@@ -5,18 +5,23 @@ import styles from './index.module.css'
 import {
   Menu,
   MenuBoard,
-  Dashboard,
+  Profile2User,
   Receipt1,
   Add,
   People,
   MoneySend,
   Box1,
   UserAdd,
-  Swap,
-  MainWallet,
-  OnlineChat,
+  PresentionChart,
+  FavoriteChart,
+  ChartSuccess,
   Call,
-  SignOut,
+  MessageFavorite,
+  Ticket,
+  MessageNotif,
+  ArrowDown2,
+  LogoutCurve,
+  Strongbox2,
 } from 'iconsax-react'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -28,16 +33,21 @@ const Sidebar: React.FC = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
   const [isOpen, setIsOpen] = useState<boolean>(true)
   const iconList = [
-    Dashboard,
-    MainWallet,
+    Menu,
+    Strongbox2,
     Receipt1,
+    MoneySend,
+    MenuBoard,
     People,
     UserAdd,
     Box1,
-    Add,
-    MoneySend,
-    Swap,
-    OnlineChat,
+    Profile2User,
+    PresentionChart,
+    FavoriteChart,
+    ChartSuccess,
+    MessageFavorite,
+    Ticket,
+    MessageNotif,
     Call,
   ]
 
@@ -51,12 +61,12 @@ const Sidebar: React.FC = () => {
     }
 
     const IconComponent = iconList[iconIndex]
-    return <IconComponent color={color} />
+    return <IconComponent color={color} size={24} />
   }
 
   return (
     <div
-      className={`${styles.sidebar} ${isOpen ? styles.open : styles.closed}`}>
+      className={`${styles.sidebar} ${isOpen ? styles.open : styles.closed} overflow-y-auto h-20`}>
       <div className={`${styles.topSection} ${styles.bottomBorder}`}>
         {isOpen && (
           <Image
@@ -95,14 +105,12 @@ const Sidebar: React.FC = () => {
                 openIndex === index ? 'white' : isOpen ? 'gray' : '#50545F'
               )}
               {isOpen && (
-                <Link
+                <div
                   className={`${styles.link} ${
                     openIndex === index ? styles.active : ''
-                  }`}
-                  href={item.link}
-                  target='_blank'>
+                  }`}>
                   {item.name}
-                </Link>
+                </div>
               )}
               {item.subItems && isOpen && (
                 <div
@@ -112,7 +120,9 @@ const Sidebar: React.FC = () => {
                     }deg)`,
                     display: 'flex',
                   }}>
-                  <Arrow color={openIndex === index ? 'white' : '#50545F'} />
+                  <ArrowDown2
+                    color={openIndex === index ? 'white' : '#50545F'}
+                  />
                 </div>
               )}
             </div>
@@ -121,15 +131,14 @@ const Sidebar: React.FC = () => {
               <ul className={styles.subMenu}>
                 {item.subItems.map((subItem, subIndex) => (
                   <li key={subIndex} className={styles.subMenuItem}>
-                    <Link
+                    <div
                       className={styles.link}
-                      href={subItem.link}
-                      target='_blank'>
+                      >
                       <div className={`${styles.subItems}`}>
                         {generateIcon(subItem.iconIndex, '#7747C0')}
                         {subItem.name}
                       </div>
-                    </Link>
+                    </div>
                   </li>
                 ))}
               </ul>
@@ -149,7 +158,7 @@ const Sidebar: React.FC = () => {
             <div className={styles.status}></div>
             {user.name}
           </div>
-          <SignOut />
+          <LogoutCurve />
         </div>
       </ul>
     </div>

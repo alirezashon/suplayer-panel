@@ -23,24 +23,81 @@ export const data: Items[] = [
     iconIndex: 1,
     subItems: [],
   },
-  { name: 'کیف پول ویزیت', link: '/wallet/add', iconIndex: 2, subItems: [] },
   {
-    name: 'کیف پول درگاه سلامت',
+    name: 'تسویه حساب',
     link: '/wallet/add',
     iconIndex: 2,
     subItems: [
-      { name: 'افزایش موجودی', link: '/wallet/add', iconIndex: 3 },
-      { name: 'تبدیل', link: '/wallet/swap', iconIndex: 4 },
-      { name: 'برداشت', link: '/wallet/withdraw', iconIndex: 5 },
+      {
+        name: '   آزادسازی',
+        link: '/wallet/add',
+        iconIndex: 3,
+      },
     ],
   },
   {
-    name: 'پشتیبانی آنلاین',
+    name: ' تعاریف',
     link: '/reports',
-    iconIndex: 6,
+    iconIndex: 4,
+    subItems: [
+      {
+        name: 'گروه/زیرگروه',
+        link: '/wallet/add',
+        iconIndex: 5,
+      },
+      {
+        name: 'محصولات من',
+        link: '/wallet/add',
+        iconIndex: 6,
+      },
+      {
+        name: 'بازاریاب‌های من',
+        link: '/wallet/add',
+        iconIndex: 7,
+      },
+    ],
+  },
+  {
+    name: 'گروه‌های من ',
+    link: '/wallet',
+    iconIndex: 8,
     subItems: [],
   },
-  { name: '۰۲۱-۹۲۳۰۰۸۴۲', link: '/reports/expenses', iconIndex: 7 },
+  {
+    name: ' پروموشن',
+    link: '/reports',
+    iconIndex: 9,
+    subItems: [
+      {
+        name: 'تعریف پروموشن',
+        link: '/wallet/add',
+        iconIndex: 10,
+      },
+      {
+        name: ' فعال‌سازی',
+        link: '/wallet/add',
+        iconIndex: 11,
+      },
+    ],
+  },
+  {
+    name: ' پشتیلانی آنلاین',
+    link: '/reports',
+    iconIndex: 12,
+    subItems: [
+      {
+        name: ' تیکتینگ',
+        link: '/wallet/add',
+        iconIndex: 13,
+      },
+      {
+        name: ' چت آنلاین',
+        link: '/wallet/add',
+        iconIndex: 14,
+      },
+    ],
+  },
+  { name: '۰۲۱-۹۲۳۰۰۸۴۲', link: '/reports/expenses', iconIndex: 15 },
   {
     name: 'پاسخگویی تلفنی ۸ صبح الی ۱۲ شب',
     link: '/reports/expenses',
