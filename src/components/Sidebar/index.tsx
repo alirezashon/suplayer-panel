@@ -23,7 +23,6 @@ import {
   LogoutCurve,
   Strongbox2,
 } from 'iconsax-react'
-import Link from 'next/link'
 import Image from 'next/image'
 const user = {
   name: 'محدثه عالمی',
@@ -66,7 +65,7 @@ const Sidebar: React.FC = () => {
 
   return (
     <div
-      className={`${styles.sidebar} ${isOpen ? styles.open : styles.closed} overflow-y-auto h-20`}>
+      className={`${styles.sidebar} ${isOpen ? styles.open : styles.closed}`}>
       <div className={`${styles.topSection} ${styles.bottomBorder}`}>
         {isOpen && (
           <Image

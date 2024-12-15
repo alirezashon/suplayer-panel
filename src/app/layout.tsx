@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
 import './assets//globals.css'
 import Sidebar from '@/components/Sidebar'
+import Header from '@/components/Header'
+import { MenuProvider } from '@/Context/Menu'
+import ToastProvider from '../../providers/ToastProvider'
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -14,14 +17,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <body>
-      <main className={`w-full flex`}>
-          <Sidebar />
-        <div className={'w-full'}>
-          {children}
-        </div>
-        </main>
-      </body>
+      <MenuProvider>
+        <body>
+        <ToastProvider />
+          <main className={`w-full flex pt-3`}>
+            <Sidebar />
+            <div className={'w-[80%] mr-[22%]'}>
+              <Header />
+              {children}
+            </div>
+          </main>
+        </body>
+      </MenuProvider>
     </html>
   )
 }
