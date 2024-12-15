@@ -19,10 +19,12 @@ export default function RootLayout({
     <html lang='en'>
       <MenuProvider>
         <body>
-        <ToastProvider />
-          <main className={`w-full flex pt-3`}>
-            <Sidebar />
-            <div className={'w-[80%] mr-[22%]'}>
+          <ToastProvider />
+          <main className={`w-full flex justify-between bg-gray-100`}>
+            <div className='w-[17%]'>
+              <Sidebar />
+            </div>
+            <div className={'w-[83%]'}>
               <Header />
               {children}
             </div>

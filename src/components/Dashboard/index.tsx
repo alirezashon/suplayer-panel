@@ -1,5 +1,4 @@
 import { ArrowLeft2, Profile2User } from 'iconsax-react'
-import React from 'react'
 
 const Dashboard = () => {
   return (
