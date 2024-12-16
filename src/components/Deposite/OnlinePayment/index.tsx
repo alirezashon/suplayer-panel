@@ -2,7 +2,6 @@ import React, { useRef } from 'react'
 import { WalletMoney, CloseCircle, TickCircle, MoneySend } from 'iconsax-react'
 
 const OnlinePayment = () => {
-  // Refs for all inputs
   const refs = useRef({
     amount: '',
     phone: '',

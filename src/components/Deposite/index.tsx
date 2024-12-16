@@ -2,6 +2,9 @@ import { ArrowLeft2, Profile2User } from 'iconsax-react'
 import { useState } from 'react'
 import OnlinePayment from './OnlinePayment'
 import Report from './Report'
+import PayByID from './PayByID'
+import PaymentLink from './PaymentLink'
+import Drafts from './Drafts'
 
 const Deposite = () => {
   const [tab, setTab] = useState<number>(0)
@@ -94,8 +97,16 @@ const Deposite = () => {
           </button>
         </div>
       </div>
-      {tab===0?<OnlinePayment />:''}
-      <Report/>
+      {tab === 0 ? (
+        <OnlinePayment />
+      ) : tab === 1 ? (
+        <PayByID />
+      ) : tab === 2 ? (
+        <PaymentLink />
+      ) : (
+        tab === 3 && <Drafts />
+      )}
+      <Report />
     </div>
   )
 }
