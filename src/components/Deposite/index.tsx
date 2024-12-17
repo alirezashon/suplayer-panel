@@ -1,4 +1,3 @@
-import { ArrowLeft2, Profile2User } from 'iconsax-react'
 import { useState } from 'react'
 import OnlinePayment from './OnlinePayment'
 import Report from './Report'

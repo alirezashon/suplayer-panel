@@ -6,12 +6,14 @@ import Loading from '../shared/LoadingSpinner'
 import Image from 'next/image'
 import { bankImages } from '../shared/MatchingBankLogo'
 import WithdrawSheba from './Sheba'
+import ConfirmModal from './Modal'
 
 export const WithdrawalForm: React.FC = () => {
   const [tab, setTab] = useState<number>(1)
   const [showShabaSuggestion, setShowShabaSuggestion] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
   const [showIbanPage, setShowIbanPage] = useState<boolean>(false)
+  const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false)
   const [selectedSheba, setSelectedSheba] = useState<{
     name: string
     bank: string
@@ -36,6 +38,7 @@ export const WithdrawalForm: React.FC = () => {
 
     if (Object.keys(newErrors).length === 0) {
       console.log('Form Submitted:', formValues)
+      setShowConfirmModal(true)
     }
   }
 
@@ -47,6 +50,7 @@ export const WithdrawalForm: React.FC = () => {
 
   return (
     <>
+    {showConfirmModal&&<ConfirmModal />}
       {!showIbanPage ? (
         <div className='flex px-3 gap-3'>
           <form
@@ -184,7 +188,6 @@ export const WithdrawalForm: React.FC = () => {
               )}
             </div>
 
-            {/* Submit Button */}
             <button
               type='submit'
               className='mt-4 px-4 py-2 bg-purple-700 text-white rounded-lg hover:bg-purple-800'>

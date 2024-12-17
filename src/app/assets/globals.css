@@ -9,7 +9,6 @@
 
 html {
   scroll-behavior: smooth;
-  
 }
 
 body {
@@ -98,12 +97,37 @@ input:focus {
 .modal-animate {
   animation: modalAnimate 1s ease-in-out forwards;
 }
-@keyframes disable-animate {
+@keyframes right-animate {
   from {
-    transform: translateX(30vh);
+    transform: translateX(120vw);
+  }
+  to {
+    transform: translateX(0vh);
+    transform: translateY(10vh);
   }
 }
-.disable-animate{
-  animation: disable-animate .2s ease-in-out forwards;
-
+.right-animate {
+  animation: right-animate 2s ease-in-out forwards;
+}
+@keyframes right-side-animate {
+  from {
+    transform: translateX(120vw);
+  }
+  to {
+    transform: translateX(0vh);
+  }
+}
+.right-side-animate {
+  animation: right-side-animate 1s ease-in-out forwards;
+}
+@keyframes delete-box-animate {
+  from {
+    transform: translateX(120vw);
+  }
+  to {
+    transform: translate(-10vw,20vh);
+  }
+}
+.delete-box-animate {
+  animation: delete-box-animate 1s ease-in-out forwards;
 }

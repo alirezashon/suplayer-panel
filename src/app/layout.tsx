@@ -20,7 +20,7 @@ export default function RootLayout({
       <MenuProvider>
         <body>
           <ToastProvider />
-          <main className={`w-full flex justify-between bg-gray-100`}>
+          <main className={`w-full flex justify-between bg-gray-100 min-h-[100vh]`}>
             <div className='w-[17%]'>
               <Sidebar />
             </div>
