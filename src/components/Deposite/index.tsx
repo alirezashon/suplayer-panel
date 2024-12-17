@@ -14,9 +14,7 @@ const Deposite = () => {
       <div className='flex border-b'>
         <div
           className={`transition-all duration-500 px-5 border-b ${
-            tab === 0
-              ? 'bg-[#E6DBFB80] border-b-[#704CB9]'
-              : 'border-b-[#704CB9]'
+            tab === 0 && 'bg-[#E6DBFB80] border-b-[#704CB9]'
           }`}>
           <button
             className={`w-full flex justify-center !rounded-lg items-center gap-4 !py-3 ${
@@ -35,9 +33,7 @@ const Deposite = () => {
         </div>
         <div
           className={`transition-all duration-500 px-5 border-b ${
-            tab === 1
-              ? 'bg-[#E6DBFB80] border-b-[#704CB9]'
-              : 'border-b-[#704CB9]'
+            tab === 1 && 'bg-[#E6DBFB80] border-b-[#704CB9]'
           }`}>
           <button
             className={`w-full flex justify-center !rounded-lg items-center gap-4 !py-3 ${
@@ -56,9 +52,7 @@ const Deposite = () => {
         </div>
         <div
           className={`transition-all duration-500 px-5 border-b ${
-            tab === 2
-              ? 'bg-[#E6DBFB80] border-b-[#704CB9]'
-              : 'border-b-[#704CB9]'
+            tab === 2 && 'bg-[#E6DBFB80] border-b-[#704CB9]'
           }`}>
           <button
             className={`w-full flex justify-center !rounded-lg items-center gap-4 !py-3 ${
@@ -77,9 +71,7 @@ const Deposite = () => {
         </div>
         <div
           className={`transition-all duration-500 px-5 border-b ${
-            tab === 3
-              ? 'bg-[#E6DBFB80] border-b-[#704CB9]'
-              : 'border-b-[#704CB9]'
+            tab === 3 && 'bg-[#E6DBFB80] border-b-[#704CB9]'
           }`}>
           <button
             className={`w-full flex justify-center !rounded-lg items-center gap-4 !py-3 ${

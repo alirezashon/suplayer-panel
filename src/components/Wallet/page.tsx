@@ -106,12 +106,15 @@ const Wallet: React.FC = () => {
           </div>
         </div>
         <div className='flex gap-[15%]'>
-          <button className=' min-w-[16%] justify-center flex rounded-lg  px-3 h-10 items-center gap-2 bg-[#419370] text-white'
-          onClick={()=>location.href='/deposite'}>
+          <button
+            className=' min-w-[16%] justify-center flex rounded-lg  px-3 h-10 items-center gap-2 bg-[#419370] text-white'
+            onClick={() => (location.href = '/deposite')}>
             <Add size={24} color='#ffffff' />
             <p>افزایش موجودی</p>
           </button>
-          <button className=' min-w-[16%] justify-center flex rounded-lg  px-3 h-10 items-center gap-2 bg-[#DB4239] text-white'>
+          <button
+            className=' min-w-[16%] justify-center flex rounded-lg  px-3 h-10 items-center gap-2 bg-[#DB4239] text-white'
+            onClick={() => (location.href = '/withdraw')}>
             <MoneySend size={24} color='#ffffff' />
             <p> برداشت</p>
           </button>
