@@ -1,6 +1,7 @@
 'use client'
 import Dashboard from '@/components/Dashboard'
 import Groups from '@/components/Groups'
+import Referrer from '@/components/Referrer'
 import SubGroups from '@/components/SubGroups'
 import LinearChart from '@/components/Wallet/page'
 import { useMenu } from '@/Context/Menu'
@@ -15,7 +16,8 @@ const Home = () => {
         <LinearChart />
       ) : (
       // <Groups />
-      <SubGroups/>
+      // <SubGroups/>
+      <Referrer/>
       )}
     </div>
   )
