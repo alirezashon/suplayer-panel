@@ -1,0 +1,195 @@
+import React, { useState } from 'react'
+import { ShieldSearch, Trash, Edit2, SearchNormal } from 'iconsax-react'
+import AddModal from './AddModal'
+import DeleteModal from './DeleteModal'
+import Image from 'next/image'
+
+interface ProductCard {
+  category: string
+  title: string
+}
+
+const productData: ProductCard[] = [
+  {
+    category: 'محصولات پوستی',
+    title: ' فولیکا',
+  },
+  {
+    category: 'محصولات شامپو',
+    title: ' فولیکا',
+  },
+  {
+    category: 'محصولات آرایشی',
+    title: ' فولیکا',
+  },
+  {
+    category: 'محصولات پوستی',
+    title: ' محصولات',
+  },
+  {
+    category: 'محصولات آرایشی',
+    title: ' فولیکا',
+  },
+  {
+    category: 'محصولات شامپو',
+    title: ' فولیا',
+  },
+]
+const headers = ['ردیف', 'گروه محصول', 'نام محصول', 'عملیات']
+const Product: React.FC = () => {
+  const [data, setData] = useState<ProductCard[]>(productData)
+  const [showAddModal, setShowAddModal] = useState<
+    boolean | { category: string, title: string }
+  >(false)
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean | string>(
+    false
+  )
+  return (
+    <div className='m-4'>
+      <div className='flex justify-between items-center mb-7'>
+        <p>
+          <span className='text-[#98A2B3]'>تعاریف</span>/
+          <span className='text-[#98A2B3]'>محصولات من</span>/
+          <span className='text-[#7747C0]'>گروه شامپو</span>
+        </p>
+        {data.length > 0 && (
+          <button
+            type='submit'
+            onClick={() => setShowAddModal(true)}
+            className='h-10 min-w-40 bg-purple-700 text-white rounded-lg hover:bg-purple-800'>
+            + محصول جدید
+          </button>
+        )}
+      </div>
+      {showAddModal && (
+        <AddModal
+          existName={typeof showAddModal === 'object' ? showAddModal.title : ''}
+          category={
+            typeof showAddModal === 'object' ? showAddModal.category : ''
+          }
+          close={setShowAddModal}
+        />
+      )}
+      {showDeleteModal && (
+        <DeleteModal name={`${showDeleteModal}`} close={setShowDeleteModal} />
+      )}
+      {data.length > 0 ? (
+        <div className='p-6 bg-white rounded-lg border border-gray-200 flex flex-col gap-5'>
+          <div className='flex gap-5 items-center'>
+            <div className='relative w-full flex items-center '>
+              <div className='absolute left-3 z-20 cursor-pointer text-[#50545F]'>
+                <SearchNormal size={24} color='gray' />
+              </div>
+
+              <input
+                type='search'
+                placeholder='جستجو'
+                // value={search}
+                // onChange={(e) => handleSearchChange(e.target.value)}
+                className='absolute w-full z-10 border border-gray-300 rounded-md px-4 py-2 text-right outline-none focus:border-red-400'
+              />
+            </div>
+            <button
+              type='submit'
+              className={`fill-button px-10 h-10 rounded-lg `}>
+              جستجو
+            </button>
+          </div>
+          <table className='my-10 w-full'>
+            <thead>
+              <tr>
+                {headers.map((head, headIndex) => (
+                  <th
+                    className={`bg-[#F3F4F5] border-z h-10 ${
+                      headIndex === 0
+                        ? 'rounded-tr-lg'
+                        : headIndex === headers.length - 1 && 'rounded-tl-lg'
+                    } `}
+                    key={headIndex}>
+                    <p
+                      className={`flex justify-center items-center border-y h-10  ${
+                        headIndex === 0
+                          ? 'border-r rounded-tr-lg'
+                          : headIndex === headers.length - 1 &&
+                            'border-l rounded-tl-lg'
+                      }`}>
+                      {head}
+                    </p>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+
+            <tbody>
+              {data.map((product, index) => (
+                <tr key={index} className='border-b'>
+                  {[index + 1, ...[...Object.values(product), '']].map(
+                    (detail, detailIndex) => (
+                      <td
+                        key={detailIndex}
+                        className={`text-center h-10 ${
+                          detailIndex === 0
+                            ? 'border-r'
+                            : detailIndex === 3 && 'border-l'
+                        }`}>
+                        {detailIndex !== 3 ? (
+                          detail
+                        ) : (
+                          <div className='justify-center flex gap-2'>
+                            <Trash
+                              size={20}
+                              color='#D42620'
+                              cursor={'pointer'}
+                              onClick={() => {
+                                setData((prv) =>
+                                  prv.filter((ref) => ref.title !== product.title)
+                                )
+                                setShowDeleteModal(product.title)
+                              }}
+                            />
+                            <Edit2
+                              size={20}
+                              color='#8455D2'
+                              cursor={'pointer'}
+                              onClick={() =>
+                                setShowAddModal({
+                                  category: product.category,
+                                  title: product.title,
+                                })
+                              }
+                            />
+                          </div>
+                        )}
+                      </td>
+                    )
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <div className='flex flex-col gap-2 justify-center items-center h-[60vh]'>
+          <h1 className='text-2xl'>محصولی ندارید</h1>
+          <Image
+            src={'/icons/empty-box.svg'}
+            width={444}
+            height={333}
+            alt=''
+            className='w-[10%]'
+          />
+          <div className='border min-w-[40%] my-5'></div>
+          <h1 className='text-2xl'> تعریف محصول</h1>
+          <button
+            type='submit'
+            onClick={() => setShowAddModal(true)}
+            className='h-10 min-w-40 bg-purple-700 text-white rounded-lg hover:bg-purple-800'>
+            + محصول جدید
+          </button>
+        </div>
+      )}
+    </div>
+  )
+}
+
+export default Product

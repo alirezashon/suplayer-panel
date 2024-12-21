@@ -42,7 +42,7 @@ const AddModal = ({existName,close}:{existName?:string,close:(show:boolean)=>voi
           <div className='mt-10 w-full max-md:max-w-full'>
             <button
               type='submit'
-              className={`flex-1 shrink gap-2 self-stretch px-3 py-2 w-full text-base text-center text-white whitespace-nowrap bg-purple-700 rounded-lg border border-purple-700 border-solid min-h-[40px] `}>
+              className={`fill-button px-10 h-10 rounded-lg  `}>
               ثبت
             </button>
           </div>

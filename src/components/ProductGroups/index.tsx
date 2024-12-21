@@ -3,62 +3,71 @@ import { ShieldSearch, Trash, Edit, Edit2 } from 'iconsax-react'
 import AddModal from './AddModal'
 import DeleteModal from './DeleteModal'
 
-interface SubGroup {
-  name: string
+interface ProductCard {
+  id: number
+  category: string
+  actionText: string
+  buttonType: 'view' | 'add'
 }
 
-interface TabData {
-  title: string
-  subGroups: SubGroup[]
-}
-
-const tabData: TabData[] = [
+const productData: ProductCard[] = [
   {
-    title: 'تهران شرق',
-    subGroups: [
-      { name: 'منطقه ۲' },
-      { name: 'منطقه 4  ' },
-      { name: 'منطقه 13' },
-      { name: 'منطقه ۷' },
-    ],
+    id: 1,
+    category: 'محصولات پوستی',
+    actionText: 'مشاهده محصولات',
+    buttonType: 'view',
   },
   {
-    title: 'تهران غرب',
-    subGroups: [
-      { name: 'منطقه 8' },
-      { name: 'منطقه ۲' },
-      { name: 'منطقه 22' },
-      { name: 'منطقه ۷' },
-    ],
+    id: 2,
+    category: 'محصولات شامپو',
+    actionText: 'مشاهده محصولات',
+    buttonType: 'view',
   },
   {
-    title: 'دکترهای پوست',
-    subGroups: [
-      { name: 'منطقه 9' },
-      { name: 'منطقه 23' },
-      { name: 'منطقه ۲' },
-      { name: 'منطقه ۷' },
-    ],
+    id: 3,
+    category: 'محصولات آرایشی',
+    actionText: 'تعریف محصول',
+    buttonType: 'add',
   },
   {
-    title: 'خدمات زیبایی و درمان',
-    subGroups: [
-      { name: 'منطقه ۲' },
-      { name: 'منطقه 4' },
-      { name: 'منطقه 24' },
-      { name: 'منطقه ۷' },
-    ],
+    id: 4,
+    category: 'محصولات پوستی',
+    actionText: 'مشاهده محصولات',
+    buttonType: 'view',
+  },
+  {
+    id: 5,
+    category: 'محصولات آرایشی',
+    actionText: 'تعریف محصول',
+    buttonType: 'add',
+  },
+  {
+    id: 6,
+    category: 'محصولات شامپو',
+    actionText: 'مشاهده محصولات',
+    buttonType: 'view',
   },
 ]
-
-const SubGroups: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<number>(0)
+const ProductGroups: React.FC = () => {
+  const [data, setData] = useState<ProductCard[]>(productData)
   const [showAddModal, setShowAddModal] = useState<boolean | string>(false)
   const [showDeleteModal, setShowDeleteModal] = useState<boolean | string>(
     false
   )
   return (
-    <>
+    <div className='m-4'>
+      <div className='flex justify-between items-center mb-7'>
+        <p>
+          <span className='text-[#98A2B3]'>تعاریف</span>/
+          <span className='text-[#7747C0]'> محصولات من</span>
+        </p>
+        <button
+          type='submit'
+          onClick={() => setShowAddModal(true)}
+          className='h-10 min-w-40 bg-purple-700 text-white rounded-lg hover:bg-purple-800'>
+          + گروه محصول جدید
+        </button>
+      </div>
       {showAddModal && (
         <AddModal
           existName={typeof showAddModal === 'string' ? showAddModal : ''}
@@ -67,42 +76,57 @@ const SubGroups: React.FC = () => {
       )}
       {showDeleteModal && (
         <DeleteModal
-          name={`${showAddModal}`}
+          name={`${showDeleteModal}`}
           close={setShowDeleteModal}
-          isActive
+          
         />
       )}
       <div className='p-6 bg-white rounded-lg border border-gray-200'>
-        <div className='flex border-b'>
-          {tabData.map((tab, index) => (
-            <button
-              key={index}
-              className={`px-5 py-3 transition-all duration-500 ${
-                activeTab === index
-                  ? 'bg-[#E6DBFB80] border-b-2 border-[#704CB9] text-[#704CB9]'
-                  : 'text-[#344054]'
-              }`}
-              onClick={() => setActiveTab(index)}>
-              {tab.title}
-            </button>
-          ))}
-        </div>
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6'>
-          {tabData[activeTab].subGroups.map((subGroup, subIndex) => (
+        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4'>
+          {data.map((product) => (
             <div
-              key={subIndex}
-              className='flex justify-between items-center p-4 bg-white rounded-lg border border-gray-200 shadow'>
-              <div className='text-gray-600'>{subGroup.name}</div>
-              <div className='flex gap-2'>
-                <Edit2 size={18} color='#8455D2' className='cursor-pointer' onClick={()=>setShowAddModal(subGroup.name)}/>
-                <Trash size={18} color='#D42620' className='cursor-pointer' onClick={()=>setShowDeleteModal(subGroup.name)}/>
+              key={product.id}
+              className='flex flex-col justify-between items-start border rounded-lg p-4 shadow-md hover:shadow-lg transition duration-300'>
+              {/* Category Label */}
+              <div className='flex items-center justify-between w-full mb-4'>
+                <span className='text-sm bg-[#E1DCF8] text-[#6137A0] px-2 py-1 rounded'>
+                  {product.category}
+                </span>
+                <div className='flex gap-2'>
+                  <Edit2
+                    size={20}
+                    color='#8455D2'
+                    cursor={'pointer'}
+                    onClick={() => setShowAddModal(product.category)}
+                  />
+                  <Trash
+                    size={20}
+                    color='#D42620'
+                    cursor={'pointer'}
+                    onClick={() => {
+                      setData((prv) =>
+                        prv.filter((ref) => ref.id !== product.id)
+                      )
+                      setShowDeleteModal(product.category)
+                    }}
+                  />
+                </div>
               </div>
+
+              <button
+                className={`w-full py-2  font-semibold rounded ${
+                  product.buttonType === 'add'
+                    ? 'bg-purple-600 hover:bg-purple-700 text-white'
+                    : 'border border-purple-600 text-purple-600 hover:bg-purple-600 hover:text-white'
+                } transition duration-300`}>
+                {product.actionText}
+              </button>
             </div>
           ))}
         </div>
       </div>
-    </>
+    </div>
   )
 }
 
-export default SubGroups
+export default ProductGroups

@@ -41,12 +41,12 @@ input:focus {
   border-color: #565ffe;
 }
 .fill-button {
-  background-color: #2f27ce;
+  background-color: #7747C0;
   color: #ffffff;
 }
 .border-button {
-  color: #2f27ce;
-  border: 1px #2f27ce solid;
+  color: #7747C0;
+  border: 1px #7747C0 solid;
 }
 
 @keyframes slideUp {

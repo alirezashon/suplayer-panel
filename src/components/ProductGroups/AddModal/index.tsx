@@ -18,31 +18,24 @@ const AddModal = ({existName,close}:{existName?:string,close:(show:boolean)=>voi
           className='flex flex-col bg-white max-w-[594px] pb-[852px] max-md:px-5 max-md:pb-24'>
           <div className='flex justify-between items-center w-full text-xl font-medium text-right text-gray-800 max-md:max-w-full'>
             <div className='flex-1 shrink self-stretch my-auto min-w-[240px] max-md:max-w-full'>
-              تعریف گروه جدید
+            گروه محصول جدید
             </div>
            <div className="
            ">
              <CloseSquare size={24} cursor='pointer' color='#50545F' onClick={()=>close(false)}/>
             </div>
           </div>
-          <div className='my-4'>
-            <label id='status-label'> گروه خود را انتخاب کنید</label>
-            <select
-              className={`!w-full outline-none border rounded-lg h-10 px-1 cursor-pointer border-[#C9D0D8]`}>
-              <option value=''>نام گروه</option>
-              <option value='0'>ناروه</option>
-            </select>
-          </div>
+        
 
           <div className='mt-10 w-full max-md:max-w-full'>
             <div className='flex flex-col w-full'>
               <label className='text-base font-medium text-right text-gray-800'>
-              نام زیر گروه خود را بنویسید
+              نام گروه محصول
               </label>
               <input
                 defaultValue={name}
                 type='text'
-                placeholder='مثال: دکترهای پوست، تهران غرب ...'
+                placeholder='نام گروه محصول'
               />
             </div>
           </div>
@@ -50,7 +43,7 @@ const AddModal = ({existName,close}:{existName?:string,close:(show:boolean)=>voi
           <div className='mt-10 w-full max-md:max-w-full'>
             <button
               type='submit'
-              className={`flex-1 shrink gap-2 self-stretch px-3 py-2 w-full text-base text-center text-white whitespace-nowrap bg-purple-700 rounded-lg border border-purple-700 border-solid min-h-[40px] `}>
+              className={`fill-button px-10 h-10 rounded-lg  `}>
               ثبت
             </button>
           </div>
