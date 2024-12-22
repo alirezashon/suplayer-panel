@@ -14,52 +14,57 @@ export interface Items {
 export const data: Items[] = [
   {
     name: 'داشبورد',
-    link: '/dashboard',
+    link: '',
     iconIndex: 0,
   },
   {
     name: 'کیف پول',
-    link: '/wallet',
+    link: 'wallet',
     iconIndex: 1,
     subItems: [],
   },
   {
     name: 'تسویه حساب',
-    link: '/wallet/add',
+    link: 'walletadd',
     iconIndex: 2,
     subItems: [
       {
         name: '   آزادسازی',
-        link: '/wallet/add',
+        link: 'wallet/ad',
         iconIndex: 3,
       },
     ],
   },
   {
     name: ' تعاریف',
-    link: '/reports',
+    link: 'definitions',
     iconIndex: 4,
     subItems: [
       {
-        name: 'گروه/زیرگروه',
-        link: '/wallet/add',
+        name: 'گروه',
+        link: 'groupmanagement',
+        iconIndex: 5,
+      },
+       {
+        name: 'زیرگروه',
+        link: 'subgroups',
         iconIndex: 5,
       },
       {
         name: 'محصولات من',
-        link: '/wallet/add',
+        link: 'productgroups',
         iconIndex: 6,
       },
       {
         name: 'بازاریاب‌های من',
-        link: '/wallet/add',
+        link: 'referrers',
         iconIndex: 7,
       },
     ],
   },
   {
     name: 'گروه‌های من ',
-    link: '/wallet',
+    link: 'mygroups',
     iconIndex: 8,
     subItems: [],
   },

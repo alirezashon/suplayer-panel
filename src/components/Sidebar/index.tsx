@@ -23,6 +23,7 @@ import {
   Strongbox2,
 } from 'iconsax-react'
 import Image from 'next/image'
+import { useMenu } from '@/Context/Menu'
 
 const user = {
   name: 'محدثه عالمی',
@@ -32,6 +33,7 @@ const user = {
 const Sidebar: React.FC = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
   const [isOpen, setIsOpen] = useState<boolean>(true)
+  const { menu, setMenu } = useMenu()
 
   const iconList = [
     Menu,
@@ -97,7 +99,11 @@ const Sidebar: React.FC = () => {
                   ? 'bg-[#7747C0] text-white'
                   : 'text-[#242424]'
               }`}
-              onClick={() => setOpenIndex(openIndex === index ? null : index)}>
+              onClick={() => {
+                setMenu(item.link)
+                location.hash = item.link
+                setOpenIndex(openIndex === index ? null : index)
+              }}>
               {generateIcon(
                 item.iconIndex,
                 openIndex === index ? 'white' : isOpen ? 'gray' : '#50545F'
@@ -119,9 +125,18 @@ const Sidebar: React.FC = () => {
             {item.subItems && openIndex === index && isOpen && (
               <ul className='ml-[2vw]'>
                 {item.subItems.map((subItem, subIndex) => (
-                  <li key={subIndex} className='flex items-center p-[1vh]'>
+                  <li
+                    key={subIndex}
+                    className='flex items-center p-[1vh] cursor-pointer'
+                    onClick={() => {
+                      location.hash = subItem.link
+                      setMenu(subItem.link)
+                    }}>
                     {generateIcon(subItem.iconIndex, '#7747C0')}
-                    <span className='ml-[1vw] text-[#7747C0]'>
+                    <span
+                      className={`ml-[1vw] '${
+                        menu == subItem.link && 'text-[#7747C0]'
+                      }`}>
                       {subItem.name}
                     </span>
                   </li>

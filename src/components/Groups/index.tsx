@@ -2,15 +2,9 @@ import React, { useState } from 'react'
 import { Edit2, Trash } from 'iconsax-react'
 import AddModal from './AddModal'
 import DeleteModal from './DeleteModal'
+import { GroupData } from '@/interfaces'
 
-interface SubGroup {
-  name: string
-}
 
-interface GroupData {
-  title: string
-  subGroups: SubGroup[]
-}
 
 const groupsData: GroupData[] = [
   {

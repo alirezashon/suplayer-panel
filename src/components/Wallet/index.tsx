@@ -1,16 +1,21 @@
 'use client'
+
 import { useEffect, useRef } from 'react'
 import Chart from 'chart.js/auto'
 import { Add, InfoCircle, MoneySend, Wallet3 } from 'iconsax-react'
 
 const Wallet: React.FC = () => {
   const chartRef = useRef<HTMLCanvasElement>(null)
+  const chartInstanceRef = useRef<Chart | null>(null)
 
   useEffect(() => {
     const ctx = chartRef.current?.getContext('2d')
 
     if (ctx) {
-      new Chart(ctx, {
+      if (chartInstanceRef.current) {
+        chartInstanceRef.current.destroy()
+      }
+      chartInstanceRef.current = new Chart(ctx, {
         type: 'bar',
         data: {
           labels: ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور'],
@@ -18,14 +23,14 @@ const Wallet: React.FC = () => {
             {
               label: 'سبز',
               data: [150, 300, 200, 300, 150, 180],
-              backgroundColor: '#00B050', // Green color
+              backgroundColor: '#00B050',
               barPercentage: 0.6,
               borderRadius: 4,
             },
             {
               label: 'قرمز',
               data: [100, 250, 150, 250, 100, 130],
-              backgroundColor: '#E74C3C', // Red color
+              backgroundColor: '#E74C3C',
               barPercentage: 0.6,
               borderRadius: 4,
             },
@@ -56,10 +61,16 @@ const Wallet: React.FC = () => {
         },
       })
     }
+
+    return () => {
+      if (chartInstanceRef.current) {
+        chartInstanceRef.current.destroy()
+      }
+    }
   }, [])
 
   return (
-    <div className='bg-gray-100 flex flex-col justify-center items-center p-6 min-h-screen gap-10'>
+    <div className='bg-gray-100 flex flex-col justify-center items-center p-6 min-h-screen gap-20'>
       <div
         className='w-full flex flex-col gap-3'
         style={{
@@ -107,16 +118,15 @@ const Wallet: React.FC = () => {
         </div>
         <div className='flex gap-[15%]'>
           <button
-            className=' min-w-[16%] justify-center flex rounded-lg  px-3 h-10 items-center gap-2 bg-[#419370] text-white'
+            className=' min-w-[16%] justify-center flex rounded-lg  px-3 h-10 items-center gap-2 bg-[#0F973D] text-white'
             onClick={() => (location.href = '/deposite')}>
             <Add size={24} color='#ffffff' />
             <p>افزایش موجودی</p>
           </button>
           <button
-            className=' min-w-[16%] justify-center flex rounded-lg  px-3 h-10 items-center gap-2 bg-[#DB4239] text-white'
+            className=' min-w-[16%] justify-center flex rounded-lg  px-3 h-10 items-center gap-2 border border-[#0F973D] text-[#0F973D]'
             onClick={() => (location.href = '/withdraw')}>
-            <MoneySend size={24} color='#ffffff' />
-            <p> برداشت</p>
+            +<p> افزایش اعتبار</p>
           </button>
         </div>
       </div>

@@ -1,29 +1,52 @@
 'use client'
 import Dashboard from '@/components/Dashboard'
 import Groups from '@/components/Groups'
+import MyGroups from '@/components/MyGroups'
 import ProductGroups from '@/components/ProductGroups'
 import Product from '@/components/Products'
 import Referrer from '@/components/Referrer'
 import SubGroups from '@/components/SubGroups'
-import LinearChart from '@/components/Wallet/page'
+import Wallet from '@/components/Wallet'
 import { useMenu } from '@/Context/Menu'
+import MainLayout from '@/layouts/MainLayout'
+import { useEffect } from 'react'
 
 const Home = () => {
-  const { menu } = useMenu()
+  const { menu, setMenu } = useMenu()
+  useEffect(() => {
+    const handleHashChange = () => {
+      const tag = location.hash.substring(1)
+      setMenu(tag)
+    }
+    window.addEventListener('menuchange', handleHashChange, false)
+    handleHashChange()
+    return () => {
+      window.removeEventListener('menuchange', handleHashChange, false)
+    }
+  }, [setMenu])
+
   return (
-    <div>
-      {menu === '0' ? (
-        <Dashboard />
-      ) : menu === '1' ? (
-        <LinearChart />
-      ) : (
-      // <Groups />
-      // <SubGroups/>
-      // <Referrer/>
-        // <ProductGroups/>
-        <Product/>
-)}
-    </div>
+    <MainLayout>
+      <div>
+        {menu === 'wallet' ? (
+          <Wallet />
+        ) : menu === 'mygroups' ? (
+          <MyGroups />
+        ) : menu === 'groupmanagement' ? (
+          <Groups />
+        ) : menu === 'subgroups' ? (
+          <SubGroups />
+        ) : menu === 'referrers' ? (
+          <Referrer />
+        ) : menu === 'productgroups' ? (
+          <ProductGroups />
+        ) : menu === 'products' ? (
+          <Product />
+        ) : (
+          <Dashboard />
+        )}
+      </div>
+    </MainLayout>
   )
 }
 

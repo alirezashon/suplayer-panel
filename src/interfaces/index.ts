@@ -34,3 +34,11 @@ export interface IShabaDestinationList {
   bid_code: string
   fullname: string
 }
+export interface SubGroup {
+  name: string
+}
+
+export interface GroupData {
+  title: string
+  subGroups: SubGroup[]
+}
