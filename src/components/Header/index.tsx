@@ -23,6 +23,7 @@ const Header: React.FC = () => {
     ['چت آنلاین', '/wallet/add'],
     ['۰۲۱-۹۲۳۰۰۸۴۲', '/reports/expenses'],
     ['پاسخگویی تلفنی ۸ صبح الی ۱۲ شب', '/reports/expenses'],
+    ['  پروفایل ', 'profile'],
   ]
 
   const user = 'پارس حیان'

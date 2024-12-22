@@ -48,7 +48,7 @@ const MyGroups: React.FC = () => {
       <div className='flex justify-between items-center mb-7'>
         <p>
           <span className='text-[#98A2B3]'>تعاریف</span>/
-          <span className='text-[#7747C0]'> محصولات من</span>
+          <span className='text-[#7747C0]'> گروه‌های من</span>
         </p>
         <button
           type='submit'
