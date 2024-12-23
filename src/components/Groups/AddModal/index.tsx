@@ -1,10 +1,13 @@
+import { getCookieByKey } from '@/actions/cookieToken'
+import { CreateGroup } from '@/services/items'
 import { CloseSquare } from 'iconsax-react'
 import { useState } from 'react'
 
 const AddModal = ({existName,close}:{existName?:string,close:(show:boolean)=>void}) => {
   const [name, setName] = useState<string>(existName||'')
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleSubmit = async(e: React.FormEvent) => {
+   const accessToken = await getCookieByKey('access_token')||''
+    await CreateGroup({accessToken,name})
   }
 
   return (
@@ -42,7 +45,7 @@ const AddModal = ({existName,close}:{existName?:string,close:(show:boolean)=>voi
           <div className='mt-10 w-full max-md:max-w-full'>
             <button
               type='submit'
-              className={`fill-button px-10 h-10 rounded-lg  `}>
+              className={`fill-button px-10 h-10 rounded-lg w-full`}>
               ثبت
             </button>
           </div>

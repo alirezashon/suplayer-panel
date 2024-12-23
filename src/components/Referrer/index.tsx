@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Trash, Edit2 } from 'iconsax-react'
 import AddModal from './AddModal'
 import DeleteModal from './DeleteModal'
+import Image from 'next/image'
 
 interface Group {
   id: number
@@ -90,12 +91,14 @@ const Referrer: React.FC = () => {
             <span className='text-[#98A2B3]'>تعاریف</span>/
             <span className='text-[#7747C0]'>بازاریاب‌های من</span>
           </p>
-          <button
-            type='submit'
-            onClick={() => setShowAddModal(true)}
-            className='h-10 min-w-40 bg-purple-700 text-white rounded-lg hover:bg-purple-800'>
-            + بازاریاب جدید
-          </button>
+          {data.length > 0 && (
+            <button
+              type='submit'
+              onClick={() => setShowAddModal(true)}
+              className='h-10 min-w-40 bg-purple-700 text-white rounded-lg hover:bg-purple-800'>
+              + بازاریاب جدید
+            </button>
+          )}
         </div>
         <div className='p-6 bg-white rounded-lg border border-gray-200'>
           <div className='flex border-b'>
@@ -152,77 +155,101 @@ const Referrer: React.FC = () => {
               </button>
             </div>
           </form>
+            {data.length > 0 ? 
           <div className='grid grid-cols-1 lg:grid-cols-3 gap-6 mt-4'>
-            {data.map((referrer) => (
-              <div
-                key={referrer.id}
-                className='bg-white rounded-lg shadow border border-gray-200 p-4 relative'>
-                <div className='flex justify-between items-center'>
-                  <div className='flex gap-2'>
-                    <h3 className='text-gray-800 font-semibold'>
-                      {referrer.name}
-                    </h3>
-                    <span
-                      className={`text-xs px-2 py-1 rounded ${
-                        referrer.type === 'شخص'
-                          ? 'bg-[#E6DBFB80] text-[#704CB9]'
-                          : 'bg-[#CAF7E3] text-[#0E9E7A]'
-                      }`}>
-                      {referrer.type}
-                    </span>
-                  </div>
-                  <div className='flex gap-2'>
-                    <Edit2
-                      size={20}
-                      color='#8455D2'
-                      cursor={'pointer'}
-                      onClick={() => setShowAddModal(true)}
-                      // onClick={() => setShowAddModal(group.title)}
-                    />
-                    <Trash
-                      size={20}
-                      color='#D42620'
-                      cursor={'pointer'}
-                      onClick={() => {
-                        setData((prv) =>
-                          prv.filter((ref) => ref.id !== referrer.id)
-                        )
-                        setShowDeleteModal(referrer.name)
-                      }}
-                    />
-                  </div>
-                </div>
-
-                <div className='mt-2'>
-                  <h4 className='text-sm text-gray-600 mb-2'>
-                    گروه‌های عضو شده
-                  </h4>
-                  <div className='flex flex-wrap gap-2'>
-                    {referrer.groups.map((group) => (
+{              data.map((referrer) => (
+                <div
+                  key={referrer.id}
+                  className='bg-white rounded-lg shadow border border-gray-200 p-4 relative'>
+                  <div className='flex justify-between items-center'>
+                    <div className='flex gap-2'>
+                      <h3 className='text-gray-800 font-semibold'>
+                        {referrer.name}
+                      </h3>
                       <span
-                        key={group.id}
-                        className='text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded'>
-                        {group.name}
+                        className={`text-xs px-2 py-1 rounded ${
+                          referrer.type === 'شخص'
+                            ? 'bg-[#E6DBFB80] text-[#704CB9]'
+                            : 'bg-[#CAF7E3] text-[#0E9E7A]'
+                        }`}>
+                        {referrer.type}
                       </span>
-                    ))}
+                    </div>
+                    <div className='flex gap-2'>
+                      <Edit2
+                        size={20}
+                        color='#8455D2'
+                        cursor={'pointer'}
+                        onClick={() => setShowAddModal(true)}
+                        // onClick={() => setShowAddModal(group.title)}
+                      />
+                      <Trash
+                        size={20}
+                        color='#D42620'
+                        cursor={'pointer'}
+                        onClick={() => {
+                          setData((prv) =>
+                            prv.filter((ref) => ref.id !== referrer.id)
+                          )
+                          setShowDeleteModal(referrer.name)
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className='mt-2'>
+                    <h4 className='text-sm text-gray-600 mb-2'>
+                      گروه‌های عضو شده
+                    </h4>
+                    <div className='flex flex-wrap gap-2'>
+                      {referrer.groups.map((group) => (
+                        <span
+                          key={group.id}
+                          className='text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded'>
+                          {group.name}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className='absolute top-2 right-2 flex gap-2 text-[#704CB9]'>
+                    <button className='hover:text-red-500 transition'>
+                      <i className='fas fa-trash'></i>
+                    </button>
+                    <button className='hover:text-blue-500 transition'>
+                      <i className='fas fa-pen'></i>
+                    </button>
                   </div>
                 </div>
-
-                <div className='absolute top-2 right-2 flex gap-2 text-[#704CB9]'>
-                  <button className='hover:text-red-500 transition'>
-                    <i className='fas fa-trash'></i>
-                  </button>
-                  <button className='hover:text-blue-500 transition'>
-                    <i className='fas fa-pen'></i>
-                  </button>
+              ))}
                 </div>
+            : (
+              <div className='w-full bg-white flex flex-col gap-2 justify-center items-center'>
+                <h1 className='text-2xl'>بازاریابی ندارید</h1>
+                <Image
+                  src={'/icons/empty-box.svg'}
+                  width={444}
+                  height={333}
+                  alt=''
+                  className='w-[10%]'
+                />
+                <div className='border min-w-[40%] my-5'></div>
+                <h1 className='text-2xl'> تعریف بازاریاب</h1>
+                <button
+                  type='submit'
+                  onClick={() => setShowAddModal(true)}
+                  className='h-10 min-w-40 bg-purple-700 text-white rounded-lg hover:bg-purple-800'>
+                  +  بازاریاب جدید
+                </button>
               </div>
-            ))}
+            )}
           </div>
         </div>
-      </div>
     </>
   )
 }
 
 export default Referrer
+
+
+

@@ -123,7 +123,7 @@ const Sidebar: React.FC = () => {
             </div>
             {/* Sub Menu */}
             {item.subItems && openIndex === index && isOpen && (
-              <ul className='ml-[2vw]'>
+              <ul className='mr-2'>
                 {item.subItems.map((subItem, subIndex) => (
                   <li
                     key={subIndex}
@@ -132,10 +132,10 @@ const Sidebar: React.FC = () => {
                       location.hash = subItem.link
                       setMenu(subItem.link)
                     }}>
-                    {generateIcon(subItem.iconIndex, '#7747C0')}
+                    {generateIcon(subItem.iconIndex,   menu === subItem.link ? '#7747C0':'#50545F')}
                     <span
-                      className={`ml-[1vw] '${
-                        menu == subItem.link && 'text-[#7747C0]'
+                      className={`mr-1 ${
+                        menu === subItem.link ? 'text-[#7747C0]':'text-[#50545F]'
                       }`}>
                       {subItem.name}
                     </span>

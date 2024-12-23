@@ -1,4 +1,5 @@
 import { SearchAddress, searchAddress } from '@/components/Address/handler'
+import { CreateReferrer } from '@/services/items'
 import { CloseSquare, SearchNormal } from 'iconsax-react'
 import dynamic from 'next/dynamic'
 import { useState, useRef } from 'react'
@@ -28,7 +29,6 @@ const AddModal = ({ data, close }: AddModalProps) => {
   const [showDropdown, setShowDropdown] = useState<boolean>(false)
   const [search, setSearch] = useState<string>('')
   const [referrerType, setReferrerType] = useState<number>(0)
-
   const nameRef = useRef<HTMLInputElement>(null)
   const lastNameRef = useRef<HTMLInputElement>(null)
   const specialityRef = useRef<HTMLInputElement>(null)
@@ -38,7 +38,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
 
   const beneficiaries = ['شخص', 'کسب و کار']
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
     setErrors({})
@@ -63,7 +63,13 @@ const AddModal = ({ data, close }: AddModalProps) => {
       return
     }
 
-    console.log('Form submitted successfully:', formData)
+    await CreateReferrer({
+      accessToken: '',
+      name: formData.name,
+      family: formData.lastName,
+      mobile: '',
+      fullName: '',
+    })
   }
   const handleSearchChange = async (value: string) => {
     setSearch(value)

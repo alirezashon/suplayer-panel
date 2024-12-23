@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { ShieldSearch, Trash, Edit, Edit2 } from 'iconsax-react'
 import AddModal from './AddModal'
 import DeleteModal from './DeleteModal'
+import { useMenu } from '@/Context/Menu'
 
 interface ProductCard {
   id: number
@@ -54,6 +55,8 @@ const ProductGroups: React.FC = () => {
   const [showDeleteModal, setShowDeleteModal] = useState<boolean | string>(
     false
   )
+  const { setMenu } = useMenu()
+
   return (
     <div className='m-4'>
       <div className='flex justify-between items-center mb-7'>
@@ -75,11 +78,7 @@ const ProductGroups: React.FC = () => {
         />
       )}
       {showDeleteModal && (
-        <DeleteModal
-          name={`${showDeleteModal}`}
-          close={setShowDeleteModal}
-          
-        />
+        <DeleteModal name={`${showDeleteModal}`} close={setShowDeleteModal} />
       )}
       <div className='p-6 bg-white rounded-lg border border-gray-200'>
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4'>
@@ -114,6 +113,10 @@ const ProductGroups: React.FC = () => {
               </div>
 
               <button
+                onClick={() => {
+                  location.hash = 'products'
+                  setMenu('products')
+                }}
                 className={`w-full py-2  font-semibold rounded ${
                   product.buttonType === 'add'
                     ? 'bg-purple-600 hover:bg-purple-700 text-white'
