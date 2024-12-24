@@ -65,7 +65,7 @@ const Groups: React.FC = () => {
           isActive
         />
       )}
-      <div className='flex flex-col p-5'>
+      <div className='flex flex-col p-2'>
         <div className='flex justify-between items-center'>
           <p>
             <span className='text-[#98A2B3]'>تعاریف</span>/
@@ -79,7 +79,7 @@ const Groups: React.FC = () => {
           </button>
         </div>
         {data.length > 0 ? (
-          <div className='mr-2 mt-7 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6 bg-white rounded-lg border border-gray-200'>
+          <div className=' mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6 bg-white rounded-lg border border-gray-200'>
             {data.map((group, groupIndex) => (
               <div
                 key={groupIndex}

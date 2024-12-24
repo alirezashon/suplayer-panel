@@ -7,7 +7,10 @@ const AddModal = ({existName,close}:{existName?:string,close:(show:boolean)=>voi
   const [name, setName] = useState<string>(existName||'')
   const handleSubmit = async(e: React.FormEvent) => {
    const accessToken = await getCookieByKey('access_token')||''
-    await CreateGroup({accessToken,name})
+    const response = await CreateGroup({accessToken,name})
+    if(response){
+      existName
+    }
   }
 
   return (

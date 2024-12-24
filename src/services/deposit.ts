@@ -1,36 +1,24 @@
-import { IDepositForm } from "@/interfaces"
-
-export interface ICreateNewIPG {
-  status: '1' | '-1'
-  token: string
-  payment_amount: number
-  payment_url: string
-  message?:string
-  ref_order_id?:string
-}
-
-export const CreateNewIPG = async ({
-  data,
+export const AddDraftImage = async ({
+  src,
   accessToken,
 }: {
-  data: IDepositForm
+  src: FormData
   accessToken: string
-}): Promise<ICreateNewIPG | undefined> => {
+}): Promise<{ status: string; rec_id_file: string } | undefined> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/sbw_createipg`,
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/uploadchequeimage`,
       {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
           authorization: `Bearer ${accessToken}`,
         },
-        body: JSON.stringify(data),
+        body: src,
       }
     )
 
     if (response.status !== 200) {
-      throw new Error('Failed to CreateNewIPG!')
+      throw new Error('Failed to CreateShabaDestination!')
     }
 
     return await response.json()
@@ -38,30 +26,159 @@ export const CreateNewIPG = async ({
     console.log(error)
   }
 }
-
-export const SendPaymentLink = async ({
-  order_id,
+export const CheckDraftImage = async ({
+  id,
+  accessToken,
 }: {
-  order_id: string
-})=> {
+  id: string
+  accessToken: string
+}) => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/sbw_sendipg`,
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/uploadchequeimage`,
       {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          authorization: `Bearer ${accessToken}`,
         },
-        body: JSON.stringify({order_id}),
+        body: JSON.stringify({
+          file_uid: id,
+        }),
       }
     )
 
     if (response.status !== 200) {
-      throw new Error('خطا در ارسال لینک پرداخت')
+      throw new Error('Failed to CreateShabaDestination!')
     }
 
-    const datali = await response.json()
-    return datali
+    return await response.json()
+  } catch (error: unknown) {
+    console.log(error)
+  }
+}
+export const ChangeDraftStatus = async ({
+  manager_uid,
+  cheque_ype,
+  cheque_uid,
+  cheque_status,
+  cheque_status_date,
+  status_description,
+  accessToken,
+}: {
+  manager_uid: string
+  cheque_ype: number
+  cheque_uid: string
+  cheque_status: number
+  cheque_status_date: string
+  status_description: string
+  accessToken: string
+}) => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/uploadchequeimage`,
+      {
+        method: 'POST',
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          manager_uid,
+          cheque_ype,
+          cheque_uid,
+          cheque_status,
+          cheque_status_date,
+          status_description,
+        }),
+      }
+    )
+
+    if (response.status !== 200) {
+      throw new Error('Failed to CreateShabaDestination!')
+    }
+
+    return await response.json()
+  } catch (error: unknown) {
+    console.log(error)
+  }
+}
+export const DepositWithDraft = async ({
+  cheque_type,
+  amount,
+  accessToken,
+  cheque_number,
+  cheque_date,
+  cheque_id_file,
+  sayad_number,
+  cheque_bank,
+  cheque_branch,
+  shaba_number,
+  description,
+}: {
+  cheque_type: string
+  amount: number
+  cheque_number: string
+  cheque_date: string
+  cheque_id_file: string
+  sayad_number: string
+  cheque_bank: string
+  cheque_branch: string
+  shaba_number: string
+  description: string
+  accessToken: string
+}) => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/deposit_with_cheque`,
+      {
+        method: 'POST',
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          cheque_type,
+          amount,
+          cheque_number,
+          cheque_date,
+          cheque_id_file,
+          sayad_number,
+          cheque_bank,
+          cheque_branch,
+          shaba_number,
+          description,
+        }),
+      }
+    )
+
+    if (response.status !== 200) {
+      throw new Error('Failed to CreateShabaDestination!')
+    }
+
+    return await response.json()
+  } catch (error: unknown) {
+    console.log(error)
+  }
+}
+export const GetdDraftsList = async ({
+  accessToken,
+}: {
+  accessToken: string | undefined
+}): Promise<any[] | undefined> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/cheque_list`,
+      {
+        method: 'GET',
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+      }
+    )
+
+    if (!response.ok || response.status === 500) {
+      throw new Error('Failed to GetAssistantList')
+    }
+
+    return await response.json()
   } catch (error) {
     console.log(error)
   }

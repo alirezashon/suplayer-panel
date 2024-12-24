@@ -1,3 +1,5 @@
+import { getCookieByKey } from '@/actions/cookieToken'
+import { CreateProduct, EditProduct } from '@/services/items'
 import { CloseSquare, Message, Trash } from 'iconsax-react'
 import { useState } from 'react'
 
@@ -11,8 +13,14 @@ const AddModal = ({
   close: (show: boolean) => void
 }) => {
   const [names, setNames] = useState<string[]>([existName || ''])
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleSubmit = async (e: React.FormEvent) => {
+    const accessToken = (await getCookieByKey('access_token')) || ''
+
+    names.map(async (name) => {
+      !existName
+        ? await CreateProduct({ accessToken, name })
+        : await EditProduct({ accessToken, name })
+    })
   }
 
   return (

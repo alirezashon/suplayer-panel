@@ -1,6 +1,5 @@
 import { useRef, useState } from 'react'
 import {
-  WalletMoney,
   CloseCircle,
   TickCircle,
   MoneySend,
@@ -12,6 +11,8 @@ import {
 } from 'iconsax-react'
 import toast from 'react-hot-toast'
 import Image from 'next/image'
+import { getCookieByKey } from '@/actions/cookieToken'
+import { AddDraftImage } from '@/services/deposit'
 
 const Drafts = () => {
   const refs = useRef({
@@ -69,7 +70,12 @@ const Drafts = () => {
               progressValue += 10
               setProgress(progressValue)
             }
-          }, 200)
+          }, 200)    
+          const accessToken = (await getCookieByKey('access_token')) || ''   
+          const result = await AddDraftImage({
+            src: formData,
+            accessToken,
+          })
         } catch (error) {
           setUploadStatus('error')
           toast.error('Failed to upload file!')

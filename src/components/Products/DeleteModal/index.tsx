@@ -1,5 +1,6 @@
-import { CloseSquare, Danger, Forbidden2, Trash } from 'iconsax-react'
-import { useState } from 'react'
+import { getCookieByKey } from '@/actions/cookieToken'
+import { EditProduct } from '@/services/items'
+import { CloseSquare, Forbidden2, Trash } from 'iconsax-react'
 
 const DeleteModal = ({
   isActive,
@@ -10,8 +11,11 @@ const DeleteModal = ({
   name: string
   close: (show: boolean) => void
 }) => {
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleSubmit = async (e: React.FormEvent) => {
+    const accessToken = (await getCookieByKey('access_token')) || ''
+    {
+      await EditProduct({ accessToken, name })
+    }
   }
 
   return (

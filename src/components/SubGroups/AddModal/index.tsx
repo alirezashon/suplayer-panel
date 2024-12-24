@@ -1,10 +1,24 @@
+import { getCookieByKey } from '@/actions/cookieToken'
+import { CreateSubGroup, EditSubGroup } from '@/services/items'
 import { CloseSquare } from 'iconsax-react'
 import { useState } from 'react'
 
-const AddModal = ({existName,close}:{existName?:string,close:(show:boolean)=>void}) => {
-  const [name, setName] = useState<string>(existName||'')
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+const AddModal = ({
+  existName,
+  close,
+}: {
+  existName?: string
+  close: (show: boolean) => void
+}) => {
+  const [name, setName] = useState<string>(existName || '')
+  const handleSubmit = async (e: React.FormEvent) => {
+    const accessToken = (await getCookieByKey('access_token')) || ''
+
+    {
+      !existName
+        ? CreateSubGroup({ accessToken, mobile: '', name })
+        : EditSubGroup({ accessToken, mobile: '', name })
+    }
   }
 
   return (
@@ -18,11 +32,17 @@ const AddModal = ({existName,close}:{existName?:string,close:(show:boolean)=>voi
           className='flex flex-col bg-white max-w-[594px] pb-[852px] max-md:px-5 max-md:pb-24'>
           <div className='flex justify-between items-center w-full text-xl font-medium text-right text-gray-800 max-md:max-w-full'>
             <div className='flex-1 shrink self-stretch my-auto min-w-[240px] max-md:max-w-full'>
-              تعریف گروه جدید
+              تعریف زیرگروه جدید
             </div>
-           <div className="
-           ">
-             <CloseSquare size={24} cursor='pointer' color='#50545F' onClick={()=>close(false)}/>
+            <div
+              className='
+           '>
+              <CloseSquare
+                size={24}
+                cursor='pointer'
+                color='#50545F'
+                onClick={() => close(false)}
+              />
             </div>
           </div>
           <div className='my-4'>
@@ -37,7 +57,7 @@ const AddModal = ({existName,close}:{existName?:string,close:(show:boolean)=>voi
           <div className='mt-10 w-full max-md:max-w-full'>
             <div className='flex flex-col w-full'>
               <label className='text-base font-medium text-right text-gray-800'>
-              نام زیر گروه خود را بنویسید
+                نام زیر گروه خود را بنویسید
               </label>
               <input
                 defaultValue={name}

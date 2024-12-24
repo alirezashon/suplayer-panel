@@ -1,10 +1,23 @@
+import { getCookieByKey } from '@/actions/cookieToken'
+import { CreateProductGroup, EditProductGroup } from '@/services/items'
 import { CloseSquare } from 'iconsax-react'
 import { useState } from 'react'
 
-const AddModal = ({existName,close}:{existName?:string,close:(show:boolean)=>void}) => {
-  const [name, setName] = useState<string>(existName||'')
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+const AddModal = ({
+  existName,
+  close,
+}: {
+  existName?: string
+  close: (show: boolean) => void
+}) => {
+  const [name, setName] = useState<string>(existName || '')
+  const handleSubmit = async (e: React.FormEvent) => {
+    const accessToken = (await getCookieByKey('access_token')) || ''
+    {
+      !existName
+        ? await CreateProductGroup({ accessToken, name })
+        : await EditProductGroup({ accessToken, name })
+    }
   }
 
   return (
@@ -18,19 +31,24 @@ const AddModal = ({existName,close}:{existName?:string,close:(show:boolean)=>voi
           className='flex flex-col bg-white max-w-[594px] pb-[852px] max-md:px-5 max-md:pb-24'>
           <div className='flex justify-between items-center w-full text-xl font-medium text-right text-gray-800 max-md:max-w-full'>
             <div className='flex-1 shrink self-stretch my-auto min-w-[240px] max-md:max-w-full'>
-            گروه محصول جدید
+              گروه محصول جدید
             </div>
-           <div className="
-           ">
-             <CloseSquare size={24} cursor='pointer' color='#50545F' onClick={()=>close(false)}/>
+            <div
+              className='
+           '>
+              <CloseSquare
+                size={24}
+                cursor='pointer'
+                color='#50545F'
+                onClick={() => close(false)}
+              />
             </div>
           </div>
-        
 
           <div className='mt-10 w-full max-md:max-w-full'>
             <div className='flex flex-col w-full'>
               <label className='text-base font-medium text-right text-gray-800'>
-              نام گروه محصول
+                نام گروه محصول
               </label>
               <input
                 defaultValue={name}

@@ -1,3 +1,5 @@
+import { getCookieByKey } from '@/actions/cookieToken'
+import { EditProductGroup } from '@/services/items'
 import { CloseSquare, Danger, Forbidden2, Trash } from 'iconsax-react'
 import { useState } from 'react'
 
@@ -10,9 +12,11 @@ const DeleteModal = ({
   name: string
   close: (show: boolean) => void
 }) => {
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-  }
+  const handleSubmit = async (e: React.FormEvent) => {
+    const accessToken = (await getCookieByKey('access_token')) || ''
+    {
+     await  EditProductGroup({ accessToken, status: 9, name })
+    }  }
 
   return (
     <div>
@@ -28,8 +32,7 @@ const DeleteModal = ({
               حذف گروه محصول
             </div>
             <div
-              className='
-           '>
+              className=''>
               <CloseSquare
                 size={24}
                 cursor='pointer'

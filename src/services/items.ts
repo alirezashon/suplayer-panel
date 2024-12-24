@@ -15,7 +15,6 @@ export const CreateGroup = async ({
           authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
-          sup_group_code: '',
           sup_group_name: `${name}`,
           sup_group_status: 1,
         }),
@@ -34,9 +33,11 @@ export const CreateGroup = async ({
 export const EditGroup = async ({
   name,
   accessToken,
+  status,
 }: {
   name: string
   accessToken: string | undefined
+  status?: number
 }) => {
   try {
     const response = await fetch(
@@ -50,7 +51,7 @@ export const EditGroup = async ({
         body: JSON.stringify({
           sup_group_code: '',
           sup_group_name: `${name}`,
-          sup_group_status: 1,
+          sup_group_status: status || 1,
         }),
       }
     )
@@ -130,10 +131,12 @@ export const EditSubGroup = async ({
   name,
   mobile,
   accessToken,
+  status,
 }: {
   name: string
   mobile: string
   accessToken: string | undefined
+  status?: number
 }) => {
   try {
     const response = await fetch(
@@ -146,7 +149,7 @@ export const EditSubGroup = async ({
         },
         body: JSON.stringify({
           supervisor_name: name,
-          sup_status: 1,
+          sup_status: status|| 1,
           sup_type: 0,
           supervisor_uid: mobile,
           sup_group_id: 0,
@@ -335,9 +338,11 @@ export const CreateProductGroup = async ({
 export const EditProductGroup = async ({
   name,
   accessToken,
+  status
 }: {
   name: string
   accessToken: string | undefined
+  status?:number
 }) => {
   try {
     const response = await fetch(
@@ -351,7 +356,7 @@ export const EditProductGroup = async ({
         body: JSON.stringify({
           group_pid: 0,
           group_desc: name,
-          group_status: 1,
+          group_status: status|| 1,
         }),
       }
     )
@@ -415,7 +420,7 @@ export const CreateProduct = async ({
           max_price: 0,
           group_id: 0,
           ini_code: '',
-          ini_name:name,
+          ini_name: name,
           cui: 0,
           nw: 0,
           vra: 0,
