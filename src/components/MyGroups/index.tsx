@@ -1,7 +1,5 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { People } from 'iconsax-react'
-import AddModal from './AddModal'
-import DeleteModal from './DeleteModal'
 import { GroupData } from '@/interfaces'
 
 const groupsData: GroupData[] = [
@@ -38,34 +36,13 @@ const groupsData: GroupData[] = [
   },
 ]
 const MyGroups: React.FC = () => {
-  const [data, setData] = useState<GroupData[]>(groupsData)
-  const [showAddModal, setShowAddModal] = useState<boolean | string>(false)
-  const [showDeleteModal, setShowDeleteModal] = useState<boolean | string>(
-    false
-  )
+  const [data, setData] = useState<GroupData[]>([])
+useEffect(()=>{
+  setData(groupsData)
+},[setData])
   return (
     <div className='m-4'>
-      <div className='flex justify-between items-center mb-7'>
-        <p>
-          <span className='text-[#98A2B3]'>تعاریف</span>/
-          <span className='text-[#7747C0]'> گروه‌های من</span>
-        </p>
-        <button
-          type='submit'
-          onClick={() => setShowAddModal(true)}
-          className='h-10 min-w-40 bg-purple-700 text-white rounded-lg hover:bg-purple-800'>
-          + گروه محصول جدید
-        </button>
-      </div>
-      {showAddModal && (
-        <AddModal
-          existName={typeof showAddModal === 'string' ? showAddModal : ''}
-          close={setShowAddModal}
-        />
-      )}
-      {showDeleteModal && (
-        <DeleteModal name={`${showDeleteModal}`} close={setShowDeleteModal} />
-      )}
+  
       <div className='p-6 bg-white rounded-lg border border-gray-200'>
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4'>
           {data.map((product, index) => (

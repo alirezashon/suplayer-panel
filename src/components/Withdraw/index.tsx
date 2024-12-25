@@ -1,7 +1,6 @@
 import { useRef, useState } from 'react'
-import { WalletInfo } from './WalletBalance'
 import { BeneficiaryProps } from '@/interfaces'
-import { InfoCircle, Star, Star1 } from 'iconsax-react'
+import { InfoCircle, Star1 } from 'iconsax-react'
 import Loading from '../shared/LoadingSpinner'
 import Image from 'next/image'
 import { bankImages } from '../shared/MatchingBankLogo'
@@ -10,11 +9,11 @@ import ConfirmModal from './Modal'
 
 export const WithdrawalForm: React.FC = () => {
   const [tab, setTab] = useState<number>(1)
-  const [showShabaSuggestion, setShowShabaSuggestion] = useState<boolean>(false)
-  const [loading, setLoading] = useState<boolean>(false)
+  // const [showShabaSuggestion, setShowShabaSuggestion] = useState<boolean>(false)
+  const [loading] = useState<boolean>(false)
   const [showIbanPage, setShowIbanPage] = useState<boolean>(false)
   const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false)
-  const [selectedSheba, setSelectedSheba] = useState<{
+  const [selectedSheba] = useState<{
     name: string
     bank: string
   }>()
@@ -114,7 +113,7 @@ export const WithdrawalForm: React.FC = () => {
                       className={`${'border-[#F97570]'} w-full !rounded-lg px-2`}
                       autoComplete='off'
                       placeholder='1234-1123-4135-1312-1235-1456'
-                      onClick={() => setShowShabaSuggestion(true)}
+                      // onClick={() => setShowShabaSuggestion(true)}
                     />
                     <div
                       className='absolute right-2 cursor-pointer'

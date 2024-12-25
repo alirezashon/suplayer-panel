@@ -34,6 +34,7 @@ const AddModal = ({existName,close}:{existName?:string,close:(show:boolean)=>voi
               </label>
               <input
                 defaultValue={name}
+                onChange={(e)=>setName(e.target.value)}
                 type='text'
                 placeholder='نام گروه محصول'
               />

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react'
 import Chart from 'chart.js/auto'
-import { Add, InfoCircle, MoneySend, Wallet3 } from 'iconsax-react'
+import { Add, InfoCircle, Wallet3 } from 'iconsax-react'
 
 const Wallet: React.FC = () => {
   const chartRef = useRef<HTMLCanvasElement>(null)

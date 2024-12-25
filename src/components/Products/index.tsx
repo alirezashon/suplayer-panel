@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { ShieldSearch, Trash, Edit2, SearchNormal } from 'iconsax-react'
+import { Trash, Edit2, SearchNormal } from 'iconsax-react'
 import AddModal from './AddModal'
 import DeleteModal from './DeleteModal'
 import Image from 'next/image'

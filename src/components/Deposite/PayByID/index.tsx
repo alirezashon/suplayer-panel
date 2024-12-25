@@ -72,6 +72,7 @@ const PayByID = () => {
         } catch (error) {
           setUploadStatus('error')
           toast.error('Failed to upload file!')
+          return error
         }
       }
       reader.readAsDataURL(file)

@@ -4,6 +4,7 @@ import AddModal from './AddModal'
 import DeleteModal from './DeleteModal'
 import { GroupData } from '@/interfaces'
 import Image from 'next/image'
+import { useMenu } from '@/Context/Menu'
 
 const groupsData: GroupData[] = [
   {
@@ -50,6 +51,8 @@ const Groups: React.FC = () => {
   const [showDeleteModal, setShowDeleteModal] = useState<boolean | string>(
     false
   )
+  const { setMenu } = useMenu()
+
   return (
     <>
       {showAddModal && (
@@ -67,9 +70,24 @@ const Groups: React.FC = () => {
       )}
       <div className='flex flex-col p-2'>
         <div className='flex justify-between items-center'>
-          <p>
-            <span className='text-[#98A2B3]'>تعاریف</span>/
-            <span className='text-[#7747C0]'>گروه</span>
+          <p className='cursor-pointer'>
+            <span
+              className='text-[#98A2B3]'
+              onClick={() => {
+                setMenu('groupmanagement')
+                location.hash = 'groupmanagement'
+              }}>
+              تعاریف
+            </span>
+            /
+            <span
+              className='text-[#7747C0]'
+              onClick={() => {
+                setMenu('groupmanagement')
+                location.hash = 'groupmanagement'
+              }}>
+              گروه
+            </span>
           </p>
           <button
             type='submit'

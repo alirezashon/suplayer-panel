@@ -1,7 +1,6 @@
 'use client'
 import { useMenu } from '@/Context/Menu'
 import { Message, Notification, Profile } from 'iconsax-react'
-import { data } from '../Sidebar/data'
 const Header: React.FC = () => {
   const { menu } = useMenu()
   const names: [string, string][] = [
@@ -30,7 +29,7 @@ const Header: React.FC = () => {
   return (
     <div
       className={'flex w-full justify-between items-center mb-4 p-5 bg-white '}>
-      <h3>{names.find(([_, link]) => link === menu)?.[0] || ''}</h3>
+      <h3>{names.find(([, link]) => link === menu)?.[0] ||''}</h3>
       <div className={'flex gap-5'}>
         <Notification color='#50545F' size={24} />
         <Message color='#50545F' size={24} />

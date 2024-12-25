@@ -1,15 +1,15 @@
 'use client'
 import { Export } from 'iconsax-react'
 import React, { useState } from 'react'
-import { getCookieByName } from '@/hooks/getToken'
 import Loading from './LoadingSpinner'
+import { getCookieByKey } from '@/actions/cookieToken'
 
-const ExcelGenerator = ({ rows }: { rows: any[] }) => {
+const ExcelGenerator = ({ rows }: { rows: Record<string,string>[] }) => {
   const [loading, setLoading] = useState(false)
 
   const generateExcel = async () => {
     setLoading(true)
-    const role = await getCookieByName('role')
+    const role = await getCookieByKey('role')
     const requestData = {
       role,
       rows,

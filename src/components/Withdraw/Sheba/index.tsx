@@ -1,12 +1,12 @@
 'use client'
 import { IShabaDestinationList } from '@/interfaces'
 import ShebaButtonItem from './ShebaButtonItem'
-import { ArrowRight2, SearchNormal, Slash } from 'iconsax-react'
+import { ArrowRight2, SearchNormal } from 'iconsax-react'
 import { useCallback, useEffect, useState } from 'react'
 
 const WithdrawSheba = () => {
-  const [shebaList, setShebaList] = useState<IShabaDestinationList[]>([])
-  const [filteredShebaList, setFilteredShebaList] = useState<
+  const [shebaList] = useState<IShabaDestinationList[]>([])
+  const [filteredShebaList] = useState<
     IShabaDestinationList[]
   >([])
 
@@ -19,12 +19,13 @@ const WithdrawSheba = () => {
     //   setShebaList(sheba)
     //   setFilteredShebaList(sheba)
     // }
-  }, [setShebaList])
+  }, [])
 
   useEffect(() => {
-    !shebaList.length && getShebaList()
+     getShebaList()
   }, [getShebaList, shebaList])
   const searching = (value: string) => {
+    return value
     // const filteredData = shebaList?.filter(
     //   (item) =>
     //     item.shaba.toString().includes(value) ||

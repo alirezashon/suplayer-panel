@@ -3,6 +3,7 @@ import { Trash, Edit2 } from 'iconsax-react'
 import AddModal from './AddModal'
 import DeleteModal from './DeleteModal'
 import Image from 'next/image'
+import { useMenu } from '@/Context/Menu'
 
 interface Group {
   id: number
@@ -63,6 +64,7 @@ const Referrer: React.FC = () => {
     false
   )
   const [data, setData] = useState<ReferrerData[]>(referrerData)
+  const { setMenu } = useMenu()
 
   return (
     <>
@@ -87,9 +89,24 @@ const Referrer: React.FC = () => {
       )}
       <div className='flex flex-col p-5'>
         <div className='flex justify-between items-center mb-7'>
-          <p>
-            <span className='text-[#98A2B3]'>تعاریف</span>/
-            <span className='text-[#7747C0]'>بازاریاب‌های من</span>
+          <p className='cursor-pointer'>
+            <span
+              className='text-[#98A2B3]'
+              onClick={() => {
+                setMenu('groupmanagement')
+                location.hash = 'groupmanagement'
+              }}>
+              تعاریف
+            </span>
+            /
+            <span
+              className='text-[#7747C0]'
+              onClick={() => {
+                setMenu('referrers')
+                location.hash = 'referrers'
+              }}>
+              بازاریاب‌های من
+            </span>
           </p>
           {data.length > 0 && (
             <button
@@ -155,9 +172,9 @@ const Referrer: React.FC = () => {
               </button>
             </div>
           </form>
-            {data.length > 0 ? 
-          <div className='grid grid-cols-1 lg:grid-cols-3 gap-6 mt-4'>
-{              data.map((referrer) => (
+          {data.length > 0 ? (
+            <div className='grid grid-cols-1 lg:grid-cols-3 gap-6 mt-4'>
+              {data.map((referrer) => (
                 <div
                   key={referrer.id}
                   className='bg-white rounded-lg shadow border border-gray-200 p-4 relative'>
@@ -222,34 +239,31 @@ const Referrer: React.FC = () => {
                   </div>
                 </div>
               ))}
-                </div>
-            : (
-              <div className='w-full bg-white flex flex-col gap-2 justify-center items-center'>
-                <h1 className='text-2xl'>بازاریابی ندارید</h1>
-                <Image
-                  src={'/icons/empty-box.svg'}
-                  width={444}
-                  height={333}
-                  alt=''
-                  className='w-[10%]'
-                />
-                <div className='border min-w-[40%] my-5'></div>
-                <h1 className='text-2xl'> تعریف بازاریاب</h1>
-                <button
-                  type='submit'
-                  onClick={() => setShowAddModal(true)}
-                  className='h-10 min-w-40 bg-purple-700 text-white rounded-lg hover:bg-purple-800'>
-                  +  بازاریاب جدید
-                </button>
-              </div>
-            )}
-          </div>
+            </div>
+          ) : (
+            <div className='w-full bg-white flex flex-col gap-2 justify-center items-center'>
+              <h1 className='text-2xl'>بازاریابی ندارید</h1>
+              <Image
+                src={'/icons/empty-box.svg'}
+                width={444}
+                height={333}
+                alt=''
+                className='w-[10%]'
+              />
+              <div className='border min-w-[40%] my-5'></div>
+              <h1 className='text-2xl'> تعریف بازاریاب</h1>
+              <button
+                type='submit'
+                onClick={() => setShowAddModal(true)}
+                className='h-10 min-w-40 bg-purple-700 text-white rounded-lg hover:bg-purple-800'>
+                + بازاریاب جدید
+              </button>
+            </div>
+          )}
         </div>
+      </div>
     </>
   )
 }
 
 export default Referrer
-
-
-

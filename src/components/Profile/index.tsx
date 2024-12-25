@@ -1,4 +1,4 @@
-import { ArrowRight2, CloseSquare, Key, UserEdit } from 'iconsax-react'
+import { ArrowRight2, Key, UserEdit } from 'iconsax-react'
 import Image from 'next/image'
 import { useRef, useState } from 'react'
 import { CheckMark } from '../shared/IconGenerator'

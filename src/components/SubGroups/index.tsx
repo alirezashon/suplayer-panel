@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Trash, Edit2 } from 'iconsax-react'
 import AddModal from './AddModal'
 import DeleteModal from './DeleteModal'
+import { useMenu } from '@/Context/Menu'
 
 interface SubGroup {
   name: string
@@ -57,6 +58,8 @@ const SubGroups: React.FC = () => {
   const [showDeleteModal, setShowDeleteModal] = useState<boolean | string>(
     false
   )
+  const { setMenu } = useMenu()
+
   return (
     <>
       {showAddModal && (
@@ -74,9 +77,24 @@ const SubGroups: React.FC = () => {
       )}
       <div className='flex flex-col p-2'>
         <div className='flex justify-between items-center'>
-          <p>
-            <span className='text-[#98A2B3]'>تعاریف</span>/
-            <span className='text-[#7747C0]'>زیرگروه</span>
+          <p className='cursor-pointer'>
+            <span
+              className='text-[#98A2B3]'
+              onClick={() => {
+                setMenu('groupmanagement')
+                location.hash = 'groupmanagement'
+              }}>
+              تعاریف
+            </span>
+            /
+            <span
+              className='text-[#7747C0]'
+              onClick={() => {
+                setMenu('subgroups')
+                location.hash = 'subgroups'
+              }}>
+              زیرگروه
+            </span>
           </p>
           <button
             type='submit'

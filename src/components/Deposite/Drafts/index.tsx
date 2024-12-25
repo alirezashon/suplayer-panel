@@ -76,9 +76,13 @@ const Drafts = () => {
             src: formData,
             accessToken,
           })
+          if(result){
+            
+          }
         } catch (error) {
           setUploadStatus('error')
-          toast.error('Failed to upload file!')
+          toast.error('خطا در بارگذاری')
+          return error
         }
       }
       reader.readAsDataURL(file)

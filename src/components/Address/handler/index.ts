@@ -1,10 +1,8 @@
-import { RefObject } from 'react'
 import toast from 'react-hot-toast'
 
 export interface SearchAddress {
   title: string
-  x: number
-  y: number
+  location: { x: number; y: number }
 }
 
 export const searchAddress = async (
@@ -23,11 +21,13 @@ export const searchAddress = async (
     )
     const data = await response.json()
     if (response.status === 200 && data.items) {
-      const converted: SearchAddress[] = data.items.map((item: any) => ({
-        title: item.title,
-        x: item.location.x,
-        y: item.location.y,
-      }))
+      const converted: SearchAddress[] = data.items.map(
+        (item: SearchAddress) => ({
+          title: item.title,
+          x: item.location.x,
+          y: item.location.y,
+        })
+      )
       setAddresses(converted)
     }
   } catch (error) {
@@ -62,24 +62,16 @@ export const UpdateAddress = async (
         .map(() => Math.floor(Math.random() * 16).toString(16))
         .join('')
       setIsLoading(false)
-      randomString &&
         localStorage.setItem(
           's(T*a&r)i^o*m#a#b%a*l(F)a)z)l%aBi',
           JSON.stringify(randomString)
         )
       return toast.success('کد برای شماره ارسال شد')
     } else {
-      setIsLoading(false)
+      setIsLoading(false)  
       localStorage.removeItem('s(T*a&r)i^o*m#a#b%a*l(F)a)z)l%aBi')
       location.reload()
       return toast.error('لطفا مجدد تلاش کنید')
     }
-  } catch (error) {
-    return {
-      severity: 'error',
-      summary: 'خطای سرور ، لطفا مجدد تلاش کنید',
-      detail: 'ناموفق',
-      life: 3000,
-    }
-  }
+  } catch (error) {return error}
 }

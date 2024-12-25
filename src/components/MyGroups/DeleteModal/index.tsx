@@ -1,5 +1,4 @@
 import { CloseSquare, Danger, Forbidden2, Trash } from 'iconsax-react'
-import { useState } from 'react'
 
 const DeleteModal = ({
   isActive,

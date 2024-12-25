@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { ShieldSearch, Trash, Edit, Edit2 } from 'iconsax-react'
+import {  Trash, Edit2 } from 'iconsax-react'
 import AddModal from './AddModal'
 import DeleteModal from './DeleteModal'
 import { useMenu } from '@/Context/Menu'
@@ -60,9 +60,13 @@ const ProductGroups: React.FC = () => {
   return (
     <div className='m-4'>
       <div className='flex justify-between items-center mb-7'>
-        <p>
-          <span className='text-[#98A2B3]'>تعاریف</span>/
-          <span className='text-[#7747C0]'> محصولات من</span>
+        <p className='cursor-pointer'>
+          <span className='text-[#98A2B3]'onClick={()=>{setMenu('groupmanagement')
+            location.hash='groupmanagement'
+          }}>تعاریف</span>/
+          <span className='text-[#7747C0]'onClick={()=>{setMenu('productgroups')
+            location.hash='productgroups'
+          }}> محصولات من</span>
         </p>
         <button
           type='submit'

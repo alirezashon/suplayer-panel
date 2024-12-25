@@ -19,7 +19,8 @@ const SupportModal = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
             {isAuthenticated && (
               <div
                 className='flex  pr-5 mt-5 h-10  items-center cursor-pointer hover:bg-[#D9EDFF]'
-                onClick={() => window.Goftino.open()}>
+                // onClick={() => window.Goftino.open()}
+                >
                 <MusicPlay size='20' color='#125AE3' className='ml-3' />
                 <span>پشتیبانی آنلاین</span>
               </div>

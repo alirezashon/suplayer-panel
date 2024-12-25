@@ -21,7 +21,6 @@ export const data: Items[] = [
     name: 'کیف پول',
     link: 'wallet',
     iconIndex: 1,
-    subItems: [],
   },
   {
     name: 'تسویه حساب',
@@ -37,7 +36,7 @@ export const data: Items[] = [
   },
   {
     name: ' تعاریف',
-    link: 'definitions',
+    link: 'groupmanagement',
     iconIndex: 4,
     subItems: [
       {
@@ -45,7 +44,7 @@ export const data: Items[] = [
         link: 'groupmanagement',
         iconIndex: 5,
       },
-       {
+      {
         name: 'زیرگروه',
         link: 'subgroups',
         iconIndex: 5,
@@ -66,7 +65,6 @@ export const data: Items[] = [
     name: 'گروه‌های من ',
     link: 'mygroups',
     iconIndex: 8,
-    subItems: [],
   },
   {
     name: ' پروموشن',
@@ -84,6 +82,11 @@ export const data: Items[] = [
         iconIndex: 11,
       },
     ],
+  },
+  {
+    name: ' کمپین',
+    link: 'campaign',
+    iconIndex: 9,
   },
   {
     name: ' پشتیلانی آنلاین',

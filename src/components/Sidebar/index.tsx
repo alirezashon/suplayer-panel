@@ -6,7 +6,6 @@ import {
   MenuBoard,
   Profile2User,
   Receipt1,
-  Add,
   People,
   MoneySend,
   Box1,

@@ -11,7 +11,7 @@ const DeleteModal = ({
   name: string
   close: (show: boolean) => void
 }) => {
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async () => {
     const accessToken = (await getCookieByKey('access_token')) || ''
     {
       await EditProduct({ accessToken, name })

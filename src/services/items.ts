@@ -69,7 +69,7 @@ export const GetGroupsList = async ({
   accessToken,
 }: {
   accessToken: string | undefined
-}): Promise<any[] | undefined> => {
+}): Promise<Record<string, string | number>[] | undefined> => {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_super_groups_list`,
@@ -149,7 +149,7 @@ export const EditSubGroup = async ({
         },
         body: JSON.stringify({
           supervisor_name: name,
-          sup_status: status|| 1,
+          sup_status: status || 1,
           sup_type: 0,
           supervisor_uid: mobile,
           sup_group_id: 0,
@@ -170,7 +170,7 @@ export const GetSubGroupsList = async ({
   accessToken,
 }: {
   accessToken: string | undefined
-}): Promise<any[] | undefined> => {
+}): Promise<Record<string,string|number>[] | undefined> => {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_super_groups_list`,
@@ -281,7 +281,7 @@ export const GetReferrerList = async ({
   accessToken,
 }: {
   accessToken: string | undefined
-}): Promise<any[] | undefined> => {
+}): Promise<Record<string,string|number>[] | undefined> => {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_visitors_list`,
@@ -338,11 +338,11 @@ export const CreateProductGroup = async ({
 export const EditProductGroup = async ({
   name,
   accessToken,
-  status
+  status,
 }: {
   name: string
   accessToken: string | undefined
-  status?:number
+  status?: number
 }) => {
   try {
     const response = await fetch(
@@ -356,7 +356,7 @@ export const EditProductGroup = async ({
         body: JSON.stringify({
           group_pid: 0,
           group_desc: name,
-          group_status: status|| 1,
+          group_status: status || 1,
         }),
       }
     )
@@ -374,7 +374,7 @@ export const GetProductGroupList = async ({
   accessToken,
 }: {
   accessToken: string | undefined
-}): Promise<any[] | undefined> => {
+}): Promise<Record<string,string|number>[] | undefined> => {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_product_group_list`,
@@ -474,7 +474,7 @@ export const GetProductList = async ({
   accessToken,
 }: {
   accessToken: string | undefined
-}): Promise<any[] | undefined> => {
+}): Promise<Record<string,string|number>[] | undefined> => {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_products_list`,

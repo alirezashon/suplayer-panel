@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Moneys, People } from 'iconsax-react'
 
 interface RegionData {
@@ -27,7 +27,9 @@ const subGroups: RegionData[] = [
 
 const GroupsDetail: React.FC = () => {
   const [data, setData] = useState<RegionData[]>(subGroups)
-
+  useEffect(() => {
+    setData(subGroups)
+  }, [setData])
   return (
     <div className='m-4'>
       <div className='flex justify-between items-center mb-7'>
@@ -43,14 +45,14 @@ const GroupsDetail: React.FC = () => {
           {data.map((product, index) => (
             <div
               key={index}
-              className='flex flex-col justify-between items-start border rounded-lg p-4 shadow-md hover:shadow-lg transition duration-300'>
+              className='flex flex-col items-start border rounded-lg p-2 shadow-md hover:shadow-lg transition duration-300'>
               {/* Category Label */}
-              <div className='flex items-center justify-between w-full mb-4'>
+              <div className='flex items-center justify-between w-full '>
                 <span className='text-sm bg-[#E1DCF8] text-[#6137A0] px-2 py-1 rounded'>
                   {product.region}
                 </span>
               </div>
-              <div className='flex my-5'>
+              <div className='flex mt-5'>
                 <Moneys size={24} color='#704CB9' />
                 <p className='text-sm  px-2 py-1 rounded'>
                   {product.allocatedBudget ? (
@@ -63,7 +65,7 @@ const GroupsDetail: React.FC = () => {
                   )}
                 </p>
               </div>
-              <div className='flex my-5'>
+              <div className='flex mb-5 mt-1'>
                 <People size={24} color='#704CB9' />
                 <p className='text-sm  px-2 py-1 rounded'>
                   {product.marketersCount ? (

@@ -3,6 +3,7 @@
 import { cookies } from 'next/headers'
 
 export interface IAccessTokenResponse {
+  customer_status: string
   access_token: string
   token_type: string
   lastlogin_date: string
@@ -24,7 +25,7 @@ export async function setTokenIntoCookie({
   data: IAccessTokenResponse
   mobile: string
 }) {
-  (await cookies()).set('access_token', data.access_token, {
+  ;(await cookies()).set('access_token', data.access_token, {
     maxAge: (60 * 60) / 2,
     path: '/',
   })
@@ -38,7 +39,7 @@ export async function setTokenIntoCookie({
 }
 
 export async function deleteAllCookies() {
-  (await cookies()).delete('access_token')
+  ;(await cookies()).delete('access_token')
   ;(await cookies()).delete('role')
   ;(await cookies()).delete('lastlogin_date')
   ;(await cookies()).delete('lastlogin_time')
@@ -62,7 +63,7 @@ interface ITagAndValue {
   value: string
 }
 export async function setCookieByTagAndValue({ key, value }: ITagAndValue) {
-  (await cookies()).set(key, value)
+  ;(await cookies()).set(key, value)
 }
 export async function setCookieByTagAndValueAndPath({
   key,
@@ -73,11 +74,11 @@ export async function setCookieByTagAndValueAndPath({
   value: string
   path: string
 }) {
-  (await cookies()).set(key, value, {
+  ;(await cookies()).set(key, value, {
     path,
   })
 }
 
 export async function deleteCookieByKey(key: string) {
-  (await cookies()).delete(key)
+  ;(await cookies()).delete(key)
 }

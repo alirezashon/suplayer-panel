@@ -1,5 +1,5 @@
 'use client'
-import { Add, ExportCurve, Filter, FilterSearch, Receipt1 } from 'iconsax-react'
+import { Add, ExportCurve, Receipt1 } from 'iconsax-react'
 import dynamic from 'next/dynamic'
 
 const Table = dynamic(() => import('../../Table'), {

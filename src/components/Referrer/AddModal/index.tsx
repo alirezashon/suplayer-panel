@@ -82,7 +82,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
   }
 
   const handleSelectAddress = (selected: SearchAddress) => {
-    setMapData([selected.y, selected.x])
+    setMapData([selected.location.y, selected.location.x])
     setAddress(selected.title)
     setShowDropdown(false)
   }

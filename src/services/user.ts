@@ -6,11 +6,13 @@ export interface IAuthenticatedUser {
   lastlogin_date: string
   lastlogin_time: string
   last_login_ip: string
+  customer_status: string
   user_status: string
   city_level: number
   customer_code: string
   role: string
   approve_status: number
+  user_approve_status: number
 }
 
 export const UserLoginAPI = async ({
@@ -28,11 +30,11 @@ export const UserLoginAPI = async ({
         password: password,
       }),
     })
-
-
-    return (await response.json()) as IAccessTokenResponse
+    if (!response) return
+    const data = await response.json()
+    return data
   } catch (error) {
-    console.error(error)
+    console.log(error)
   }
 }
 
@@ -148,7 +150,6 @@ export const LoginWithOtpAndMobile = async ({
   }
 }
 
-
 export const DeterminationRole = async ({
   id,
   accessToken,
@@ -209,7 +210,6 @@ export interface ISignupResponse {
   message: string
 }
 
-
 interface IChangePassword {
   newpassword: string
   otp_code: string
@@ -266,4 +266,3 @@ export const callChangePassword = async ({
   const data = await response.json()
   return data
 }
-

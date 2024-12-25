@@ -162,7 +162,7 @@ export const GetdDraftsList = async ({
   accessToken,
 }: {
   accessToken: string | undefined
-}): Promise<any[] | undefined> => {
+}): Promise<Record<string,string|number>[] | undefined> => {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/cheque_list`,

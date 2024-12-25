@@ -16,7 +16,7 @@ const Add: React.FC = () => {
 
   const updateAddress = async (e: FormEvent) => {
     e.preventDefault()
-    const information = { address, lat: mapData[0], long: mapData[1] }
+    // const information = { address, lat: mapData[0], long: mapData[1] }
     // addAddress(toast, information)
   }
 
@@ -31,7 +31,7 @@ const Add: React.FC = () => {
   }
 
   const handleSelectAddress = (selected: SearchAddress) => {
-    setMapData([selected.y, selected.x])
+    setMapData([selected.location.y, selected.location.x])
     setAddress(selected.title)
     setShowDropdown(false)
   }

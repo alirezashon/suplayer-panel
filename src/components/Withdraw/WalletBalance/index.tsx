@@ -4,7 +4,6 @@ import { MoneySend, Wallet3 } from 'iconsax-react'
 
 export const WalletInfo: React.FC<WalletInfoProps> = ({
   balance,
-  availableBalance,
 }) => {
     const walletBoxStyle = {
         background:

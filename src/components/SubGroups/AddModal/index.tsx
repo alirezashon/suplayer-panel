@@ -11,14 +11,10 @@ const AddModal = ({
   close: (show: boolean) => void
 }) => {
   const [name, setName] = useState<string>(existName || '')
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async () => {
     const accessToken = (await getCookieByKey('access_token')) || ''
-
-    {
-      !existName
-        ? CreateSubGroup({ accessToken, mobile: '', name })
-        : EditSubGroup({ accessToken, mobile: '', name })
-    }
+    if (existName) CreateSubGroup({ accessToken, mobile: '', name })
+    else EditSubGroup({ accessToken, mobile: '', name })
   }
 
   return (
@@ -60,6 +56,7 @@ const AddModal = ({
                 نام زیر گروه خود را بنویسید
               </label>
               <input
+                onChange={(e) => setName(e.target.value)}
                 defaultValue={name}
                 type='text'
                 placeholder='مثال: دکترهای پوست، تهران غرب ...'

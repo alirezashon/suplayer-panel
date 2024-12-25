@@ -11,13 +11,11 @@ const AddModal = ({
   close: (show: boolean) => void
 }) => {
   const [name, setName] = useState<string>(existName || '')
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async () => {
     const accessToken = (await getCookieByKey('access_token')) || ''
-    {
-      !existName
-        ? await CreateProductGroup({ accessToken, name })
-        : await EditProductGroup({ accessToken, name })
-    }
+
+    if (existName) await EditProductGroup({ accessToken, name })
+    else await CreateProductGroup({ accessToken, name })
   }
 
   return (
@@ -52,6 +50,7 @@ const AddModal = ({
               </label>
               <input
                 defaultValue={name}
+                onChange={(e) => setName(e.target.value)}
                 type='text'
                 placeholder='نام گروه محصول'
               />

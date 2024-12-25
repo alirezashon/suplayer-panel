@@ -10,13 +10,11 @@ const ShebaButtonItem = ({
   avatar,
   shabaNumber,
   username,
-  shabaId,
   isDraggable = false, // New prop for conditional drag
   bankCode,
-  bankName
 }: IbanInterface) => {
   // const { withdrawForm, setWithdrawForm } = useKeepWithdrawFormData()
-  const [showModal, setShowModal] = useState<boolean>(false)
+  const [, setShowModal] = useState<boolean>(false)
   const [dragPosition, setDragPosition] = useState<number>(0)
   const [lastDragPosition, setLastDragPosition] = useState<number>(0)
   const [dragging, setDragging] = useState<boolean>(false)
@@ -47,7 +45,8 @@ const ShebaButtonItem = ({
       const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX
       const dragOffset = clientX - startX.current
       setDragPosition(dragOffset)
-      dragOffset > -50 ? setDragging(true) : setDragging(false)
+      if (dragOffset > -50) setDragging(true)
+      else setDragging(false)
     }
   }
 
@@ -65,18 +64,6 @@ const ShebaButtonItem = ({
     }
   }
 
-  const handleConfirm = async () => {
-    setShowModal(false)
-    // const accessToken = (await getAccessToken()) || ''
-    // await DeleteShebaDestination({ id: shabaId, accessToken })
-    location.reload()
-  }
-
-  const handleCancel = () => {
-    setShowModal(false)
-    setDragPosition(0) // Reset position on modal cancel
-  }
-
   return (
     <>
       <div
@@ -89,7 +76,7 @@ const ShebaButtonItem = ({
             <Slash size={24} />
             <p>غیرفعال کردن</p>
           </div>
-         )}
+        )}
         <div
           onMouseDown={handleDragStart}
           onMouseMove={(e) => e.buttons === 1 && handleDragMove(e)}
@@ -129,7 +116,6 @@ const ShebaButtonItem = ({
           </p>
         </div>
       </div>
-    
     </>
   )
 }

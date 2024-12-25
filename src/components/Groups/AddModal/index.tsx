@@ -5,11 +5,11 @@ import { useState } from 'react'
 
 const AddModal = ({existName,close}:{existName?:string,close:(show:boolean)=>void}) => {
   const [name, setName] = useState<string>(existName||'')
-  const handleSubmit = async(e: React.FormEvent) => {
+  const handleSubmit = async() => {
    const accessToken = await getCookieByKey('access_token')||''
     const response = await CreateGroup({accessToken,name})
     if(response){
-      existName
+      
     }
   }
 
@@ -39,6 +39,7 @@ const AddModal = ({existName,close}:{existName?:string,close:(show:boolean)=>voi
               </label>
               <input
                 defaultValue={name}
+                onChange={(e)=>setName(e.target.value)}
                 type='text'
                 placeholder='مثال: دکترهای پوست، تهران غرب ...'
               />

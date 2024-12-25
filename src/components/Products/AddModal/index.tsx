@@ -13,13 +13,15 @@ const AddModal = ({
   close: (show: boolean) => void
 }) => {
   const [names, setNames] = useState<string[]>([existName || ''])
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async () => {
     const accessToken = (await getCookieByKey('access_token')) || ''
 
     names.map(async (name) => {
-      !existName
-        ? await CreateProduct({ accessToken, name })
-        : await EditProduct({ accessToken, name })
+      if (!existName) {
+        await CreateProduct({ accessToken, name })
+      } else {
+        await EditProduct({ accessToken, name })
+      }
     })
   }
 
