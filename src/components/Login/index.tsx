@@ -205,7 +205,7 @@ const Login = () => {
                       <div className='flex gap-2 items-center'>
                         <Whatsapp size={24} color='#7747C0' />
                         <p className='flex flex-col'>
-                          <span>واتس‌اپ</span>
+                          <span>واتس‌اپ</span> 
                           <span className='text-[#747B8E]'>Whatsapp</span>
                         </p>
                       </div>
