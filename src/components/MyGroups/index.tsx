@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { People } from 'iconsax-react'
 import { GroupData } from '@/interfaces'
+import { useMenu } from '@/Context/Menu'
 
 const groupsData: GroupData[] = [
   {
@@ -37,12 +38,13 @@ const groupsData: GroupData[] = [
 ]
 const MyGroups: React.FC = () => {
   const [data, setData] = useState<GroupData[]>([])
-useEffect(()=>{
-  setData(groupsData)
-},[setData])
+  const { setMenu } = useMenu()
+
+  useEffect(() => {
+    setData(groupsData)
+  }, [setData])
   return (
     <div className='m-4'>
-  
       <div className='p-6 bg-white rounded-lg border border-gray-200'>
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4'>
           {data.map((product, index) => (
@@ -54,14 +56,16 @@ useEffect(()=>{
                 <span className='text-sm bg-[#E1DCF8] text-[#6137A0] px-2 py-1 rounded'>
                   {product.title}
                 </span>
-
               </div>
               <div className='flex my-5'>
                 <People size={24} color='#704CB9' />
                 <p className='text-sm  px-2 py-1 rounded'>
                   {product.subGroups.length > 0 ? (
                     <>
-                      <span className='text-[#757575]'> تعداد زیر‌گروه‌ها: </span>
+                      <span className='text-[#757575]'>
+                        {' '}
+                        تعداد زیر‌گروه‌ها:{' '}
+                      </span>
                       {product.subGroups.length}
                     </>
                   ) : (
@@ -70,6 +74,13 @@ useEffect(()=>{
                 </p>
               </div>
               <button
+                onClick={() => {
+                  location.hash =
+                    product.subGroups.length > 0 ? 'groupsdetail' : 'subgroups'
+                  setMenu(
+                    product.subGroups.length > 0 ? 'groupsdetail' : 'subgroups'
+                  )
+                }}
                 className={`w-full h-10  font-semibold rounded ${
                   product.subGroups.length === 0
                     ? 'bg-purple-600 hover:bg-purple-700 text-white'
