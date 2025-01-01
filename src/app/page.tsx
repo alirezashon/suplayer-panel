@@ -1,11 +1,13 @@
 'use client'
 import Dashboard from '@/components/Dashboard'
+import Deposite from '@/components/Deposite'
 import Groups from '@/components/Groups'
 import MyGroups from '@/components/MyGroups'
 import GroupsDetail from '@/components/MyGroups/GroupDetail'
 import ProductGroups from '@/components/ProductGroups'
 import Product from '@/components/Products'
 import Profile from '@/components/Profile'
+import Promotion from '@/components/Promotions'
 import Referrer from '@/components/Referrer'
 import SubGroups from '@/components/SubGroups'
 import Wallet from '@/components/Wallet'
@@ -47,6 +49,10 @@ const Home = () => {
             <Product />
           ) : menu === 'groupsdetail' ? (
             <GroupsDetail />
+          ) : menu === 'deposite' ? (
+            <Deposite />
+          ) : ['promotion','promotion-list','new-promotion','edit-promotion','view-promotion'].includes(menu) ? (
+            <Promotion />
           ) : (
             <Dashboard />
           )}

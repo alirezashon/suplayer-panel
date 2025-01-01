@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react'
-import { People } from 'iconsax-react'
+import  { useEffect, useState } from 'react'
+import { Edit2, People, ProfileCircle, Trash } from 'iconsax-react'
 import { GroupData } from '@/interfaces'
 import { useMenu } from '@/Context/Menu'
+import AddModal from './AddModal'
+import DeleteModal from './DeleteModal'
 
 const groupsData: GroupData[] = [
   {
@@ -12,10 +14,12 @@ const groupsData: GroupData[] = [
       { name: 'زیر گروه سوم' },
       { name: 'زیر گروه چهارم' },
     ],
+    referrers: 23,
   },
   {
     title: ' تهران شرق',
     subGroups: [],
+    referrers: 0,
   },
   {
     title: 'تهران غرب',
@@ -25,6 +29,7 @@ const groupsData: GroupData[] = [
       { name: 'زیر گروه سوم' },
       { name: 'زیر گروه چهارم' },
     ],
+    referrers: 22,
   },
   {
     title: 'دکترهای پوست',
@@ -34,17 +39,57 @@ const groupsData: GroupData[] = [
       { name: 'زیر گروه سوم' },
       { name: 'زیر گروه چهارم' },
     ],
+    referrers: 243,
   },
 ]
 const MyGroups: React.FC = () => {
   const [data, setData] = useState<GroupData[]>([])
   const { setMenu } = useMenu()
-
+  const [showAddModal, setShowAddModal] = useState<boolean | string>(false)
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean | string>(
+    false
+  )
   useEffect(() => {
     setData(groupsData)
   }, [setData])
   return (
     <div className='m-4'>
+      <div className='flex justify-between items-center mb-7'>
+        <p className='cursor-pointer'>
+          <span
+            className='text-[#98A2B3]'
+            onClick={() => {
+              setMenu('groupmanagement')
+              location.hash = 'groupmanagement'
+            }}>
+            تعاریف
+          </span>
+          /
+          <span
+            className='text-[#7747C0]'
+            onClick={() => {
+              setMenu('productgroups')
+              location.hash = 'productgroups'
+            }}>
+            گروه‌های من
+          </span>
+        </p>
+        <button
+          type='submit'
+          onClick={() => setShowAddModal(true)}
+          className='h-10 min-w-40 bg-purple-700 text-white rounded-lg hover:bg-purple-800'>
+          + گروه محصول جدید
+        </button>
+      </div>
+      {showAddModal && (
+        <AddModal
+          existName={typeof showAddModal === 'string' ? showAddModal : ''}
+          close={setShowAddModal}
+        />
+      )}
+      {showDeleteModal && (
+        <DeleteModal name={`${showDeleteModal}`} close={setShowDeleteModal} />
+      )}
       <div className='p-6 bg-white rounded-lg border border-gray-200'>
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4'>
           {data.map((product, index) => (
@@ -56,16 +101,45 @@ const MyGroups: React.FC = () => {
                 <span className='text-sm bg-[#E1DCF8] text-[#6137A0] px-2 py-1 rounded'>
                   {product.title}
                 </span>
+                <div className='flex gap-2'>
+                  <Edit2
+                    size={20}
+                    color='#8455D2'
+                    cursor={'pointer'}
+                    onClick={() => setShowAddModal(product.title)}
+                  />
+                  <Trash
+                    size={20}
+                    color='#D42620'
+                    cursor={'pointer'}
+                    onClick={() => {
+                      setData((prv) =>
+                        prv.filter((ref) => ref.title !== product.title)
+                      )
+                      setShowDeleteModal(product.title)
+                    }}
+                  />
+                </div>
+              </div>
+              <div className='flex'>
+                <ProfileCircle size={24} color='#704CB9' />
+                <p className='text-sm  px-2 py-1 rounded'>
+                  {product.referrers > 0 ? (
+                    <>
+                      <span className='text-[#757575]'>تعداد بازاریاب:</span>
+                      {product.referrers}
+                    </>
+                  ) : (
+                    'بازاریابی تعریف نشده است'
+                  )}
+                </p>
               </div>
               <div className='flex my-5'>
                 <People size={24} color='#704CB9' />
                 <p className='text-sm  px-2 py-1 rounded'>
                   {product.subGroups.length > 0 ? (
                     <>
-                      <span className='text-[#757575]'>
-                        {' '}
-                        تعداد زیر‌گروه‌ها:{' '}
-                      </span>
+                      <span className='text-[#757575]'>تعداد زیر‌گروه‌ها:</span>
                       {product.subGroups.length}
                     </>
                   ) : (

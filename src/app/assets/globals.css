@@ -18,6 +18,9 @@ body {
   font-size: 14px !important;
   direction: rtl;
 }
+button {
+  outline: none;
+}
 
 @media (max-width: 520px) {
   body {
@@ -41,12 +44,12 @@ input:focus {
   border-color: #565ffe;
 }
 .fill-button {
-  background-color: #7747C0;
+  background-color: #7747c0;
   color: #ffffff;
 }
 .border-button {
-  color: #7747C0;
-  border: 1px #7747C0 solid;
+  color: #7747c0;
+  border: 1px #7747c0 solid;
 }
 
 @keyframes slideUp {
@@ -125,7 +128,7 @@ input:focus {
     transform: translateX(120vw);
   }
   to {
-    transform: translate(-10vw,20vh);
+    transform: translate(-10vw, 20vh);
   }
 }
 .delete-box-animate {

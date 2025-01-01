@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import  { useEffect, useState } from 'react'
 import { Moneys, People } from 'iconsax-react'
 
 interface RegionData {
@@ -39,7 +39,6 @@ const GroupsDetail: React.FC = () => {
           <span className='text-[#7747C0]'>زیر گروه</span>
         </p>
       </div>
-
       <div className='p-6 bg-white rounded-lg border border-gray-200'>
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4'>
           {data.map((product, index) => (

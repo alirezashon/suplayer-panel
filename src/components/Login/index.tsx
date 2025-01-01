@@ -1,6 +1,6 @@
 'use client'
 import Image from 'next/image'
-import React, { useEffect, useState } from 'react'
+import  { useEffect, useState } from 'react'
 import OTPInput from '../shared/OTPinput'
 import { UserLoginAPI } from '@/services/user'
 import toast from 'react-hot-toast'

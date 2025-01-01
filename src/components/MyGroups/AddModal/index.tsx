@@ -18,7 +18,7 @@ const AddModal = ({existName,close}:{existName?:string,close:(show:boolean)=>voi
           className='flex flex-col bg-white max-w-[594px] pb-[852px] max-md:px-5 max-md:pb-24'>
           <div className='flex justify-between items-center w-full text-xl font-medium text-right text-gray-800 max-md:max-w-full'>
             <div className='flex-1 shrink self-stretch my-auto min-w-[240px] max-md:max-w-full'>
-            گروه محصول جدید
+            {existName?'ویرایش گروه جدید':'تعریف گروه جدید'}
             </div>
            <div className="
            ">
@@ -30,7 +30,7 @@ const AddModal = ({existName,close}:{existName?:string,close:(show:boolean)=>voi
           <div className='mt-10 w-full max-md:max-w-full'>
             <div className='flex flex-col w-full'>
               <label className='text-base font-medium text-right text-gray-800'>
-              نام گروه محصول
+              نام گروه خود را بنویسید
               </label>
               <input
                 defaultValue={name}

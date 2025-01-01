@@ -41,4 +41,19 @@ export interface SubGroup {
 export interface GroupData {
   title: string
   subGroups: SubGroup[]
+  referrers:number
+}
+export interface PromotionInterface {
+  promotionDate: string // تاریخ پروموشن
+  startDate: string // تاریخ شروع پروموشن
+  endDate: string // تاریخ پایان پروموشن
+  selectedPharmacy: string // داروخانه انتخاب شده
+  selectedDoctorGroup: string // گروه پزشکان انتخاب شده
+  ctaLink: string // لینک CTA
+  brandSlogan: string // شعار یا جمله برند
+  promotionImage: string // لینک عکس پروموشن
+  discountType: 'cash' | 'product' // نوع تخفیف
+  status: string
+  viewCount:string,
+  clickedCount:string,
 }

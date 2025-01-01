@@ -22,89 +22,71 @@ export const data: Items[] = [
     link: 'wallet',
     iconIndex: 1,
   },
+
   {
-    name: 'تسویه حساب',
-    link: 'walletadd',
+    name: ' مدیریت پورسانت‌ دهی',
+    link: 'porsant',
     iconIndex: 2,
-    subItems: [
-      {
-        name: '   آزادسازی',
-        link: 'wallet/ad',
-        iconIndex: 3,
-      },
-    ],
+  },
+  {
+    name: ' کمپین',
+    link: 'porsant',
+    iconIndex: 3,
+  },
+  {
+    name: ' پروموشن',
+    link: 'promotion',
+    iconIndex: 4,
   },
   {
     name: ' تعاریف',
     link: 'groupmanagement',
-    iconIndex: 4,
+    iconIndex: 5,
     subItems: [
       {
-        name: 'گروه',
-        link: 'groupmanagement',
-        iconIndex: 5,
-      },
-      {
-        name: 'زیرگروه',
-        link: 'subgroups',
-        iconIndex: 5,
-      },
-      {
-        name: 'محصولات من',
-        link: 'productgroups',
+        name: 'گروه‌های من',
+        link: 'mygroups',
         iconIndex: 6,
+      },
+      {
+        name: 'زیر گروه‌های من',
+        link: 'subgroups',
+        iconIndex: 7,
       },
       {
         name: 'بازاریاب‌های من',
         link: 'referrers',
-        iconIndex: 7,
+        iconIndex: 8,
       },
-    ],
-  },
-  {
-    name: 'گروه‌های من ',
-    link: 'mygroups',
-    iconIndex: 8,
-  },
-  {
-    name: ' پروموشن',
-    link: '/reports',
-    iconIndex: 9,
-    subItems: [
       {
-        name: 'تعریف پروموشن',
-        link: '/wallet/add',
+        name: '  ذی‌نفع‌های من',
+        link: 'beneficiary',
+        iconIndex: 9,
+      },
+      {
+        name: 'محصولات من',
+        link: 'productgroups',
         iconIndex: 10,
       },
-      {
-        name: ' فعال‌سازی',
-        link: '/wallet/add',
-        iconIndex: 11,
-      },
     ],
   },
-  {
-    name: ' کمپین',
-    link: 'campaign',
-    iconIndex: 9,
-  },
-  {
-    name: ' پشتیلانی آنلاین',
-    link: '/reports',
-    iconIndex: 12,
-    subItems: [
-      {
-        name: ' تیکتینگ',
-        link: '/wallet/add',
-        iconIndex: 13,
-      },
-      {
-        name: ' چت آنلاین',
-        link: '/wallet/add',
-        iconIndex: 14,
-      },
-    ],
-  },
+  // {
+  //   name: ' پشتیلانی آنلاین',
+  //   link: '/reports',
+  //   iconIndex: 12,
+  //   subItems: [
+  //     {
+  //       name: ' تیکتینگ',
+  //       link: '/wallet/add',
+  //       iconIndex: 13,
+  //     },
+  //     {
+  //       name: ' چت آنلاین',
+  //       link: '/wallet/add',
+  //       iconIndex: 14,
+  //     },
+  //   ],
+  // },
   { name: '۰۲۱-۹۲۳۰۰۸۴۲', link: '/reports/expenses', iconIndex: 15 },
   {
     name: 'پاسخگویی تلفنی ۸ صبح الی ۱۲ شب',

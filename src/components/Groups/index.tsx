@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import  { useState } from 'react'
 import { Edit2, Trash } from 'iconsax-react'
 import AddModal from './AddModal'
 import DeleteModal from './DeleteModal'

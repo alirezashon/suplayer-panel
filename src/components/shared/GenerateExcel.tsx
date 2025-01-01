@@ -1,6 +1,6 @@
 'use client'
 import { Export } from 'iconsax-react'
-import React, { useState } from 'react'
+import  { useState } from 'react'
 import Loading from './LoadingSpinner'
 import { getCookieByKey } from '@/actions/cookieToken'
 

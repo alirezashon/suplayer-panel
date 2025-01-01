@@ -1,0 +1,311 @@
+import { useState } from 'react'
+import Kanban from './KanbanView'
+import { useMenu } from '@/Context/Menu'
+import { PromotionInterface } from '@/interfaces'
+import PromotionList from './PromotionList'
+const promotions: PromotionInterface[] = [
+  {
+    promotionDate: '1402/10/12',
+    startDate: '1402/10/15',
+    endDate: '1402/10/30',
+    viewCount: '7',
+    clickedCount: '23',
+    selectedPharmacy: 'داروخانه مرکزی تهران',
+    selectedDoctorGroup: 'گروه پزشکان قلب',
+    ctaLink: 'https://example.com/promotion1',
+    brandSlogan: 'سلامتی شما، هدف ما',
+    promotionImage: 'https://example.com/image1.jpg',
+    discountType: 'cash',
+    status: '1',
+  },  {
+    promotionDate: '1402/10/12',
+    startDate: '1402/10/15',
+    endDate: '1402/10/30',
+    viewCount: '7',
+    clickedCount: '23',
+    selectedPharmacy: 'داروخانه مرکزی تهران',
+    selectedDoctorGroup: 'گروه پزشکان قلب',
+    ctaLink: 'https://example.com/promotion1',
+    brandSlogan: 'سلامتی شما، هدف ما',
+    promotionImage: 'https://example.com/image1.jpg',
+    discountType: 'cash',
+    status: '1',
+  },  {
+    promotionDate: '1402/10/12',
+    startDate: '1402/10/15',
+    endDate: '1402/10/30',
+    viewCount: '7',
+    clickedCount: '23',
+    selectedPharmacy: 'داروخانه مرکزی تهران',
+    selectedDoctorGroup: 'گروه پزشکان قلب',
+    ctaLink: 'https://example.com/promotion1',
+    brandSlogan: 'سلامتی شما، هدف ما',
+    promotionImage: 'https://example.com/image1.jpg',
+    discountType: 'cash',
+    status: '1',
+  },  {
+    promotionDate: '1402/10/12',
+    startDate: '1402/10/15',
+    endDate: '1402/10/30',
+    viewCount: '7',
+    clickedCount: '23',
+    selectedPharmacy: 'داروخانه مرکزی تهران',
+    selectedDoctorGroup: 'گروه پزشکان قلب',
+    ctaLink: 'https://example.com/promotion1',
+    brandSlogan: 'سلامتی شما، هدف ما',
+    promotionImage: 'https://example.com/image1.jpg',
+    discountType: 'cash',
+    status: '1',
+  },  {
+    promotionDate: '1402/10/12',
+    startDate: '1402/10/15',
+    endDate: '1402/10/30',
+    viewCount: '7',
+    clickedCount: '23',
+    selectedPharmacy: 'داروخانه مرکزی تهران',
+    selectedDoctorGroup: 'گروه پزشکان قلب',
+    ctaLink: 'https://example.com/promotion1',
+    brandSlogan: 'سلامتی شما، هدف ما',
+    promotionImage: 'https://example.com/image1.jpg',
+    discountType: 'cash',
+    status: '1',
+  },  {
+    promotionDate: '1402/10/12',
+    startDate: '1402/10/15',
+    endDate: '1402/10/30',
+    viewCount: '7',
+    clickedCount: '23',
+    selectedPharmacy: 'داروخانه مرکزی تهران',
+    selectedDoctorGroup: 'گروه پزشکان قلب',
+    ctaLink: 'https://example.com/promotion1',
+    brandSlogan: 'سلامتی شما، هدف ما',
+    promotionImage: 'https://example.com/image1.jpg',
+    discountType: 'cash',
+    status: '1',
+  },
+  {
+    promotionDate: '1402/11/01',
+    startDate: '1402/11/05',
+    endDate: '1402/11/20',
+    viewCount: '7',
+    clickedCount: '23',
+    selectedPharmacy: 'داروخانه شبانه‌روزی شیراز',
+    selectedDoctorGroup: 'گروه پزشکان عمومی',
+    ctaLink: 'https://example.com/promotion2',
+    brandSlogan: 'تخفیف ویژه برای مشتریان عزیز',
+    promotionImage: 'https://example.com/image2.jpg',
+    discountType: 'product',
+    status: '2',
+  },
+  {
+    promotionDate: '1402/09/25',
+    startDate: '1402/09/30',
+    endDate: '1402/10/10',
+    viewCount: '7',
+    clickedCount: '23',
+    selectedPharmacy: 'داروخانه مرکزی اصفهان',
+    selectedDoctorGroup: 'گروه پزشکان اطفال',
+    ctaLink: 'https://example.com/promotion3',
+    brandSlogan: 'با ما همیشه سالم بمانید',
+    promotionImage: 'https://example.com/image3.jpg',
+    discountType: 'cash',
+    status: '3',
+  },
+  {
+    promotionDate: '1402/11/01',
+    startDate: '1402/11/05',
+    endDate: '1402/11/20',
+    viewCount: '7',
+    clickedCount: '23',
+    selectedPharmacy: 'داروخانه شبانه‌روزی شیراز',
+    selectedDoctorGroup: 'گروه پزشکان عمومی',
+    ctaLink: 'https://example.com/promotion2',
+    brandSlogan: 'تخفیف ویژه برای مشتریان عزیز',
+    promotionImage: 'https://example.com/image2.jpg',
+    discountType: 'product',
+    status: '2',
+  },
+  {
+    promotionDate: '1402/09/25',
+    startDate: '1402/09/30',
+    endDate: '1402/10/10',
+    viewCount: '7',
+    clickedCount: '23',
+    selectedPharmacy: 'داروخانه مرکزی اصفهان',
+    selectedDoctorGroup: 'گروه پزشکان اطفال',
+    ctaLink: 'https://example.com/promotion3',
+    brandSlogan: 'با ما همیشه سالم بمانید',
+    promotionImage: 'https://example.com/image3.jpg',
+    discountType: 'cash',
+    status: '3',
+  },{
+    promotionDate: '1402/11/01',
+    startDate: '1402/11/05',
+    endDate: '1402/11/20',
+    viewCount: '7',
+    clickedCount: '23',
+    selectedPharmacy: 'داروخانه شبانه‌روزی شیراز',
+    selectedDoctorGroup: 'گروه پزشکان عمومی',
+    ctaLink: 'https://example.com/promotion2',
+    brandSlogan: 'تخفیف ویژه برای مشتریان عزیز',
+    promotionImage: 'https://example.com/image2.jpg',
+    discountType: 'product',
+    status: '2',
+  },
+  {
+    promotionDate: '1402/09/25',
+    startDate: '1402/09/30',
+    endDate: '1402/10/10',
+    viewCount: '7',
+    clickedCount: '23',
+    selectedPharmacy: 'داروخانه مرکزی اصفهان',
+    selectedDoctorGroup: 'گروه پزشکان اطفال',
+    ctaLink: 'https://example.com/promotion3',
+    brandSlogan: 'با ما همیشه سالم بمانید',
+    promotionImage: 'https://example.com/image3.jpg',
+    discountType: 'cash',
+    status: '3',
+  },{
+    promotionDate: '1402/11/01',
+    startDate: '1402/11/05',
+    endDate: '1402/11/20',
+    viewCount: '7',
+    clickedCount: '23',
+    selectedPharmacy: 'داروخانه شبانه‌روزی شیراز',
+    selectedDoctorGroup: 'گروه پزشکان عمومی',
+    ctaLink: 'https://example.com/promotion2',
+    brandSlogan: 'تخفیف ویژه برای مشتریان عزیز',
+    promotionImage: 'https://example.com/image2.jpg',
+    discountType: 'product',
+    status: '2',
+  },
+  {
+    promotionDate: '1402/09/25',
+    startDate: '1402/09/30',
+    endDate: '1402/10/10',
+    viewCount: '7',
+    clickedCount: '23',
+    selectedPharmacy: 'داروخانه مرکزی اصفهان',
+    selectedDoctorGroup: 'گروه پزشکان اطفال',
+    ctaLink: 'https://example.com/promotion3',
+    brandSlogan: 'با ما همیشه سالم بمانید',
+    promotionImage: 'https://example.com/image3.jpg',
+    discountType: 'cash',
+    status: '3',
+  },{
+    promotionDate: '1402/11/01',
+    startDate: '1402/11/05',
+    endDate: '1402/11/20',
+    viewCount: '7',
+    clickedCount: '23',
+    selectedPharmacy: 'داروخانه شبانه‌روزی شیراز',
+    selectedDoctorGroup: 'گروه پزشکان عمومی',
+    ctaLink: 'https://example.com/promotion2',
+    brandSlogan: 'تخفیف ویژه برای مشتریان عزیز',
+    promotionImage: 'https://example.com/image2.jpg',
+    discountType: 'product',
+    status: '2',
+  },
+  {
+    promotionDate: '1402/09/25',
+    startDate: '1402/09/30',
+    endDate: '1402/10/10',
+    viewCount: '7',
+    clickedCount: '23',
+    selectedPharmacy: 'داروخانه مرکزی اصفهان',
+    selectedDoctorGroup: 'گروه پزشکان اطفال',
+    ctaLink: 'https://example.com/promotion3',
+    brandSlogan: 'با ما همیشه سالم بمانید',
+    promotionImage: 'https://example.com/image3.jpg',
+    discountType: 'cash',
+    status: '3',
+  },{
+    promotionDate: '1402/11/01',
+    startDate: '1402/11/05',
+    endDate: '1402/11/20',
+    viewCount: '7',
+    clickedCount: '23',
+    selectedPharmacy: 'داروخانه شبانه‌روزی شیراز',
+    selectedDoctorGroup: 'گروه پزشکان عمومی',
+    ctaLink: 'https://example.com/promotion2',
+    brandSlogan: 'تخفیف ویژه برای مشتریان عزیز',
+    promotionImage: 'https://example.com/image2.jpg',
+    discountType: 'product',
+    status: '2',
+  },
+  {
+    promotionDate: '1402/09/25',
+    startDate: '1402/09/30',
+    endDate: '1402/10/10',
+    viewCount: '7',
+    clickedCount: '23',
+    selectedPharmacy: 'داروخانه مرکزی اصفهان',
+    selectedDoctorGroup: 'گروه پزشکان اطفال',
+    ctaLink: 'https://example.com/promotion3',
+    brandSlogan: 'با ما همیشه سالم بمانید',
+    promotionImage: 'https://example.com/image3.jpg',
+    discountType: 'cash',
+    status: '3',
+  },{
+    promotionDate: '1402/11/01',
+    startDate: '1402/11/05',
+    endDate: '1402/11/20',
+    viewCount: '7',
+    clickedCount: '23',
+    selectedPharmacy: 'داروخانه شبانه‌روزی شیراز',
+    selectedDoctorGroup: 'گروه پزشکان عمومی',
+    ctaLink: 'https://example.com/promotion2',
+    brandSlogan: 'تخفیف ویژه برای مشتریان عزیز',
+    promotionImage: 'https://example.com/image2.jpg',
+    discountType: 'product',
+    status: '2',
+  },
+  {
+    promotionDate: '1402/09/25',
+    startDate: '1402/09/30',
+    endDate: '1402/10/10',
+    viewCount: '7',
+    clickedCount: '23',
+    selectedPharmacy: 'داروخانه مرکزی اصفهان',
+    selectedDoctorGroup: 'گروه پزشکان اطفال',
+    ctaLink: 'https://example.com/promotion3',
+    brandSlogan: 'با ما همیشه سالم بمانید',
+    promotionImage: 'https://example.com/image3.jpg',
+    discountType: 'cash',
+    status: '3',
+  },
+]
+const Promotion = () => {
+  const [done, setDone] = useState<PromotionInterface[]>(
+    promotions.filter((promo) => promo.status === '3')
+  )
+  const [toDo, setToDo] = useState<PromotionInterface[]>(
+    promotions.filter((promo) => promo.status === '1')
+  )
+  const [progress, setProgress] = useState<PromotionInterface[]>(
+    promotions.filter((promo) => promo.status === '2')
+  )
+  const [listStatus, setListStatus] = useState<string>('')
+  const { menu, setMenu } = useMenu()
+  return (
+    <div>
+      {menu === 'promotion' ? (
+        <Kanban
+          done={done}
+          toDo={toDo}
+          progress={progress}
+          length={promotions.length}
+          setListStatus={setListStatus}
+        />
+      ) : (
+        <PromotionList
+          status={listStatus}
+          promotions={
+            listStatus === '3' ? done : listStatus === '2' ? progress : toDo
+          }
+        />
+      )}
+    </div>
+  )
+}
+export default Promotion

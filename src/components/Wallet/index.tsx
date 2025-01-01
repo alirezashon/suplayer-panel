@@ -3,10 +3,12 @@
 import { useEffect, useRef } from 'react'
 import Chart from 'chart.js/auto'
 import { Add, InfoCircle, Wallet3 } from 'iconsax-react'
+import { useMenu } from '@/Context/Menu'
 
 const Wallet: React.FC = () => {
   const chartRef = useRef<HTMLCanvasElement>(null)
   const chartInstanceRef = useRef<Chart | null>(null)
+  const { menu, setMenu } = useMenu()
 
   useEffect(() => {
     const ctx = chartRef.current?.getContext('2d')
@@ -118,15 +120,13 @@ const Wallet: React.FC = () => {
         </div>
         <div className='flex gap-[15%]'>
           <button
-            className=' min-w-[16%] justify-center flex rounded-lg  px-3 h-10 items-center gap-2 bg-[#0F973D] text-white'
-            onClick={() => (location.href = '/deposite')}>
-            <Add size={24} color='#ffffff' />
-            <p>افزایش موجودی</p>
-          </button>
-          <button
-            className=' min-w-[16%] justify-center flex rounded-lg  px-3 h-10 items-center gap-2 border border-[#0F973D] text-[#0F973D]'
-            onClick={() => (location.href = '/withdraw')}>
-            +<p> افزایش اعتبار</p>
+            className=' min-w-[26%] justify-center flex rounded-lg  px-3 h-10 items-center  bg-[#0F973D] text-white'
+            onClick={() => {
+              location.hash = 'deposite'
+              setMenu('deposite')
+            }}>
+            <Add size={22} color='#ffffff' />
+            <p> افزایش اعتبار</p>
           </button>
         </div>
       </div>
