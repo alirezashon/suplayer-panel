@@ -3,6 +3,7 @@ import Kanban from './KanbanView'
 import { useMenu } from '@/Context/Menu'
 import { PromotionInterface } from '@/interfaces'
 import PromotionList from './PromotionList'
+import AddPromotion from './AddPromotion'
 const promotions: PromotionInterface[] = [
   {
     promotionDate: '1402/10/12',
@@ -297,14 +298,16 @@ const Promotion = () => {
           length={promotions.length}
           setListStatus={setListStatus}
         />
-      ) : (
+      ) :menu === 'promotion-list' ? (
         <PromotionList
           status={listStatus}
           promotions={
             listStatus === '3' ? done : listStatus === '2' ? progress : toDo
           }
         />
-      )}
+      ):
+      // new-promotion
+      <AddPromotion />}
     </div>
   )
 }

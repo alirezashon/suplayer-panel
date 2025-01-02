@@ -30,10 +30,12 @@ const Kanban = ({
           </p>
           {length > 0 && (
             <button
-              type='submit'
-              onClick={() => setMenu('new-promotion')}
+              onClick={() => {
+                location.hash='new-promotion'
+                setMenu('new-promotion')
+              }}
               className='h-10 min-w-40 bg-purple-700 text-white rounded-lg hover:bg-purple-800'>
-              + بازاریاب جدید
+              + پروموشن جدید
             </button>
           )}
         </div>
