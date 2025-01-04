@@ -27,7 +27,7 @@ const Drafts = () => {
     'idle' | 'uploading' | 'success' | 'error' | 'showImage'
   >('idle')
   const [progress, setProgress] = useState<number>(0)
-  const [identityCard, setIdentityCard] = useState<string>()
+  const [draftSrc, setDraftSrc] = useState<string>()
   const handleImageUpload = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -57,7 +57,7 @@ const Drafts = () => {
       reader.onloadend = async () => {
         try {
           const newAvatarUrl = reader.result as string
-          setIdentityCard(newAvatarUrl)
+          setDraftSrc(newAvatarUrl)
           setUploadStatus('showImage')
 
           // Simulate upload progress
@@ -233,7 +233,7 @@ const Drafts = () => {
             عکس چک
           </h3>
           <div className='flex gap-5'>
-          {identityCard ? (
+          {draftSrc ? (
             <div
               className={`gap-5 w-full p-5 rounded-lg flex flex-col justify-center items-center border 
             border-[#C9D0D8] border-dashed
@@ -242,7 +242,7 @@ const Drafts = () => {
                 <div
                   className={`gap-5 w-full p-5 rounded-lg flex justify-center items-center cursor-pointer my-6`}>
                   <Image
-                    src={identityCard}
+                    src={draftSrc}
                     width={77}
                     height={77}
                     className='w-full max-w-96'
@@ -276,7 +276,7 @@ const Drafts = () => {
                   size={24}
                     color='#BB1F1A'
                     onClick={() => {
-                      setIdentityCard(undefined)
+                      setDraftSrc(undefined)
                       setUploadStatus('idle')
                     }}
                   />

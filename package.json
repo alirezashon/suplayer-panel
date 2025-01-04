@@ -17,10 +17,10 @@
     "moment-jalaali": "^0.10.4",
     "next": "15.1.0",
     "react": "^19.0.0",
-    "react-datepicker2": "^3.3.13",
     "react-dom": "^19.0.0",
     "react-hot-toast": "^2.4.1",
     "react-leaflet": "^5.0.0",
+    "react-multi-date-picker": "^4.5.2",
     "react-qr-code": "^2.0.15"
   },
   "devDependencies": {
