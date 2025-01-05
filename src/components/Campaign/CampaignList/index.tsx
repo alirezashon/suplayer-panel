@@ -1,14 +1,14 @@
 import { useMenu } from '@/Context/Menu'
-import { PromotionInterface } from '@/interfaces'
-import Done from '../PromotionCard/Done'
-import Progress from '../PromotionCard/Progress'
-import Wait from '../PromotionCard/Wait'
+import { CampaignInterface } from '@/interfaces'
+import Done from '../CampaignCard/Done'
+import Progress from '../CampaignCard/Progress'
+import Wait from '../CampaignCard/Wait'
 
-const PromotionList = ({
-  promotions,
+const CampaignList = ({
+  campaigns,
   status,
 }: {
-  promotions: PromotionInterface[]
+  campaigns: CampaignInterface[]
   status: string
 }) => {
   const { setMenu } = useMenu()
@@ -21,10 +21,10 @@ const PromotionList = ({
             <span
               className='text-[#98A2B3]'
               onClick={() => {
-                setMenu('promotion')
-                location.hash = 'promotion'
+                setMenu('campaign')
+                location.hash = 'campaign'
               }}>
-              پروموشن
+              کمپین
             </span>
             /
             <span className='text-[#7747C0]'>
@@ -37,13 +37,13 @@ const PromotionList = ({
           </p>
         </div>
         <div className='grid grid-cols-[repeat(auto-fit,minmax(25%,1fr))] gap-6 p-6 bg-white rounded-lg border border-gray-200'>
-          {promotions.map((promotion, index) =>
+          {campaigns.map((campaign, index) =>
             status === '1' ? (
-              <Wait key={index} promotion={promotion}/>
+              <Wait key={index} campaign={campaign}/>
             ) : status === '2' ? (
-              <Progress key={index} promotion={promotion} />
+              <Progress key={index} campaign={campaign} />
             ) : (
-              <Done key={index} promotion={promotion} />
+              <Done key={index} campaign={campaign} />
             )
           )}
         </div>
@@ -52,4 +52,4 @@ const PromotionList = ({
   )
 }
 
-export default PromotionList
+export default CampaignList

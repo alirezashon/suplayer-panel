@@ -1,9 +1,11 @@
 'use client'
+import Campaign from '@/components/Campaign'
 import Dashboard from '@/components/Dashboard'
 import Deposite from '@/components/Deposite'
 import Groups from '@/components/Groups'
 import MyGroups from '@/components/MyGroups'
 import GroupsDetail from '@/components/MyGroups/GroupDetail'
+import PorsantManagement from '@/components/PorsantManagement'
 import ProductGroups from '@/components/ProductGroups'
 import Product from '@/components/Products'
 import Profile from '@/components/Profile'
@@ -51,8 +53,18 @@ const Home = () => {
             <GroupsDetail />
           ) : menu === 'deposite' ? (
             <Deposite />
-          ) : ['promotion','promotion-list','new-promotion','edit-promotion','view-promotion'].includes(menu) ? (
+          ) : [
+              'promotion',
+              'promotion-list',
+              'new-promotion',
+              'edit-promotion',
+              'view-promotion',
+            ].includes(menu) ? (
             <Promotion />
+          ) : ['campaign', 'campaign-list', 'view-campaign'].includes(menu) ? (
+            <Campaign />
+          ) : ['porsant'].includes(menu) ? (
+            <PorsantManagement />
           ) : (
             <Dashboard />
           )}

@@ -30,7 +30,7 @@ export const data: Items[] = [
   },
   {
     name: ' کمپین',
-    link: 'porsant',
+    link: 'campaign',
     iconIndex: 3,
   },
   {

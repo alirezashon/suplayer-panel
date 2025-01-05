@@ -203,29 +203,21 @@ const AddPromotion = () => {
         <div className='flex  gap-3'>
           <div className='flex w-full flex-col gap-3'>
             <p className='text-lg font-bold'>مخاطبین خود را انتخاب کنید</p>
-            <SelectList items={items} setSelectedItems={setSelectedItems}  label=' انتخاب داروخانه '/>
-{...selectedItems}
             <div className=''>
               <label className='mb-2'> انتخاب داروخانه </label>
-              <select
-                defaultValue={'0'}
-                className={`!w-full outline-none border border-[#cccccc] rounded-lg  h-10  cursor-pointer text-slate-400`}>
-                <option value='0' disabled>
-                  داروخانه مد نظر خود را انتخاب کنید
-                </option>
-                <option value='1'>ازونا شده</option>
-              </select>
+              <SelectList
+                items={items}
+                setSelectedItems={setSelectedItems}
+                label='داروخانه مد نظر خود را انتخاب کنید'
+              />
             </div>
             <div className=''>
               <label className='mb-2'> گروه پزشکان من </label>
-              <select
-                defaultValue={'0'}
-                className={`!w-full outline-none border border-[#cccccc] rounded-lg  h-10 cursor-pointer`}>
-                <option value='none' disabled>
-                  نام بانک
-                </option>
-                <option value='1'>ازونا شده</option>
-              </select>
+              <SelectList
+                items={items}
+                setSelectedItems={setSelectedItems}
+                label='گروه پزشکان من خود را انتخاب کنید'
+              />
             </div>
             <p className='text-lg font-bold'>
               شعار | جمله برند خود را انتخاب کنید

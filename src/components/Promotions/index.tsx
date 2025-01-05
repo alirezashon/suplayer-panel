@@ -287,6 +287,7 @@ const Promotion = () => {
     promotions.filter((promo) => promo.status === '2')
   )
   const [listStatus, setListStatus] = useState<string>('')
+  
   const { menu, setMenu } = useMenu()
   return (
     <div>
@@ -306,7 +307,7 @@ const Promotion = () => {
           }
         />
       ):
-      // new-promotion
+      ['new-promotion','edit-promotion'].includes(menu)&&
       <AddPromotion />}
     </div>
   )

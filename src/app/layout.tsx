@@ -2,6 +2,7 @@
 import type { Metadata } from 'next'
 import './assets/globals.css'
 import { MenuProvider } from '@/Context/Menu'
+import { PromotionProvider } from '@/Context/Promotion'
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -14,24 +15,14 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
+    <PromotionProvider>
       <MenuProvider>
         <html lang='en'>
           <body>
             {children}
-
-            {/* <ToastProvider />
-          <main className={`w-full flex justify-between bg-gray-100 min-h-[100vh]`}>
-            <div className='w-[17%]'>
-              <Sidebar />
-            </div>
-            <div className={'w-[83%]'}>
-              <Header />
-              {children}
-            </div>
-          </main>
-       */}
           </body>
         </html>
       </MenuProvider>
+    </PromotionProvider>
   )
 }

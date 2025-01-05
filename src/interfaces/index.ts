@@ -21,7 +21,7 @@ export interface IbanInterface {
   shabaId: string
   isDraggable?: boolean
   bankCode?: string
-  bankName?:string
+  bankName?: string
 }
 export interface IShabaDestinationList {
   sid: string | null
@@ -41,7 +41,7 @@ export interface SubGroup {
 export interface GroupData {
   title: string
   subGroups: SubGroup[]
-  referrers:number
+  referrers?: number
 }
 export interface PromotionInterface {
   promotionDate: string // تاریخ پروموشن
@@ -54,6 +54,25 @@ export interface PromotionInterface {
   promotionImage: string // لینک عکس پروموشن
   discountType: 'cash' | 'product' // نوع تخفیف
   status: string
-  viewCount:string,
-  clickedCount:string,
+  viewCount: string
+  clickedCount: string
+}
+export interface CampaignInterface {
+  type: string // نوع کمپین
+  name: string // نام کمپین
+  smsType: string // نوع پیامک
+  productCampaign: string // نوع کمپین محصول
+  startDate: string // تاریخ شروع
+  endDate: string // تاریخ پایان
+  country: string // کشور
+  province: string // استان
+  city: string // شهر
+  county: string // شهرستان
+  budget: string // بودجه
+  expectedResponse: string // پاسخ مورد انتظار
+  description: string // شرح کمپین
+  status: string // وضعیت کمپین
+  selectedGroups: string[] // گروه‌ و زیرگروه‌های انتخاب شده
+  joinedBrands: string[] // گروه و برند محصول عضو شده
+  category: string // گروه محصول
 }
