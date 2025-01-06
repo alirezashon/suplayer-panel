@@ -1,26 +1,31 @@
-import Sidebar from '@/components/Sidebar';
-import Header from '@/components/Header';
+'use client'
+import Sidebar from '@/components/Sidebar'
+import Header from '@/components/Header'
+import { useState } from 'react'
 
 const MainLayout = ({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) => {
+  const [isSidebarOpen, setSidebarOpen] = useState(true)
+
   return (
-    <div className="flex w-full min-h-screen bg-gray-100">
-      <div className="w-[17%] min-h-screen bg-white">
+    <div className='flex min-h-screen bg-gray-100'>
+      <div
+        className={`transition-all duration-300 ${
+          isSidebarOpen ? 'min-w-[17%]' : 'w-[5%]'
+        } bg-white`}>
         <Sidebar />
       </div>
-      <div className="flex flex-col flex-1">
-        <div className="w-full bg-white">
+      <div className='flex flex-col flex-grow'>
+        <div className='bg-white'>
           <Header />
         </div>
-        <div className="flex-1 p-4">
-          {children}
-        </div>
+        <div className='p-4 flex-grow'>{children}</div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default MainLayout;
+export default MainLayout

@@ -18,13 +18,15 @@ import {
   Profile,
   User,
   Box,
+  ArrowRight,
+  ArrowSquareRight,
 } from 'iconsax-react'
 import Image from 'next/image'
 import { useMenu } from '@/Context/Menu'
 
 const user = {
   name: 'محدثه عالمی',
-  src: '/images/2.png',
+  src: '/icons/logo.svg',
 }
 
 const Sidebar: React.FC = () => {
@@ -63,29 +65,32 @@ const Sidebar: React.FC = () => {
   return (
     <div
       style={{ scrollbarWidth: 'none' }}
-      className={`fixed top-0 right-0 h-full p-[1vh] transition-all duration-300 min-w-[17%]
-       bg-white flex flex-col overflow-y-auto border border-[#C9D0D8]`}>
-      <div
-        className={`sticky top-[2vh] flex items-center pb-[1vh] border-b border-[#C9D0D8]`}>
+      className={`fixed top-0 right-0 h-full transition-all duration-300 ${
+        isOpen ? 'min-w-[17%]' : 'w-[5%]'
+      } bg-white flex flex-col overflow-y-auto border border-[#C9D0D8]`}>
+      <div className='sticky top-0 justify-center flex items-center border-b border-[#C9D0D8] bg-white'>
         {isOpen && (
           <Image
             src={'/icons/logo.svg'}
             alt='logo'
             width={200}
             height={100}
-            className='w-[80%] h-[7vh] object-contain'
+            className='w-[80%] h-[7vh] object-contain mt-4'
           />
         )}
-        <div
-          className='cursor-pointer ml-auto'
-          onClick={() => setIsOpen(!isOpen)}>
-          {isOpen ? <MenuBoard size={24} /> : <Menu color='gray' size={24} />}
-        </div>
+        
+        {isOpen ?  <ArrowSquareRight
+          onClick={() => setIsOpen(!isOpen)}
+          size={22}
+          color='#50545F'
+        />: <Menu color='gray' size={24} 
+        onClick={() => setIsOpen(!isOpen)}
+        />}
       </div>
 
       {/* Menu Items */}
       <ul className='mt-[2vh]'>
-        <p className='text-[#878FA4]'>منو اصلی</p>
+        <p className={`${isOpen ? 'text-[#878FA4]' : 'hidden'}`}>منو اصلی</p>
         {data.map((item, index) => (
           <li key={index} className='w-full my-3'>
             <div
@@ -101,7 +106,7 @@ const Sidebar: React.FC = () => {
               }}>
               {generateIcon(
                 item.iconIndex,
-                openIndex === index ? 'white' : isOpen ? 'gray' : '#50545F'
+                openIndex === index ? 'white' : '#50545F'
               )}
               {isOpen && (
                 <span className='ml-[1vw] flex-grow'>{item.name}</span>
@@ -127,10 +132,15 @@ const Sidebar: React.FC = () => {
                       location.hash = subItem.link
                       setMenu(subItem.link)
                     }}>
-                    {generateIcon(subItem.iconIndex,   menu === subItem.link ? '#7747C0':'#50545F')}
+                    {generateIcon(
+                      subItem.iconIndex,
+                      menu === subItem.link ? '#7747C0' : '#50545F'
+                    )}
                     <span
                       className={`mr-1 ${
-                        menu === subItem.link ? 'text-[#7747C0]':'text-[#50545F]'
+                        menu === subItem.link
+                          ? 'text-[#7747C0]'
+                          : 'text-[#50545F]'
                       }`}>
                       {subItem.name}
                     </span>

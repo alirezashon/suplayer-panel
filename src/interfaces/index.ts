@@ -76,3 +76,10 @@ export interface CampaignInterface {
   joinedBrands: string[] // گروه و برند محصول عضو شده
   category: string // گروه محصول
 }
+
+export interface CardProps {
+  title: string
+  allocation: string
+  lastAllocation: string
+  released: string
+}

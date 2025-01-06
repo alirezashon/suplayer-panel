@@ -1,8 +1,10 @@
-import  { useEffect, useState } from 'react'
-import { Moneys, People } from 'iconsax-react'
+import { useEffect, useState } from 'react'
+import { Moneys, People, ProfileCircle } from 'iconsax-react'
+import { useMenu } from '@/Context/Menu'
 
 interface RegionData {
   region: string
+  referrer: string
   allocatedBudget: string | null
   marketersCount: string
 }
@@ -10,23 +12,28 @@ interface RegionData {
 const subGroups: RegionData[] = [
   {
     region: 'منطقه ۸',
+    referrer: 'محمد کوشکی',
     allocatedBudget: '۳۰.۰۰۰ میلیون ریال',
     marketersCount: '۳۰',
   },
   {
     region: 'منطقه ۷',
+    referrer: 'محمد کوشکی',
     allocatedBudget: null,
     marketersCount: '۳۰',
   },
   {
     region: 'منطقه ۵',
+    referrer: 'محمد کوشکی',
     allocatedBudget: '۳۰.۰۰۰ میلیون ریال',
     marketersCount: '۳۰',
   },
 ]
 
-const GroupsDetail: React.FC = () => {
+const GroupsDetail: React.FC<{ name: string }> = ({ name }) => {
   const [data, setData] = useState<RegionData[]>(subGroups)
+  const { setMenu } = useMenu()
+
   useEffect(() => {
     setData(subGroups)
   }, [setData])
@@ -34,9 +41,8 @@ const GroupsDetail: React.FC = () => {
     <div className='m-4'>
       <div className='flex justify-between items-center mb-7'>
         <p>
-          <span className='text-[#98A2B3]'>تعاریف</span>/
-          <span className='text-[#98A2B3]'>گروه‌های من</span>/
-          <span className='text-[#7747C0]'>زیر گروه</span>
+          <span className='text-[#98A2B3]'>مدیریت پورسانت‌دهی </span> /
+          <span className='text-[#7747C0]'> {name} </span>
         </p>
       </div>
       <div className='p-6 bg-white rounded-lg border border-gray-200'>
@@ -45,7 +51,6 @@ const GroupsDetail: React.FC = () => {
             <div
               key={index}
               className='flex flex-col items-start border rounded-lg p-2 shadow-md hover:shadow-lg transition duration-300'>
-              {/* Category Label */}
               <div className='flex items-center justify-between w-full '>
                 <span className='text-sm bg-[#E1DCF8] text-[#6137A0] px-2 py-1 rounded'>
                   {product.region}
@@ -64,30 +69,39 @@ const GroupsDetail: React.FC = () => {
                   )}
                 </p>
               </div>
+              <div className='flex my-3'>
+                <ProfileCircle size={24} color='#704CB9' />
+                <p className='text-sm  px-2 py-1 rounded'>
+                  <span className='text-[#757575]'>بازاریاب :</span>
+                  {product.referrer}
+                </p>
+              </div>
               <div className='flex mb-5 mt-1'>
                 <People size={24} color='#704CB9' />
                 <p className='text-sm  px-2 py-1 rounded'>
                   {product.marketersCount ? (
                     <>
-                      <span className='text-[#757575]'>
-                        تعداد بازاریاب‌ها :
-                      </span>
+                      <span className='text-[#757575]'>تعداد ذی‌ نفع :</span>
                       {product.marketersCount}
                     </>
                   ) : (
-                    '  بازاریابی   تعریف نشده است'
+                    '   ذی‌نفعی‌ تعریف نشده است'
                   )}
                 </p>
               </div>
               <button
+                onClick={() => {
+                  setMenu('porsantmanagement')
+                  location.hash = 'porsantmanagement'
+                }}
                 className={`w-full h-10  font-semibold rounded ${
                   !product.allocatedBudget
                     ? 'bg-purple-600 hover:bg-purple-700 text-white'
                     : 'border border-purple-600 text-purple-600 hover:bg-purple-600 hover:text-white'
                 } transition duration-300`}>
                 {!product.allocatedBudget
-                  ? 'تخصیص اعتبار  '
-                  : 'مشاهده بازاریاب‌‌ها '}
+                  ? ' مدیریت پورسانت‌ دهی  '
+                  : 'افزودن ذی‌نفع به زیرگروه'}
               </button>
             </div>
           ))}

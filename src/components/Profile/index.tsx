@@ -16,7 +16,7 @@ const Profile = () => {
   const secondInputRef = useRef<HTMLInputElement>(null)
   const user = {
     name: 'محدثه عالمی',
-    src: '/images/2.png',
+    src: '/icons/logo.svg',
     mobile: '0912121212',
   }
   const validator = () => {
