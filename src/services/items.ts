@@ -1,3 +1,5 @@
+import { GroupData, SubGroup } from '@/interfaces'
+
 export const CreateGroup = async ({
   name,
   accessToken,
@@ -32,11 +34,13 @@ export const CreateGroup = async ({
 }
 export const EditGroup = async ({
   name,
+  sup_group_code,
   accessToken,
   status,
 }: {
   name: string
   accessToken: string | undefined
+  sup_group_code: string
   status?: number
 }) => {
   try {
@@ -49,7 +53,7 @@ export const EditGroup = async ({
           authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
-          sup_group_code: '',
+          sup_group_code,
           sup_group_name: `${name}`,
           sup_group_status: status || 1,
         }),
@@ -69,7 +73,7 @@ export const GetGroupsList = async ({
   accessToken,
 }: {
   accessToken: string | undefined
-}): Promise<Record<string, string | number>[] | undefined> => {
+}): Promise<GroupData[] | undefined> => {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_super_groups_list`,
@@ -92,11 +96,11 @@ export const GetGroupsList = async ({
 }
 export const CreateSubGroup = async ({
   name,
-  mobile,
   accessToken,
+  groupID,
 }: {
   name: string
-  mobile: string
+  groupID: number
   accessToken: string | undefined
 }) => {
   try {
@@ -111,9 +115,9 @@ export const CreateSubGroup = async ({
         body: JSON.stringify({
           supervisor_name: name,
           sup_status: 1,
-          sup_type: 0,
-          supervisor_uid: mobile,
-          sup_group_id: 0,
+          sup_type: 2,
+          supervisor_uid: '',
+          sup_group_id: groupID,
         }),
       }
     )
@@ -170,10 +174,10 @@ export const GetSubGroupsList = async ({
   accessToken,
 }: {
   accessToken: string | undefined
-}): Promise<Record<string,string|number>[] | undefined> => {
+}): Promise<SubGroup[] | undefined> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_super_groups_list`,
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_supervisors_list`,
       {
         method: 'GET',
         headers: {
@@ -281,7 +285,7 @@ export const GetReferrerList = async ({
   accessToken,
 }: {
   accessToken: string | undefined
-}): Promise<Record<string,string|number>[] | undefined> => {
+}): Promise<Record<string, string | number>[] | undefined> => {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_visitors_list`,
@@ -374,7 +378,7 @@ export const GetProductGroupList = async ({
   accessToken,
 }: {
   accessToken: string | undefined
-}): Promise<Record<string,string|number>[] | undefined> => {
+}): Promise<Record<string, string | number>[] | undefined> => {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_product_group_list`,
@@ -474,7 +478,7 @@ export const GetProductList = async ({
   accessToken,
 }: {
   accessToken: string | undefined
-}): Promise<Record<string,string|number>[] | undefined> => {
+}): Promise<Record<string, string | number>[] | undefined> => {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_products_list`,

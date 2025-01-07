@@ -3,13 +3,16 @@ import { CreateGroup } from '@/services/items'
 import { CloseSquare } from 'iconsax-react'
 import { useState } from 'react'
 
-const AddModal = ({existName,close}:{existName?:string,close:(show:boolean)=>void}) => {
+const AddModal = ({existName,close,sup_group_code}:{existName?:string,close:(show:boolean)=>void,sup_group_code:string}) => {
   const [name, setName] = useState<string>(existName||'')
   const handleSubmit = async() => {
-   const accessToken = await getCookieByKey('access_token')||''
-    const response = await CreateGroup({accessToken,name})
-    if(response){
-      
+    if(!sup_group_code){
+
+      const accessToken = await getCookieByKey('access_token')||''
+      const response = await CreateGroup({accessToken,name})
+      if(response){
+        
+      }
     }
   }
 
@@ -46,13 +49,11 @@ const AddModal = ({existName,close}:{existName?:string,close:(show:boolean)=>voi
             </div>
           </div>
 
-          <div className='mt-10 w-full max-md:max-w-full'>
             <button
               type='submit'
               className={`fill-button px-10 h-10 rounded-lg w-full`}>
               ثبت
             </button>
-          </div>
         </form>
       </div>
     </div>

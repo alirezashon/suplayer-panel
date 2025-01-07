@@ -1,4 +1,5 @@
 'use client'
+import { getGroupData, getSubGroupData } from '@/actions/setData'
 import Campaign from '@/components/Campaign'
 import Dashboard from '@/components/Dashboard'
 import Deposite from '@/components/Deposite'
@@ -14,14 +15,26 @@ import Referrer from '@/components/Referrer'
 import Loading from '@/components/shared/LoadingSpinner'
 import SubGroups from '@/components/SubGroups'
 import Wallet from '@/components/Wallet'
+import { useGroupData } from '@/Context/GroupsData'
 import { useMenu } from '@/Context/Menu'
+import { useSubGroupData } from '@/Context/SubGroupsData'
 import MainLayout from '@/layouts/MainLayout'
 import { useEffect, useState } from 'react'
 
 const Home = () => {
   const { menu, setMenu } = useMenu()
   const [loading, setLoading] = useState<boolean>(true)
+  const { setGroupData } = useGroupData()
+  const { setSubGroupData } = useSubGroupData()
+
   useEffect(() => {
+    const fetcher = async () => {
+      const groups = await getGroupData()
+      if (groups) setGroupData(groups) 
+           const subGroups = await getSubGroupData()
+        if (subGroups) setSubGroupData(subGroups)
+    }
+    fetcher()
     const handleHashChange = () => {
       const tag = location.hash.substring(1)
       setMenu(tag)

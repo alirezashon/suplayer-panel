@@ -1,16 +1,35 @@
+import { getCookieByKey } from '@/actions/cookieToken'
+import { EditGroup } from '@/services/items'
 import { CloseSquare, Danger, Forbidden2, Trash } from 'iconsax-react'
+import toast from 'react-hot-toast'
 
 const DeleteModal = ({
   isActive,
   name,
   close,
+  sup_group_code,
 }: {
   isActive?: boolean
   name: string
-  close: (show: boolean) => void
+  close: (show: null) => void
+  sup_group_code: string
 }) => {
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    const accessToken = (await getCookieByKey('access_token')) || ''
+    const response = await EditGroup({
+      accessToken,
+      name,
+      sup_group_code,
+      status: 9,
+    })
+    if (response.status === 1) {
+      toast.success(response.message)
+    } else if (response.status === '-1') {
+      toast.error(response.message)
+    } else {
+      toast.error('لطفا دوباره امتحان کنید')
+    }
   }
 
   return (
@@ -33,7 +52,7 @@ const DeleteModal = ({
                 size={24}
                 cursor='pointer'
                 color='#50545F'
-                onClick={() => close(false)}
+                onClick={() => close(null)}
               />
             </div>
           </div>
@@ -53,7 +72,7 @@ const DeleteModal = ({
             </div>
           )}
           <div className='flex'>
-            <Danger color='#CDA125' size={22}/>
+            <Danger color='#CDA125' size={22} />
             <p className='text-[#CDA125]'>
               محصولات مرتبط به این گروه نیز حذف خواهد شد.
             </p>

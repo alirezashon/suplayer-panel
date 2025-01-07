@@ -1,20 +1,28 @@
 import { getCookieByKey } from '@/actions/cookieToken'
+import { useGroupData } from '@/Context/GroupsData'
 import { CreateSubGroup, EditSubGroup } from '@/services/items'
 import { CloseSquare } from 'iconsax-react'
 import { useState } from 'react'
 
 const AddModal = ({
   existName,
+  groupId,
   close,
 }: {
   existName?: string
+  groupId: number
   close: (show: boolean) => void
 }) => {
-  const [name, setName] = useState<string>(existName || '')
+  const [data, setData] = useState<{ name: string; groupId: number }>({
+    name: '',
+    groupId: 0,
+  })
+  const { groupData } = useGroupData()
   const handleSubmit = async () => {
     const accessToken = (await getCookieByKey('access_token')) || ''
-    if (existName) CreateSubGroup({ accessToken, mobile: '', name })
-    else EditSubGroup({ accessToken, mobile: '', name })
+    if (existName)
+      CreateSubGroup({ accessToken, groupID: data.groupId, name: data.name })
+    else EditSubGroup({ accessToken, mobile: '', name: data.name })
   }
 
   return (
@@ -30,9 +38,7 @@ const AddModal = ({
             <div className='flex-1 shrink self-stretch my-auto min-w-[240px] max-md:max-w-full'>
               تعریف زیرگروه جدید
             </div>
-            <div
-              className='
-           '>
+            <div className=''>
               <CloseSquare
                 size={24}
                 cursor='pointer'
@@ -45,8 +51,11 @@ const AddModal = ({
             <label id='status-label'> گروه خود را انتخاب کنید</label>
             <select
               className={`!w-full outline-none border rounded-lg h-10 px-1 cursor-pointer border-[#C9D0D8]`}>
-              <option value=''>نام گروه</option>
-              <option value='0'>ناروه</option>
+              {groupData?.map((gp) => (
+                <option key={gp.sup_group_code} value={gp.sup_group_code} defaultChecked={groupId?gp.sup_group_id===groupId:false}>
+                  {gp.sup_group_name}
+                </option>
+              ))}
             </select>
           </div>
 
@@ -56,8 +65,10 @@ const AddModal = ({
                 نام زیر گروه خود را بنویسید
               </label>
               <input
-                onChange={(e) => setName(e.target.value)}
-                defaultValue={name}
+                onChange={(e) =>
+                  setData({ name: e.target.value, groupId: data.groupId })
+                }
+                defaultValue={data.name}
                 type='text'
                 placeholder='مثال: دکترهای پوست، تهران غرب ...'
               />

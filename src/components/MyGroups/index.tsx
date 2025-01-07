@@ -1,57 +1,17 @@
-import  { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Edit2, People, ProfileCircle, Trash } from 'iconsax-react'
-import { GroupData } from '@/interfaces'
 import { useMenu } from '@/Context/Menu'
 import AddModal from './AddModal'
 import DeleteModal from './DeleteModal'
+import { getGroupData } from '@/actions/setData'
+import { useGroupData } from '@/Context/GroupsData'
 
-const groupsData: GroupData[] = [
-  {
-    title: 'تهران شرق',
-    subGroups: [
-      { name: 'زیر گروه اول' },
-      { name: 'زیر گروه دوم' },
-      { name: 'زیر گروه سوم' },
-      { name: 'زیر گروه چهارم' },
-    ],
-    referrers: 23,
-  },
-  {
-    title: ' تهران شرق',
-    subGroups: [],
-    referrers: 0,
-  },
-  {
-    title: 'تهران غرب',
-    subGroups: [
-      { name: 'زیر گروه اول' },
-      { name: 'زیر گروه دوم' },
-      { name: 'زیر گروه سوم' },
-      { name: 'زیر گروه چهارم' },
-    ],
-    referrers: 22,
-  },
-  {
-    title: 'دکترهای پوست',
-    subGroups: [
-      { name: 'زیر گروه اول' },
-      { name: 'زیر گروه دوم' },
-      { name: 'زیر گروه سوم' },
-      { name: 'زیر گروه چهارم' },
-    ],
-    referrers: 243,
-  },
-]
 const MyGroups: React.FC = () => {
-  const [data, setData] = useState<GroupData[]>([])
   const { setMenu } = useMenu()
-  const [showAddModal, setShowAddModal] = useState<boolean | string>(false)
-  const [showDeleteModal, setShowDeleteModal] = useState<boolean | string>(
-    false
-  )
-  useEffect(() => {
-    setData(groupsData)
-  }, [setData])
+  const { groupData, setGroupData } = useGroupData()
+  const [showAddModal, setShowAddModal] = useState<null | string[]>(null)
+  const [showDeleteModal, setShowDeleteModal] = useState<null | string[]>(null)
+ 
   return (
     <div className='m-4'>
       <div className='flex justify-between items-center mb-7'>
@@ -76,96 +36,119 @@ const MyGroups: React.FC = () => {
         </p>
         <button
           type='submit'
-          onClick={() => setShowAddModal(true)}
+          onClick={() => setShowAddModal([])}
           className='h-10 min-w-40 bg-purple-700 text-white rounded-lg hover:bg-purple-800'>
-          + گروه محصول جدید
+          + گروه جدید
         </button>
       </div>
       {showAddModal && (
         <AddModal
-          existName={typeof showAddModal === 'string' ? showAddModal : ''}
+          existName={showAddModal[0]}
+          sup_group_code={showAddModal[1]}
           close={setShowAddModal}
         />
       )}
       {showDeleteModal && (
-        <DeleteModal name={`${showDeleteModal}`} close={setShowDeleteModal} />
+        <DeleteModal
+          sup_group_code={showDeleteModal[1]}
+          name={`${showDeleteModal[0]}`}
+          close={setShowDeleteModal}
+        />
       )}
       <div className='p-6 bg-white rounded-lg border border-gray-200'>
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4'>
-          {data.map((product, index) => (
-            <div
-              key={index}
-              className='flex flex-col justify-between items-start border rounded-lg p-4 shadow-md hover:shadow-lg transition duration-300'>
-              {/* Category Label */}
-              <div className='flex items-center justify-between w-full mb-4'>
-                <span className='text-sm bg-[#E1DCF8] text-[#6137A0] px-2 py-1 rounded'>
-                  {product.title}
-                </span>
-                <div className='flex gap-2'>
-                  <Edit2
-                    size={20}
-                    color='#8455D2'
-                    cursor={'pointer'}
-                    onClick={() => setShowAddModal(product.title)}
-                  />
-                  <Trash
-                    size={20}
-                    color='#D42620'
-                    cursor={'pointer'}
-                    onClick={() => {
-                      setData((prv) =>
-                        prv.filter((ref) => ref.title !== product.title)
-                      )
-                      setShowDeleteModal(product.title)
-                    }}
-                  />
+          {groupData &&
+            groupData.map((product, index) => (
+              <div
+                key={index}
+                className='flex flex-col justify-between items-start border rounded-lg p-4 shadow-md hover:shadow-lg transition duration-300'>
+                {/* Category Label */}
+                <div className='flex items-center justify-between w-full mb-4'>
+                  <span className='text-sm bg-[#E1DCF8] text-[#6137A0] px-2 py-1 rounded'>
+                    {product.sup_group_name}
+                  </span>
+                  <div className='flex gap-2'>
+                    <Edit2
+                      size={20}
+                      color='#8455D2'
+                      cursor={'pointer'}
+                      onClick={() =>
+                        setShowAddModal([
+                          product.sup_group_name,
+                          product.sup_group_code,
+                        ])
+                      }
+                    />
+                    <Trash
+                      size={20}
+                      color='#D42620'
+                      cursor={'pointer'}
+                      onClick={() => {
+                        setGroupData(
+                          groupData.filter(
+                            (ref) =>
+                              ref.sup_group_name !== product.sup_group_name
+                          )
+                        )
+                        setShowDeleteModal([
+                          product.sup_group_name,
+                          product.sup_group_code,
+                        ])
+                      }}
+                    />
+                  </div>
                 </div>
+                <div className='flex'>
+                  <ProfileCircle size={24} color='#704CB9' />
+                  <p className='text-sm  px-2 py-1 rounded'>
+                    {Number(`${'product.referrers'}`) > 0 ? (
+                      <>
+                        <span className='text-[#757575]'>تعداد بازاریاب:</span>
+                        {'product.referrers'}
+                      </>
+                    ) : (
+                      'بازاریابی تعریف نشده است'
+                    )}
+                  </p>
+                </div>
+                <div className='flex my-5'>
+                  <People size={24} color='#704CB9' />
+                  <p className='text-sm  px-2 py-1 rounded'>
+                    {product.sup_group_code.length > 0 ? (
+                      <>
+                        <span className='text-[#757575]'>
+                          تعداد زیر‌گروه‌ها:
+                        </span>
+                        {product.sup_group_code.length}
+                      </>
+                    ) : (
+                      ' زیر گروهی تعریف نشده است'
+                    )}
+                  </p>
+                </div>
+                <button
+                  onClick={() => {
+                    location.hash =
+                      product.sup_group_code.length > 0
+                        ? 'groupsdetail'
+                        : 'subgroups'
+                    setMenu(
+                      product.sup_group_code.length > 0
+                        ? 'groupsdetail'
+                        : 'subgroups'
+                    )
+                  }}
+                  className={`w-full h-10  font-semibold rounded ${
+                    product.sup_group_code.length === 0
+                      ? 'bg-purple-600 hover:bg-purple-700 text-white'
+                      : 'border border-purple-600 text-purple-600 hover:bg-purple-600 hover:text-white'
+                  } transition duration-300`}>
+                  {product.sup_group_code.length > 0
+                    ? 'مشاهده زیر گروه‌ها'
+                    : 'تعریف زیر گروه'}
+                </button>
               </div>
-              <div className='flex'>
-                <ProfileCircle size={24} color='#704CB9' />
-                <p className='text-sm  px-2 py-1 rounded'>
-                  {product.referrers > 0 ? (
-                    <>
-                      <span className='text-[#757575]'>تعداد بازاریاب:</span>
-                      {product.referrers}
-                    </>
-                  ) : (
-                    'بازاریابی تعریف نشده است'
-                  )}
-                </p>
-              </div>
-              <div className='flex my-5'>
-                <People size={24} color='#704CB9' />
-                <p className='text-sm  px-2 py-1 rounded'>
-                  {product.subGroups.length > 0 ? (
-                    <>
-                      <span className='text-[#757575]'>تعداد زیر‌گروه‌ها:</span>
-                      {product.subGroups.length}
-                    </>
-                  ) : (
-                    ' زیر گروهی تعریف نشده است'
-                  )}
-                </p>
-              </div>
-              <button
-                onClick={() => {
-                  location.hash =
-                    product.subGroups.length > 0 ? 'groupsdetail' : 'subgroups'
-                  setMenu(
-                    product.subGroups.length > 0 ? 'groupsdetail' : 'subgroups'
-                  )
-                }}
-                className={`w-full h-10  font-semibold rounded ${
-                  product.subGroups.length === 0
-                    ? 'bg-purple-600 hover:bg-purple-700 text-white'
-                    : 'border border-purple-600 text-purple-600 hover:bg-purple-600 hover:text-white'
-                } transition duration-300`}>
-                {product.subGroups.length > 0
-                  ? 'مشاهده زیر گروه‌ها'
-                  : 'تعریف زیر گروه'}
-              </button>
-            </div>
-          ))}
+            ))}
         </div>
       </div>
     </div>

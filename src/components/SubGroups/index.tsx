@@ -1,8 +1,10 @@
-import  { useState } from 'react'
+import { useState } from 'react'
 import { Trash, Edit2 } from 'iconsax-react'
 import AddModal from './AddModal'
 import DeleteModal from './DeleteModal'
 import { useMenu } from '@/Context/Menu'
+import { useGroupData } from '@/Context/GroupsData'
+import { useSubGroupData } from '@/Context/SubGroupsData'
 
 interface SubGroup {
   name: string
@@ -13,57 +15,23 @@ interface TabData {
   subGroups: SubGroup[]
 }
 
-const tabData: TabData[] = [
-  {
-    title: 'تهران شرق',
-    subGroups: [
-      { name: 'منطقه ۲' },
-      { name: 'منطقه 4  ' },
-      { name: 'منطقه 13' },
-      { name: 'منطقه ۷' },
-    ],
-  },
-  {
-    title: 'تهران غرب',
-    subGroups: [
-      { name: 'منطقه 8' },
-      { name: 'منطقه ۲' },
-      { name: 'منطقه 22' },
-      { name: 'منطقه ۷' },
-    ],
-  },
-  {
-    title: 'دکترهای پوست',
-    subGroups: [
-      { name: 'منطقه 9' },
-      { name: 'منطقه 23' },
-      { name: 'منطقه ۲' },
-      { name: 'منطقه ۷' },
-    ],
-  },
-  {
-    title: 'خدمات زیبایی و درمان',
-    subGroups: [
-      { name: 'منطقه ۲' },
-      { name: 'منطقه 4' },
-      { name: 'منطقه 24' },
-      { name: 'منطقه ۷' },
-    ],
-  },
-]
-
 const SubGroups: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<number>(0)
+  const { setMenu } = useMenu()
+  const { groupData } = useGroupData()
+  const { subGroupData } = useSubGroupData()
+  const [activeTab, setActiveTab] = useState<number>(
+    groupData ? groupData[0].sup_group_id : 0
+  )
   const [showAddModal, setShowAddModal] = useState<boolean | string>(false)
   const [showDeleteModal, setShowDeleteModal] = useState<boolean | string>(
     false
   )
-  const { setMenu } = useMenu()
 
   return (
     <>
       {showAddModal && (
         <AddModal
+        groupId={activeTab}
           existName={typeof showAddModal === 'string' ? showAddModal : ''}
           close={setShowAddModal}
         />
@@ -105,41 +73,51 @@ const SubGroups: React.FC = () => {
         </div>
         <div className='p-6 mt-5 bg-white rounded-lg border border-gray-200'>
           <div className='flex border-b'>
-            {tabData.map((tab, index) => (
+            {groupData?.map((tab, index) => (
               <button
                 key={index}
                 className={`px-5 py-3 transition-all duration-500 ${
-                  activeTab === index
+                  activeTab === tab.sup_group_id
                     ? 'bg-[#E6DBFB80] border-b-2 border-[#704CB9] text-[#704CB9]'
                     : 'text-[#344054]'
                 }`}
-                onClick={() => setActiveTab(index)}>
-                {tab.title}
+                onClick={() => setActiveTab(tab.sup_group_id)}>
+                {tab.sup_group_name}
               </button>
             ))}
           </div>
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6'>
-            {tabData[activeTab].subGroups.map((subGroup, subIndex) => (
-              <div
-                key={subIndex}
-                className='flex justify-between items-center p-4 bg-white rounded-lg border border-gray-200 shadow'>
-                <div className='text-gray-600'>{subGroup.name}</div>
-                <div className='flex gap-2'>
-                  <Edit2
-                    size={18}
-                    color='#8455D2'
-                    className='cursor-pointer'
-                    onClick={() => setShowAddModal(subGroup.name)}
-                  />
-                  <Trash
-                    size={18}
-                    color='#D42620'
-                    className='cursor-pointer'
-                    onClick={() => setShowDeleteModal(subGroup.name)}
-                  />
-                </div>
-              </div>
-            ))}
+            {subGroupData &&
+              subGroupData?.map(
+                (subGroup, subIndex) =>
+                  subGroup.sup_group_id === activeTab && (
+                    <div
+                      key={subIndex}
+                      className='flex justify-between items-center p-4 bg-white rounded-lg border border-gray-200 shadow'>
+                      <div className='text-gray-600'>
+                        {subGroup.supervisor_name}
+                      </div>
+                      <div className='flex gap-2'>
+                        <Edit2
+                          size={18}
+                          color='#8455D2'
+                          className='cursor-pointer'
+                          onClick={() =>
+                            setShowAddModal(subGroup.supervisor_name)
+                          }
+                        />
+                        <Trash
+                          size={18}
+                          color='#D42620'
+                          className='cursor-pointer'
+                          onClick={() =>
+                            setShowDeleteModal(subGroup.supervisor_name)
+                          }
+                        />
+                      </div>
+                    </div>
+                  )
+              )}
           </div>
         </div>
       </div>

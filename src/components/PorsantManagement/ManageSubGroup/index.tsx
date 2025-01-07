@@ -15,7 +15,7 @@ import DoctorCard from './ReferrerCard'
 const PorsantManagement = () => {
   const [showAddModal, setShowAddModal] = useState<boolean | string>(false)
   const [showDeleteState, setShowDeleteState] = useState<boolean>(false)
-
+  const [deleteState, setDeleteState] = useState<string[]>([])
   return (
     <>
       {showAddModal && (
@@ -25,9 +25,14 @@ const PorsantManagement = () => {
         />
       )}
       <div className='container mx-auto px-4 py-6'>
-        {/* Header Section */}
         <div className='flex justify-between items-center mb-6'>
-          <h1 className='text-xl '>مدیریت پورسانت‌دهی / گروه من / منطقه ۵</h1>
+          <div className='flex justify-between items-center mb-7'>
+            <p>
+              <span className='text-[#98A2B3]'>مدیریت پورسانت‌دهی </span> /
+              <span className='text-[#98A2B3]'>گروه من </span>/
+              <span className='text-[#7747C0]'>منطقه ۵</span>
+            </p>
+          </div>
           {!showDeleteState && (
             <div className='flex'>
               <div className='flex gap-3 mx-7'>
@@ -64,26 +69,24 @@ const PorsantManagement = () => {
           )}
           {showDeleteState && (
             <div className='flex gap-3 mx-7'>
-             
               <button
                 onClick={() => {
-                  ;('')
+                 setShowDeleteState(false)
                 }}
-                className={`border border-[#7747C0] text-[#7747C0] px-5  h-10 rounded-lg`}>
-               حذف بازاریاب‌ها
+                className={`min-w-40 border border-[#7747C0] text-[#7747C0] px-5  h-10 rounded-lg`}>
+                حذف بازاریاب‌ها
               </button>
-               <button
+              <button
                 onClick={() => {
-                  ;('')
+                setShowDeleteState(false)
                 }}
-                className={`bg-[#7747C0] text-white px-5  h-10 rounded-lg`}>
+                className={`min-w-40 bg-[#7747C0] text-white px-5  h-10 rounded-lg`}>
                 انصراف
               </button>
             </div>
           )}
         </div>
 
-        {/* Colored Stat Cards */}
         {!showDeleteState && (
           <div className='grid grid-cols-5 max-md:grid-cols-1 max-lg:grid-cols-2 gap-4 mb-6'>
             <StatCard
@@ -119,15 +122,25 @@ const PorsantManagement = () => {
             />
           </div>
         )}
-
+   
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
           {Array.from({ length: 8 }).map((_, index) => (
             <DoctorCard
               key={index}
-              title='دکتر محدثه عالی'
-              allocation='۴۰۰۰ میلیون ریال'
-              lastAllocation='۲۰۰۰ میلیون ریال'
-              released='۲۰۰۰ میلیون ریال'
+              data={{
+                title: 'دکتر محدثه عالی',
+                allocation: '۴۰۰۰ میلیون ریال',
+                lastAllocation: '۲۰۰۰ میلیون ریال',
+                released: '۲۰۰۰ میلیون ریال',
+              }}
+              setDeleteItems={(value: string) =>
+                setDeleteState((prv) =>
+                  prv.includes(value)
+                    ? prv.filter((lastOne) => lastOne !== value)
+                    : [...prv, value]
+                )
+              }
+              showDeleteMode={showDeleteState}
             />
           ))}
         </div>

@@ -35,13 +35,21 @@ export interface IShabaDestinationList {
   fullname: string
 }
 export interface SubGroup {
-  name: string
+  supervisor_uid: string
+  supervisor_id: number
+  supervisor_code: string
+  supervisor_name:string
+  sup_status: number
+  sup_type: number
+  sup_group_id: number
+  sup_group_name: string
 }
 
 export interface GroupData {
-  title: string
-  subGroups: SubGroup[]
-  referrers?: number
+  sup_group_id: number
+  sup_group_code: string
+  sup_group_name: string
+  sup_group_status: number
 }
 export interface PromotionInterface {
   promotionDate: string // تاریخ پروموشن
