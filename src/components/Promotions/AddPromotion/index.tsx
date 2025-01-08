@@ -247,7 +247,7 @@ const AddPromotion = () => {
                     name='discountType'
                     value='cash'
                     onChange={handleInputChange}
-                    className='w-5 h-5 cursor-pointer accent-purple-700'
+                    className='w-5 h-5 cursor-pointer accent-[#7747C0]'
                   />
                   تخفیف نقدی
                 </label>
@@ -257,7 +257,7 @@ const AddPromotion = () => {
                     name='discountType'
                     value='product'
                     onChange={handleInputChange}
-                    className='w-5 h-5 cursor-pointer accent-purple-700'
+                    className='w-5 h-5 cursor-pointer accent-[#7747C0]'
                   />
                   تخفیف جنسی
                 </label>
@@ -401,7 +401,7 @@ const AddPromotion = () => {
                         </>
                       )}
                     </div>
-                    <div className='px-4 bg-purple-700 text-white py-2 rounded-md'>
+                    <div className='px-4 bg-[#7747C0] text-white py-2 rounded-md'>
                       بارگذاری
                     </div>
                   </label>
@@ -420,7 +420,7 @@ const AddPromotion = () => {
         <div className='w-full flex justify-end'>
           <button
             type='submit'
-            className='mt-6 px-12 bg-purple-700 text-white py-2 rounded-md'>
+            className='mt-6 px-12 bg-[#7747C0] text-white py-2 rounded-md'>
             ثبت پروموشن
           </button>
         </div>

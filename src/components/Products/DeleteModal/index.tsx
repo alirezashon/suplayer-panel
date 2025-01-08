@@ -68,7 +68,7 @@ const DeleteModal = ({
               <>
                 <button
                   type='submit'
-                  className='w-full mt-4 px-4 py-2 bg-purple-700 text-white rounded-lg hover:bg-purple-800'>
+                  className='w-full mt-4 px-4 py-2 bg-[#7747C0] text-white rounded-lg hover:bg-purple-800'>
                   انصراف
                 </button>
                 <button

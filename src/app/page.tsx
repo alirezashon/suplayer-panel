@@ -1,5 +1,6 @@
 'use client'
 import { getGroupData, getSubGroupData } from '@/actions/setData'
+import Beneficiary from '@/components/Beneficiary'
 import Campaign from '@/components/Campaign'
 import Dashboard from '@/components/Dashboard'
 import Deposite from '@/components/Deposite'
@@ -30,9 +31,9 @@ const Home = () => {
   useEffect(() => {
     const fetcher = async () => {
       const groups = await getGroupData()
-      if (groups) setGroupData(groups) 
-           const subGroups = await getSubGroupData()
-        if (subGroups) setSubGroupData(subGroups)
+      if (groups) setGroupData(groups)
+      const subGroups = await getSubGroupData()
+      if (subGroups) setSubGroupData(subGroups)
     }
     fetcher()
     const handleHashChange = () => {
@@ -88,6 +89,8 @@ const Home = () => {
               <Campaign />
             ) : ['porsant', 'porsantmanagement'].includes(menu) ? (
               <PorsantManagement />
+            ) : menu === 'beneficiary' ? (
+              <Beneficiary />
             ) : (
               <Dashboard />
             )}

@@ -216,7 +216,7 @@ const Drafts = () => {
             />
           </div>
           <div className='flex gap-10'>
-            <button className='flex items-center gap-2 w-full justify-center h-10 rounded-lg bg-purple-600 hover:bg-purple-700 text-white font-bold'>
+            <button className='flex items-center gap-2 w-full justify-center h-10 rounded-lg bg-purple-600 hover:bg-[#7747C0] text-white font-bold'>
               <TickCircle size='20' color='#ffffff' variant='Bold' />
               ذخیره
             </button>

@@ -154,7 +154,7 @@ export const WithdrawalForm: React.FC = () => {
                         type='radio'
                         name='beneficiary'
                         value={beneficiary.iban}
-                        className={`w-5 h-5 cursor-pointer accent-purple-700 ${
+                        className={`w-5 h-5 cursor-pointer accent-[#7747C0] ${
                           errors.beneficiary ? 'border-red-500' : ''
                         }`}
                       />
@@ -189,7 +189,7 @@ export const WithdrawalForm: React.FC = () => {
 
             <button
               type='submit'
-              className='mt-4 px-4 py-2 bg-purple-700 text-white rounded-lg hover:bg-purple-800'>
+              className='mt-4 px-4 py-2 bg-[#7747C0] text-white rounded-lg hover:bg-purple-800'>
               ادامه
             </button>
           </form>

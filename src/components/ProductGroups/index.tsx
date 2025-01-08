@@ -71,7 +71,7 @@ const ProductGroups: React.FC = () => {
         <button
           type='submit'
           onClick={() => setShowAddModal(true)}
-          className='h-10 min-w-40 bg-purple-700 text-white rounded-lg hover:bg-purple-800'>
+          className='h-10 min-w-40 bg-[#7747C0] text-white rounded-lg hover:bg-purple-800'>
           + گروه محصول جدید
         </button>
       </div>
@@ -123,7 +123,7 @@ const ProductGroups: React.FC = () => {
                 }}
                 className={`w-full py-2  font-semibold rounded ${
                   product.buttonType === 'add'
-                    ? 'bg-purple-600 hover:bg-purple-700 text-white'
+                    ? 'bg-purple-600 hover:bg-[#7747C0] text-white'
                     : 'border border-purple-600 text-purple-600 hover:bg-purple-600 hover:text-white'
                 } transition duration-300`}>
                 {product.actionText}

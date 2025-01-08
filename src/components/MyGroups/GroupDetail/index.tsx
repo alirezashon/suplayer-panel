@@ -82,7 +82,7 @@ const GroupsDetail: React.FC = () => {
               <button
                 className={`w-full h-10  font-semibold rounded ${
                   !product.allocatedBudget
-                    ? 'bg-purple-600 hover:bg-purple-700 text-white'
+                    ? 'bg-purple-600 hover:bg-[#7747C0] text-white'
                     : 'border border-purple-600 text-purple-600 hover:bg-purple-600 hover:text-white'
                 } transition duration-300`}>
                 {!product.allocatedBudget

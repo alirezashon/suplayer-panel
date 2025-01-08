@@ -6,15 +6,6 @@ import { useMenu } from '@/Context/Menu'
 import { useGroupData } from '@/Context/GroupsData'
 import { useSubGroupData } from '@/Context/SubGroupsData'
 
-interface SubGroup {
-  name: string
-}
-
-interface TabData {
-  title: string
-  subGroups: SubGroup[]
-}
-
 const SubGroups: React.FC = () => {
   const { setMenu } = useMenu()
   const { groupData } = useGroupData()
@@ -31,16 +22,16 @@ const SubGroups: React.FC = () => {
     <>
       {showAddModal && (
         <AddModal
-        groupId={activeTab}
+          groupId={activeTab}
           existName={typeof showAddModal === 'string' ? showAddModal : ''}
           close={setShowAddModal}
         />
       )}
       {showDeleteModal && (
         <DeleteModal
-          name={`${showAddModal}`}
+          name={`${showDeleteModal}`}
           close={setShowDeleteModal}
-          isActive
+          groupId={activeTab}
         />
       )}
       <div className='flex flex-col p-2'>
@@ -67,7 +58,7 @@ const SubGroups: React.FC = () => {
           <button
             type='submit'
             onClick={() => setShowAddModal(true)}
-            className='h-10 min-w-40 bg-purple-700 text-white rounded-lg hover:bg-purple-800'>
+            className='h-10 min-w-40 bg-[#7747C0] text-white rounded-lg hover:bg-purple-800'>
             + زیرگروه جدید
           </button>
         </div>
@@ -103,7 +94,11 @@ const SubGroups: React.FC = () => {
                           color='#8455D2'
                           className='cursor-pointer'
                           onClick={() =>
-                            setShowAddModal(subGroup.supervisor_name)
+                            setShowAddModal(
+                              subGroup.supervisor_name +
+                                '#$%^@!~' +
+                                subGroup.supervisor_code
+                            )
                           }
                         />
                         <Trash
@@ -111,7 +106,11 @@ const SubGroups: React.FC = () => {
                           color='#D42620'
                           className='cursor-pointer'
                           onClick={() =>
-                            setShowDeleteModal(subGroup.supervisor_name)
+                            setShowDeleteModal(
+                              subGroup.supervisor_name +
+                                '#$%^@!~' +
+                                subGroup.supervisor_code
+                            )
                           }
                         />
                       </div>

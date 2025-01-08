@@ -56,7 +56,7 @@ const Product: React.FC = () => {
           <button
             type='submit'
             onClick={() => setShowAddModal(true)}
-            className='h-10 min-w-40 bg-purple-700 text-white rounded-lg hover:bg-purple-800'>
+            className='h-10 min-w-40 bg-[#7747C0] text-white rounded-lg hover:bg-purple-800'>
             + محصول جدید
           </button>
         )}
@@ -183,7 +183,7 @@ const Product: React.FC = () => {
           <button
             type='submit'
             onClick={() => setShowAddModal(true)}
-            className='h-10 min-w-40 bg-purple-700 text-white rounded-lg hover:bg-purple-800'>
+            className='h-10 min-w-40 bg-[#7747C0] text-white rounded-lg hover:bg-purple-800'>
             + محصول جدید
           </button>
         </div>

@@ -112,7 +112,7 @@ const Referrer: React.FC = () => {
             <button
               type='submit'
               onClick={() => setShowAddModal(true)}
-              className='h-10 min-w-40 bg-purple-700 text-white rounded-lg hover:bg-purple-800'>
+              className='h-10 min-w-40 bg-[#7747C0] text-white rounded-lg hover:bg-purple-800'>
               + بازاریاب جدید
             </button>
           )}
@@ -167,7 +167,7 @@ const Referrer: React.FC = () => {
             <div className='mt-10 w-full flex justify-end '>
               <button
                 type='submit'
-                className={` gap-2 px-2 py-2 w-40 text-base text-center text-white bg-purple-700 rounded-lg border border-purple-700 border-solid min-h-10 `}>
+                className={` gap-2 px-2 py-2 w-40 text-base text-center text-white bg-[#7747C0] rounded-lg border border-[#7747C0] border-solid min-h-10 `}>
                 جستجو
               </button>
             </div>
@@ -255,7 +255,7 @@ const Referrer: React.FC = () => {
               <button
                 type='submit'
                 onClick={() => setShowAddModal(true)}
-                className='h-10 min-w-40 bg-purple-700 text-white rounded-lg hover:bg-purple-800'>
+                className='h-10 min-w-40 bg-[#7747C0] text-white rounded-lg hover:bg-purple-800'>
                 + بازاریاب جدید
               </button>
             </div>

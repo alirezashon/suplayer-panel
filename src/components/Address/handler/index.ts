@@ -7,7 +7,7 @@ export interface SearchAddress {
 
 export const searchAddress = async (
   value: string,
-  setAddresses: (value: SearchAddress[]) => void
+  setAddresses: (value: any[]) => void
 ) => {
   try {
     const response = await fetch(
@@ -21,8 +21,8 @@ export const searchAddress = async (
     )
     const data = await response.json()
     if (response.status === 200 && data.items) {
-      const converted: SearchAddress[] = data.items.map(
-        (item: SearchAddress) => ({
+      const converted: any[] = data.items.map(
+        (item: any) => ({
           title: item.title,
           x: item.location.x,
           y: item.location.y,

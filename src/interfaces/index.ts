@@ -38,7 +38,7 @@ export interface SubGroup {
   supervisor_uid: string
   supervisor_id: number
   supervisor_code: string
-  supervisor_name:string
+  supervisor_name: string
   sup_status: number
   sup_type: number
   sup_group_id: number
@@ -90,4 +90,16 @@ export interface CardProps {
   allocation: string
   lastAllocation: string
   released: string
+}
+export interface States {
+  StateCode: string
+  StateDesc: string
+}
+export interface County {
+  CountyCode: string
+  CountyDesc: string
+}
+export interface Cities {
+  CountyCode: string
+  CountyDesc: string
 }

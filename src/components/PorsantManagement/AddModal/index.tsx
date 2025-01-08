@@ -81,7 +81,7 @@ const AddModal = ({
             <button
               type='button'
               onClick={handleAddInput}
-              className='text-[#7747C0] font-bold hover:text-purple-700'>
+              className='text-[#7747C0] font-bold hover:text-[#7747C0]'>
               + افزودن زیر گروه جدید
             </button>
           </div>

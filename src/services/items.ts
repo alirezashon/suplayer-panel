@@ -133,18 +133,21 @@ export const CreateSubGroup = async ({
 }
 export const EditSubGroup = async ({
   name,
-  mobile,
+  code,
   accessToken,
   status,
+  group_id
 }: {
   name: string
-  mobile: string
+  code: string
   accessToken: string | undefined
   status?: number
+  group_id:string
+
 }) => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/edit_super_grpups`,
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/edit_supervisor`,
       {
         method: 'POST',
         headers: {
@@ -152,11 +155,12 @@ export const EditSubGroup = async ({
           authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
+          supervisor_code: code,
           supervisor_name: name,
           sup_status: status || 1,
-          sup_type: 0,
-          supervisor_uid: mobile,
-          sup_group_id: 0,
+          sup_type: 2,
+          supervisor_uid: '',
+          sup_group_code: group_id,
         }),
       }
     )

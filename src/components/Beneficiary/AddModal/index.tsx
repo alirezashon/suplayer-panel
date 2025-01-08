@@ -1,10 +1,9 @@
-import { SearchAddress, searchAddress } from '@/components/Address/handler'
+import { getCookieByKey } from '@/actions/cookieToken'
+import { Cities, County, States } from '@/interfaces'
 import { CreateReferrer } from '@/services/items'
+import { GetCity, GetCounty, GetStates } from '@/services/location'
 import { CloseSquare, SearchNormal } from 'iconsax-react'
-import dynamic from 'next/dynamic'
-import { useState, useRef } from 'react'
-
-const Map = dynamic(() => import('../../Address/Map'), { ssr: false })
+import { useState, useRef, useEffect } from 'react'
 
 interface FormData {
   name?: string
@@ -20,13 +19,13 @@ interface AddModalProps {
 }
 
 const AddModal = ({ data, close }: AddModalProps) => {
-  const [mapData, setMapData] = useState<[number, number]>([
-    35.72249924640049, 51.335191350784214,
-  ])
-  const [address, setAddress] = useState<string>('')
   const [errors, setErrors] = useState<Record<string, string>>({})
-  const [foundAddresses, setFoundAddresses] = useState<SearchAddress[]>([])
-  const [showDropdown, setShowDropdown] = useState<boolean>(false)
+  const [states, setStates] = useState<States[]>([])
+  const [county, setCounty] = useState<County[]>([])
+  const [cities, Setcities] = useState<Cities[]>([])
+  const [showDropdown, setShowDropdown] = useState<
+    'states' | 'county' | 'city' | null
+  >()
   const [search, setSearch] = useState<string>('')
   const [referrerType, setReferrerType] = useState<number>(0)
   const nameRef = useRef<HTMLInputElement>(null)
@@ -35,57 +34,92 @@ const AddModal = ({ data, close }: AddModalProps) => {
   const phoneRef = useRef<HTMLInputElement>(null)
   const addressRef = useRef<HTMLInputElement>(null)
   const weightRef = useRef<HTMLSelectElement>(null)
-
+  const locationRefs = useRef({state:'',county:'',city:''})
   const beneficiaries = ['شخص', 'کسب و کار']
 
+  useEffect(() => {
+    const getLocs = async () => {
+      const accessToken = await getCookieByKey('access_token')
+      await GetStates({ accessToken }).then(async (value) => {
+        if (value) {
+          setStates(value)
+          await GetCounty({ accessToken, state: value[0].StateCode }).then(
+            async (counties) => {
+              if (counties) {
+                setCounty(counties)
+                await GetCity({
+                  accessToken,
+                  state: value[0].StateCode,
+                  county: counties[0].CountyCode,
+                }).then((cityList) => {
+                  if (cityList) {
+                    Setcities(cityList)
+                  }
+                })
+              }
+            }
+          )
+        }
+      })
+    }
+    getLocs()
+  }, [])
+
+  const getCounty = async () => {
+    const accessToken = await getCookieByKey('access_token')
+        await GetCounty({ accessToken, state: locationRefs.current.state }).then(
+          async (counties) => {
+            if (counties) {
+              setCounty(counties)
+              await GetCity({
+                accessToken,
+                state: locationRefs.current.state,
+                county: locationRefs.current.county
+              }).then((cityList) => {
+                if (cityList) {
+                  Setcities(cityList)
+                }
+              })
+            }
+          }
+        )
+      }
+   
+  }
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    setErrors({})
-    const formData = {
-      name: nameRef.current?.value.trim() || '',
-      lastName: lastNameRef.current?.value.trim() || '',
-      speciality: specialityRef.current?.value.trim() || '',
-      phone: phoneRef.current?.value.trim() || '',
-      address: addressRef.current?.value.trim() || '',
-      weight: weightRef.current?.value || '',
-    }
+    // setErrors({})
+    // const formData = {
+    //   name: nameRef.current?.value.trim() || '',
+    //   lastName: lastNameRef.current?.value.trim() || '',
+    //   speciality: specialityRef.current?.value.trim() || '',
+    //   phone: phoneRef.current?.value.trim() || '',
+    //   address: addressRef.current?.value.trim() || '',
+    //   weight: weightRef.current?.value || '',
+    // }
 
-    const newErrors: Record<string, string> = {}
-    Object.keys(formData).forEach((key) => {
-      if (!formData[key as keyof typeof formData]) {
-        newErrors[key] = 'این فیلد اجباری است'
-      }
-    })
+    // const newErrors: Record<string, string> = {}
+    // Object.keys(formData).forEach((key) => {
+    //   if (!formData[key as keyof typeof formData]) {
+    //     newErrors[key] = 'این فیلد اجباری است'
+    //   }
+    // })
 
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors)
-      return
-    }
+    // if (Object.keys(newErrors).length > 0) {
+    //   setErrors(newErrors)
+    //   return
+    // }
 
-    await CreateReferrer({
-      accessToken: '',
-      name: formData.name,
-      family: formData.lastName,
-      mobile: '',
-      fullName: '',
-    })
-  }
-  const handleSearchChange = async (value: string) => {
-    setSearch(value)
-    if (value.length > 2) {
-      await searchAddress(value, setFoundAddresses)
-      setShowDropdown(true)
-    } else {
-      setShowDropdown(false)
-    }
+    // await CreateReferrer({
+    //   accessToken: '',
+    //   name: formData.name,
+    //   family: formData.lastName,
+    //   mobile: '',
+    //   fullName: '',
+    // })
   }
 
-  const handleSelectAddress = (selected: SearchAddress) => {
-    setMapData([selected.location.y, selected.location.x])
-    setAddress(selected.title)
-    setShowDropdown(false)
-  }
   return (
     <div>
       <div className='absolute bg-slate-600 opacity-50 w-full h-[200vh] z-50 top-0 right-0'></div>
@@ -97,7 +131,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
           className='flex flex-col mx-2 my-2 bg-white pb-[70px]'>
           <div className='sticky top-0 bg-white flex justify-between items-center w-full text-xl font-medium text-right text-gray-800'>
             <div className=' flex-1 shrink my-auto min-w-[240px]'>
-              بازاریاب جدید
+              {data ? 'ویرایش ذی‌‌نفع' : 'ذی‌ نفع جدید'}
             </div>
             <CloseSquare
               size={24}
@@ -107,8 +141,8 @@ const AddModal = ({ data, close }: AddModalProps) => {
             />
           </div>
 
-          <div className='flex flex-col mt-3'>
-            <p className='text-[#7747C0]'>انتخاب نوع بازاریاب</p>
+          <div className='flex flex-col mt-7'>
+            <p className='text-[#7747C0]'>انتخاب نوع ذی‌ نفع </p>
             <div className='flex flex-col gap-3 mt-2'>
               {beneficiaries.map((beneficiary, index) => (
                 <label
@@ -162,7 +196,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
               </div>
               <div className='flex gap-4 my-3'>
                 <div className='flex flex-col w-full'>
-                  <label>تخصص بازاریاب</label>
+                  <label>تخصص ذی‌ نفع</label>
                   <input
                     ref={specialityRef}
                     defaultValue={data?.speciality || ''}
@@ -177,7 +211,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
                   )}
                 </div>
                 <div className='flex flex-col w-full'>
-                  <label>شماره همراه بازاریاب</label>
+                  <label>شماره همراه ذی‌ نفع</label>
                   <input
                     ref={phoneRef}
                     defaultValue={data?.phone || ''}
@@ -255,54 +289,51 @@ const AddModal = ({ data, close }: AddModalProps) => {
               </div>
             </>
           )}
-
-          <div className='relative'>
-            <div className='relative w-full flex items-center'>
-              <div className='absolute left-[18px] top-[18px] z-20 cursor-pointer text-[#50545F]'>
-                <SearchNormal size={24} color='gray' />
-              </div>
-              <input
-                type='search'
-                placeholder='جستجو'
-                value={search}
-                onChange={(e) => handleSearchChange(e.target.value)}
-                className='absolute top-[12px] right-[12px] w-[calc(100%-24px)] z-10 border border-gray-300 rounded-md px-4 py-2 text-right outline-none focus:border-red-400'
-              />
+          <div className='flex gap-4 my-3'>
+            <div className='flex-1'>
+              <label> استان </label>
+              <select
+                ref={weightRef}
+                className='w-full border rounded-lg h-10 px-1 outline-none'>
+                {states.length > 0 &&
+                  states.map((item, index) => (
+                    <option key={index} defaultValue={item.StateCode}>
+                      {item.StateDesc}
+                    </option>
+                  ))}
+              </select>
             </div>
-
-            {showDropdown && (
-              <div className='absolute top-[calc(100%+48px)] right-[12px] w-[calc(100%-24px)] bg-white border border-gray-300 mt-1 max-h-40 overflow-y-auto z-20 rounded-md shadow-md'>
-                {foundAddresses.map((item, index) => (
-                  <div
-                    key={index}
-                    className='p-2 cursor-pointer hover:bg-gray-100'
-                    onClick={() => handleSelectAddress(item)}>
-                    {item.title}
-                  </div>
-                ))}
-              </div>
-            )}
+            <div className='flex-1'>
+              <label> شهرستان </label>
+              <select
+                ref={weightRef}
+                className='w-full border rounded-lg h-10 px-1 outline-none'>
+                {county.length > 0 &&
+                  county.map((item, index) => (
+                    <option key={index} defaultValue={item.CountyCode}>
+                      {item.CountyDesc}
+                    </option>
+                  ))}
+              </select>
+            </div>
           </div>
-
-          <Map coord={mapData} setCoord={setMapData} setAddress={setAddress} />
-
-          <div className='my-4'>
-            <label>آدرس</label>
-            <input
-              value={address.length > 0 ? address : data?.address}
-              onChange={(e) => setAddress(e.target.value)}
-              type='text'
-              className={`w-full border ${
-                errors.address ? 'border-red-500' : ''
-              }`}
-            />
-            {errors.address && (
-              <span className='text-red-500'>{errors.address}</span>
-            )}
+          <div className='flex gap-4 my-3'>
+            <div className='flex-1'>
+              <label> شهر </label>
+              <select
+                ref={weightRef}
+                className='w-full border rounded-lg h-10 px-1 outline-none'>
+                {cities.length > 0 &&
+                  cities.map((item, index) => (
+                    <option key={index} defaultValue={item.CountyCode}>
+                      {item.CountyDesc}
+                    </option>
+                  ))}
+              </select>
+            </div>
           </div>
-
           <div className='my-2'>
-            <label>انتخاب وزن برای بازاریاب</label>
+            <label>انتخاب وزن برای ذی‌ نفع</label>
             <select
               ref={weightRef}
               className='w-full border rounded-lg h-10 px-1'>
@@ -318,12 +349,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
           <button
             type='submit'
             className='w-full h-10 text-white bg-[#7747C0] rounded-lg'>
-            ثبت و ادامه
-          </button>
-          <button
-            type='submit'
-            className='flex justify-center items-center w-full h-10 border border-[#7747C0] text-[#7747C0] rounded-lg hover:bg-purple-100'>
-            ثبت و بررسی
+            ثبت و ذخیره
           </button>
         </div>
       </div>

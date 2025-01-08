@@ -3,6 +3,7 @@ import { useGroupData } from '@/Context/GroupsData'
 import { CreateSubGroup, EditSubGroup } from '@/services/items'
 import { CloseSquare } from 'iconsax-react'
 import { useState } from 'react'
+import toast from 'react-hot-toast'
 
 const AddModal = ({
   existName,
@@ -14,15 +15,34 @@ const AddModal = ({
   close: (show: boolean) => void
 }) => {
   const [data, setData] = useState<{ name: string; groupId: number }>({
-    name: '',
-    groupId: 0,
+    name: existName?.split('#$%^@!~')[0] || '',
+    groupId,
   })
   const { groupData } = useGroupData()
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
     const accessToken = (await getCookieByKey('access_token')) || ''
-    if (existName)
+    if (!existName)
       CreateSubGroup({ accessToken, groupID: data.groupId, name: data.name })
-    else EditSubGroup({ accessToken, mobile: '', name: data.name })
+        .then((value) =>
+          value.status === '-1'
+            ? toast.error(value.message)
+            : toast.success(value.message)
+        )
+        .catch(() => toast.error('خطایی پیش آمد'))
+    else
+      EditSubGroup({
+        accessToken,
+        group_id: `${data.groupId}`,
+        code: `${existName.split('#$%^@!~')[1]}`,
+        name: data.name,
+      })
+        .then((value) =>
+          value.status === '-1'
+            ? toast.error(value.message)
+            : toast.success(value.message)
+        )
+        .catch(() => toast.error('خطایی پیش آمد'))
   }
 
   return (
@@ -50,9 +70,16 @@ const AddModal = ({
           <div className='my-4'>
             <label id='status-label'> گروه خود را انتخاب کنید</label>
             <select
+              onChange={(e) =>
+                setData((prev) => ({
+                  ...prev,
+                  groupId: Number(e.target.value),
+                }))
+              }
+              defaultValue={groupId}
               className={`!w-full outline-none border rounded-lg h-10 px-1 cursor-pointer border-[#C9D0D8]`}>
               {groupData?.map((gp) => (
-                <option key={gp.sup_group_code} value={gp.sup_group_code} defaultChecked={groupId?gp.sup_group_id===groupId:false}>
+                <option key={gp.sup_group_code} value={gp.sup_group_code}>
                   {gp.sup_group_name}
                 </option>
               ))}
@@ -74,14 +101,11 @@ const AddModal = ({
               />
             </div>
           </div>
-
-          <div className='mt-10 w-full max-md:max-w-full'>
-            <button
-              type='submit'
-              className={`fill-button px-10 h-10 rounded-lg  `}>
-              ثبت
-            </button>
-          </div>
+          <button
+            type='submit'
+            className={`fill-button px-10 h-10 mt-10 rounded-lg  `}>
+            ثبت
+          </button>
         </form>
       </div>
     </div>
