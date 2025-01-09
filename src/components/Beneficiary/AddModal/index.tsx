@@ -85,7 +85,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
         )
       }
    
-  }
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
