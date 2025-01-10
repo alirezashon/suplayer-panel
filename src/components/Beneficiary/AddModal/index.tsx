@@ -34,7 +34,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
   const phoneRef = useRef<HTMLInputElement>(null)
   const addressRef = useRef<HTMLInputElement>(null)
   const weightRef = useRef<HTMLSelectElement>(null)
-  const locationRefs = useRef({state:'',county:'',city:''})
+  const locationRefs = useRef({ state: '', county: '', city: '' })
   const beneficiaries = ['شخص', 'کسب و کار']
 
   useEffect(() => {
@@ -67,25 +67,36 @@ const AddModal = ({ data, close }: AddModalProps) => {
 
   const getCounty = async () => {
     const accessToken = await getCookieByKey('access_token')
-        await GetCounty({ accessToken, state: locationRefs.current.state }).then(
-          async (counties) => {
-            if (counties) {
-              setCounty(counties)
-              await GetCity({
-                accessToken,
-                state: locationRefs.current.state,
-                county: locationRefs.current.county
-              }).then((cityList) => {
-                if (cityList) {
-                  Setcities(cityList)
-                }
-              })
+    await GetCounty({ accessToken, state: locationRefs.current.state }).then(
+      async (counties) => {
+        if (counties) {
+          setCounty(counties)
+          await GetCity({
+            accessToken,
+            state: locationRefs.current.state,
+            county: locationRefs.current.county,
+          }).then((cityList) => {
+            if (cityList) {
+              Setcities(cityList)
             }
-          }
-        )
+          })
+        }
       }
-   
-  
+    )
+  }
+  const getCity = async () => {
+    const accessToken = await getCookieByKey('access_token')
+    await GetCity({
+      accessToken,
+      state: locationRefs.current.state,
+      county: locationRefs.current.county,
+    }).then((cityList) => {
+      if (cityList) {
+        Setcities(cityList)
+      }
+    })
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
