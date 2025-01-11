@@ -3,7 +3,6 @@ import { Edit2, People, ProfileCircle, Trash } from 'iconsax-react'
 import { useMenu } from '@/Context/Menu'
 import AddModal from './AddModal'
 import DeleteModal from './DeleteModal'
-import { getGroupData } from '@/actions/setData'
 import { useGroupData } from '@/Context/GroupsData'
 
 const MyGroups: React.FC = () => {
@@ -114,12 +113,12 @@ const MyGroups: React.FC = () => {
                 <div className='flex my-5'>
                   <People size={24} color='#704CB9' />
                   <p className='text-sm  px-2 py-1 rounded'>
-                    {product.sup_group_code.length > 0 ? (
+                    {product.supervisors_count > 0 ? (
                       <>
                         <span className='text-[#757575]'>
                           تعداد زیر‌گروه‌ها:
                         </span>
-                        {product.sup_group_code.length}
+                        {product.supervisors_count}
                       </>
                     ) : (
                       ' زیر گروهی تعریف نشده است'

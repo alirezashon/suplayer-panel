@@ -93,7 +93,7 @@ const AddModal = ({
             <p
               className='text-[#7747C0] cursor-pointer'
               onClick={() => setNames((prv) => [...prv, ''])}>
-              + محصول جدید{' '}
+              + محصول جدید
             </p>
           </div>
           <div className='mt-10 w-full max-md:max-w-full'>

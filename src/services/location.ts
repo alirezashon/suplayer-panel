@@ -66,7 +66,7 @@ export const GetCity = async ({
 }): Promise<Cities[] | undefined> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/get_county?StateCode=${state}&CountyCode=${county}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/get_city?StateCode=${state}&CountyCode=${county}`,
       {
         method: 'GET',
         headers: {

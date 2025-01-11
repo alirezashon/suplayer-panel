@@ -22,13 +22,6 @@ const Beneficiary: React.FC = () => {
     <>
       {showAddModal && (
         <AddModal
-          data={{
-            name: 'string',
-            lastName: ' string',
-            speciality: 'string',
-            phone: 'string',
-            address: 'string',
-          }}
           close={setShowAddModal}
         />
       )}

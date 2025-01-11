@@ -1,6 +1,6 @@
 import { getCookieByKey } from '@/actions/cookieToken'
 import { Cities, County, States } from '@/interfaces'
-import { CreateReferrer } from '@/services/items'
+import { CreateBeneficiary } from '@/services/items'
 import { GetCity, GetCounty, GetStates } from '@/services/location'
 import { CloseSquare, SearchNormal } from 'iconsax-react'
 import { useState, useRef, useEffect } from 'react'
@@ -11,6 +11,7 @@ interface FormData {
   speciality?: string
   phone?: string
   address?: string
+  weight?: number
 }
 
 interface AddModalProps {
@@ -23,17 +24,16 @@ const AddModal = ({ data, close }: AddModalProps) => {
   const [states, setStates] = useState<States[]>([])
   const [county, setCounty] = useState<County[]>([])
   const [cities, Setcities] = useState<Cities[]>([])
-  const [showDropdown, setShowDropdown] = useState<
-    'states' | 'county' | 'city' | null
-  >()
-  const [search, setSearch] = useState<string>('')
-  const [referrerType, setReferrerType] = useState<number>(0)
-  const nameRef = useRef<HTMLInputElement>(null)
-  const lastNameRef = useRef<HTMLInputElement>(null)
-  const specialityRef = useRef<HTMLInputElement>(null)
-  const phoneRef = useRef<HTMLInputElement>(null)
-  const addressRef = useRef<HTMLInputElement>(null)
-  const weightRef = useRef<HTMLSelectElement>(null)
+  const [beneficiaryType, setBeneficiaryType] = useState<1 | 2>(1)
+
+  const detailsRefs = useRef({
+    name: '',
+    lastName: '',
+    speciality: '',
+    phone: '',
+    address: '',
+    weight: 1,
+  })
   const locationRefs = useRef({ state: '', county: '', city: '' })
   const beneficiaries = ['شخص', 'کسب و کار']
 
@@ -65,31 +65,29 @@ const AddModal = ({ data, close }: AddModalProps) => {
     getLocs()
   }, [])
 
-  const getCounty = async () => {
+  const getCounty = async (state: string) => {
     const accessToken = await getCookieByKey('access_token')
-    await GetCounty({ accessToken, state: locationRefs.current.state }).then(
-      async (counties) => {
-        if (counties) {
-          setCounty(counties)
-          await GetCity({
-            accessToken,
-            state: locationRefs.current.state,
-            county: locationRefs.current.county,
-          }).then((cityList) => {
-            if (cityList) {
-              Setcities(cityList)
-            }
-          })
-        }
+    await GetCounty({ accessToken, state: state }).then(async (counties) => {
+      if (counties) {
+        setCounty(counties)
+        await GetCity({
+          accessToken,
+          state: state,
+          county: locationRefs.current.county,
+        }).then((cityList) => {
+          if (cityList) {
+            Setcities(cityList)
+          }
+        })
       }
-    )
+    })
   }
-  const getCity = async () => {
+  const getCity = async (county: string) => {
     const accessToken = await getCookieByKey('access_token')
     await GetCity({
       accessToken,
       state: locationRefs.current.state,
-      county: locationRefs.current.county,
+      county: county,
     }).then((cityList) => {
       if (cityList) {
         Setcities(cityList)
@@ -99,36 +97,36 @@ const AddModal = ({ data, close }: AddModalProps) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    const accessToken = await getCookieByKey('access_token')
 
-    // setErrors({})
-    // const formData = {
-    //   name: nameRef.current?.value.trim() || '',
-    //   lastName: lastNameRef.current?.value.trim() || '',
-    //   speciality: specialityRef.current?.value.trim() || '',
-    //   phone: phoneRef.current?.value.trim() || '',
-    //   address: addressRef.current?.value.trim() || '',
-    //   weight: weightRef.current?.value || '',
-    // }
+    setErrors({})
 
-    // const newErrors: Record<string, string> = {}
-    // Object.keys(formData).forEach((key) => {
-    //   if (!formData[key as keyof typeof formData]) {
-    //     newErrors[key] = 'این فیلد اجباری است'
-    //   }
-    // })
+    const newErrors: Record<string, string> = {}
+    Object.keys(detailsRefs).forEach((key) => {
+      if (!detailsRefs[key as keyof typeof detailsRefs]) {
+        newErrors[key] = 'این فیلد اجباری است'
+      }
+    })
 
-    // if (Object.keys(newErrors).length > 0) {
-    //   setErrors(newErrors)
-    //   return
-    // }
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors)
+      return
+    }
 
-    // await CreateReferrer({
-    //   accessToken: '',
-    //   name: formData.name,
-    //   family: formData.lastName,
-    //   mobile: '',
-    //   fullName: '',
-    // })
+    await CreateBeneficiary({
+      accessToken,
+      name: detailsRefs.current.name?.trim() || '',
+      family: detailsRefs.current.lastName?.trim() || '',
+      fullName: '',
+      mobile: detailsRefs.current.phone?.trim() || '',
+      CityUID: locationRefs.current.city?.trim() || '',
+      address: detailsRefs.current.address?.trim() || '',
+      expertise: detailsRefs.current.speciality?.trim() || '',
+      weight: detailsRefs.current.weight || 1,
+      lat: 0,
+      long: 0,
+      tob: beneficiaryType,
+    })
   }
 
   return (
@@ -151,7 +149,6 @@ const AddModal = ({ data, close }: AddModalProps) => {
               onClick={() => close(false)}
             />
           </div>
-
           <div className='flex flex-col mt-7'>
             <p className='text-[#7747C0]'>انتخاب نوع ذی‌ نفع </p>
             <div className='flex flex-col gap-3 mt-2'>
@@ -164,7 +161,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
                     defaultChecked={index === 0}
                     name='beneficiary'
                     value={beneficiary}
-                    onChange={() => setReferrerType(index)}
+                    onChange={() => setBeneficiaryType(index === 0 ? 1 : 2)}
                     className='w-5 h-5 cursor-pointer accent-[#7747C0]'
                   />
                   <span className='text-gray-700'>{beneficiary}</span>
@@ -172,16 +169,16 @@ const AddModal = ({ data, close }: AddModalProps) => {
               ))}
             </div>
           </div>
-
-          {referrerType === 0 ? (
+          {beneficiaryType === 1 ? (
             <>
               <div className='flex gap-4 my-2'>
                 <div className='flex flex-col w-full'>
                   <label>نام</label>
                   <input
-                    ref={nameRef}
-                    defaultValue={data?.name || ''}
-                    type='text'
+                    defaultValue={data?.name || detailsRefs.current.name || ''}
+                    onChange={(e) =>
+                      (detailsRefs.current.name = e.target.value)
+                    }
                     placeholder='محمدی حسین'
                     className={`border ${errors.name ? 'border-red-500' : ''}`}
                   />
@@ -192,9 +189,12 @@ const AddModal = ({ data, close }: AddModalProps) => {
                 <div className='flex flex-col w-full'>
                   <label>نام خانوادگی</label>
                   <input
-                    ref={lastNameRef}
-                    defaultValue={data?.lastName || ''}
-                    type='text'
+                    defaultValue={
+                      data?.lastName || detailsRefs.current.lastName || ''
+                    }
+                    onChange={(e) =>
+                      (detailsRefs.current.lastName = e.target.value)
+                    }
                     placeholder='پازکی'
                     className={`border ${
                       errors.lastName ? 'border-red-500' : ''
@@ -209,9 +209,12 @@ const AddModal = ({ data, close }: AddModalProps) => {
                 <div className='flex flex-col w-full'>
                   <label>تخصص ذی‌ نفع</label>
                   <input
-                    ref={specialityRef}
-                    defaultValue={data?.speciality || ''}
-                    type='text'
+                    defaultValue={
+                      data?.speciality || detailsRefs.current.speciality || ''
+                    }
+                    onChange={(e) =>
+                      (detailsRefs.current.speciality = e.target.value)
+                    }
                     placeholder='متخصص پوست و مو'
                     className={`border ${
                       errors.speciality ? 'border-red-500' : ''
@@ -224,9 +227,12 @@ const AddModal = ({ data, close }: AddModalProps) => {
                 <div className='flex flex-col w-full'>
                   <label>شماره همراه ذی‌ نفع</label>
                   <input
-                    ref={phoneRef}
-                    defaultValue={data?.phone || ''}
-                    type='text'
+                    defaultValue={
+                      data?.phone || detailsRefs.current.phone || ''
+                    }
+                    onChange={(e) =>
+                      (detailsRefs.current.phone = e.target.value)
+                    }
                     placeholder='۰۹۱۲۷۶۸۵۶۴۷۳'
                     className={`border ${errors.phone ? 'border-red-500' : ''}`}
                   />
@@ -242,9 +248,10 @@ const AddModal = ({ data, close }: AddModalProps) => {
                 <div className='flex flex-col w-full'>
                   <label>نام کسب و کار</label>
                   <input
-                    ref={nameRef}
-                    defaultValue={data?.name || ''}
-                    type='text'
+                    defaultValue={data?.name || detailsRefs.current.name || ''}
+                    onChange={(e) =>
+                      (detailsRefs.current.name = e.target.value)
+                    }
                     placeholder='محمدی حسین'
                     className={`border ${errors.name ? 'border-red-500' : ''}`}
                   />
@@ -255,10 +262,13 @@ const AddModal = ({ data, close }: AddModalProps) => {
                 <div className='flex flex-col w-full'>
                   <label>تلفن ثابت (با کد شهر) </label>
                   <input
-                    ref={lastNameRef}
-                    defaultValue={data?.lastName || ''}
-                    type='text'
-                    placeholder='پازکی'
+                    defaultValue={
+                      data?.phone || detailsRefs.current.phone || ''
+                    }
+                    onChange={(e) =>
+                      (detailsRefs.current.phone = e.target.value)
+                    }
+                    placeholder='021-77889999'
                     className={`border ${
                       errors.lastName ? 'border-red-500' : ''
                     }`}
@@ -272,9 +282,12 @@ const AddModal = ({ data, close }: AddModalProps) => {
                 <div className='flex flex-col w-full'>
                   <label>نام صاحب کسب و کار </label>
                   <input
-                    ref={specialityRef}
-                    defaultValue={data?.speciality || ''}
-                    type='text'
+                    defaultValue={
+                      data?.speciality || detailsRefs.current.speciality || ''
+                    }
+                    onChange={(e) =>
+                      (detailsRefs.current.speciality = e.target.value)
+                    }
                     placeholder='متخصص پوست و مو'
                     className={`border ${
                       errors.speciality ? 'border-red-500' : ''
@@ -287,9 +300,12 @@ const AddModal = ({ data, close }: AddModalProps) => {
                 <div className='flex flex-col w-full'>
                   <label>شماره همراه </label>
                   <input
-                    ref={phoneRef}
-                    defaultValue={data?.phone || ''}
-                    type='text'
+                    defaultValue={
+                      data?.phone || detailsRefs.current.phone || ''
+                    }
+                    onChange={(e) =>
+                      (detailsRefs.current.phone = e.target.value)
+                    }
                     placeholder='۰۹۱۲۷۶۸۵۶۴۷۳'
                     className={`border ${errors.phone ? 'border-red-500' : ''}`}
                   />
@@ -304,11 +320,14 @@ const AddModal = ({ data, close }: AddModalProps) => {
             <div className='flex-1'>
               <label> استان </label>
               <select
-                ref={weightRef}
-                className='w-full border rounded-lg h-10 px-1 outline-none'>
+                className='w-full border rounded-lg h-10 px-1 outline-none'
+                onChange={(e) => {
+                  getCounty(e.target.value)
+                  locationRefs.current.state = e.target.value
+                }}>
                 {states.length > 0 &&
                   states.map((item, index) => (
-                    <option key={index} defaultValue={item.StateCode}>
+                    <option key={index} value={item.StateCode}>
                       {item.StateDesc}
                     </option>
                   ))}
@@ -317,11 +336,14 @@ const AddModal = ({ data, close }: AddModalProps) => {
             <div className='flex-1'>
               <label> شهرستان </label>
               <select
-                ref={weightRef}
-                className='w-full border rounded-lg h-10 px-1 outline-none'>
+                className='w-full border rounded-lg h-10 px-1 outline-none'
+                onChange={(e) => {
+                  getCity(e.target.value)
+                  locationRefs.current.county = e.target.value
+                }}>
                 {county.length > 0 &&
                   county.map((item, index) => (
-                    <option key={index} defaultValue={item.CountyCode}>
+                    <option key={index} value={item.CountyCode}>
                       {item.CountyDesc}
                     </option>
                   ))}
@@ -332,12 +354,12 @@ const AddModal = ({ data, close }: AddModalProps) => {
             <div className='flex-1'>
               <label> شهر </label>
               <select
-                ref={weightRef}
-                className='w-full border rounded-lg h-10 px-1 outline-none'>
+                className='w-full border rounded-lg h-10 px-1 outline-none'
+                onChange={(e) => (locationRefs.current.city = e.target.value)}>
                 {cities.length > 0 &&
                   cities.map((item, index) => (
-                    <option key={index} defaultValue={item.CountyCode}>
-                      {item.CountyDesc}
+                    <option key={index} value={item.CityUID}>
+                      {item.CityDesc}
                     </option>
                   ))}
               </select>
@@ -346,23 +368,24 @@ const AddModal = ({ data, close }: AddModalProps) => {
           <div className='my-2'>
             <label>انتخاب وزن برای ذی‌ نفع</label>
             <select
-              ref={weightRef}
+              defaultValue={data?.weight || detailsRefs.current.weight || ''}
+              onChange={(e) =>
+                (detailsRefs.current.weight = parseInt(`${e.target.value}`))
+              }
               className='w-full border rounded-lg h-10 px-1'>
-              <option value='1'>1</option>
-              <option value='2'>2</option>
-              <option value='3'>3</option>
-              <option value='4'>4</option>
-              <option value='5'>5</option>
+              <option value={1}>1</option>
+              <option value={2}>2</option>
+              <option value={3}>3</option>
+              <option value={4}>4</option>
+              <option value={5}>5</option>
             </select>
           </div>
-        </form>
-        <div className='sticky bottom-0 left-0 right-0 bg-white flex items-center gap-4 p-2 max-w-[40vw] mx-auto'>
           <button
             type='submit'
-            className='w-full h-10 text-white bg-[#7747C0] rounded-lg'>
+            className='w-full h-10 text-white bg-[#7747C0] rounded-lg mt-16'>
             ثبت و ذخیره
           </button>
-        </div>
+        </form>
       </div>
     </div>
   )

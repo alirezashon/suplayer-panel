@@ -1,8 +1,7 @@
 import { getCookieByKey } from '@/actions/cookieToken'
 import { CreateProductGroup, EditProductGroup } from '@/services/items'
-import { CloseSquare } from 'iconsax-react'
-import { useState } from 'react'
-
+import { CloseSquare, Trash } from 'iconsax-react'
+import { FormEvent, useState } from 'react'
 const AddModal = ({
   existName,
   close,
@@ -10,14 +9,29 @@ const AddModal = ({
   existName?: string
   close: (show: boolean) => void
 }) => {
-  const [name, setName] = useState<string>(existName || '')
-  const handleSubmit = async () => {
-    const accessToken = (await getCookieByKey('access_token')) || ''
+  const [productGroupName, setProductGroupName] = useState<string>('')
+  const [names, setNames] = useState<string[]>([''])
 
-    if (existName) await EditProductGroup({ accessToken, name })
-    else await CreateProductGroup({ accessToken, name })
+  const handleAddInput = () => {
+    setNames([...names, ''])
   }
 
+  const handleRemoveInput = (index: number) => {
+    setNames((prev) => prev.filter((_, i) => i !== index))
+  }
+
+  const handleInputChange = (value: string, index: number) => {
+    setNames((prev) => prev.map((item, i) => (i === index ? value : item)))
+  }
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault()
+    const accessToken = (await getCookieByKey('access_token')) || ''
+    if (existName)
+      names.map(async (name) => await EditProductGroup({ accessToken, name }))
+    else
+      names.map(async (name) => await CreateProductGroup({ accessToken, name }))
+  }
   return (
     <div>
       <div className='absolute bg-slate-600 opacity-50 w-full h-[200vh] z-50 top-0 right-0'></div>
@@ -42,32 +56,60 @@ const AddModal = ({
               />
             </div>
           </div>
-
           <div className='mt-10 w-full max-md:max-w-full'>
             <div className='flex flex-col w-full'>
-              <label className='text-base font-medium text-right text-gray-800'>
+              <label className='text-base font-medium text-right text-gray-800 mb-2'>
                 نام گروه محصول
               </label>
               <input
-                defaultValue={name}
-                onChange={(e) => setName(e.target.value)}
+                defaultValue={productGroupName}
+                onChange={(e) => setProductGroupName(e.target.value)}
                 type='text'
                 placeholder='نام گروه محصول'
               />
             </div>
           </div>
-
-          <div className='mt-10 w-full max-md:max-w-full'>
+          <div className='mt-5 w-full max-md:max-w-full'>
+            {names.map((name, index) => (
+              <div key={index} className='flex flex-col w-full mb-4'>
+                <label className='text-base font-medium text-right text-gray-800'>
+                نام برند محصول خود را بنویسید
+                </label>
+                <div className='flex items-center gap-2'>
+                  <input
+                    value={name}
+                    onChange={(e) => handleInputChange(e.target.value, index)}
+                    type='text'
+                    placeholder='مثال: فولیکا'
+                    className='flex-1 border border-gray-300 rounded-lg px-4 py-2'
+                  />
+                  {index > 0 && (
+                    <Trash
+                      onClick={() => handleRemoveInput(index)}
+                      size={24}
+                      color='#D42620'
+                    />
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className='flex justify-end mt-3'>
             <button
-              type='submit'
-              className={`fill-button px-10 h-10 rounded-lg  `}>
-              ثبت
+              type='button'
+              onClick={handleAddInput}
+              className='text-[#7747C0] font-bold hover:text-[#7747C0]'>
+            افزودن برند 
             </button>
           </div>
+          <button
+            type='submit'
+            className={`fill-button px-10 h-10 rounded-lg  mt-12`}>
+            ثبت
+          </button>
         </form>
       </div>
     </div>
   )
 }
-
 export default AddModal

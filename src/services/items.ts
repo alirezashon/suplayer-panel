@@ -1,4 +1,4 @@
-import { GroupData, SubGroup } from '@/interfaces'
+import { Beneficiary, GroupData, ProductGroup, SubGroup } from '@/interfaces'
 
 export const CreateGroup = async ({
   name,
@@ -136,14 +136,13 @@ export const EditSubGroup = async ({
   code,
   accessToken,
   status,
-  group_id
+  group_id,
 }: {
   name: string
   code: string
   accessToken: string | undefined
   status?: number
-  group_id:string
-
+  group_id: string
 }) => {
   try {
     const response = await fetch(
@@ -199,22 +198,36 @@ export const GetSubGroupsList = async ({
     console.log(error)
   }
 }
-export const CreateReferrer = async ({
+export const CreateBeneficiary = async ({
   name,
   family,
   fullName,
   mobile,
   accessToken,
+  CityUID,
+  address,
+  expertise,
+  weight,
+  lat,
+  long,
+  tob
 }: {
   name: string
   family: string
   fullName: string
   mobile: string
   accessToken: string | undefined
+  CityUID: string
+  address: string
+  expertise: string
+  weight: number
+  lat: number
+  long: number
+  tob:number
 }) => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_define_supervisors`,
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_define_visitors`,
       {
         method: 'POST',
         headers: {
@@ -229,6 +242,14 @@ export const CreateReferrer = async ({
           visitor_name: name,
           visitor_family: family,
           visitor_status: 1,
+          visitor_tob: tob,
+          visitor_tel: mobile,
+          CityUID,
+          visitor_address: address,
+          visitor_specialty: expertise,
+          default_weight: weight,
+          latitude: lat,
+          longitude: long,
         }),
       }
     )
@@ -242,18 +263,32 @@ export const CreateReferrer = async ({
     console.log(error)
   }
 }
-export const EditReferrer = async ({
+export const EditBeneficiary = async ({
   name,
   family,
   fullName,
   mobile,
   accessToken,
+  CityUID,
+  address,
+  expertise,
+  weight,
+  lat,
+  long,
+  status,
 }: {
   name: string
   family: string
   fullName: string
   mobile: string
   accessToken: string | undefined
+  CityUID: string
+  address: string
+  expertise: string
+  weight: number
+  lat: number
+  long: number
+  status?: number
 }) => {
   try {
     const response = await fetch(
@@ -271,7 +306,15 @@ export const EditReferrer = async ({
           visitor_full_name: fullName,
           visitor_name: name,
           visitor_family: family,
-          visitor_status: 1,
+          visitor_status: status,
+          visitor_tob: 0,
+          visitor_tel: mobile,
+          CityUID,
+          visitor_address: address,
+          visitor_specialty: expertise,
+          default_weight: weight,
+          latitude: lat,
+          longitude: long,
         }),
       }
     )
@@ -285,11 +328,11 @@ export const EditReferrer = async ({
     console.log(error)
   }
 }
-export const GetReferrerList = async ({
+export const GetBeneficiaryList = async ({
   accessToken,
 }: {
   accessToken: string | undefined
-}): Promise<Record<string, string | number>[] | undefined> => {
+}): Promise<Beneficiary[] | undefined> => {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_visitors_list`,
@@ -382,7 +425,7 @@ export const GetProductGroupList = async ({
   accessToken,
 }: {
   accessToken: string | undefined
-}): Promise<Record<string, string | number>[] | undefined> => {
+}): Promise<ProductGroup[] | undefined> => {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_product_group_list`,

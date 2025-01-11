@@ -5,7 +5,7 @@ import OTPInput from '../shared/OTPinput'
 import { UserLoginAPI } from '@/services/user'
 import toast from 'react-hot-toast'
 import { IAccessTokenResponse, setTokenIntoCookie } from '@/actions/cookieToken'
-import { ArrowRight2, MessageText, SmsNotification, SmsTracking, Whatsapp } from 'iconsax-react'
+import { ArrowRight2, MessageText, SmsTracking, Whatsapp } from 'iconsax-react'
 import Loading from '../shared/LoadingSpinner'
 
 const Login = () => {
@@ -20,7 +20,7 @@ const Login = () => {
   const [mobile, setMobile] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
   const [password, setPassword] = useState('')
-  const isActive2AuthVerfication = false
+
 
   const handleLogin = async () => {
     try {
@@ -84,7 +84,6 @@ const Login = () => {
         </div>
       ) : (
         <div className='flex w-[100vw] min-h-screen bg-white'>
-          {/* Right Section */}
           <div className='flex flex-col justify-center items-center w-1/2'>
             <div className='w-full px-20'>
               <Image

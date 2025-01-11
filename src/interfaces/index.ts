@@ -50,6 +50,7 @@ export interface GroupData {
   sup_group_code: string
   sup_group_name: string
   sup_group_status: number
+  supervisors_count:number
 }
 export interface PromotionInterface {
   promotionDate: string // تاریخ پروموشن
@@ -100,6 +101,46 @@ export interface County {
   CountyDesc: string
 }
 export interface Cities {
-  CountyCode: string
-  CountyDesc: string
+  CityCode: string
+  CityDesc: string
+  CityUID: string
+}
+export interface Beneficiary {
+  supervisor_id: number
+  visitor_type: number
+  visitor_tob: number
+  visitor_uid: string
+  visitor_tel: string
+  visitor_full_name: string
+  visitor_name: string
+  visitor_family: string
+  visitor_status: number
+  CityUID: string
+  visitor_address: string
+  visitor_specialty: string
+  default_weight: number
+  latitude: number
+  longitude: number
+}
+export interface ProductGroup {
+  id: number
+  group_pid: number
+  group_desc: string
+  group_status: number
+  level: number
+}
+export interface ReferrerData {
+  personnel_code: string
+  pers_chart_id: number
+  pers_job_id: number
+  pers_type: number
+  pers_tob: number
+  pers_uid: string
+  pers_tel: string
+  pers_full_name: string
+  pers_name: string
+  pers_family: string
+  pers_status: number
+  CityUID: string
+  pers_address: string
 }

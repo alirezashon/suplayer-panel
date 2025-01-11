@@ -1,58 +1,86 @@
-import  { useState } from 'react'
-import { Trash, Edit2 } from 'iconsax-react'
+import { useState } from 'react'
+import { Trash, Edit2, SearchNormal } from 'iconsax-react'
 import AddModal from './AddModal'
 import DeleteModal from './DeleteModal'
 import Image from 'next/image'
 import { useMenu } from '@/Context/Menu'
+import { ReferrerData } from '@/interfaces'
 
-interface Group {
-  id: number
-  name: string
-}
-
-interface ReferrerData {
-  id: number
-  name: string
-  type: 'شخص' | 'کسب و کار'
-  groups: Group[]
-}
-
-const referrerData: ReferrerData[] = [
+const sampleData = [
   {
-    id: 1,
-    name: 'شرکت احمدی',
-    type: 'کسب و کار',
-    groups: [
-      { id: 1, name: 'گروه پوست و مو' },
-      { id: 2, name: 'گروه تغذیه' },
-      { id: 3, name: 'گروه زبان و روان' },
-      { id: 4, name: 'گروه شامپو' },
-      { id: 5, name: 'گروه زنان و زایمان' },
-      { id: 6, name: 'گروه پوست' },
-      { id: 7, name: 'گروه تغذیه' },
-      { id: 8, name: 'گروه زبان و روان' },
-      { id: 9, name: 'گروه شامپو' },
-      { id: 10, name: 'گروه زنان و زایمان' },
-      { id: 11, name: 'گروه پوست' },
-    ],
+    personnel_code: '001',
+    pers_chart_id: 1,
+    pers_job_id: 1,
+    pers_type: 1,
+    pers_tob: 1,
+    pers_uid: 'UID001',
+    pers_tel: '09123456789',
+    pers_full_name: 'الهه محسنی',
+    pers_name: 'الهه',
+    pers_family: 'محسنی',
+    pers_status: 1, // فعال
+    CityUID: 'City001',
+    pers_address: 'تهران، سعادت آباد',
   },
   {
-    id: 2,
-    name: 'دکتر محمدعالی',
-    type: 'شخص',
-    groups: [
-      { id: 4, name: 'گروه پوست و مو' },
-      { id: 5, name: 'گروه زبان و روان' },
-    ],
+    personnel_code: '002',
+    pers_chart_id: 2,
+    pers_job_id: 2,
+    pers_type: 1,
+    pers_tob: 2,
+    pers_uid: 'UID002',
+    pers_tel: '09123456780',
+    pers_full_name: 'رضا احمدی',
+    pers_name: 'رضا',
+    pers_family: 'احمدی',
+    pers_status: 0, // غیرفعال
+    CityUID: 'City002',
+    pers_address: 'تهران، ونک',
   },
   {
-    id: 3,
-    name: 'داروخانه محمدی',
-    type: 'کسب و کار',
-    groups: [
-      { id: 6, name: 'گروه پوست و مو' },
-      { id: 7, name: 'گروه زبان و روان' },
-    ],
+    personnel_code: '003',
+    pers_chart_id: 3,
+    pers_job_id: 3,
+    pers_type: 2,
+    pers_tob: 1,
+    pers_uid: 'UID003',
+    pers_tel: '09123456781',
+    pers_full_name: 'مریم صادقی',
+    pers_name: 'مریم',
+    pers_family: 'صادقی',
+    pers_status: 1, // فعال
+    CityUID: 'City003',
+    pers_address: 'کرج، جهانشهر',
+  },
+  {
+    personnel_code: '004',
+    pers_chart_id: 4,
+    pers_job_id: 4,
+    pers_type: 2,
+    pers_tob: 2,
+    pers_uid: 'UID004',
+    pers_tel: '09123456782',
+    pers_full_name: 'علی اکبری',
+    pers_name: 'علی',
+    pers_family: 'اکبری',
+    pers_status: 0, // غیرفعال
+    CityUID: 'City004',
+    pers_address: 'شیراز، معالی آباد',
+  },
+  {
+    personnel_code: '005',
+    pers_chart_id: 5,
+    pers_job_id: 5,
+    pers_type: 3,
+    pers_tob: 1,
+    pers_uid: 'UID005',
+    pers_tel: '09123456783',
+    pers_full_name: 'زهرا محمدی',
+    pers_name: 'زهرا',
+    pers_family: 'محمدی',
+    pers_status: 1, // فعال
+    CityUID: 'City005',
+    pers_address: 'اصفهان، چهارباغ',
   },
 ]
 
@@ -63,9 +91,18 @@ const Referrer: React.FC = () => {
   const [showDeleteModal, setShowDeleteModal] = useState<boolean | string>(
     false
   )
-  const [data, setData] = useState<ReferrerData[]>(referrerData)
+  const [data, setData] = useState<ReferrerData[]>(sampleData)
   const { setMenu } = useMenu()
-
+  const headers = [
+    'ردیف',
+    'نام',
+    'نام خانوادگی',
+    'نوع بازاریاب',
+    'وضعیت',
+    'فعالسازی/انتصاب',
+    'جزئیات',
+    'عملیات',
+  ]
   return (
     <>
       {showAddModal && (
@@ -173,72 +210,104 @@ const Referrer: React.FC = () => {
             </div>
           </form>
           {data.length > 0 ? (
-            <div className='grid grid-cols-1 lg:grid-cols-3 gap-6 mt-4'>
-              {data.map((referrer) => (
-                <div
-                  key={referrer.id}
-                  className='bg-white rounded-lg shadow border border-gray-200 p-4 relative'>
-                  <div className='flex justify-between items-center'>
-                    <div className='flex gap-2'>
-                      <h3 className='text-gray-800 font-semibold'>
-                        {referrer.name}
-                      </h3>
-                      <span
-                        className={`text-xs px-2 py-1 rounded ${
-                          referrer.type === 'شخص'
-                            ? 'bg-[#E6DBFB80] text-[#704CB9]'
-                            : 'bg-[#CAF7E3] text-[#0E9E7A]'
-                        }`}>
-                        {referrer.type}
-                      </span>
-                    </div>
-                    <div className='flex gap-2'>
-                      <Edit2
-                        size={20}
-                        color='#8455D2'
-                        cursor={'pointer'}
-                        onClick={() => setShowAddModal(true)}
-                        // onClick={() => setShowAddModal(group.title)}
-                      />
-                      <Trash
-                        size={20}
-                        color='#D42620'
-                        cursor={'pointer'}
-                        onClick={() => {
-                          setData((prv) =>
-                            prv.filter((ref) => ref.id !== referrer.id)
-                          )
-                          setShowDeleteModal(referrer.name)
-                        }}
-                      />
-                    </div>
+            <div className='p-6 bg-white rounded-lg border border-gray-200 flex flex-col gap-5'>
+              <div className='flex gap-5 items-center'>
+                <div className='relative w-full flex items-center '>
+                  <div className='absolute left-3 z-20 cursor-pointer text-[#50545F]'>
+                    <SearchNormal size={24} color='gray' />
                   </div>
 
-                  <div className='mt-2'>
-                    <h4 className='text-sm text-gray-600 mb-2'>
-                      گروه‌های عضو شده
-                    </h4>
-                    <div className='flex flex-wrap gap-2'>
-                      {referrer.groups.map((group) => (
-                        <span
-                          key={group.id}
-                          className='text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded'>
-                          {group.name}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className='absolute top-2 right-2 flex gap-2 text-[#704CB9]'>
-                    <button className='hover:text-red-500 transition'>
-                      <i className='fas fa-trash'></i>
-                    </button>
-                    <button className='hover:text-blue-500 transition'>
-                      <i className='fas fa-pen'></i>
-                    </button>
-                  </div>
+                  <input
+                    type='search'
+                    placeholder='جستجو'
+                    // value={search}
+                    // onChange={(e) => handleSearchChange(e.target.value)}
+                    className='absolute w-full z-10 border border-gray-300 rounded-md px-4 py-2 text-right outline-none focus:border-red-400'
+                  />
                 </div>
-              ))}
+                <button
+                  type='submit'
+                  className={`fill-button px-10 h-10 rounded-lg `}>
+                  جستجو
+                </button>
+              </div>
+              <table className='my-10 w-full'>
+                <thead>
+                  <tr>
+                    {headers.map((head, headIndex) => (
+                      <th
+                        className={`bg-[#F3F4F5] border-z h-10 ${
+                          headIndex === 0
+                            ? 'rounded-tr-lg'
+                            : headIndex === headers.length - 1 &&
+                              'rounded-tl-lg'
+                        } `}
+                        key={headIndex}>
+                        <p
+                          className={`flex justify-center items-center border-y h-10  ${
+                            headIndex === 0
+                              ? 'border-r rounded-tr-lg'
+                              : headIndex === headers.length - 1 &&
+                                'border-l rounded-tl-lg'
+                          }`}>
+                          {head}
+                        </p>
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {data.map((personnel, index) => (
+                    <tr key={index} className='border-b'>
+                      {[index + 1, ...[...Object.values(personnel), '']].map(
+                        (detail, detailIndex) => (
+                          <td
+                            key={detailIndex}
+                            className={`text-center h-10 ${
+                              detailIndex === 0
+                                ? 'border-r'
+                                : detailIndex === 3 && 'border-l'
+                            }`}>
+                            {detailIndex !== 3 ? (
+                              detail
+                            ) : (
+                              <div className='justify-center flex gap-2'>
+                                <Trash
+                                  size={20}
+                                  color='#D42620'
+                                  cursor={'pointer'}
+                                  onClick={() => {
+                                    setData((prv) =>
+                                      prv.filter(
+                                        (ref) =>
+                                          ref.personnel_code !==
+                                          personnel.personnel_code
+                                      )
+                                    )
+                                    setShowDeleteModal(personnel.personnel_code)
+                                  }}
+                                />
+                                <Edit2
+                                  size={20}
+                                  color='#8455D2'
+                                  cursor={'pointer'}
+                                  onClick={
+                                    () => '' // setShowAddModal({
+                                    //   category: personnel.personnel_code,
+                                    //   title: personnel.pers_full_name,
+                                    // })
+                                  }
+                                />
+                              </div>
+                            )}
+                          </td>
+                        )
+                      )}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           ) : (
             <div className='w-full bg-white flex flex-col gap-2 justify-center items-center'>

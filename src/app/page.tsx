@@ -41,10 +41,10 @@ const Home = () => {
       setMenu(tag)
       setLoading(false)
     }
-    window.addEventListener('menuchange', handleHashChange, false)
+    window.addEventListener('hashchange', handleHashChange, false)
     handleHashChange()
     return () => {
-      window.removeEventListener('menuchange', handleHashChange, false)
+      window.removeEventListener('hashchange', handleHashChange, false)
     }
   }, [setMenu])
 
