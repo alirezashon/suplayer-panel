@@ -1,6 +1,6 @@
 import { getCookieByKey } from '@/actions/cookieToken'
 import { CreateGroup, EditGroup } from '@/services/items'
-import { CloseSquare } from 'iconsax-react'
+import { CloseSquare, Grammerly } from 'iconsax-react'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
 
@@ -14,9 +14,11 @@ const AddModal = ({
   sup_group_code: string
 }) => {
   const [name, setName] = useState<string>(existName || '')
+  const [isConfirmed, setIsConfirmed] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setIsConfirmed(true)
     const accessToken = (await getCookieByKey('access_token')) || ''
     if (!sup_group_code) {
       const response = await CreateGroup({ accessToken, name })
@@ -28,7 +30,7 @@ const AddModal = ({
         toast.error('لطفا دوباره امتحان کنید')
       }
     } else {
-      const response = await EditGroup({ accessToken, name, sup_group_code})
+      const response = await EditGroup({ accessToken, name, sup_group_code })
       if (response.status === 1) {
         toast.success(response.message)
       } else if (response.status === '-1') {
@@ -36,6 +38,9 @@ const AddModal = ({
       } else {
         toast.error('لطفا دوباره امتحان کنید')
       }
+      setTimeout(() => {
+        setIsConfirmed(false)
+      }, 2222)
     }
   }
   return (
@@ -78,11 +83,34 @@ const AddModal = ({
           </div>
 
           <div className='mt-10 w-full max-md:max-w-full'>
-            <button
-              type='submit'
-              className={`fill-button px-10 h-10 rounded-lg  `}>
-              ثبت
-            </button>
+            <div className='flex items-center'>
+              <button
+                type='submit'
+                style={{
+                  animation: `${
+                    isConfirmed
+                      ? 'hideSubmitAnimate 1s ease-in-out forwards '
+                      : 'showSubmitAnimate 1s ease-in-out forwards '
+                  }`,
+                }}
+                className={`w-full fill-button px-10 h-10 mt-10 rounded-lg transition-transform duration-200 ease-in-out hover:scale-105`}>
+                ثبت
+              </button>
+
+              <div
+                className={`absolute ${
+                  !isConfirmed && ' opacity-0 '
+                } transform -translate-x-1/2 text-[#0F973D] flex rounded-lg transition-all duration-1000 ease-in-out`}
+                style={{
+                  animation: `${
+                    isConfirmed
+                      ? 'showSuccessText 1s ease-in-out forwards '
+                      : 'hideSuccessText 1s ease-in-out forwards '
+                  }`,
+                }}>
+                عملیات موفقیت‌آمیز بود! <Grammerly size={24} color='#0F973D' />
+              </div>
+            </div>
           </div>
         </form>
       </div>

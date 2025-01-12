@@ -2,7 +2,7 @@ import { getCookieByKey } from '@/actions/cookieToken'
 import { Cities, County, States } from '@/interfaces'
 import { CreateBeneficiary } from '@/services/items'
 import { GetCity, GetCounty, GetStates } from '@/services/location'
-import { CloseSquare, SearchNormal } from 'iconsax-react'
+import { CloseSquare, Grammerly, SearchNormal } from 'iconsax-react'
 import { useState, useRef, useEffect } from 'react'
 
 interface FormData {
@@ -25,6 +25,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
   const [county, setCounty] = useState<County[]>([])
   const [cities, Setcities] = useState<Cities[]>([])
   const [beneficiaryType, setBeneficiaryType] = useState<1 | 2>(1)
+  const [isConfirmed, setIsConfirmed] = useState(false)
 
   const detailsRefs = useRef({
     name: '',
@@ -97,6 +98,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setIsConfirmed(true)
     const accessToken = await getCookieByKey('access_token')
 
     setErrors({})
@@ -127,6 +129,9 @@ const AddModal = ({ data, close }: AddModalProps) => {
       long: 0,
       tob: beneficiaryType,
     })
+    setTimeout(() => {
+      setIsConfirmed(false)
+    }, 2222)
   }
 
   return (
@@ -380,11 +385,35 @@ const AddModal = ({ data, close }: AddModalProps) => {
               <option value={5}>5</option>
             </select>
           </div>
-          <button
-            type='submit'
-            className='w-full h-10 text-white bg-[#7747C0] rounded-lg mt-16'>
-            ثبت و ذخیره
-          </button>
+
+          <div className='flex items-center'>
+            <button
+              type='submit'
+              style={{
+                animation: `${
+                  isConfirmed
+                    ? 'hideSubmitAnimate 1s ease-in-out forwards '
+                    : 'showSubmitAnimate 1s ease-in-out forwards '
+                }`,
+              }}
+              className={`w-full fill-button px-10 h-10 mt-10 rounded-lg transition-transform duration-200 ease-in-out hover:scale-105`}>
+              ثبت و ذخیره
+            </button>
+
+            <div
+              className={`absolute ${
+                !isConfirmed && ' opacity-0 '
+              } transform -translate-x-1/2 text-[#0F973D] flex rounded-lg transition-all duration-1000 ease-in-out`}
+              style={{
+                animation: `${
+                  isConfirmed
+                    ? 'showSuccessText 1s ease-in-out forwards '
+                    : 'hideSuccessText 1s ease-in-out forwards '
+                }`,
+              }}>
+              عملیات موفقیت‌آمیز بود! <Grammerly size={24} color='#0F973D' />
+            </div>
+          </div>
         </form>
       </div>
     </div>

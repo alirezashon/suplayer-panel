@@ -95,7 +95,7 @@ const AddModal = ({
                             <span
                               className={`${
                                 names.includes(item)
-                                  ? 'text-purple-600'
+                                  ? 'text-[#7747C0]'
                                   : 'text-gray-700'
                               }`}>
                               {item}

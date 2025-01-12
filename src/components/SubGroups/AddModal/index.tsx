@@ -1,7 +1,7 @@
 import { getCookieByKey } from '@/actions/cookieToken'
 import { useGroupData } from '@/Context/GroupsData'
 import { CreateSubGroup, EditSubGroup } from '@/services/items'
-import { CloseSquare } from 'iconsax-react'
+import { CloseSquare, Grammerly } from 'iconsax-react'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
 
@@ -18,9 +18,11 @@ const AddModal = ({
     name: existName?.split('#$%^@!~')[0] || '',
     groupId,
   })
+  const [isConfirmed, setIsConfirmed] = useState(false)
   const { groupData } = useGroupData()
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setIsConfirmed(true)
     const accessToken = (await getCookieByKey('access_token')) || ''
     if (!existName)
       CreateSubGroup({ accessToken, groupID: data.groupId, name: data.name })
@@ -42,7 +44,10 @@ const AddModal = ({
             ? toast.error(value.message)
             : toast.success(value.message)
         )
-        .catch(() => toast.error('خطایی پیش آمد'))
+    .catch(() => toast.error('خطایی پیش آمد'))
+    setTimeout(() => {
+      setIsConfirmed(false)
+    }, 2222)
   }
 
   return (
@@ -101,11 +106,32 @@ const AddModal = ({
               />
             </div>
           </div>
-          <button
-            type='submit'
-            className={`fill-button px-10 h-10 mt-10 rounded-lg  `}>
-            ثبت
-          </button>
+          <div className='flex items-center'>
+            <button
+              type='submit'
+              style={{
+                animation: `${
+                  isConfirmed
+                    ? 'hideSubmitAnimate 1s ease-in-out forwards '
+                    : 'showSubmitAnimate 1s ease-in-out forwards '
+                }`,
+              }}
+              className={`w-full fill-button px-10 h-10 mt-10 rounded-lg transition-transform duration-200 ease-in-out hover:scale-105`}>
+              ثبت
+            </button>
+
+            <div
+              className={`absolute ${!isConfirmed&& ' opacity-0 '} transform -translate-x-1/2 text-[#0F973D] flex rounded-lg transition-all duration-1000 ease-in-out`}
+              style={{
+                animation: `${
+                  isConfirmed
+                    ? 'showSuccessText 1s ease-in-out forwards '
+                    : 'hideSuccessText 1s ease-in-out forwards '
+                }`,
+              }}>
+              عملیات موفقیت‌آمیز بود! <Grammerly size={24} color='#0F973D'/>
+            </div>
+          </div>
         </form>
       </div>
     </div>

@@ -54,7 +54,7 @@ const PaymentLink = () => {
             </div>
             <div className='flex gap-10'>
               <button
-                className='flex items-center gap-2 w-full justify-center h-10 rounded-lg bg-purple-600 hover:bg-[#7747C0] text-white font-bold'
+                className='flex items-center gap-2 w-full justify-center h-10 rounded-lg bg-[#7747C0] hover:bg-[#7747C0] text-white font-bold'
                 onClick={() => setQR('linkalakinka')}>
                 <Add size='20' color='#ffffff' variant='Bold' />
                 <p>ارسال لینک پرداخت</p>
@@ -136,7 +136,7 @@ const PaymentLink = () => {
               />
             </div>
             <div className='flex gap-10'>
-              <button className='flex items-center gap-2 w-full justify-center h-10 rounded-lg bg-purple-600 hover:bg-[#7747C0] text-white font-bold'
+              <button className='flex items-center gap-2 w-full justify-center h-10 rounded-lg bg-[#7747C0] hover:bg-[#7747C0] text-white font-bold'
                 onClick={() => setQR('linkalakinka')}
               >
                 <TickCircle
@@ -146,7 +146,7 @@ const PaymentLink = () => {
                 />
                 تایید
               </button>
-              <button className='flex items-center gap-2 w-full justify-center h-10 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-600 border border-600 font-bold'>
+              <button className='flex items-center gap-2 w-full justify-center h-10 rounded-lg bg-purple-50 hover:bg-purple-100 text-[#7747C0] border border-600 font-bold'>
                 <CloseCircle size='20' color='#704CB9' variant='Bold' />
                 انصراف
               </button>

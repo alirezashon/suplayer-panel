@@ -246,7 +246,7 @@ const Login = () => {
                       <button
                         type='button'
                         onClick={() => setInputState('otp-selection')}
-                        className={`py-2 px-4 w-full text-white bg-purple-600 rounded-lg transition`}>
+                        className={`py-2 px-4 w-full text-white bg-[#7747C0] rounded-lg transition`}>
                         {inputState === 'password'
                           ? 'ورود با کد یکبار مصرف'
                           : 'ورود با رمز عبور'}
@@ -254,7 +254,7 @@ const Login = () => {
                       <button
                         type='button'
                         onClick={handleLogin}
-                        className={`py-2 px-4 w-full text-white bg-purple-600 rounded-lg transition ${
+                        className={`py-2 px-4 w-full text-white bg-[#7747C0] rounded-lg transition ${
                           inputState === 'otp'
                             ? 'opacity-50 cursor-not-allowed'
                             : ''

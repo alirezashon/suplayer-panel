@@ -139,8 +139,8 @@ const MyGroups: React.FC = () => {
                   }}
                   className={`w-full h-10  font-semibold rounded ${
                     product.sup_group_code.length === 0
-                      ? 'bg-purple-600 hover:bg-[#7747C0] text-white'
-                      : 'border border-purple-600 text-purple-600 hover:bg-purple-600 hover:text-white'
+                      ? 'bg-[#7747C0] hover:bg-[#7747C0] text-white'
+                      : 'border border-[#7747C0] text-[#7747C0] hover:bg-[#7747C0] hover:text-white'
                   } transition duration-300`}>
                   {product.sup_group_code.length > 0
                     ? 'مشاهده زیر گروه‌ها'

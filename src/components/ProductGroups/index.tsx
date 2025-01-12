@@ -140,8 +140,8 @@ const ProductGroups: React.FC = () => {
                     }}
                     className={`w-full py-2  font-semibold rounded ${
                       product.group_desc === 'add'
-                        ? 'bg-purple-600 hover:bg-[#7747C0] text-white'
-                        : 'border border-purple-600 text-purple-600 hover:bg-purple-600 hover:text-white'
+                        ? 'bg-[#7747C0] hover:bg-[#7747C0] text-white'
+                        : 'border border-[#7747C0] text-[#7747C0] hover:bg-[#7747C0] hover:text-white'
                     } transition duration-300`}>
                     {product.group_desc}
                   </button>

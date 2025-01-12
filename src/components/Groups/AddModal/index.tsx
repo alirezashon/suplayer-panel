@@ -1,19 +1,30 @@
 import { getCookieByKey } from '@/actions/cookieToken'
 import { CreateGroup } from '@/services/items'
-import { CloseSquare } from 'iconsax-react'
+import { CloseSquare, Grammerly } from 'iconsax-react'
 import { useState } from 'react'
 
-const AddModal = ({existName,close,sup_group_code}:{existName?:string,close:(show:boolean)=>void,sup_group_code:string}) => {
-  const [name, setName] = useState<string>(existName||'')
-  const handleSubmit = async() => {
-    if(!sup_group_code){
-
-      const accessToken = await getCookieByKey('access_token')||''
-      const response = await CreateGroup({accessToken,name})
-      if(response){
-        
+const AddModal = ({
+  existName,
+  close,
+  sup_group_code,
+}: {
+  existName?: string
+  close: (show: boolean) => void
+  sup_group_code: string
+}) => {
+  const [name, setName] = useState<string>(existName || '')
+  const [isConfirmed, setIsConfirmed] = useState(false)
+  const handleSubmit = async () => {
+    setIsConfirmed(true)
+    if (!sup_group_code) {
+      const accessToken = (await getCookieByKey('access_token')) || ''
+      const response = await CreateGroup({ accessToken, name })
+      if (response) {
       }
     }
+    setTimeout(() => {
+      setIsConfirmed(false)
+    }, 2222)
   }
 
   return (
@@ -29,9 +40,15 @@ const AddModal = ({existName,close,sup_group_code}:{existName?:string,close:(sho
             <div className='flex-1 shrink self-stretch my-auto min-w-[240px] max-md:max-w-full'>
               تعریف گروه جدید
             </div>
-           <div className="
-           ">
-             <CloseSquare size={24} cursor='pointer' color='#50545F' onClick={()=>close(false)}/>
+            <div
+              className='
+           '>
+              <CloseSquare
+                size={24}
+                cursor='pointer'
+                color='#50545F'
+                onClick={() => close(false)}
+              />
             </div>
           </div>
 
@@ -42,18 +59,41 @@ const AddModal = ({existName,close,sup_group_code}:{existName?:string,close:(sho
               </label>
               <input
                 defaultValue={name}
-                onChange={(e)=>setName(e.target.value)}
+                onChange={(e) => setName(e.target.value)}
                 type='text'
                 placeholder='مثال: دکترهای پوست، تهران غرب ...'
               />
             </div>
           </div>
 
+          <div className='flex items-center'>
             <button
               type='submit'
-              className={`fill-button px-10 h-10 rounded-lg w-full`}>
+              style={{
+                animation: `${
+                  isConfirmed
+                    ? 'hideSubmitAnimate 1s ease-in-out forwards '
+                    : 'showSubmitAnimate 1s ease-in-out forwards '
+                }`,
+              }}
+              className={`w-full fill-button px-10 h-10 mt-10 rounded-lg transition-transform duration-200 ease-in-out hover:scale-105`}>
               ثبت
             </button>
+
+            <div
+              className={`absolute ${
+                !isConfirmed && ' opacity-0 '
+              } transform -translate-x-1/2 text-[#0F973D] flex rounded-lg transition-all duration-1000 ease-in-out`}
+              style={{
+                animation: `${
+                  isConfirmed
+                    ? 'showSuccessText 1s ease-in-out forwards '
+                    : 'hideSuccessText 1s ease-in-out forwards '
+                }`,
+              }}>
+              عملیات موفقیت‌آمیز بود! <Grammerly size={24} color='#0F973D' />
+            </div>
+          </div>
         </form>
       </div>
     </div>

@@ -8,7 +8,7 @@ import { useGroupData } from '@/Context/GroupsData'
 const ShowGroups: React.FC = () => {
   const { setMenu } = useMenu()
   const [showGroup, setSshowGroup] = useState<string>('')
-  const { groupData, setGroupData } = useGroupData()
+  const { groupData } = useGroupData()
 
   return (
     <>
@@ -26,8 +26,6 @@ const ShowGroups: React.FC = () => {
               </span>
             </p>
           </div>
-        
-
           <div className='p-6 bg-white rounded-lg border border-gray-200'>
             <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4'>
               {groupData &&
@@ -74,21 +72,21 @@ const ShowGroups: React.FC = () => {
                     <button
                       onClick={() => {
                         location.hash =
-                          product.sup_group_code.length > 0
+                          product.supervisors_count > 0
                             ? 'groupsdetail'
                             : 'subgroups'
                         setMenu(
-                          product.sup_group_code.length > 0
+                          product.supervisors_count > 0
                             ? 'groupsdetail'
                             : 'subgroups'
                         )
                       }}
                       className={`w-full h-10  font-semibold rounded ${
-                        product.sup_group_code.length === 0
-                          ? 'bg-purple-600 hover:bg-[#7747C0] text-white'
-                          : 'border border-purple-600 text-purple-600 hover:bg-purple-600 hover:text-white'
+                        product.supervisors_count === 0
+                          ? 'bg-[#7747C0] hover:bg-[#7747C0] text-white'
+                          : 'border border-[#7747C0] text-[#7747C0] hover:bg-[#7747C0] hover:text-white'
                       } transition duration-300`}>
-                      {product.sup_group_code.length > 0
+                      {product.supervisors_count > 0
                         ? 'مشاهده زیر گروه‌ها'
                         : 'تعریف زیر گروه'}
                     </button>

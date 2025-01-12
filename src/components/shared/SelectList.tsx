@@ -59,7 +59,7 @@ const SelectList: React.FC<SelectListProps> = ({
               <span
                 className={`${
                   selectedItems.includes(item.id)
-                    ? 'text-purple-600'
+                    ? 'text-[#7747C0]'
                     : 'text-gray-700'
                 }`}>
                 {item.label}

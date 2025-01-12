@@ -114,7 +114,7 @@ export const DepositWithDraft = async ({
   shaba_number,
   description,
 }: {
-  cheque_type: string
+  cheque_type: number
   amount: number
   cheque_number: string
   cheque_date: string
