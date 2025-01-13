@@ -2,7 +2,7 @@ import { getCookieByKey } from '@/actions/cookieToken'
 import { Cities, County, States } from '@/interfaces'
 import { CreateBeneficiary } from '@/services/items'
 import { GetCity, GetCounty, GetStates } from '@/services/location'
-import { CloseSquare, Grammerly, SearchNormal } from 'iconsax-react'
+import { CloseSquare, Grammerly } from 'iconsax-react'
 import { useState, useRef, useEffect } from 'react'
 
 interface FormData {

@@ -17,6 +17,8 @@ import {
   Profile,
   User,
   Box,
+  Setting2,
+  Chart,
 } from 'iconsax-react'
 import React from 'react'
 const Header: React.FC = () => {
@@ -49,6 +51,8 @@ const Header: React.FC = () => {
     Profile,
     User,
     Box,
+    Setting2,
+    Chart,
     Ticket,
     MessageNotif,
     Call,

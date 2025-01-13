@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import DatePicker from 'react-multi-date-picker'
+import DatePicker, { DateObject } from 'react-multi-date-picker'
 import persian from 'react-date-object/calendars/persian'
 import persian_en from 'react-date-object/locales/persian_fa'
 
@@ -10,9 +10,9 @@ interface Props {
 }
 
 const Calendar: React.FC<Props> = ({ setDate }) => {
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null)
+  const [selectedDate, setSelectedDate] = useState<DateObject | null>(null)
 
-  const handleChange = (date: any) => {
+  const handleChange = (date: DateObject) => {
     setSelectedDate(date)
     setDate(date.format('YYYY-MM-DD')) // Format to your desired output
   }

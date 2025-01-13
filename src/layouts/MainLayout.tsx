@@ -8,7 +8,7 @@ const MainLayout = ({
 }: Readonly<{
   children: React.ReactNode
 }>) => {
-  const [isSidebarOpen, setSidebarOpen] = useState(true)
+  const [isSidebarOpen,] = useState(true)
 
   return (
     <div className='flex min-h-screen bg-gray-100'>

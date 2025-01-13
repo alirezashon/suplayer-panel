@@ -4,8 +4,6 @@ import type { NextRequest } from 'next/server'
 export function middleware(request: NextRequest) {
   const isAuthenticated = request.cookies.has('access_token')
   const userStatus = request.cookies.get('user_status')?.value
-  const approveStatus = request.cookies.get('approve_status')?.value
-  const role = request.cookies.get('role')?.value
 
   if (
     request.nextUrl.pathname !== '/payment-status/success' &&

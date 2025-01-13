@@ -8,7 +8,7 @@ import { useMenu } from '@/Context/Menu'
 const Wallet: React.FC = () => {
   const chartRef = useRef<HTMLCanvasElement>(null)
   const chartInstanceRef = useRef<Chart | null>(null)
-  const { menu, setMenu } = useMenu()
+  const { setMenu } = useMenu()
 
   useEffect(() => {
     const ctx = chartRef.current?.getContext('2d')

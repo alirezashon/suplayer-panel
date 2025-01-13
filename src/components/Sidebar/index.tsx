@@ -18,8 +18,9 @@ import {
   Profile,
   User,
   Box,
-  ArrowRight,
   ArrowSquareRight,
+  Chart,
+  Setting2,
 } from 'iconsax-react'
 import Image from 'next/image'
 import { useMenu } from '@/Context/Menu'
@@ -46,6 +47,8 @@ const Sidebar: React.FC = () => {
     Profile,
     User,
     Box,
+    Setting2,
+    Chart,
     Ticket,
     MessageNotif,
     Call,

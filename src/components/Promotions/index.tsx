@@ -277,18 +277,18 @@ const promotions: PromotionInterface[] = [
   },
 ]
 const Promotion = () => {
-  const [done, setDone] = useState<PromotionInterface[]>(
+  const [done,] = useState<PromotionInterface[]>(
     promotions.filter((promo) => promo.status === '3')
   )
-  const [toDo, setToDo] = useState<PromotionInterface[]>(
+  const [toDo, ] = useState<PromotionInterface[]>(
     promotions.filter((promo) => promo.status === '1')
   )
-  const [progress, setProgress] = useState<PromotionInterface[]>(
+  const [progress,] = useState<PromotionInterface[]>(
     promotions.filter((promo) => promo.status === '2')
   )
   const [listStatus, setListStatus] = useState<string>('')
   
-  const { menu, setMenu } = useMenu()
+  const { menu,  } = useMenu()
   return (
     <div>
       {menu === 'promotion' ? (

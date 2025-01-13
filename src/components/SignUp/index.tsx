@@ -12,7 +12,7 @@ import LoginBg2 from '../../../public/images/login2.jpg'
 import LoginShadow from '../../../public/images/login-bg.svg'
 
 
-const Login = () => {
+const SignUp = () => {
   const [inputState, setInputState] = useState<
     | 'mobile'
     | 'otp'
@@ -176,9 +176,6 @@ const Login = () => {
                     </div>
                   )}
                 </div>
-                <p className='flex mt-4 justify-center text-[#50545F] cursor-pointer' 
-                // onClick={()=>location.href='/auth/sign-up'}
-                >حساب کاربری ندارید؟ ثبت نام کنید</p>
               </form>
             </div>
           </div>
@@ -221,4 +218,4 @@ const Login = () => {
     </>
   )
 }
-export default Login
+export default SignUp

@@ -15,7 +15,7 @@ import DoctorCard from './ReferrerCard'
 const PorsantManagement = () => {
   const [showAddModal, setShowAddModal] = useState<boolean | string>(false)
   const [showDeleteState, setShowDeleteState] = useState<boolean>(false)
-  const [deleteState, setDeleteState] = useState<string[]>([])
+  const [, setDeleteState] = useState<string[]>([])
   return (
     <>
       {showAddModal && (
@@ -37,16 +37,10 @@ const PorsantManagement = () => {
             <div className='flex'>
               <div className='flex gap-3 mx-7'>
                 <button
-                  onClick={() => {
-                    ;('')
-                  }}
                   className={`bg-[#7747C0] text-white px-5  h-10 rounded-lg`}>
                   تخصیص اعتبار
                 </button>
                 <button
-                  onClick={() => {
-                    ;('')
-                  }}
                   className={`border border-[#7747C0] text-[#7747C0] px-5  h-10 rounded-lg`}>
                   آزادسازی اعتبار
                 </button>
@@ -71,14 +65,14 @@ const PorsantManagement = () => {
             <div className='flex gap-3 mx-7'>
               <button
                 onClick={() => {
-                 setShowDeleteState(false)
+                  setShowDeleteState(false)
                 }}
                 className={`min-w-40 border border-[#7747C0] text-[#7747C0] px-5  h-10 rounded-lg`}>
                 حذف بازاریاب‌ها
               </button>
               <button
                 onClick={() => {
-                setShowDeleteState(false)
+                  setShowDeleteState(false)
                 }}
                 className={`min-w-40 bg-[#7747C0] text-white px-5  h-10 rounded-lg`}>
                 انصراف
@@ -122,7 +116,7 @@ const PorsantManagement = () => {
             />
           </div>
         )}
-   
+
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
           {Array.from({ length: 8 }).map((_, index) => (
             <DoctorCard

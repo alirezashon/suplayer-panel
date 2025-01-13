@@ -1,5 +1,5 @@
 import { PromotionInterface } from '@/interfaces'
-import { Edit2, Eye, MouseCircle, Personalcard, Trash } from 'iconsax-react'
+import { Eye, MouseCircle, Personalcard } from 'iconsax-react'
 import React from 'react'
 
 const Done = ({ promotion }: { promotion: PromotionInterface }) => {

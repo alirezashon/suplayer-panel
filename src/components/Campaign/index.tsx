@@ -65,18 +65,18 @@ const campaign: CampaignInterface[] = [
   },
 ]
 const Campaign = () => {
-  const [done, setDone] = useState<CampaignInterface[]>(
+  const [done] = useState<CampaignInterface[]>(
     campaign.filter((promo) => promo.status === '3')
   )
-  const [toDo, setToDo] = useState<CampaignInterface[]>(
+  const [toDo] = useState<CampaignInterface[]>(
     campaign.filter((promo) => promo.status === '1')
   )
-  const [progress, setProgress] = useState<CampaignInterface[]>(
+  const [progress] = useState<CampaignInterface[]>(
     campaign.filter((promo) => promo.status === '2')
   )
   const [listStatus, setListStatus] = useState<string>('')
 
-  const { menu, setMenu } = useMenu()
+  const { menu } = useMenu()
   return (
     <div>
       {menu === 'campaign' ? (

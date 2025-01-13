@@ -70,6 +70,18 @@ export const data: Items[] = [
       },
     ],
   },
+  {
+    name: ' تنظیمات',
+    link: 'referral-levels',
+    iconIndex: 11,
+    subItems: [
+      {
+        name: 'مدیریت سطوح بازاریابی',
+        link: 'referral-levels',
+        iconIndex: 12,
+      },
+    ],
+  },
   // {
   //   name: ' پشتیلانی آنلاین',
   //   link: '/reports',

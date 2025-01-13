@@ -1,12 +1,5 @@
 import { CampaignInterface } from '@/interfaces'
-import {
-  Calendar,
-  Eye,
-  Moneys,
-  MouseCircle,
-  Personalcard,
-  Trash,
-} from 'iconsax-react'
+import { Calendar, Moneys } from 'iconsax-react'
 import React from 'react'
 
 const Done = ({ campaign }: { campaign: CampaignInterface }) => {

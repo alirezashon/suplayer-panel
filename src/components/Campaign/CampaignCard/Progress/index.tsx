@@ -1,14 +1,5 @@
 import { CampaignInterface } from '@/interfaces'
-import {
-  Calendar,
-  Edit2,
-  Eye,
-  Moneys,
-  MouseCircle,
-  Personalcard,
-  Timer,
-  Trash,
-} from 'iconsax-react'
+import { Calendar, Moneys, Timer } from 'iconsax-react'
 import React from 'react'
 
 const Progress = ({ campaign }: { campaign: CampaignInterface }) => {
@@ -30,7 +21,7 @@ const Progress = ({ campaign }: { campaign: CampaignInterface }) => {
           </div>
         </div>
       </div>
- <div className='my-4 px-1 flex justify-between '>
+      <div className='my-4 px-1 flex justify-between '>
         <div className='flex gap-1 '>
           <Calendar size={24} color='#7747C0' />
           <p className='text-gray-600 mb-2'> تاریخ شروع</p>
@@ -41,18 +32,18 @@ const Progress = ({ campaign }: { campaign: CampaignInterface }) => {
       <div className='my-4 px-1 flex justify-between '>
         <div className='flex gap-1 '>
           <Calendar size={24} color='#7747C0' />
-          <p className='text-gray-600 mb-2'>  تاریخ پایان</p>
+          <p className='text-gray-600 mb-2'> تاریخ پایان</p>
         </div>
         <p>{campaign.endDate}</p>
       </div>
       <div className='my-4 px-1 flex justify-between '>
         <div className='flex gap-1 '>
           <Moneys size={24} color='#7747C0' />
-          <p className='text-gray-600 mb-2'>  بودجه</p>
+          <p className='text-gray-600 mb-2'> بودجه</p>
         </div>
         <p>{campaign.budget}</p>
       </div>
-</div>
+    </div>
   )
 }
 

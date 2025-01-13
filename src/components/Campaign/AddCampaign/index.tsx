@@ -3,25 +3,7 @@ import SelectList from '@/components/shared/SelectList'
 import { CampaignInterface } from '@/interfaces'
 import { ArrowRight2, CloseSquare, Message } from 'iconsax-react'
 import { FormEvent, useState } from 'react'
-const sampleDetails = {
-  type: 'کمپین ایمیلی',
-  name: 'کمپین ایمیل مشتریان',
-  smsType: 'تعامل با مشتریان',
-  productCampaign: 'کمپین تخفیف ویژه',
-  startDate: '۱۴۰۳/۰۹/۱۵',
-  endDate: '۱۴۰۳/۱۰/۰۵',
-  country: 'ایران',
-  province: 'اصفهان',
-  city: 'اصفهان',
-  county: 'اصفهان',
-  budget: '۵۰.۰۰۰.۰۰۰.۰۰۰ ریال',
-  expectedResponse: '۱۰۰.۰۰۰.۰۰۰.۰۰۰ ریال',
-  description: 'کمپین برای افزایش فروش در بازه تخفیف‌ها طراحی شده است',
-  status: '3',
-  selectedGroups: ['زیرگروه آقایان', 'زیرگروه بانوان'],
-  joinedBrands: ['فولیکا', 'داو'],
-  category: 'گروه آرایشی و بهداشتی',
-}
+
 const AddCampaign = ({
   existData,
   close,
@@ -29,7 +11,7 @@ const AddCampaign = ({
   existData?: CampaignInterface
   close: (show: boolean) => void
 }) => {
-  const [prvData, setPrvData] = useState<CampaignInterface | null>(
+  const [prvData,] = useState<CampaignInterface | null>(
     existData || null
   )
   const [time, setTime] = useState<{ start: string; end: string }>({
@@ -57,7 +39,7 @@ const AddCampaign = ({
     title: '',
     description: '',
   })
-  const [selectedItems, setSelectedItems] = useState<Array<string | number>>([])
+  const [, setSelectedItems] = useState<Array<string | number>>([])
   const items = [
     { id: 1, label: 'گروه زنان و زایمان' },
     { id: 2, label: 'گروه پوست و مو' },

@@ -15,7 +15,7 @@ const AddModal = ({
 }) => {
   const [name, setName] = useState<string>(existName || '')
   const [isConfirmed, setIsConfirmed] = useState(false)
-
+  const [level, setLevel] = useState<number>(1)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsConfirmed(true)
@@ -67,21 +67,52 @@ const AddModal = ({
               />
             </div>
           </div>
-
           <div className='mt-10 w-full max-md:max-w-full'>
-            <div className='flex flex-col w-full'>
+            <div className='flex flex-col mt-7'>
+              <p className='text-[#8455D2]'>انتخاب سطح بازاریاب</p>
+              <div className='grid grid-cols-2 gap-3 my-2'>
+                {['سطح 1', 'سطح 2', 'سطح 3', 'سطح 4'].map(
+                  (beneficiary, index) => (
+                    <label
+                      key={index}
+                      className='flex items-center gap-3 cursor-pointer'>
+                      <input
+                        type='radio'
+                        defaultChecked={index === 0}
+                        name='beneficiary'
+                        value={beneficiary}
+                        onChange={() => setLevel(index + 1)}
+                        className='w-5 h-5 cursor-pointer accent-[#7747C0]'
+                      />
+                      <span className='text-gray-700'>{beneficiary}</span>
+                    </label>
+                  )
+                )}
+              </div>
+            </div>
+            <div className='flex flex-col w-full my-3'>
               <label className='text-base font-medium text-right text-gray-800'>
-                نام گروه خود را بنویسید
+                نام سمت سطح {level}
               </label>
               <input
                 defaultValue={name}
                 onChange={(e) => setName(e.target.value)}
                 type='text'
-                placeholder='نام گروه محصول'
+                placeholder='مثال: مدیر منطقه'
               />
             </div>
           </div>
-
+          <div className='flex flex-col w-full my-3'>
+            <label className='text-base font-medium text-right text-gray-800'>
+              نام بازایاب را بنویسید
+            </label>
+            <input
+              defaultValue={name}
+              onChange={(e) => setName(e.target.value)}
+              type='text'
+              placeholder='مثال: محمد رضایی'
+            />
+          </div>
           <div className='mt-10 w-full max-md:max-w-full'>
             <div className='flex items-center'>
               <button
@@ -96,7 +127,6 @@ const AddModal = ({
                 className={`w-full fill-button px-10 h-10 mt-10 rounded-lg transition-transform duration-200 ease-in-out hover:scale-105`}>
                 ثبت
               </button>
-
               <div
                 className={`absolute ${
                   !isConfirmed && ' opacity-0 '
@@ -117,5 +147,4 @@ const AddModal = ({
     </div>
   )
 }
-
 export default AddModal

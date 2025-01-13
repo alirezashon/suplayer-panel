@@ -1,6 +1,6 @@
 import { useMenu } from '@/Context/Menu'
 import { CampaignInterface } from '@/interfaces'
-import { Calendar, Edit2, Moneys, Personalcard, Trash } from 'iconsax-react'
+import { Calendar, Edit2, Moneys,Personalcard, Trash } from 'iconsax-react'
 import React from 'react'
 
 const Wait = ({ campaign }: { campaign: CampaignInterface }) => {

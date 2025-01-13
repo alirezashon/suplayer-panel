@@ -1,4 +1,7 @@
 'use client'
+
+import { Import, MoreSquare } from 'iconsax-react'
+
 const Table = ({
   data,
   headers,
@@ -14,7 +17,7 @@ const Table = ({
         <tr>
           {headers.map((head, headIndex) => (
             <th
-              className={`bg-[#D7C9EB] border-z h-10 ${
+              className={`bg-[#F5F7F8] border-z h-10 ${
                 headIndex === 0
                   ? 'rounded-tr-lg'
                   : headIndex === headers.length - 1 && 'rounded-tl-lg'
@@ -37,7 +40,7 @@ const Table = ({
       <tbody>
         {data.map((account, index) => (
           <tr key={index} className='border-b'>
-            {[index + 1, ...[...Object.values(account)]].map(
+        {[index + 1, ...[...Object.values(account)]].map(
               (detail, detailIndex) => (
                 <td
                   key={detailIndex}
@@ -48,15 +51,11 @@ const Table = ({
                       : `${detail}`.includes('-') && 'text-red-600'
                   } ${
                     detailIndex === 0
-                      ? 'border-r'
-                      : detailIndex === Object.values(account).length  &&
-                        'border-l'
+                      && 'border-r'
+                   
                   }`}>
                   {`${detail}` === 'edit' ? (
-                    <p className='flex justify-center'>
-                      b
-                      /
-                    </p>
+                    <p className='flex justify-center'>b /</p>
                   ) : (
                     <p
                       className={`${
@@ -75,6 +74,16 @@ const Table = ({
                 </td>
               )
             )}
+             <td className=''>
+              <p className='flex justify-center'>
+              <Import size={24} color='#7747C0' />
+              </p>
+            </td>   
+            <td className='b'>
+              <p className='flex justify-center'>
+              <MoreSquare size={24} color='#7747C0' />
+              </p>
+            </td>
           </tr>
         ))}
       </tbody>

@@ -1,13 +1,12 @@
 import { useState } from 'react'
 import { People, ProfileCircle } from 'iconsax-react'
-import { GroupData } from '@/interfaces'
 import { useMenu } from '@/Context/Menu'
 import GroupsDetail from '../GroupDetail'
 import { useGroupData } from '@/Context/GroupsData'
 
 const ShowGroups: React.FC = () => {
   const { setMenu } = useMenu()
-  const [showGroup, setSshowGroup] = useState<string>('')
+  const [showGroup] = useState<string>('')
   const { groupData } = useGroupData()
 
   return (

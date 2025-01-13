@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Edit2, People, ProfileCircle, Trash } from 'iconsax-react'
 import { useMenu } from '@/Context/Menu'
 import AddModal from './AddModal'

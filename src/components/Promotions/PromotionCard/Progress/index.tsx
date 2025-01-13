@@ -1,11 +1,9 @@
 import { PromotionInterface } from '@/interfaces'
 import {
-  Edit2,
   Eye,
   MouseCircle,
   Personalcard,
   Timer,
-  Trash,
 } from 'iconsax-react'
 import React from 'react'
 

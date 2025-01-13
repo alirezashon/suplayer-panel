@@ -1,13 +1,10 @@
 import toast from 'react-hot-toast'
 
-export interface SearchAddress {
-  title: string
-  location: { x: number; y: number }
-}
+
 
 export const searchAddress = async (
-  value: string,
-  setAddresses: (value: any[]) => void
+  value,
+  setAddresses
 ) => {
   try {
     const response = await fetch(
@@ -21,8 +18,8 @@ export const searchAddress = async (
     )
     const data = await response.json()
     if (response.status === 200 && data.items) {
-      const converted: any[] = data.items.map(
-        (item: any) => ({
+      const converted = data.items.map(
+        (item) => ({
           title: item.title,
           x: item.location.x,
           y: item.location.y,
@@ -36,10 +33,10 @@ export const searchAddress = async (
 }
 
 export const UpdateAddress = async (
-  setIsLoading: (arg: boolean) => void,
-  houseNumber: number,
-  houseUnit: number,
-  address: string
+  setIsLoading,
+  houseNumber,
+  houseUnit,
+  address
 ) => {
   setIsLoading(true)
 

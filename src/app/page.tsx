@@ -4,7 +4,6 @@ import Beneficiary from '@/components/Beneficiary'
 import Campaign from '@/components/Campaign'
 import Dashboard from '@/components/Dashboard'
 import Deposite from '@/components/Deposite'
-import Groups from '@/components/Groups'
 import MyGroups from '@/components/MyGroups'
 import GroupsDetail from '@/components/MyGroups/GroupDetail'
 import PorsantManagement from '@/components/PorsantManagement'
@@ -12,6 +11,7 @@ import ProductGroups from '@/components/ProductGroups'
 import Product from '@/components/Products'
 import Profile from '@/components/Profile'
 import Promotion from '@/components/Promotions'
+import ReferralLevels from '@/components/Referral Levels'
 import Referrer from '@/components/Referrer'
 import Loading from '@/components/shared/LoadingSpinner'
 import SubGroups from '@/components/SubGroups'
@@ -46,7 +46,7 @@ const Home = () => {
     return () => {
       window.removeEventListener('hashchange', handleHashChange, false)
     }
-  }, [setMenu])
+  }, [setMenu,setGroupData,setSubGroupData])
 
   return (
     <MainLayout>
@@ -61,8 +61,6 @@ const Home = () => {
               <Wallet />
             ) : menu === 'mygroups' ? (
               <MyGroups />
-            ) : menu === 'groupmanagement' ? (
-              <Groups />
             ) : menu === 'subgroups' ? (
               <SubGroups />
             ) : menu === 'referrers' ? (
@@ -91,6 +89,8 @@ const Home = () => {
               <PorsantManagement />
             ) : menu === 'beneficiary' ? (
               <Beneficiary />
+            ) : menu === 'referral-levels' ? (
+              <ReferralLevels />
             ) : (
               <Dashboard />
             )}

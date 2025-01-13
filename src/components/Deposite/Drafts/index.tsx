@@ -1,6 +1,5 @@
 import { useRef, useState } from 'react'
 import {
-  CloseCircle,
   TickCircle,
   MoneySend,
   DocumentUpload,
@@ -96,7 +95,7 @@ const Drafts = () => {
         <div className='w-full flex flex-col gap-4'>
           <h2 className='text-gray-700 text-xl font-bold flex items-center gap-2 mr-4'>
             <MoneySend size='24' color='#704CB9' />
-            مشخصات چک واریزی
+            مشخصات {chequeType === 1 ? ' چک ' : ' سند '} واریزی
           </h2>
           <div className='flex flex-col mt-7'>
             <p className='text-[#7747C0]'>انتخاب نوع ذی‌ نفع </p>
@@ -123,7 +122,9 @@ const Drafts = () => {
               <label
                 htmlFor='amount'
                 className='block text-gray-600 mb-2 text-right'>
-                مبلغ چک به ریال
+                مبلغ
+                {chequeType === 1 ? ' چک ' : ' سند '}
+                به ریال
               </label>
               <input
                 id='amount'
@@ -139,9 +140,9 @@ const Drafts = () => {
               <label
                 htmlFor='amount'
                 className='block text-gray-600 mb-2 text-right'>
-                مبلغ چک به ریال
+                تاریخ {chequeType === 1 ? ' چک ' : ' سند '}
               </label>
-              <Calendar setDate={(value:string)=>''} />
+              <Calendar setDate={(value: string) => value} />
             </div>
           </div>
 
@@ -149,7 +150,7 @@ const Drafts = () => {
             <label
               htmlFor='sheba'
               className='block text-gray-600 mb-2 text-right'>
-             شماره شبا حساب مبدا
+              {chequeType === 1 ? ' شماره شبا حساب مبدا' : ''}
             </label>
             <input
               id='sheba'
@@ -157,7 +158,9 @@ const Drafts = () => {
               defaultValue={refs.current.sheba}
               onChange={(e) => (refs.current.sheba = e.target.value)}
               type='text'
-              placeholder='شماره شبا را وارد کنید'
+              placeholder={`${
+                chequeType === 1 ? '۹۲۷۴۳۵۹۲' : 'شماره شبا را وارد کنید'
+              }`}
               className='w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400'
             />
           </div>
@@ -166,7 +169,7 @@ const Drafts = () => {
               <label
                 htmlFor='sheba'
                 className='block text-gray-600 mb-2 text-right'>
-                شماره سریال چک
+                شماره سریال {chequeType === 1 ? ' چک ' : ' سند '}
               </label>
               <input
                 id='sheba'
@@ -182,7 +185,7 @@ const Drafts = () => {
               <label
                 htmlFor='sheba'
                 className='block text-gray-600 mb-2 text-right'>
-                شناسه چک صیاد
+                شناسه {chequeType === 1 ? ' چک ' : ' سند '} صیاد
               </label>
               <input
                 id='sheba'
@@ -190,7 +193,9 @@ const Drafts = () => {
                 defaultValue={refs.current.sheba}
                 onChange={(e) => (refs.current.sheba = e.target.value)}
                 type='text'
-                placeholder='شناسه چک صیاد را وارد کنید'
+                placeholder={`شناسه${
+                  chequeType === 1 ? ' چک ' : ' سند '
+                }صیاد را وارد کنید`}
                 className='w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400'
               />
             </div>
@@ -258,7 +263,7 @@ const Drafts = () => {
         <div className='flex flex-col w-full justify-between h-fit mb-6'>
           <h3 className='text-gray-700 text-lg font-bold flex items-center gap-2 mb-2'>
             <ReceiptSquare size='20' color='#704CB9' />
-            عکس چک
+            عکس {chequeType === 1 ? ' چک ' : ' سند '}
           </h3>
           <div className='flex gap-5'>
             {draftSrc ? (

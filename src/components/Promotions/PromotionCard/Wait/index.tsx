@@ -4,8 +4,6 @@ import { PromotionInterface } from '@/interfaces'
 import {
   Calendar,
   Edit2,
-  Eye,
-  MouseCircle,
   Personalcard,
   Trash,
 } from 'iconsax-react'

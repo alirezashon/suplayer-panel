@@ -1,5 +1,5 @@
 'use client'
-import { Add, ExportCurve, Receipt1 } from 'iconsax-react'
+import { ExportCurve, Receipt1 } from 'iconsax-react'
 import dynamic from 'next/dynamic'
 
 const Table = dynamic(() => import('../../Table'), {
@@ -12,17 +12,19 @@ const Report = () => {
     username: 'فاطمه جلیلی',
     mande: '3,000,000,00',
     tarikh: '۲۷ مهر ۱۴۰۳',
-    detail: 'حساب معین',
+    hesab: 'حساب معین',
     status: index % 2 === 0 ? ' موفق' : 'ناموفق',
   }))
   const headers = [
-    'شناسه',
-    '  نوع تراکنش',
+    'نوع اعتبار',
     ' مبلغ (ریال )',
-    '  کارمزد بانکی(ریال)',
-    'کارمزد خدمت(ریال)',
     ' تاریخ ',
+    'شبا / سریال',
+    'شناسه صیاد',
+    ' نام بانک',
+    'شعبه',
     ' وضعیت',
+    'دانلود سند',
     'جزئیات',
   ]
 
@@ -99,7 +101,6 @@ const Report = () => {
         </form>
         <div className='flex justify-end mt-6'>
           <button className=' bg-[#7747C0] text-white w-56 flex items-center justify-center py-1 px-2 rounded-lg '>
-            <Add size={24} color='#FFF' />
             جستجو
           </button>
         </div>
