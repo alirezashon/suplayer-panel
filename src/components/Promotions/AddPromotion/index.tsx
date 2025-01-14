@@ -35,7 +35,7 @@ const AddPromotion = () => {
     title: '',
     description: '',
   })
-  const [selectedItems, setSelectedItems] = useState<Array<string | number>>([])
+  const [, setSelectedItems] = useState<Array<string | number>>([])
   const items = [
     { id: 1, label: 'گروه زنان و زایمان' },
     { id: 2, label: 'گروه پوست و مو' },
