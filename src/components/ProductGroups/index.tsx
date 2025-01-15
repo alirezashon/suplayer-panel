@@ -9,9 +9,9 @@ import AddModal from './AddModal'
 import DeleteModal from './DeleteModal'
 import { useMenu } from '@/Context/Menu'
 import Image from 'next/image'
-import { GetProductGroupList } from '@/services/items'
 import { getCookieByKey } from '@/actions/cookieToken'
 import { ProductGroup } from '@/interfaces'
+import { GetProductGroupsList } from '@/services/products'
 
 const ProductGroups: React.FC = () => {
   const [data, setData] = useState<ProductGroup[]>([])
@@ -23,7 +23,7 @@ const ProductGroups: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       const accessToken = (await getCookieByKey('access_token')) || ''
-      await GetProductGroupList({ accessToken }).then(
+      await GetProductGroupsList({ accessToken }).then(
         (value) => value && setData(value)
       )
     }

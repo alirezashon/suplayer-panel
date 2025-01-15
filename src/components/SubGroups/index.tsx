@@ -3,13 +3,11 @@ import { Trash, Edit2 } from 'iconsax-react'
 import AddModal from './AddModal'
 import DeleteModal from './DeleteModal'
 import { useMenu } from '@/Context/Menu'
-import { useGroupData } from '@/Context/GroupsData'
-import { useSubGroupData } from '@/Context/SubGroupsData'
+import { useData } from '@/Context/Data'
 
 const SubGroups: React.FC = () => {
   const { setMenu } = useMenu()
-  const { groupData } = useGroupData()
-  const { subGroupData } = useSubGroupData()
+  const { groupData ,subGroupData} = useData()
   const [activeTab, setActiveTab] = useState<number>(
     groupData ? groupData[0].sup_group_id : 0
   )

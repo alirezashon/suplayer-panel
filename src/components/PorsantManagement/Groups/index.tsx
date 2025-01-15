@@ -2,12 +2,12 @@ import { useState } from 'react'
 import { People, ProfileCircle } from 'iconsax-react'
 import { useMenu } from '@/Context/Menu'
 import GroupsDetail from '../GroupDetail'
-import { useGroupData } from '@/Context/GroupsData'
+import { useData } from '@/Context/Data'
 
 const ShowGroups: React.FC = () => {
   const { setMenu } = useMenu()
-  const [showGroup] = useState<string>('')
-  const { groupData } = useGroupData()
+  const [showGroup, setShowGroup] = useState<string>('')
+  const { groupData } = useData()
 
   return (
     <>
@@ -28,25 +28,25 @@ const ShowGroups: React.FC = () => {
           <div className='p-6 bg-white rounded-lg border border-gray-200'>
             <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4'>
               {groupData &&
-                groupData.map((product, index) => (
+                groupData.map((group, index) => (
                   <div
                     key={index}
                     className='flex flex-col justify-between items-start border rounded-lg p-4 shadow-md hover:shadow-lg transition duration-300'>
                     {/* Category Label */}
                     <div className='flex items-center justify-between w-full mb-4'>
                       <span className='text-sm bg-[#E1DCF8] text-[#6137A0] px-2 py-1 rounded'>
-                        {product.sup_group_name}
+                        {group.sup_group_name}
                       </span>
                     </div>
                     <div className='flex'>
                       <ProfileCircle size={24} color='#704CB9' />
                       <p className='text-sm  px-2 py-1 rounded'>
-                        {Number(`${'product.referrers'}`) > 0 ? (
+                        {Number(`${'group.referrers'}`) > 0 ? (
                           <>
                             <span className='text-[#757575]'>
                               تعداد بازاریاب:
                             </span>
-                            {'product.referrers'}
+                            {'group.referrers'}
                           </>
                         ) : (
                           'بازاریابی تعریف نشده است'
@@ -56,12 +56,12 @@ const ShowGroups: React.FC = () => {
                     <div className='flex my-5'>
                       <People size={24} color='#704CB9' />
                       <p className='text-sm  px-2 py-1 rounded'>
-                        {product.supervisors_count > 0 ? (
+                        {group.supervisors_count > 0 ? (
                           <>
                             <span className='text-[#757575]'>
                               تعداد زیر‌گروه‌ها:
                             </span>
-                            {product.supervisors_count}
+                            {group.supervisors_count}
                           </>
                         ) : (
                           ' زیر گروهی تعریف نشده است'
@@ -70,22 +70,17 @@ const ShowGroups: React.FC = () => {
                     </div>
                     <button
                       onClick={() => {
-                        location.hash =
-                          product.supervisors_count > 0
-                            ? 'groupsdetail'
-                            : 'subgroups'
-                        setMenu(
-                          product.supervisors_count > 0
-                            ? 'groupsdetail'
-                            : 'subgroups'
-                        )
+                        group.supervisors_count > 0
+                          ? setShowGroup(group.sup_group_code)
+                          : (location.hash = 'subgroups') &&
+                            setMenu('subgroups')
                       }}
                       className={`w-full h-10  font-semibold rounded ${
-                        product.supervisors_count === 0
+                        group.supervisors_count === 0
                           ? 'bg-[#7747C0] hover:bg-[#7747C0] text-white'
                           : 'border border-[#7747C0] text-[#7747C0] hover:bg-[#7747C0] hover:text-white'
                       } transition duration-300`}>
-                      {product.supervisors_count > 0
+                      {group.supervisors_count > 0
                         ? 'مشاهده زیر گروه‌ها'
                         : 'تعریف زیر گروه'}
                     </button>
@@ -95,7 +90,7 @@ const ShowGroups: React.FC = () => {
           </div>
         </div>
       ) : (
-        <GroupsDetail name={showGroup} />
+        <GroupsDetail id={showGroup} />
       )}
     </>
   )

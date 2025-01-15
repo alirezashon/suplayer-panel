@@ -1,5 +1,10 @@
 'use client'
-import { getGroupData, getSubGroupData } from '@/actions/setData'
+import {
+  getGroupData,
+  getSubGroupData,
+  getProductData,
+  getProductGroupData,
+} from '@/actions/setData'
 import Beneficiary from '@/components/Beneficiary'
 import Campaign from '@/components/Campaign'
 import Dashboard from '@/components/Dashboard'
@@ -16,17 +21,16 @@ import Referrer from '@/components/Referrer'
 import Loading from '@/components/shared/LoadingSpinner'
 import SubGroups from '@/components/SubGroups'
 import Wallet from '@/components/Wallet'
-import { useGroupData } from '@/Context/GroupsData'
+import { useData } from '@/Context/Data'
 import { useMenu } from '@/Context/Menu'
-import { useSubGroupData } from '@/Context/SubGroupsData'
 import MainLayout from '@/layouts/MainLayout'
 import { useEffect, useState } from 'react'
 
 const Home = () => {
   const { menu, setMenu } = useMenu()
   const [loading, setLoading] = useState<boolean>(true)
-  const { setGroupData } = useGroupData()
-  const { setSubGroupData } = useSubGroupData()
+  const { setGroupData, setSubGroupData, setProductData, setProductGroupData } =
+    useData()
 
   useEffect(() => {
     const fetcher = async () => {
@@ -34,6 +38,10 @@ const Home = () => {
       if (groups) setGroupData(groups)
       const subGroups = await getSubGroupData()
       if (subGroups) setSubGroupData(subGroups)
+      const productsGroups = await getProductGroupData()
+      if (productsGroups) setProductGroupData(productsGroups)
+      const products = await getProductData()
+      if (products) setProductData(products)
     }
     fetcher()
     const handleHashChange = () => {
@@ -46,7 +54,7 @@ const Home = () => {
     return () => {
       window.removeEventListener('hashchange', handleHashChange, false)
     }
-  }, [setMenu,setGroupData,setSubGroupData])
+  }, [setMenu, setGroupData, setSubGroupData])
 
   return (
     <MainLayout>
@@ -69,8 +77,6 @@ const Home = () => {
               <ProductGroups />
             ) : menu === 'products' ? (
               <Product />
-            ) : menu === 'groupsdetail' ? (
-              <GroupsDetail />
             ) : menu === 'deposite' ? (
               <Deposite />
             ) : [
@@ -85,7 +91,7 @@ const Home = () => {
                 menu
               ) ? (
               <Campaign />
-            ) : ['porsant', 'porsantmanagement'].includes(menu) ? (
+            ) : ['porsant', 'porsantmanagement','groupsdetail','allocation','release'].includes(menu) ? (
               <PorsantManagement />
             ) : menu === 'beneficiary' ? (
               <Beneficiary />

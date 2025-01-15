@@ -177,7 +177,7 @@ const Login = () => {
                   )}
                 </div>
                 <p className='flex mt-4 justify-center text-[#50545F] cursor-pointer' 
-                // onClick={()=>location.href='/auth/sign-up'}
+                onClick={()=>location.href='/auth/sign-up'}
                 >حساب کاربری ندارید؟ ثبت نام کنید</p>
               </form>
             </div>

@@ -1,7 +1,10 @@
+import { useData } from '@/Context/Data'
+import { useMenu } from '@/Context/Menu'
 import {
   ArrowLeft2,
   Box,
   Calendar,
+  Danger,
   Eye,
   Moneys,
   MouseCircle,
@@ -14,28 +17,8 @@ import {
 } from 'iconsax-react'
 
 const Dashboard = () => {
-  const statsData = [
-    {
-      icon: <People size={22} color='#666BC9' />,
-      title: 'گروه‌های فعال من',
-      count: '۱۴',
-    },
-    {
-      icon: <Profile2User size={22} color='#666BC9' />,
-      title: 'بازاریاب‌های من',
-      count: '۱۳۰',
-    },
-    {
-      icon: <Profile2User size={22} color='#666BC9' />,
-      title: ' ذی‌نفعان من',
-      count: '۱۱۳۰',
-    },
-    {
-      icon: <Box size={22} color='#666BC9' />,
-      title: 'محصول‌های من',
-      count: '۳۰',
-    },
-  ]
+  const { groupData, productData } = useData()
+  const { setMenu } = useMenu()
 
   const promotionsData = [
     {
@@ -87,23 +70,128 @@ const Dashboard = () => {
   return (
     <div className='flex flex-col m-5'>
       <div className='my-10 flex gap-4'>
-        {statsData.map((stat, index) => (
-          <div
-            key={index}
-            className='flex flex-col flex-1 p-6 bg-white rounded-xl border border-gray-200 shadow min-w-[240px] max-md:px-5'>
-            <div className='flex justify-between items-center text-sm text-zinc-600'>
-              <span>{stat.title}</span>
-              {stat.icon}
-            </div>
+        <div className='h-fit flex flex-col flex-1 p-6 bg-white rounded-xl border border-gray-200 shadow min-w-[240px] max-md:px-5'>
+          <div className='flex justify-between items-center text-sm text-zinc-600'>
+            <span> گروه‌های فعال من</span>
+            <People size={22} color='#666BC9' />
+          </div>
+          {groupData && groupData?.length > 0 ? (
             <div className='flex justify-between items-center mt-6 text-zinc-900'>
-              <span className='text-xl'>{stat.count}</span>
+              <span className='text-xl'>{groupData?.length}</span>
               <div className=' cursor-pointer flex items-center gap-2 text-[#7747C0]'>
                 <span>مشاهده بیشتر</span>
                 <ArrowLeft2 size={22} color='#7747C0' />
               </div>
             </div>
+          ) : (
+            <div className='flex flex-col gap-5 text-[#A9791C] mt-5'>
+              <div className='flex gap-2'>
+                <Danger color='#A9791C' size={18} />
+                <p>شما هنوز گروه تعریف نکرده‌اید</p>
+              </div>
+              <button
+                className='fill-button h-10 rounded-lg'
+                onClick={() => {
+                  setMenu('mygroups')
+                  location.hash = 'mygroups'
+                }}>
+                تعریف گروه جدید
+              </button>
+            </div>
+          )}
+        </div>
+        <div className='h-fit flex flex-col flex-1 p-6 bg-white rounded-xl border border-gray-200 shadow min-w-[240px] max-md:px-5'>
+          <div className='flex justify-between items-center text-sm text-zinc-600'>
+            <span>بازاریاب‌های من</span>
+            <Profile2User size={22} color='#666BC9' />
           </div>
-        ))}
+          {groupData && groupData?.length < 0 ? (
+            <div className='flex justify-between items-center mt-6 text-zinc-900'>
+              <span className='text-xl'>{groupData?.length}</span>
+              <div className=' cursor-pointer flex items-center gap-2 text-[#7747C0]'>
+                <span>مشاهده بیشتر</span>
+                <ArrowLeft2 size={22} color='#7747C0' />
+              </div>
+            </div>
+          ) : (
+            <div className='flex flex-col gap-5 text-[#A9791C] mt-5'>
+              <div className='flex gap-2'>
+                <Danger color='#A9791C' size={18} />
+                <p>شما هنوز بازاریاب‌ تعریف نکرده‌اید</p>
+              </div>
+              <button
+                className='fill-button h-10 rounded-lg'
+                onClick={() => {
+                  setMenu('referrers')
+                  location.hash = 'referrers'
+                }}>
+                تعریف بازاریاب جدید
+              </button>
+            </div>
+          )}
+        </div>
+
+        <div className='h-fit flex flex-col flex-1 p-6 bg-white rounded-xl border border-gray-200 shadow min-w-[240px] max-md:px-5'>
+          <div className='flex justify-between items-center text-sm text-zinc-600'>
+            <span>ذی‌نفعان من</span>
+            <Profile2User size={22} color='#666BC9' />
+          </div>
+          {groupData && groupData?.length < 0 ? (
+            <div className='flex justify-between items-center mt-6 text-zinc-900'>
+              <span className='text-xl'>{groupData?.length}</span>
+              <div className=' cursor-pointer flex items-center gap-2 text-[#7747C0]'>
+                <span>مشاهده بیشتر</span>
+                <ArrowLeft2 size={22} color='#7747C0' />
+              </div>
+            </div>
+          ) : (
+            <div className='flex flex-col gap-5 text-[#A9791C] mt-5'>
+              <div className='flex gap-2'>
+                <Danger color='#A9791C' size={18} />
+                <p>شما هنوز ذی‌نفع تعریف نکرده‌اید</p>
+              </div>
+              <button
+                className='fill-button h-10 rounded-lg'
+                onClick={() => {
+                  setMenu('beneficiary')
+                  location.hash = 'beneficiary'
+                }}>
+                تعریف ذی‌نفع جدید
+              </button>
+            </div>
+          )}
+        </div>
+
+        <div className='h-fit flex flex-col flex-1 p-6 bg-white rounded-xl border border-gray-200 shadow min-w-[240px] max-md:px-5'>
+          <div className='flex justify-between items-center text-sm text-zinc-600'>
+            <span>محصول‌های من</span>
+            <Box size={22} color='#666BC9' />
+          </div>
+          {productData && productData?.length > 0 ? (
+            <div className='flex justify-between items-center mt-6 text-zinc-900'>
+              <span className='text-xl'>{productData?.length}</span>
+              <div className=' cursor-pointer flex items-center gap-2 text-[#7747C0]'>
+                <span>مشاهده بیشتر</span>
+                <ArrowLeft2 size={22} color='#7747C0' />
+              </div>
+            </div>
+          ) : (
+            <div className='flex flex-col gap-5 text-[#A9791C] mt-5'>
+              <div className='flex gap-2'>
+                <Danger color='#A9791C' size={18} />
+                <p>شما هنوز محصول‌ تعریف نکرده‌اید</p>
+              </div>
+              <button
+                className='fill-button h-10 rounded-lg'
+                onClick={() => {
+                  setMenu('products')
+                  location.hash = 'products'
+                }}>
+                تعریف محصول‌ جدید
+              </button>
+            </div>
+          )}
+        </div>
       </div>
       <div className='flex flex-col bg-white p-5 border rounded-lg'>
         <div className='flex gap-3 items-center'>

@@ -3,11 +3,11 @@ import { Edit2, People, ProfileCircle, Trash } from 'iconsax-react'
 import { useMenu } from '@/Context/Menu'
 import AddModal from './AddModal'
 import DeleteModal from './DeleteModal'
-import { useGroupData } from '@/Context/GroupsData'
+import { useData } from '@/Context/Data'
 
 const MyGroups: React.FC = () => {
   const { setMenu } = useMenu()
-  const { groupData, setGroupData } = useGroupData()
+  const { groupData, setGroupData } = useData()
   const [showAddModal, setShowAddModal] = useState<null | string[]>(null)
   const [showDeleteModal, setShowDeleteModal] = useState<null | string[]>(null)
  

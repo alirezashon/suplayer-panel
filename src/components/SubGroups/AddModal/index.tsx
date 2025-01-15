@@ -1,5 +1,5 @@
 import { getCookieByKey } from '@/actions/cookieToken'
-import { useGroupData } from '@/Context/GroupsData'
+import { useData } from '@/Context/Data'
 import { CreateSubGroup, EditSubGroup } from '@/services/items'
 import { CloseSquare, Grammerly } from 'iconsax-react'
 import { useState } from 'react'
@@ -19,7 +19,7 @@ const AddModal = ({
     groupId,
   })
   const [isConfirmed, setIsConfirmed] = useState(false)
-  const { groupData } = useGroupData()
+  const { groupData } = useData()
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsConfirmed(true)

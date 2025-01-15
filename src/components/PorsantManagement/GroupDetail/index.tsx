@@ -1,48 +1,26 @@
 import { useEffect, useState } from 'react'
 import { Moneys, People, ProfileCircle } from 'iconsax-react'
 import { useMenu } from '@/Context/Menu'
+import { useData } from '@/Context/Data'
+import { SubGroup } from '@/interfaces'
 
-interface RegionData {
-  region: string
-  referrer: string
-  allocatedBudget: string | null
-  marketersCount: string
-}
-
-const subGroups: RegionData[] = [
-  {
-    region: 'منطقه ۸',
-    referrer: 'محمد کوشکی',
-    allocatedBudget: '۳۰.۰۰۰ میلیون ریال',
-    marketersCount: '۳۰',
-  },
-  {
-    region: 'منطقه ۷',
-    referrer: 'محمد کوشکی',
-    allocatedBudget: null,
-    marketersCount: '۳۰',
-  },
-  {
-    region: 'منطقه ۵',
-    referrer: 'محمد کوشکی',
-    allocatedBudget: '۳۰.۰۰۰ میلیون ریال',
-    marketersCount: '۳۰',
-  },
-]
-
-const GroupsDetail: React.FC<{ name: string }> = ({ name }) => {
-  const [data, setData] = useState<RegionData[]>(subGroups)
+const GroupsDetail: React.FC<{ id: string }> = ({ id }) => {
+  const [data, setData] = useState<SubGroup[]>([])
   const { setMenu } = useMenu()
+  const { subGroupData } = useData()
 
   useEffect(() => {
-    setData(subGroups)
+    setData(
+      subGroupData?.filter((sub) => sub.sup_group_id === parseInt(`${id}`)) ||
+        []
+    )
   }, [setData])
   return (
     <div className='m-4'>
       <div className='flex justify-between items-center mb-7'>
         <p>
           <span className='text-[#98A2B3]'>مدیریت پورسانت‌دهی </span> /
-          <span className='text-[#7747C0]'> {name} </span>
+          <span className='text-[#7747C0]'> {id} </span>
         </p>
       </div>
       <div className='p-6 bg-white rounded-lg border border-gray-200'>
@@ -53,16 +31,16 @@ const GroupsDetail: React.FC<{ name: string }> = ({ name }) => {
               className='flex flex-col items-start border rounded-lg p-2 shadow-md hover:shadow-lg transition duration-300'>
               <div className='flex items-center justify-between w-full '>
                 <span className='text-sm bg-[#E1DCF8] text-[#6137A0] px-2 py-1 rounded'>
-                  {product.region}
+                  {product.sup_group_name}
                 </span>
               </div>
               <div className='flex mt-5'>
                 <Moneys size={24} color='#704CB9' />
                 <p className='text-sm  px-2 py-1 rounded'>
-                  {product.allocatedBudget ? (
+                  {product.sup_group_name ? (
                     <>
                       <span className='text-[#757575]'>تخصیص داده شده:</span>
-                      {product.allocatedBudget}
+                      {product.sup_group_name}
                     </>
                   ) : (
                     '  هنوز اعتباری داده نشده'
@@ -73,16 +51,16 @@ const GroupsDetail: React.FC<{ name: string }> = ({ name }) => {
                 <ProfileCircle size={24} color='#704CB9' />
                 <p className='text-sm  px-2 py-1 rounded'>
                   <span className='text-[#757575]'>بازاریاب :</span>
-                  {product.referrer}
+                  {product.sup_group_id}
                 </p>
               </div>
               <div className='flex mb-5 mt-1'>
                 <People size={24} color='#704CB9' />
                 <p className='text-sm  px-2 py-1 rounded'>
-                  {product.marketersCount ? (
+                  {product.supervisor_id ? (
                     <>
-                      <span className='text-[#757575]'>تعداد ذی‌ نفع :</span>
-                      {product.marketersCount}
+                      <span className='text-[#757575]'>تعداد ذی‌ :</span>
+                      {product.supervisor_id}
                     </>
                   ) : (
                     '   ذی‌نفعی‌ تعریف نشده است'
@@ -95,11 +73,11 @@ const GroupsDetail: React.FC<{ name: string }> = ({ name }) => {
                   location.hash = 'porsantmanagement'
                 }}
                 className={`w-full h-10  font-semibold rounded ${
-                  !product.allocatedBudget
+                  !product.sup_group_name
                     ? 'bg-[#7747C0] hover:bg-[#7747C0] text-white'
                     : 'border border-[#7747C0] text-[#7747C0] hover:bg-[#7747C0] hover:text-white'
                 } transition duration-300`}>
-                {!product.allocatedBudget
+                {!product.sup_group_name
                   ? ' مدیریت پورسانت‌ دهی  '
                   : 'افزودن ذی‌نفع به زیرگروه'}
               </button>

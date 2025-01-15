@@ -4,8 +4,7 @@ import './assets/globals.css'
 import { MenuProvider } from '@/Context/Menu'
 import { PromotionProvider } from '@/Context/Promotion'
 import ToastProvider from '../../providers/ToastProvider'
-import { GroupDataProvider } from '@/Context/GroupsData'
-import { SubGroupDataProvider } from '@/Context/SubGroupsData'
+import { DataProvider } from '@/Context/Data'
 
 export const metadata: Metadata = {
   title: ' ',
@@ -20,16 +19,14 @@ export default function RootLayout({
   return (
     <PromotionProvider>
       <MenuProvider>
-        <GroupDataProvider>
-          <SubGroupDataProvider>
-            <html lang='en'>
-              <body>
-                <ToastProvider />
-                {children}
-              </body>
-            </html>
-          </SubGroupDataProvider>
-        </GroupDataProvider>
+        <DataProvider>
+          <html lang='en'>
+            <body>
+              <ToastProvider />
+              {children}
+            </body>
+          </html>
+        </DataProvider>
       </MenuProvider>
     </PromotionProvider>
   )

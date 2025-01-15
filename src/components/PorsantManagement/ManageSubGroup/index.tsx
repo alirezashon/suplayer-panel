@@ -11,11 +11,13 @@ import { useState } from 'react'
 import AddModal from './AddModal'
 import StatCard from './StatCard'
 import DoctorCard from './ReferrerCard'
+import { useMenu } from '@/Context/Menu'
 
 const PorsantManagement = () => {
   const [showAddModal, setShowAddModal] = useState<boolean | string>(false)
   const [showDeleteState, setShowDeleteState] = useState<boolean>(false)
   const [, setDeleteState] = useState<string[]>([])
+  const { setMenu } = useMenu()
   return (
     <>
       {showAddModal && (
@@ -37,10 +39,18 @@ const PorsantManagement = () => {
             <div className='flex'>
               <div className='flex gap-3 mx-7'>
                 <button
+                  onClick={() => {
+                    location.hash = 'allocation'
+                    setMenu('allocation')
+                  }}
                   className={`bg-[#7747C0] text-white px-5  h-10 rounded-lg`}>
                   تخصیص اعتبار
                 </button>
                 <button
+                  onClick={() => {
+                    location.hash = 'release'
+                    setMenu('release')
+                  }}
                   className={`border border-[#7747C0] text-[#7747C0] px-5  h-10 rounded-lg`}>
                   آزادسازی اعتبار
                 </button>

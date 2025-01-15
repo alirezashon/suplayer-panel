@@ -24,7 +24,7 @@ export interface IbanInterface {
   bankName?: string
 }
 export interface IShabaDestinationList {
-  sid: string | null
+  sid: string | any
   sdcode: string
   sdtitle: string
   mobile: string
@@ -50,7 +50,7 @@ export interface GroupData {
   sup_group_code: string
   sup_group_name: string
   sup_group_status: number
-  supervisors_count:number
+  supervisors_count: number
 }
 export interface PromotionInterface {
   promotionDate: string // تاریخ پروموشن
@@ -143,4 +143,37 @@ export interface ReferrerData {
   pers_status: number
   CityUID: string
   pers_address: string
+}
+export interface ProductGroupData {
+  id: number
+  group_pid: number
+  group_desc: string
+  group_status: number
+  level: number
+}
+export interface ProductsData {
+  sysid: string
+  sys_app: string
+  group: any
+  sstid: string
+  sstt: string
+  mu: string
+  mu_2nd: any
+  type: any
+  min_price: string
+  max_price: string
+  from_date: any
+  from_date_pe: any
+  exp_date: any
+  exp_date_pe: any
+  status: any
+  group_id: string
+  group_desc: any
+  ini_code: string
+  ini_name: string
+  cui: string
+  nw: string
+  vra: string
+  chart_id: string
+  id: string
 }
