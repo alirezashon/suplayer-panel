@@ -4,13 +4,13 @@ import {
   getSubGroupData,
   getProductData,
   getProductGroupData,
+  getBeneficiaryData,
 } from '@/actions/setData'
 import Beneficiary from '@/components/Beneficiary'
 import Campaign from '@/components/Campaign'
 import Dashboard from '@/components/Dashboard'
 import Deposite from '@/components/Deposite'
 import MyGroups from '@/components/MyGroups'
-import GroupsDetail from '@/components/MyGroups/GroupDetail'
 import PorsantManagement from '@/components/PorsantManagement'
 import ProductGroups from '@/components/ProductGroups'
 import Product from '@/components/Products'
@@ -29,8 +29,13 @@ import { useEffect, useState } from 'react'
 const Home = () => {
   const { menu, setMenu } = useMenu()
   const [loading, setLoading] = useState<boolean>(true)
-  const { setGroupData, setSubGroupData, setProductData, setProductGroupData } =
-    useData()
+  const {
+    setGroupData,
+    setSubGroupData,
+    setProductData,
+    setProductGroupData,
+    setBeneficiaryData,
+  } = useData()
 
   useEffect(() => {
     const fetcher = async () => {
@@ -42,6 +47,8 @@ const Home = () => {
       if (productsGroups) setProductGroupData(productsGroups)
       const products = await getProductData()
       if (products) setProductData(products)
+      const beneficiaries = await getBeneficiaryData()
+      if (beneficiaries) setBeneficiaryData(beneficiaries)
     }
     fetcher()
     const handleHashChange = () => {
@@ -91,7 +98,13 @@ const Home = () => {
                 menu
               ) ? (
               <Campaign />
-            ) : ['porsant', 'porsantmanagement','groupsdetail','allocation','release'].includes(menu) ? (
+            ) : [
+                'porsant',
+                'porsantmanagement',
+                'groupsdetail',
+                'allocation',
+                'release',
+              ].includes(menu) ? (
               <PorsantManagement />
             ) : menu === 'beneficiary' ? (
               <Beneficiary />

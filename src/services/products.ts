@@ -46,7 +46,6 @@ export const EditProductGroup = async ({
   group_id?: number
   group_pid?: number
   accessToken: string | undefined
-  sup_group_code: string
   status?: number
 }) => {
   try {

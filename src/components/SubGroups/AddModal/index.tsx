@@ -47,6 +47,7 @@ const AddModal = ({
     .catch(() => toast.error('خطایی پیش آمد'))
     setTimeout(() => {
       setIsConfirmed(false)
+      close(false)
     }, 2222)
   }
 

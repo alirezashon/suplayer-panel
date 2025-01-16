@@ -113,6 +113,7 @@ export const DepositWithDraft = async ({
   cheque_branch,
   shaba_number,
   description,
+  Signature
 }: {
   cheque_type: number
   amount: number
@@ -125,6 +126,7 @@ export const DepositWithDraft = async ({
   shaba_number: string
   description: string
   accessToken: string
+  Signature:string
 }) => {
   try {
     const response = await fetch(
@@ -145,6 +147,7 @@ export const DepositWithDraft = async ({
           cheque_branch,
           shaba_number,
           description,
+          Signature,
         }),
       }
     )
@@ -162,7 +165,7 @@ export const GetdDraftsList = async ({
   accessToken,
 }: {
   accessToken: string | undefined
-}): Promise<Record<string,string|number>[] | undefined> => {
+}): Promise<Record<string, string | number>[] | undefined> => {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/cheque_list`,

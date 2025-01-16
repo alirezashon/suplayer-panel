@@ -2,6 +2,7 @@ import { useMenu } from '@/Context/Menu'
 import ShowGroups from './Groups'
 import PorsantManagement from './ManageSubGroup'
 import Allocation from './ManageSubGroup/Allocation'
+import Release from './ManageSubGroup/Release'
 
 const Porsant = () => {
   const { menu } = useMenu()
@@ -14,7 +15,7 @@ const Porsant = () => {
       ) : menu === 'allocation' ? (
         <Allocation />
       ) : (
-        menu === 'release' && ''
+        menu === 'release' && <Release/>
       )}
     </div>
   )

@@ -1,5 +1,5 @@
 import { getCookieByKey } from '@/actions/cookieToken'
-import { CreateProductGroup, EditProductGroup } from '@/services/items'
+import { CreateProductGroup, EditProductGroup } from '@/services/products'
 import { CloseSquare, Trash } from 'iconsax-react'
 import { FormEvent, useState } from 'react'
 const AddModal = ({
@@ -28,9 +28,12 @@ const AddModal = ({
     e.preventDefault()
     const accessToken = (await getCookieByKey('access_token')) || ''
     if (existName)
-      names.map(async (name) => await EditProductGroup({ accessToken, name }))
+     await EditProductGroup({ accessToken, name:productGroupName })
     else
-      names.map(async (name) => await CreateProductGroup({ accessToken, name }))
+    {   await CreateProductGroup({ accessToken, name:productGroupName }).then((value)=>{
+      if(value&&value.data.regid) names.map(async (name) =>name.length>0 &&await CreateProductGroup({ accessToken, name:name , group_pid:value.data.regid }) )
+    })
+  }
   }
   return (
     <div>

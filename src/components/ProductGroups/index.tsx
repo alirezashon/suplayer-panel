@@ -1,37 +1,22 @@
-import { useEffect, useState } from 'react'
-import {
-  Trash,
-  Edit2,
-  ProfileCircle,
-  HashtagSquare,
-} from 'iconsax-react'
+import { useState } from 'react'
+import { Trash, Edit2, ProfileCircle, HashtagSquare } from 'iconsax-react'
 import AddModal from './AddModal'
 import DeleteModal from './DeleteModal'
 import { useMenu } from '@/Context/Menu'
 import Image from 'next/image'
-import { getCookieByKey } from '@/actions/cookieToken'
-import { ProductGroup } from '@/interfaces'
-import { GetProductGroupsList } from '@/services/products'
+import { useData } from '@/Context/Data'
 
 const ProductGroups: React.FC = () => {
-  const [data, setData] = useState<ProductGroup[]>([])
+  const { productGroupData } = useData()
   const [showAddModal, setShowAddModal] = useState<boolean | string>(false)
   const [showDeleteModal, setShowDeleteModal] = useState<boolean | string>(
     false
   )
   const { setMenu } = useMenu()
-  useEffect(() => {
-    const fetchData = async () => {
-      const accessToken = (await getCookieByKey('access_token')) || ''
-      await GetProductGroupsList({ accessToken }).then(
-        (value) => value && setData(value)
-      )
-    }
-    fetchData()
-  }, [])
+
   return (
     <>
-      {data.length > 0 ? (
+      {productGroupData && productGroupData.length > 0 ? (
         <div className='m-4'>
           <div className='flex justify-between items-center mb-7'>
             <p className='cursor-pointer'>
@@ -74,7 +59,7 @@ const ProductGroups: React.FC = () => {
           )}
           <div className='p-6 bg-white rounded-lg border border-gray-200'>
             <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4'>
-              {data.map((product) => (
+              {productGroupData.map((product) => (
                 <div
                   key={product.id}
                   className='flex flex-col justify-between items-start border rounded-lg p-4 shadow-md hover:shadow-lg transition duration-300'>
@@ -95,9 +80,6 @@ const ProductGroups: React.FC = () => {
                         color='#D42620'
                         cursor={'pointer'}
                         onClick={() => {
-                          setData((prv) =>
-                            prv.filter((ref) => ref.id !== product.id)
-                          )
                           setShowDeleteModal(product.group_desc)
                         }}
                       />

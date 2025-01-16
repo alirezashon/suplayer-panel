@@ -10,7 +10,7 @@ const Deposite = () => {
 
   return (
     <div className=''>
-      <div className='flex border-b'>
+      {/* <div className='flex border-b'>
         <div
           className={`transition-all duration-500 px-5 border-b ${
             tab === 0 && 'bg-[#E6DBFB80] border-b-[#704CB9]'
@@ -87,8 +87,8 @@ const Deposite = () => {
             </div>
           </button>
         </div>
-      </div>
-      {tab === 0 ? (
+      </div> */}
+      {/* {tab === 0 ? (
         <OnlinePayment />
       ) : tab === 1 ? (
         <PayByID />
@@ -96,7 +96,8 @@ const Deposite = () => {
         <PaymentLink />
       ) : (
         tab === 3 && <Drafts />
-      )}
+      )} */}
+       <Drafts />
       <Report />
     </div>
   )

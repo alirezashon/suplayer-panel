@@ -30,9 +30,14 @@ const user = {
   src: '/icons/logo.svg',
 }
 
-const Sidebar: React.FC = () => {
+const Sidebar = ({
+  isOpen,
+  setIsOpen,
+}: {
+  isOpen: boolean
+  setIsOpen: (value: boolean) => void
+}) => {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
-  const [isOpen, setIsOpen] = useState<boolean>(true)
   const { menu, setMenu } = useMenu()
 
   const iconList = [
@@ -68,7 +73,7 @@ const Sidebar: React.FC = () => {
   return (
     <div
       style={{ scrollbarWidth: 'none' }}
-      className={`fixed top-0 right-0 h-full transition-all duration-300 ${
+      className={`fixed top-0 right-0 h-full transition-all duration-700 ${
         isOpen ? 'min-w-[17%]' : 'w-[5%]'
       } bg-white flex flex-col overflow-y-auto border border-[#C9D0D8]`}>
       <div className='sticky top-0 justify-center flex items-center border-b border-[#C9D0D8] bg-white'>
@@ -81,14 +86,22 @@ const Sidebar: React.FC = () => {
             className='w-[80%] h-[7vh] object-contain mt-4'
           />
         )}
-        
-        {isOpen ?  <ArrowSquareRight
-          onClick={() => setIsOpen(!isOpen)}
-          size={22}
-          color='#50545F'
-        />: <Menu color='gray' size={24} 
-        onClick={() => setIsOpen(!isOpen)}
-        />}
+
+        {isOpen ? (
+          <ArrowSquareRight
+            cursor={'pointer'}
+            onClick={() => setIsOpen(!isOpen)}
+            size={22}
+            color='#50545F'
+          />
+        ) : (
+          <Menu
+            cursor={'pointer'}
+            color='gray'
+            size={24}
+            onClick={() => setIsOpen(!isOpen)}
+          />
+        )}
       </div>
 
       {/* Menu Items */}
@@ -98,7 +111,7 @@ const Sidebar: React.FC = () => {
           <li key={index} className='w-full my-3'>
             <div
               className={`flex items-center p-[1vh] rounded-md cursor-pointer ${
-                openIndex === index
+                menu === item.link
                   ? 'bg-[#7747C0] text-white'
                   : 'text-[#242424]'
               }`}
@@ -107,17 +120,22 @@ const Sidebar: React.FC = () => {
                 location.hash = item.link
                 setOpenIndex(openIndex === index ? null : index)
               }}>
-              {generateIcon(
-                item.iconIndex,
-                openIndex === index ? 'white' : '#50545F'
-              )}
+              <p
+                className={`flex justify-center   ${
+                  isOpen ? 'ml-2' : 'w-full'
+                }`}>
+                {generateIcon(
+                  item.iconIndex,
+                  menu === item.link ? 'white' : '#50545F'
+                )}
+              </p>
               {isOpen && (
                 <span className='ml-[1vw] flex-grow'>{item.name}</span>
               )}
               {item.subItems && isOpen && (
                 <ArrowDown2
                   size={24}
-                  color={openIndex === index ? 'white' : '#50545F'}
+                  color={ menu === item.link ? 'white' : '#50545F'}
                   className={`transition-transform ${
                     openIndex === index ? 'rotate-180' : 'rotate-0'
                   }`}

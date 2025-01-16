@@ -8,15 +8,15 @@ const MainLayout = ({
 }: Readonly<{
   children: React.ReactNode
 }>) => {
-  const [isSidebarOpen,] = useState(true)
+  const [isSidebarOpen,setIsSidebarOpen] = useState(true)
 
   return (
-    <div className='flex min-h-screen bg-gray-100'>
+    <div className='flex min-h-screen bg-gray-100 transition-all duration-700'>
       <div
-        className={`transition-all duration-300 ${
+        className={`transition-all duration-700 ${
           isSidebarOpen ? 'min-w-[17%]' : 'w-[5%]'
         } bg-white`}>
-        <Sidebar />
+        <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen}/>
       </div>
       <div className='flex flex-col flex-grow'>
         <div className='bg-white'>

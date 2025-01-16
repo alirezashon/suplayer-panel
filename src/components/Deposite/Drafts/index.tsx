@@ -11,14 +11,21 @@ import {
 import toast from 'react-hot-toast'
 import Image from 'next/image'
 import { getCookieByKey } from '@/actions/cookieToken'
-import { AddDraftImage } from '@/services/deposit'
+import { AddDraftImage, DepositWithDraft } from '@/services/deposit'
 import Calendar from '@/components/shared/Calendar'
+import { generateDepositSignature } from '@/hooks/Deposit'
 
 const Drafts = () => {
   const refs = useRef({
     amount: '',
     sheba: '',
     description: '',
+    chequeNumber: '',
+    chequeDate: '',
+    sayadNumber: '',
+    chequeBank: '',
+    chequeBranch: '',
+    cheque_id_file: '',
   })
   const amountInputRef = useRef<HTMLInputElement>(null)
   const shebaInputRef = useRef<HTMLInputElement>(null)
@@ -88,6 +95,41 @@ const Drafts = () => {
       reader.readAsDataURL(file)
     }
   }
+  const handleSubmit = async () => {
+    const accessToken = (await getCookieByKey('access_token')) || ''
+ const customerMobile  = await getCookieByKey('mobile') || ''
+   const Signature = await generateDepositSignature({
+      amount: refs.current.amount,
+      cheque_date: refs.current.chequeDate,
+      customerMobile,
+    })
+    const chequeData = {
+      accessToken,
+      cheque_type: chequeType,
+      amount: parseInt(`${refs.current.amount}`),
+      cheque_number: refs.current.chequeNumber,
+      cheque_date: refs.current.chequeDate,
+      cheque_id_file: draftSrc || '', // تصویر بارگذاری‌شده
+      sayad_number: refs.current.sayadNumber,
+      cheque_bank: refs.current.chequeBank,
+      cheque_branch: refs.current.chequeBranch,
+      shaba_number: refs.current.sheba,
+      description: refs.current.description,
+      Signature
+    }
+
+    try {
+      const response = await DepositWithDraft(chequeData)
+      if (response) {
+        console.log('Success:', response)
+        alert('ذخیره با موفقیت انجام شد')
+      } else {
+      }
+    } catch (error) {
+      console.error('Error:', error)
+      alert('خطا در ثبت اطلاعات. لطفاً مجدداً تلاش کنید.')
+    }
+  }
 
   return (
     <div className='min-h-screen flex justify-center p-4'>
@@ -142,7 +184,9 @@ const Drafts = () => {
                 className='block text-gray-600 mb-2 text-right'>
                 تاریخ {chequeType === 1 ? ' چک ' : ' سند '}
               </label>
-              <Calendar setDate={(value: string) => value} />
+              <Calendar
+                setDate={(value: string) => (refs.current.chequeDate = value)}
+              />
             </div>
           </div>
 
@@ -251,7 +295,9 @@ const Drafts = () => {
             />
           </div>
           <div className='flex gap-10'>
-            <button className='flex items-center gap-2 w-full justify-center h-10 rounded-lg bg-[#7747C0] hover:bg-[#7747C0] text-white font-bold'>
+            <button
+              onClick={handleSubmit}
+              className='flex items-center gap-2 w-full justify-center h-10 rounded-lg bg-[#7747C0] hover:bg-[#7747C0] text-white font-bold'>
               ذخیره
             </button>
             <button className='flex items-center gap-2 w-full justify-center h-10 rounded-lg bg-purple-50 hover:bg-purple-100 text-[#7747C0] border border-[#7747c0] font-bold'>

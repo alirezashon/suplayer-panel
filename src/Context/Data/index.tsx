@@ -1,5 +1,6 @@
 'use client'
 import {
+  Beneficiary,
   GroupData,
   ProductGroupData,
   ProductsData,
@@ -16,6 +17,8 @@ interface DataContextProps {
   setGroupData: (GroupData: GroupData[]) => void
   subGroupData: SubGroup[] | undefined
   setSubGroupData: (SubGroupData: SubGroup[]) => void
+  beneficiaryData: Beneficiary[] | undefined
+  setBeneficiaryData: (SubGroupData: Beneficiary[]) => void
 }
 
 const DataContext = createContext<DataContextProps | undefined>(undefined)
@@ -25,6 +28,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
   const [productGroupData, setProductGroupData] = useState<ProductGroupData[]>()
   const [groupData, setGroupData] = useState<GroupData[]>()
   const [subGroupData, setSubGroupData] = useState<SubGroup[]>()
+  const [beneficiaryData, setBeneficiaryData] = useState<Beneficiary[]>()
 
   return (
     <DataContext.Provider
@@ -37,6 +41,8 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
         setGroupData,
         subGroupData,
         setSubGroupData,
+        beneficiaryData,
+        setBeneficiaryData,
       }}>
       {children}
     </DataContext.Provider>
