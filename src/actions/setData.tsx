@@ -31,3 +31,8 @@ export const getBeneficiaryData = async () => {
   const response = await GetBeneficiaryList({ accessToken })
   return response
 }
+export const getReferrerData = async () => {
+  const accessToken = (await getCookieByKey('access_token')) || ''
+  // const response = await GetReferrerList({ accessToken })
+  // return response
+}
