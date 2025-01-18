@@ -23,13 +23,16 @@ const DeleteModal = ({
       sup_group_code,
       status: 9,
     })
-    if (response.status === 1) {
+    if (response?.status === 1) {
       toast.success(response.message)
+      location.hash ='#mygroups'
+      location.reload()
     } else if (response.status === '-1') {
       toast.error(response.message)
     } else {
       toast.error('لطفا دوباره امتحان کنید')
     }
+    close(null)
   }
 
   return (
@@ -43,7 +46,7 @@ const DeleteModal = ({
           className='flex flex-col bg-white max-md:px-5 max-md:pb-24'>
           <div className='flex justify-between items-center w-full text-xl font-medium text-right text-gray-800 max-md:max-w-full'>
             <div className='flex-1 shrink self-stretch my-auto min-w-[240px] max-md:max-w-full'>
-              حذف گروه محصول
+              حذف زیر گروه
             </div>
             <div
               className='
@@ -64,19 +67,13 @@ const DeleteModal = ({
             </div>
           ) : (
             <div className='flex font-bold my-5'>
-              آیا مطمئن به حذف گروه محصول
+              آیا مطمئن به حذف زیر گروه
               <p className='px-3 rounded-lg mx-1 bg-purple-300 text-[#6137A0]'>
                 {name}
               </p>
               هستید؟
             </div>
           )}
-          <div className='flex'>
-            <Danger color='#CDA125' size={22} />
-            <p className='text-[#CDA125]'>
-              محصولات مرتبط به این گروه نیز حذف خواهد شد.
-            </p>
-          </div>
           <div className='flex gap-10'>
             {isActive ? (
               <button
@@ -95,7 +92,7 @@ const DeleteModal = ({
                   type='submit'
                   className='flex gap-1 justify-center w-full mt-4 px-4 py-2 border border-red-700 text-red-700 rounded-lg hover:bg-purple-100'>
                   <Trash size={24} color='#D42620' />
-                  حذف گروه محصول
+                  حذف زیر گروه
                 </button>
               </>
             )}

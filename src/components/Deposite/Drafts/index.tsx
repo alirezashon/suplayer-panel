@@ -21,6 +21,7 @@ const Drafts = () => {
     sheba: '',
     description: '',
     chequeNumber: '',
+    documentNumber:'',
     chequeDate: '',
     sayadNumber: '',
     chequeBank: '',
@@ -85,6 +86,7 @@ const Drafts = () => {
             accessToken,
           })
           if (result) {
+            refs.current.cheque_id_file = result.rec_id_file
           }
         } catch (error) {
           setUploadStatus('error')
@@ -97,8 +99,8 @@ const Drafts = () => {
   }
   const handleSubmit = async () => {
     const accessToken = (await getCookieByKey('access_token')) || ''
- const customerMobile  = await getCookieByKey('mobile') || ''
-   const Signature = await generateDepositSignature({
+    const customerMobile = (await getCookieByKey('mobile')) || ''
+    const Signature = await generateDepositSignature({
       amount: refs.current.amount,
       cheque_date: refs.current.chequeDate,
       customerMobile,
@@ -109,25 +111,22 @@ const Drafts = () => {
       amount: parseInt(`${refs.current.amount}`),
       cheque_number: refs.current.chequeNumber,
       cheque_date: refs.current.chequeDate,
-      cheque_id_file: draftSrc || '', // تصویر بارگذاری‌شده
+      cheque_id_file: refs.current.cheque_id_file || '',
       sayad_number: refs.current.sayadNumber,
       cheque_bank: refs.current.chequeBank,
       cheque_branch: refs.current.chequeBranch,
       shaba_number: refs.current.sheba,
       description: refs.current.description,
-      Signature
+      Signature,
     }
-
     try {
       const response = await DepositWithDraft(chequeData)
       if (response) {
-        console.log('Success:', response)
-        alert('ذخیره با موفقیت انجام شد')
+        toast.success(`${response.message}`)
       } else {
       }
     } catch (error) {
-      console.error('Error:', error)
-      alert('خطا در ثبت اطلاعات. لطفاً مجدداً تلاش کنید.')
+      toast.error('خطا در ثبت اطلاعات. لطفاً مجدداً تلاش کنید.')
     }
   }
 
@@ -174,7 +173,9 @@ const Drafts = () => {
                 defaultValue={refs.current.amount}
                 onChange={(e) => (refs.current.amount = e.target.value)}
                 type='text'
-                placeholder='مبلغ چک را به ریال وارد نمایید'
+                placeholder={`مبلغ ${
+                  chequeType === 1 ? ' چک ' : 'سند'
+                } را به ریال وارد نمایید`}
                 className='w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400'
               />
             </div>
@@ -199,8 +200,8 @@ const Drafts = () => {
             <input
               id='sheba'
               ref={shebaInputRef}
-              defaultValue={refs.current.sheba}
-              onChange={(e) => (refs.current.sheba = e.target.value)}
+              defaultValue={refs.current.chequeNumber}
+              onChange={(e) => (refs.current.chequeNumber = e.target.value)}
               type='text'
               placeholder={`${
                 chequeType === 1 ? '۹۲۷۴۳۵۹۲' : 'شماره شبا را وارد کنید'
@@ -208,42 +209,42 @@ const Drafts = () => {
               className='w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400'
             />
           </div>
-          <div className='flex gap-10'>
-            <div className='w-full'>
-              <label
-                htmlFor='sheba'
-                className='block text-gray-600 mb-2 text-right'>
-                شماره سریال {chequeType === 1 ? ' چک ' : ' سند '}
-              </label>
-              <input
-                id='sheba'
-                ref={shebaInputRef}
-                defaultValue={refs.current.sheba}
-                onChange={(e) => (refs.current.sheba = e.target.value)}
-                type='text'
-                placeholder='شماره شبا را وارد کنید'
-                className='w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400'
-              />
+          {chequeType === 1 && (
+            <div className='flex gap-10'>
+              <div className='w-full'>
+                <label
+                  htmlFor='sheba'
+                  className='block text-gray-600 mb-2 text-right'>
+                  شماره سریال {chequeType === 1 ? ' چک ' : ' سند '}
+                </label>
+                <input
+                  id='sheba'
+                  defaultValue={refs.current.sheba}
+                  onChange={(e) => (refs.current.sheba = e.target.value)}
+                  type='text'
+                  placeholder='شماره شبا را وارد کنید'
+                  className='w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400'
+                />
+              </div>
+              <div className='w-full'>
+                <label
+                  htmlFor='sheba'
+                  className='block text-gray-600 mb-2 text-right'>
+                  شناسه {chequeType === 1 ? ' چک ' : ' سند '} صیاد
+                </label>
+                <input
+                  id='sheba'
+                  defaultValue={refs.current.sayadNumber}
+                  onChange={(e) => (refs.current.sayadNumber = e.target.value)}
+                  type='text'
+                  placeholder={`شناسه${
+                    chequeType === 1 ? ' چک ' : ' سند '
+                  }صیاد را وارد کنید`}
+                  className='w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400'
+                />
+              </div>
             </div>
-            <div className='w-full'>
-              <label
-                htmlFor='sheba'
-                className='block text-gray-600 mb-2 text-right'>
-                شناسه {chequeType === 1 ? ' چک ' : ' سند '} صیاد
-              </label>
-              <input
-                id='sheba'
-                ref={shebaInputRef}
-                defaultValue={refs.current.sheba}
-                onChange={(e) => (refs.current.sheba = e.target.value)}
-                type='text'
-                placeholder={`شناسه${
-                  chequeType === 1 ? ' چک ' : ' سند '
-                }صیاد را وارد کنید`}
-                className='w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400'
-              />
-            </div>
-          </div>
+          )}
           <div className='flex gap-10'>
             <div className='w-full'>
               <label
@@ -253,9 +254,8 @@ const Drafts = () => {
               </label>
               <input
                 id='sheba'
-                ref={shebaInputRef}
-                defaultValue={refs.current.sheba}
-                onChange={(e) => (refs.current.sheba = e.target.value)}
+                defaultValue={refs.current.chequeBank}
+                onChange={(e) => (refs.current.chequeBank = e.target.value)}
                 type='text'
                 placeholder='نام بانک را وارد کنید'
                 className='w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400'
@@ -269,9 +269,8 @@ const Drafts = () => {
               </label>
               <input
                 id='sheba'
-                ref={shebaInputRef}
-                defaultValue={refs.current.sheba}
-                onChange={(e) => (refs.current.sheba = e.target.value)}
+                defaultValue={refs.current.chequeBranch}
+                onChange={(e) => (refs.current.chequeBranch = e.target.value)}
                 type='text'
                 placeholder='کد شعبه بانک را وارد کنید'
                 className='w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400'

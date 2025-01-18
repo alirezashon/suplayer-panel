@@ -27,7 +27,7 @@ import { useMenu } from '@/Context/Menu'
 
 const user = {
   name: 'محدثه عالمی',
-  src: '/icons/logo.svg',
+  src: '/icons/logo.png',
 }
 
 const Sidebar = ({
@@ -79,7 +79,7 @@ const Sidebar = ({
       <div className='sticky top-0 justify-center flex items-center border-b border-[#C9D0D8] bg-white'>
         {isOpen && (
           <Image
-            src={'/icons/logo.svg'}
+            src={'/icons/logo.png'}
             alt='logo'
             width={200}
             height={100}

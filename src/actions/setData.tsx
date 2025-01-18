@@ -1,6 +1,6 @@
 import { GetProductGroupsList, GetProductList } from '@/services/products'
 import { getCookieByKey } from './cookieToken'
-import { GetBeneficiaryList, GetGroupsList, GetSubGroupsList } from '@/services/items'
+import { GetBeneficiaryList, GetGroupsList, GetReferrerList, GetSubGroupsList } from '@/services/items'
 
 export const getGroupData = async () => {
   const accessToken = (await getCookieByKey('access_token')) || ''
@@ -33,6 +33,6 @@ export const getBeneficiaryData = async () => {
 }
 export const getReferrerData = async () => {
   const accessToken = (await getCookieByKey('access_token')) || ''
-  // const response = await GetReferrerList({ accessToken })
-  // return response
+  const response = await GetReferrerList({ accessToken })
+  return response
 }

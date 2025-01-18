@@ -1,5 +1,5 @@
 import { getCookieByKey } from '@/actions/cookieToken'
-import { CreateProduct, EditProduct } from '@/services/items'
+import { CreateProduct, EditProduct } from '@/services/products'
 import { CloseSquare, Message, Trash } from 'iconsax-react'
 import { useState } from 'react'
 

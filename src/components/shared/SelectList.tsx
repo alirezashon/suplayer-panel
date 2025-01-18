@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 interface SelectListProps {
   label: string
@@ -15,6 +15,7 @@ const SelectList: React.FC<SelectListProps> = ({
     Array<string | number>
   >([])
   const [isOpen, setIsOpen] = useState(false)
+  const containerRef = useRef<HTMLDivElement>(null) 
 
   const toggleItem = (id: string | number) => {
     let updatedSelectedItems
@@ -27,15 +28,31 @@ const SelectList: React.FC<SelectListProps> = ({
     setSelectedItems(updatedSelectedItems)
   }
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false) 
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
+
   return (
-    <div className='relative w-full'>
+    <div ref={containerRef} className='relative w-full'>
       <div
         className='border border-gray-300 rounded-md h-10 py-2 px-4 cursor-pointer flex justify-between items-center'
         onClick={() => setIsOpen((prev) => !prev)}>
         <span className='text-gray-700'>{label}</span>
         <span className='text-gray-400'>&#x25BC;</span>
       </div>
-
       {isOpen && (
         <div className='absolute w-full border border-gray-300 bg-white rounded-md mt-2 shadow-md z-10'>
           {items.map((item) => (
@@ -53,9 +70,7 @@ const SelectList: React.FC<SelectListProps> = ({
                 className={`form-checkbox appearance-none 
     h-5 w-5 border-2  rounded-md
     ${selectedItems.includes(item.id) ? 'bg-[#7747C0]' : 'bg-white'}
-  `}
-              />
-
+  `}/>
               <span
                 className={`${
                   selectedItems.includes(item.id)

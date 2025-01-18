@@ -1,3 +1,5 @@
+import { DraftsData } from '@/interfaces'
+
 export const AddDraftImage = async ({
   src,
   accessToken,
@@ -113,7 +115,7 @@ export const DepositWithDraft = async ({
   cheque_branch,
   shaba_number,
   description,
-  Signature
+  Signature,
 }: {
   cheque_type: number
   amount: number
@@ -126,7 +128,7 @@ export const DepositWithDraft = async ({
   shaba_number: string
   description: string
   accessToken: string
-  Signature:string
+  Signature: string
 }) => {
   try {
     const response = await fetch(
@@ -135,6 +137,8 @@ export const DepositWithDraft = async ({
         method: 'POST',
         headers: {
           authorization: `Bearer ${accessToken}`,
+          accept: 'application/json',
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           cheque_type,
@@ -165,7 +169,7 @@ export const GetdDraftsList = async ({
   accessToken,
 }: {
   accessToken: string | undefined
-}): Promise<Record<string, string | number>[] | undefined> => {
+}): Promise<DraftsData[] | undefined> => {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/cheque_list`,

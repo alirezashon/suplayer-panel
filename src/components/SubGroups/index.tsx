@@ -1,21 +1,22 @@
-import { useState } from 'react'
-import { Trash, Edit2 } from 'iconsax-react'
+import { useEffect, useState } from 'react'
+import { Trash, Edit2, People, ProfileCircle } from 'iconsax-react'
 import AddModal from './AddModal'
 import DeleteModal from './DeleteModal'
 import { useMenu } from '@/Context/Menu'
 import { useData } from '@/Context/Data'
-
 const SubGroups: React.FC = () => {
   const { setMenu } = useMenu()
-  const { groupData ,subGroupData} = useData()
-  const [activeTab, setActiveTab] = useState<number>(
-    groupData ? groupData[0].sup_group_id : 0
-  )
+  const { groupData, subGroupData } = useData()
+  const [activeTab, setActiveTab] = useState<number>(0)
   const [showAddModal, setShowAddModal] = useState<boolean | string>(false)
   const [showDeleteModal, setShowDeleteModal] = useState<boolean | string>(
     false
   )
-
+  useEffect(() => {
+    if (groupData && groupData.length > 0) {
+      setActiveTab(groupData[0].sup_group_id)
+    }
+  }, [groupData])
   return (
     <>
       {showAddModal && (
@@ -61,7 +62,9 @@ const SubGroups: React.FC = () => {
           </button>
         </div>
         <div className='p-6 mt-5 bg-white rounded-lg border border-gray-200'>
-          <div className='flex border-b'>
+          <div
+            className='max-w-[67%] flex border-b overflow-x-auto'
+            style={{ scrollbarWidth: 'none' }}>
             {groupData?.map((tab, index) => (
               <button
                 key={index}
@@ -82,36 +85,82 @@ const SubGroups: React.FC = () => {
                   subGroup.sup_group_id === activeTab && (
                     <div
                       key={subIndex}
-                      className='flex justify-between items-center p-4 bg-white rounded-lg border border-gray-200 shadow'>
-                      <div className='text-gray-600'>
-                        {subGroup.supervisor_name}
+                      className='flex flex-col justify-between items-start border rounded-lg p-4 shadow-md hover:shadow-lg transition duration-300'>
+                      <div className='flex items-center justify-between w-full mb-4'>
+                        <span className='text-sm bg-[#E1DCF8] text-[#6137A0] px-2 py-1 rounded'>
+                          {subGroup.supervisor_name}
+                        </span>
+                        <div className='flex gap-2'>
+                          <Edit2
+                            size={18}
+                            color='#8455D2'
+                            className='cursor-pointer'
+                            onClick={() =>
+                              setShowAddModal(
+                                subGroup.supervisor_name +
+                                  '#$%^@!~' +
+                                  subGroup.supervisor_code
+                              )
+                            }
+                          />
+                          <Trash
+                            size={18}
+                            color='#D42620'
+                            className='cursor-pointer'
+                            onClick={() =>
+                              setShowDeleteModal(
+                                subGroup.supervisor_name +
+                                  '#$%^@!~' +
+                                  subGroup.supervisor_code
+                              )
+                            }
+                          />
+                        </div>
                       </div>
-                      <div className='flex gap-2'>
-                        <Edit2
-                          size={18}
-                          color='#8455D2'
-                          className='cursor-pointer'
-                          onClick={() =>
-                            setShowAddModal(
-                              subGroup.supervisor_name +
-                                '#$%^@!~' +
-                                subGroup.supervisor_code
-                            )
-                          }
-                        />
-                        <Trash
-                          size={18}
-                          color='#D42620'
-                          className='cursor-pointer'
-                          onClick={() =>
-                            setShowDeleteModal(
-                              subGroup.supervisor_name +
-                                '#$%^@!~' +
-                                subGroup.supervisor_code
-                            )
-                          }
-                        />
+                      <div className='flex'>
+                        <ProfileCircle size={24} color='#704CB9' />
+                        <p className='text-sm  px-2 py-1 rounded'>
+                          {subGroup.sup_group_id > 0 ? (
+                            <>
+                              <span className='text-[#757575]'>
+                                تعداد بازاریاب:
+                              </span>
+                              {subGroup.sup_group_id}
+                            </>
+                          ) : (
+                            'بازاریابی تعریف نشده است'
+                          )}
+                        </p>
                       </div>
+                      <div className='flex my-5'>
+                        <People size={24} color='#704CB9' />
+                        <p className='text-sm  px-2 py-1 rounded'>
+                          {subGroup.sup_group_id > 0 ? (
+                            <>
+                              <span className='text-[#757575]'>
+                                تعداد زیر‌گروه‌ها:
+                              </span>
+                              {subGroup.sup_group_name}
+                            </>
+                          ) : (
+                            ' زیر گروهی تعریف نشده است'
+                          )}
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => {
+                          location.hash = 'subgroups'
+                          setMenu('subgroups')
+                        }}
+                        className={`w-full h-10  font-semibold rounded ${
+                          subGroup.sup_group_name.length === 0
+                            ? 'bg-[#7747C0] hover:bg-[#7747C0] text-white'
+                            : 'border border-[#7747C0] text-[#7747C0] hover:bg-[#7747C0] hover:text-white'
+                        } transition duration-300`}>
+                        {subGroup.sup_group_name.length > 0
+                          ? 'مشاهده زیر گروه‌ها'
+                          : 'تعریف زیر گروه'}
+                      </button>
                     </div>
                   )
               )}
@@ -121,5 +170,4 @@ const SubGroups: React.FC = () => {
     </>
   )
 }
-
 export default SubGroups

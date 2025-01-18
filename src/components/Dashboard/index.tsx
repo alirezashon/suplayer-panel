@@ -17,7 +17,7 @@ import {
 } from 'iconsax-react'
 
 const Dashboard = () => {
-  const { groupData, productData } = useData()
+  const { groupData, productData, beneficiaryData } = useData()
   const { setMenu } = useMenu()
 
   const promotionsData = [
@@ -78,7 +78,10 @@ const Dashboard = () => {
           {groupData && groupData?.length > 0 ? (
             <div className='flex justify-between items-center mt-6 text-zinc-900'>
               <span className='text-xl'>{groupData?.length}</span>
-              <div className=' cursor-pointer flex items-center gap-2 text-[#7747C0]'>
+              <div onClick={()=>{
+                location.hash = 'mygroups'
+                setMenu('mygroups')
+              }} className=' cursor-pointer flex items-center gap-2 text-[#7747C0]'>
                 <span>مشاهده بیشتر</span>
                 <ArrowLeft2 size={22} color='#7747C0' />
               </div>
@@ -108,7 +111,10 @@ const Dashboard = () => {
           {groupData && groupData?.length < 0 ? (
             <div className='flex justify-between items-center mt-6 text-zinc-900'>
               <span className='text-xl'>{groupData?.length}</span>
-              <div className=' cursor-pointer flex items-center gap-2 text-[#7747C0]'>
+              <div onClick={()=>{
+                location.hash = 'referrers'
+                setMenu('referrers')
+              }} className=' cursor-pointer flex items-center gap-2 text-[#7747C0]'>
                 <span>مشاهده بیشتر</span>
                 <ArrowLeft2 size={22} color='#7747C0' />
               </div>
@@ -136,10 +142,13 @@ const Dashboard = () => {
             <span>ذی‌نفعان من</span>
             <Profile2User size={22} color='#666BC9' />
           </div>
-          {groupData && groupData?.length < 0 ? (
+          {beneficiaryData && beneficiaryData?.length > 0 ? (
             <div className='flex justify-between items-center mt-6 text-zinc-900'>
-              <span className='text-xl'>{groupData?.length}</span>
-              <div className=' cursor-pointer flex items-center gap-2 text-[#7747C0]'>
+              <span className='text-xl'>{beneficiaryData?.length}</span>
+              <div onClick={()=>{
+                location.hash = 'beneficiary'
+                setMenu('beneficiary')
+              }} className=' cursor-pointer flex items-center gap-2 text-[#7747C0]'>
                 <span>مشاهده بیشتر</span>
                 <ArrowLeft2 size={22} color='#7747C0' />
               </div>
@@ -170,7 +179,10 @@ const Dashboard = () => {
           {productData && productData?.length > 0 ? (
             <div className='flex justify-between items-center mt-6 text-zinc-900'>
               <span className='text-xl'>{productData?.length}</span>
-              <div className=' cursor-pointer flex items-center gap-2 text-[#7747C0]'>
+              <div onClick={()=>{
+                location.hash = 'productgroups'
+                setMenu('productgroups')
+              }} className=' cursor-pointer flex items-center gap-2 text-[#7747C0]'>
                 <span>مشاهده بیشتر</span>
                 <ArrowLeft2 size={22} color='#7747C0' />
               </div>

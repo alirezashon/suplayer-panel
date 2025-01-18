@@ -28,7 +28,7 @@ const DeleteModal = ({
         value.status === '-1'
           ? toast.error(value.message)
           : toast.success(value.message)
-        close(false)
+        location.reload()
       })
       .catch(() => toast.error('خطایی پیش آمد'))
   }
@@ -79,7 +79,7 @@ const DeleteModal = ({
             ) : (
               <>
                 <button
-                  onClick={()=>close(false)}
+                  onClick={() => close(false)}
                   className='w-full mt-4 px-4 py-2 bg-[#7747C0] text-white rounded-lg hover:bg-purple-800'>
                   انصراف
                 </button>

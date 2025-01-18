@@ -14,7 +14,7 @@ export interface Items {
 export const data: Items[] = [
   {
     name: 'داشبورد',
-    link: '',
+    link: 'dashboard',
     iconIndex: 0,
   },
   {
@@ -40,7 +40,7 @@ export const data: Items[] = [
   },
   {
     name: ' تعاریف',
-    link: 'groupmanagement',
+    link: 'mygroups',
     iconIndex: 5,
     subItems: [
       {

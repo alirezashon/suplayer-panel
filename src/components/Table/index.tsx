@@ -40,16 +40,11 @@ const Table = ({
       <tbody>
         {data.map((account, index) => (
           <tr key={index} className='border-b'>
-        {[index + 1, ...[...Object.values(account)]].map(
+        {Object.values(account).map(
               (detail, detailIndex) => (
                 <td
                   key={detailIndex}
-                  className={`text-center h-10 ${
-                    detailIndex === indexOfProfitLoss &&
-                    `${detail}`.includes('+')
-                      ? 'text-green-700'
-                      : `${detail}`.includes('-') && 'text-red-600'
-                  } ${
+                  className={`text-center h-10  ${
                     detailIndex === 0
                       && 'border-r'
                    

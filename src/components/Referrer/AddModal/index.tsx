@@ -137,7 +137,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
                     ref={nameRef}
                     defaultValue={data?.name || ''}
                     type='text'
-                    placeholder='محمدی حسین'
+                    placeholder='پرهام'
                     className={`border ${errors.name ? 'border-red-500' : ''}`}
                   />
                   {errors.name && (
@@ -200,7 +200,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
                     ref={nameRef}
                     defaultValue={data?.name || ''}
                     type='text'
-                    placeholder='محمدی حسین'
+                    placeholder='پرهام'
                     className={`border ${errors.name ? 'border-red-500' : ''}`}
                   />
                   {errors.name && (

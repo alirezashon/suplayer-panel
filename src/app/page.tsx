@@ -111,7 +111,7 @@ const Home = () => {
             ) : menu === 'referral-levels' ? (
               <ReferralLevels />
             ) : (
-              <Dashboard />
+              ['dashboard', ''].includes(menu) && <Dashboard />
             )}
           </div>
         ) : (

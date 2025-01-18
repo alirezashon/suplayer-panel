@@ -184,7 +184,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
                     onChange={(e) =>
                       (detailsRefs.current.name = e.target.value)
                     }
-                    placeholder='محمدی حسین'
+                    placeholder='پرهام'
                     className={`border ${errors.name ? 'border-red-500' : ''}`}
                   />
                   {errors.name && (
@@ -257,7 +257,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
                     onChange={(e) =>
                       (detailsRefs.current.name = e.target.value)
                     }
-                    placeholder='محمدی حسین'
+                    placeholder='پرهام'
                     className={`border ${errors.name ? 'border-red-500' : ''}`}
                   />
                   {errors.name && (

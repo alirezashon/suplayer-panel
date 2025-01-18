@@ -15,7 +15,20 @@ const AddModal = ({
 }) => {
   const [name, setName] = useState<string>(existName || '')
   const [isConfirmed, setIsConfirmed] = useState(false)
-
+  const [status, setStatus] = useState<React.ReactElement>()
+  const setResult = (state: boolean, text?: string) => {
+    state
+      ? setStatus(
+          <p className='text-[#0F973D] flex items-center gap-2'>
+            عملیات موفقیت‌آمیز بود! <Grammerly size={24} color='#0F973D' />
+          </p>
+        )
+      : setStatus(
+          <p className='text-[#D42620] flex items-center gap-2'>
+            {text} <Grammerly size={24} color='#D42620' />
+          </p>
+        )
+  }
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsConfirmed(true)
@@ -23,20 +36,22 @@ const AddModal = ({
     if (!sup_group_code) {
       const response = await CreateGroup({ accessToken, name })
       if (response.status === 1) {
-        toast.success(response.message)
+        setResult(true)
+        location.reload()
       } else if (response.status === '-1') {
-        toast.error(response.message)
+        setResult(false, response.message)
       } else {
-        toast.error('لطفا دوباره امتحان کنید')
+        setResult(false, response.message)
       }
     } else {
       const response = await EditGroup({ accessToken, name, sup_group_code })
       if (response.status === 1) {
         toast.success(response.message)
+        location.reload()
       } else if (response.status === '-1') {
-        toast.error(response.message)
+        setResult(false, response.message)
       } else {
-        toast.error('لطفا دوباره امتحان کنید')
+        setResult(false, response.message)
       }
     }
     setTimeout(() => {
@@ -47,7 +62,7 @@ const AddModal = ({
     <div>
       <div className='absolute bg-slate-600 opacity-50 w-full h-[200vh] z-50 top-0 right-0'></div>
       <div
-        className={`fixed p-10 z-50 right-0 top-0 max-md:left-[0] max-md:w-[100%] w-[40vw] h-full bg-white border border-gray-300 shadow-lg transition-transform duration-300 ease-in-out right-side-animate 
+        className={`fixed p-8 z-50 right-0 top-0 max-md:left-[0] max-md:w-[100%] w-[40vw] h-full bg-white border border-gray-300 shadow-lg transition-transform duration-300 ease-in-out right-side-animate 
      `}>
         <form
           onSubmit={handleSubmit}
@@ -100,7 +115,7 @@ const AddModal = ({
               <div
                 className={`absolute ${
                   !isConfirmed && ' opacity-0 '
-                } transform -translate-x-1/2 text-[#0F973D] flex rounded-lg transition-all duration-1000 ease-in-out`}
+                } transform -translate-x-1/2 transition-all duration-1000 ease-in-out`}
                 style={{
                   animation: `${
                     isConfirmed
@@ -108,7 +123,7 @@ const AddModal = ({
                       : 'hideSuccessText 1s ease-in-out forwards '
                   }`,
                 }}>
-                عملیات موفقیت‌آمیز بود! <Grammerly size={24} color='#0F973D' />
+                {status}
               </div>
             </div>
           </div>

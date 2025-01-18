@@ -51,6 +51,7 @@ export interface GroupData {
   sup_group_name: string
   sup_group_status: number
   supervisors_count: number
+  visors_count: number
 }
 export interface PromotionInterface {
   promotionDate: string // تاریخ پروموشن
@@ -176,4 +177,20 @@ export interface ProductsData {
   vra: string
   chart_id: string
   id: string
+}
+export interface DraftsData {
+  cheque_type: 1
+  amount: string
+  cheque_number: string
+  cheque_date: string
+  cheque_id_file: string
+  sayad_number: string
+  cheque_bank: string
+  cheque_branch: string
+  shaba_number: string
+  description: string
+  cheque_uid: string
+  cheque_status: number
+  cheque_status_date: string
+  status_description: string
 }
