@@ -1,5 +1,7 @@
 'use client'
 
+import { getCookieByKey } from '@/actions/cookieToken'
+import { GetdDraftImage } from '@/services/deposit'
 import { Import, MoreSquare } from 'iconsax-react'
 
 const Table = ({
@@ -11,6 +13,21 @@ const Table = ({
   headers: string[]
   indexOfProfitLoss?: number
 }) => {
+  const downloadDraftImage = async (id: string) => {
+    const accessToken = (await getCookieByKey('access_token')) || ''
+    console.log(id)
+    await GetdDraftImage({ accessToken, file_uid: id }).then((response) => {
+      const blob = new Blob([response], { type: 'image/jpeg' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = 'draft-image.jpg'
+      document.body.appendChild(a)
+      a.click()
+      a.remove()
+      URL.revokeObjectURL(url)
+    })
+  }
   return (
     <table className='my-10 '>
       <thead>
@@ -38,45 +55,48 @@ const Table = ({
       </thead>
 
       <tbody>
-        {data.map((account, index) => (
+        {data?.map((account, index) => (
           <tr key={index} className='border-b'>
-        {Object.values(account).map(
-              (detail, detailIndex) => (
-                <td
-                  key={detailIndex}
-                  className={`text-center h-10  ${
-                    detailIndex === 0
-                      && 'border-r'
-                   
+            {Object.values(account).map((detail, detailIndex) => (
+              <td
+                key={detailIndex}
+                className={`text-center h-10  ${
+                  detailIndex === 0 && 'border-r'
+                }`}>
+                <p
+                  className={`${
+                    ['پاس شده', 'موفق'].includes(`${detail}`.trim()) &&
+                    'bg-[#DAFEE5] text-[#0CAD41] rounded-full'
+                  } ${
+                    ['پاس نشده', 'ناموفق'].includes(`${detail}`.trim()) &&
+                    'bg-[#FEE3E2] text-[#D42620] rounded-full'
+                  } ${
+                    ['در حال انجام'].includes(`${detail}`.trim()) &&
+                    'bg-[#EFE399] text-[#8E5C1A] rounded-full'
                   }`}>
-                  {`${detail}` === 'edit' ? (
-                    <p className='flex justify-center'>b /</p>
+                  {detailIndex !== 9 ? (
+                    detail
                   ) : (
-                    <p
-                      className={`${
-                        ['پاس شده', 'موفق'].includes(`${detail}`.trim()) &&
-                        'bg-[#DAFEE5] text-[#0CAD41] rounded-full '
-                      } ${
-                        ['پاس نشده', 'ناموفق'].includes(`${detail}`.trim()) &&
-                        'bg-[#FEE3E2] text-[#D42620] rounded-full '
-                      } ${
-                        ['در حال انجام'].includes(`${detail}`.trim()) &&
-                        'bg-[#EFE399] text-[#8E5C1A] rounded-full '
-                      }`}>
-                      {detail}
-                    </p>
+                    <span className='flex justify-center'>
+                      <Import
+                      onClick={()=>downloadDraftImage(detail)}
+                        size={24}
+                        color='#7747C0'
+                        className='cursor-pointer'
+                      />
+                    </span>
                   )}
-                </td>
-              )
-            )}
-             <td className=''>
-              <p className='flex justify-center'>
-              <Import size={24} color='#7747C0' />
-              </p>
-            </td>   
+                </p>
+              </td>
+            ))}
+
             <td className='b'>
               <p className='flex justify-center'>
-              <MoreSquare size={24} color='#7747C0' />
+                <MoreSquare
+                  size={24}
+                  color='#7747C0'
+                  className='cursor-pointer'
+                />
               </p>
             </td>
           </tr>

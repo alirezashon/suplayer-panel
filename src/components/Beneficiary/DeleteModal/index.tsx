@@ -1,36 +1,32 @@
 import { getCookieByKey } from '@/actions/cookieToken'
-import { EditSubGroup } from '@/services/items'
+import { BeneficiaryData } from '@/interfaces'
+import { EditBeneficiary, EditSubGroup } from '@/services/items'
 import { CloseSquare, Forbidden2, Trash } from 'iconsax-react'
 import toast from 'react-hot-toast'
 
 const DeleteModal = ({
   isActive = false,
-  name,
+  data,
   groupId,
   close,
 }: {
   isActive?: boolean
-  name: string
+  data: BeneficiaryData
   groupId: number
   close: (show: boolean) => void
 }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     const accessToken = (await getCookieByKey('access_token')) || ''
-    EditSubGroup({
-      accessToken,
-      group_id: `${groupId}`,
-      code: `${name.split('#$%^@!~')[1]}`,
-      name: `${name.split('#$%^@!~')[0]}`,
-      status: 9,
-    })
-      .then((value) => {
-        value?.status === '-1'
-          ? toast.error(value.message)
-          : toast.success(value.message)
-        close(false)
-      })
-      .catch(() => toast.error('خطایی پیش آمد'))
+    data &&
+      EditBeneficiary({ ...data, accessToken ,visitor_status:9})
+        .then((value) => {
+          value?.status === '-1'
+            ? toast.error(value.message)
+            : toast.success(value.message)
+          close(false)
+        })
+        .catch(() => toast.error('خطایی پیش آمد'))
   }
 
   return (
@@ -64,7 +60,7 @@ const DeleteModal = ({
             <div className='font-bold my-5'>
               آیا مطمئن به حذف زیر گروه
               <span className='px-3 rounded-lg mx-1 bg-purple-300 text-[#6137A0]'>
-                {name.split('#$%^@!~')[0]}
+                {data.visitor_full_name}
               </span>
               هستید؟
             </div>
@@ -79,7 +75,7 @@ const DeleteModal = ({
             ) : (
               <>
                 <button
-                  onClick={()=>close(false)}
+                  onClick={() => close(false)}
                   className='w-full mt-4 px-4 py-2 bg-[#7747C0] text-white rounded-lg hover:bg-purple-800'>
                   انصراف
                 </button>

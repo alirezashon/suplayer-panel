@@ -1,7 +1,6 @@
 import {
-  Beneficiary,
+  BeneficiaryData,
   GroupData,
-  ProductGroup,
   ReferrerData,
   SubGroup,
 } from '@/interfaces'
@@ -250,31 +249,41 @@ export const CreateBeneficiary = async ({
   }
 }
 export const EditBeneficiary = async ({
-  name,
-  family,
-  fullName,
-  mobile,
-  accessToken,
+  visitor_code,
+  supervisor_id,
+  visitor_type,
+  visitor_tob,
+  visitor_uid,
+  visitor_tel,
+  visitor_full_name,
+  visitor_name,
+  visitor_family,
+  visitor_status,
   CityUID,
-  address,
-  expertise,
-  weight,
-  lat,
-  long,
-  status,
+  visitor_address,
+  visitor_specialty,
+  default_weight,
+  latitude,
+  longitude,
+  accessToken,
 }: {
-  name: string
-  family: string
-  fullName: string
-  mobile: string
-  accessToken: string | undefined
+  visitor_code?: string
+  supervisor_id: number
+  visitor_type: number
+  visitor_tob: number
+  visitor_uid: string
+  visitor_tel: string
+  visitor_full_name: string
+  visitor_name: string
+  visitor_family: string
+  visitor_status?: number
   CityUID: string
-  address: string
-  expertise: string
-  weight: number
-  lat: number
-  long: number
-  status?: number
+  visitor_address: string
+  visitor_specialty: string
+  default_weight: number
+  latitude: number
+  longitude: number
+  accessToken: string | undefined
 }) => {
   try {
     const response = await fetch(
@@ -286,21 +295,22 @@ export const EditBeneficiary = async ({
           authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
-          supervisor_id: 0,
-          visitor_type: 1,
-          visitor_uid: mobile,
-          visitor_full_name: fullName,
-          visitor_name: name,
-          visitor_family: family,
-          visitor_status: status,
-          visitor_tob: 0,
-          visitor_tel: mobile,
+          visitor_code,
+          supervisor_id,
+          visitor_type,
+          visitor_tob,
+          visitor_uid,
+          visitor_tel,
+          visitor_full_name,
+          visitor_name,
+          visitor_family,
+          visitor_status,
           CityUID,
-          visitor_address: address,
-          visitor_specialty: expertise,
-          default_weight: weight,
-          latitude: lat,
-          longitude: long,
+          visitor_address,
+          visitor_specialty,
+          default_weight,
+          latitude,
+          longitude,
         }),
       }
     )
@@ -314,10 +324,10 @@ export const GetBeneficiaryList = async ({
   accessToken,
 }: {
   accessToken: string | undefined
-}): Promise<Beneficiary[] | undefined> => {
+}): Promise<BeneficiaryData[] | undefined> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_visitors_list`,
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_visitors_list?status_id=1`,
       {
         method: 'GET',
         headers: {

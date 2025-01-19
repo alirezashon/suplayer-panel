@@ -168,10 +168,27 @@ input:focus {
 @keyframes hideSuccessText {
   0% {
     transform: translateX(0);
-    opacity: .5;
+    opacity: 0.5;
   }
   100% {
     transform: translateX(100%);
     opacity: 0;
   }
+}
+@keyframes add-new-input-animated {
+  10% {
+    transform: translateY(30%);
+  }
+  35% {
+    transform: translateY(10%);
+  }
+  60% {
+    transform: translateY(30%);
+  }
+  90% {
+    transform: translateY(-10%);
+  }
+}
+.add-new-input-animated {
+  animation: add-new-input-animated 1s ease-in-out forwards ;
 }

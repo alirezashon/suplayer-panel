@@ -59,7 +59,11 @@ const AddModal = ({
             <p>محصولات مرتبط به این گروه را در قسمت زیر اضافه کنید.</p>
           </div>
           {names.map((name, index) => (
-            <div className='mt-10 w-full flex gap-5 ' key={index}>
+            <div
+              className={`mt-7 w-full flex gap-5 ${
+                index === names.length - 1 && 'add-new-input-animated'
+              }`}
+              key={index}>
               <div className='flex flex-col w-full'>
                 <label className='text-base font-medium text-right text-gray-800'>
                   نام محصول

@@ -14,7 +14,7 @@ export const GetReferrerProductList = async ({
       }
     )
     if (response.status !== 200) {
-      throw new Error('Failed to CreateShabaDestination!')
+      return
     }
 
     return await response.json()
@@ -51,7 +51,7 @@ export const DefineProductoReferrer = async ({
     )
 
     if (response.status !== 200) {
-      throw new Error('Failed to CreateShabaDestination!')
+      return
     }
 
     return await response.json()
@@ -91,7 +91,7 @@ export const EditReferrerProduct = async ({
     )
 
     if (response.status !== 200) {
-      throw new Error('Failed to CreateShabaDestination!')
+      return
     }
 
     return await response.json()

@@ -1,5 +1,4 @@
 import { useRef, useState } from 'react'
-import { BeneficiaryProps } from '@/interfaces'
 import { InfoCircle, Star1 } from 'iconsax-react'
 import Loading from '../shared/LoadingSpinner'
 import Image from 'next/image'
@@ -41,7 +40,7 @@ export const WithdrawalForm: React.FC = () => {
     }
   }
 
-  const beneficiaries: BeneficiaryProps[] = [
+  const beneficiaries: any[] = [
     { name: 'سعدی اسدی', iban: 'IR۳۵۰۱۹۰۰۰۰۰۰۰۰۰۰۰۲۳۴۵۹۲۳۱' },
     { name: 'محمد باقری', iban: 'IR۳۵۰۱۹۰۰۰۰۰۰۰۰۰۰۰۲۳۴۵۹۲۳۱' },
     { name: 'محسن تنابنده', iban: 'IR۳۵۰۱۹۰۰۰۰۰۰۰۰۰۰۰۲۳۴۵۹۲۳۱' },

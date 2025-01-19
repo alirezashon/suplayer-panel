@@ -139,7 +139,7 @@ const AddModal = ({
             </select>
           </div>
 
-          <div className='mt-10 w-full max-md:max-w-full '>
+          <div className='mt-10 w-full max-md:max-w-full add-new-input-animated'>
             <div className='flex flex-col w-full'>
               <label className='text-base font-medium text-right text-gray-800'>
                 نام زیر گروه خود را بنویسید
@@ -155,7 +155,7 @@ const AddModal = ({
             </div>
           </div>
           {nestedNames.map((name, index) => (
-            <div className='mt-10 w-full flex gap-5 ' key={index}>
+            <div className={`mt-7 w-full flex gap-5 ${index === nestedNames.length-1 && 'add-new-input-animated'}`} key={index}>
               <div className='flex flex-col w-full'>
                 <label className='text-base font-medium text-right text-gray-800'>
                   نام زیر گروه خود را بنویسید
@@ -186,7 +186,7 @@ const AddModal = ({
             </div>
           ))}
           {!existName && (
-            <div className='flex flex-col gap-5 my-5'>
+            <div className='flex flex-col gap- my-5'>
               <div className=''>
                 <label htmlFor=''>انتخاب ذی نفع</label>
                 <SelectList

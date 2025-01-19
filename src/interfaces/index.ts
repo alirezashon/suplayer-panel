@@ -1,7 +1,3 @@
-export interface BeneficiaryProps {
-  name: string
-  iban: string
-}
 
 export interface WalletInfoProps {
   balance: string
@@ -106,7 +102,7 @@ export interface Cities {
   CityDesc: string
   CityUID: string
 }
-export interface Beneficiary {
+export interface BeneficiaryData {
   supervisor_id: number
   visitor_type: number
   visitor_tob: number
@@ -114,6 +110,7 @@ export interface Beneficiary {
   visitor_tel: string
   visitor_full_name: string
   visitor_name: string
+  visitore_code?:string
   visitor_family: string
   visitor_status: number
   CityUID: string

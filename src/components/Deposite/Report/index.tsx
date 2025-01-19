@@ -53,7 +53,7 @@ const Report = () => {
       'cheque_bank',
       'cheque_branch',
       'cheque_status',
-      // 'cheque_id_file',
+      'cheque_id_file',
       // 'description',
       // 'cheque_uid',
       // 'cheque_status_date',

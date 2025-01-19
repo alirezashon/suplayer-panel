@@ -1,21 +1,13 @@
 import { getCookieByKey } from '@/actions/cookieToken'
-import { Cities, County, States } from '@/interfaces'
-import { CreateBeneficiary } from '@/services/items'
+import { BeneficiaryData, Cities, County, States } from '@/interfaces'
+import { CreateBeneficiary, EditBeneficiary } from '@/services/items'
 import { GetCity, GetCounty, GetStates } from '@/services/location'
 import { CloseSquare, Grammerly } from 'iconsax-react'
 import { useState, useRef, useEffect } from 'react'
-
-interface FormData {
-  name?: string
-  lastName?: string
-  speciality?: string
-  phone?: string
-  address?: string
-  weight?: number
-}
+import toast from 'react-hot-toast'
 
 interface AddModalProps {
-  data?: FormData
+  data?: BeneficiaryData
   close: (show: boolean) => void
 }
 
@@ -28,7 +20,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
   const [isConfirmed, setIsConfirmed] = useState(false)
 
   const detailsRefs = useRef({
-    name: '',
+    name: data?.visitor_family || '',
     lastName: '',
     speciality: '',
     phone: '',
@@ -114,37 +106,46 @@ const AddModal = ({ data, close }: AddModalProps) => {
       setErrors(newErrors)
       return
     }
-
-    await CreateBeneficiary({
-      accessToken,
-      name: detailsRefs.current.name?.trim() || '',
-      family: detailsRefs.current.lastName?.trim() || '',
-      fullName: '',
-      mobile: detailsRefs.current.phone?.trim() || '',
-      CityUID: locationRefs.current.city?.trim() || '',
-      address: detailsRefs.current.address?.trim() || '',
-      expertise: detailsRefs.current.speciality?.trim() || '',
-      weight: detailsRefs.current.weight || 1,
-      lat: 0,
-      long: 0,
-      tob: beneficiaryType,
-    })
+    if (data?.CityUID) {
+        EditBeneficiary({ ...data, accessToken})
+          .then((value) => {
+            // value?.status === '-1'
+            //   ? toast.error(value.message)
+            //   : toast.success(value.message)
+            close(false)
+          })
+          .catch(() => toast.error('خطایی پیش آمد'))
+    } else {
+      await CreateBeneficiary({
+        accessToken,
+        name: detailsRefs.current.name?.trim() || '',
+        family: detailsRefs.current.lastName?.trim() || '',
+        fullName: '',
+        mobile: detailsRefs.current.phone?.trim() || '',
+        CityUID: locationRefs.current.city?.trim() || '',
+        address: detailsRefs.current.address?.trim() || '',
+        expertise: detailsRefs.current.speciality?.trim() || '',
+        weight: detailsRefs.current.weight || 1,
+        lat: 0,
+        long: 0,
+        tob: beneficiaryType,
+      })
+    }
     setTimeout(() => {
       setIsConfirmed(false)
     }, 2222)
   }
 
+  
   return (
     <div>
       <div className='absolute bg-slate-600 opacity-50 w-full h-[200vh] z-50 top-0 right-0'></div>
       <div
         style={{ scrollbarWidth: 'none' }}
-        className={`fixed overflow-auto  z-50 right-0 top-0 max-md:left-[0] max-md:w-[100%] w-[40vw] h-full bg-white border border-gray-300 shadow-lg transition-transform duration-300 ease-in-out right-side-animate`}>
-        <form
-          onSubmit={handleSubmit}
-          className='flex flex-col mx-2 my-2 bg-white pb-[70px]'>
-          <div className='sticky top-0 bg-white flex justify-between items-center w-full text-xl font-medium text-right text-gray-800'>
-            <div className=' flex-1 shrink my-auto min-w-[240px]'>
+        className={`fixed overflow-auto p-8 z-50 right-0 top-0 max-md:left-[0] max-md:w-[100%] w-[40vw] h-full bg-white border border-gray-300 shadow-lg transition-transform duration-300 ease-in-out right-side-animate`}>
+        <form onSubmit={handleSubmit} className='flex flex-col bg-white '>
+          <div className='sticky top-0 py-4 bg-white flex justify-between items-center w-full text-xl font-medium text-right text-gray-800'>
+            <div className=' flex-1 shrink  min-w-[240px]'>
               {data ? 'ویرایش ذی‌‌نفع' : 'ذی‌ نفع جدید'}
             </div>
             <CloseSquare
@@ -180,7 +181,9 @@ const AddModal = ({ data, close }: AddModalProps) => {
                 <div className='flex flex-col w-full'>
                   <label>نام</label>
                   <input
-                    defaultValue={data?.name || detailsRefs.current.name || ''}
+                    defaultValue={
+                      data?.visitor_name || detailsRefs.current.name || ''
+                    }
                     onChange={(e) =>
                       (detailsRefs.current.name = e.target.value)
                     }
@@ -195,7 +198,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
                   <label>نام خانوادگی</label>
                   <input
                     defaultValue={
-                      data?.lastName || detailsRefs.current.lastName || ''
+                      data?.visitor_family || detailsRefs.current.lastName || ''
                     }
                     onChange={(e) =>
                       (detailsRefs.current.lastName = e.target.value)
@@ -215,7 +218,9 @@ const AddModal = ({ data, close }: AddModalProps) => {
                   <label>تخصص ذی‌ نفع</label>
                   <input
                     defaultValue={
-                      data?.speciality || detailsRefs.current.speciality || ''
+                      data?.visitor_specialty ||
+                      detailsRefs.current.speciality ||
+                      ''
                     }
                     onChange={(e) =>
                       (detailsRefs.current.speciality = e.target.value)
@@ -233,7 +238,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
                   <label>شماره همراه ذی‌ نفع</label>
                   <input
                     defaultValue={
-                      data?.phone || detailsRefs.current.phone || ''
+                      data?.visitor_tel || detailsRefs.current.phone || ''
                     }
                     onChange={(e) =>
                       (detailsRefs.current.phone = e.target.value)
@@ -253,7 +258,9 @@ const AddModal = ({ data, close }: AddModalProps) => {
                 <div className='flex flex-col w-full'>
                   <label>نام کسب و کار</label>
                   <input
-                    defaultValue={data?.name || detailsRefs.current.name || ''}
+                    defaultValue={
+                      data?.visitor_full_name || detailsRefs.current.name || ''
+                    }
                     onChange={(e) =>
                       (detailsRefs.current.name = e.target.value)
                     }
@@ -268,7 +275,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
                   <label>تلفن ثابت (با کد شهر) </label>
                   <input
                     defaultValue={
-                      data?.phone || detailsRefs.current.phone || ''
+                      data?.visitor_tel || detailsRefs.current.phone || ''
                     }
                     onChange={(e) =>
                       (detailsRefs.current.phone = e.target.value)
@@ -288,7 +295,9 @@ const AddModal = ({ data, close }: AddModalProps) => {
                   <label>نام صاحب کسب و کار </label>
                   <input
                     defaultValue={
-                      data?.speciality || detailsRefs.current.speciality || ''
+                      data?.visitor_family ||
+                      detailsRefs.current.speciality ||
+                      ''
                     }
                     onChange={(e) =>
                       (detailsRefs.current.speciality = e.target.value)
@@ -306,7 +315,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
                   <label>شماره همراه </label>
                   <input
                     defaultValue={
-                      data?.phone || detailsRefs.current.phone || ''
+                      data?.visitor_tel || detailsRefs.current.phone || ''
                     }
                     onChange={(e) =>
                       (detailsRefs.current.phone = e.target.value)
@@ -373,7 +382,9 @@ const AddModal = ({ data, close }: AddModalProps) => {
           <div className='my-2'>
             <label>انتخاب وزن برای ذی‌ نفع</label>
             <select
-              defaultValue={data?.weight || detailsRefs.current.weight || ''}
+              defaultValue={
+                data?.default_weight || detailsRefs.current.weight || ''
+              }
               onChange={(e) =>
                 (detailsRefs.current.weight = parseInt(`${e.target.value}`))
               }

@@ -36,6 +36,9 @@ export async function setTokenIntoCookie({
   ;(await cookies()).set('user_status', data.user_status)
   ;(await cookies()).set('clevel', `${data.city_level}`)
   ;(await cookies()).set('approve_status', String(data.user_approve_status))
+  setTimeout(() => {
+    window.location.href = '/auth/login'
+  }, 30 * 60 * 1000)
 }
 
 export async function deleteAllCookies() {

@@ -20,7 +20,7 @@ export const AddDraftImage = async ({
     )
 
     if (response.status !== 200) {
-      throw new Error('Failed to CreateShabaDestination!')
+      return
     }
 
     return await response.json()
@@ -50,7 +50,7 @@ export const CheckDraftImage = async ({
     )
 
     if (response.status !== 200) {
-      throw new Error('Failed to CreateShabaDestination!')
+      return
     }
 
     return await response.json()
@@ -95,7 +95,7 @@ export const ChangeDraftStatus = async ({
     )
 
     if (response.status !== 200) {
-      throw new Error('Failed to CreateShabaDestination!')
+      return
     }
 
     return await response.json()
@@ -157,7 +157,7 @@ export const DepositWithDraft = async ({
     )
 
     if (response.status !== 200) {
-      throw new Error('Failed to CreateShabaDestination!')
+     return
     }
 
     return await response.json()
@@ -182,7 +182,38 @@ export const GetdDraftsList = async ({
     )
 
     if (!response.ok || response.status === 500) {
-      throw new Error('Failed to GetAssistantList')
+     return
+    }
+
+    return await response.json()
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const GetdDraftImage = async ({
+  accessToken,
+  file_uid,
+}: {
+  accessToken: string | undefined
+  file_uid: string
+}) => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/checkchequeimage`,
+      {
+        method: 'POST',
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          file_uid,
+        }),
+      }
+    )
+
+    if (!response.ok || response.status === 500) {
+      return
     }
 
     return await response.json()
