@@ -5,6 +5,8 @@ import {
   getProductData,
   getProductGroupData,
   getBeneficiaryData,
+  getUserInfo,
+  getReferrerData,
 } from '@/actions/setData'
 import Beneficiary from '@/components/Beneficiary'
 import Campaign from '@/components/Campaign'
@@ -35,10 +37,13 @@ const Home = () => {
     setProductData,
     setProductGroupData,
     setBeneficiaryData,
+    setUserInfo,
+    setReferrerData,
   } = useData()
 
   useEffect(() => {
     const fetcher = async () => {
+      await getUserInfo().then((value) => value && setUserInfo(value))
       const groups = await getGroupData()
       if (groups) setGroupData(groups)
       const subGroups = await getSubGroupData()
@@ -49,6 +54,7 @@ const Home = () => {
       if (products) setProductData(products)
       const beneficiaries = await getBeneficiaryData()
       if (beneficiaries) setBeneficiaryData(beneficiaries)
+      await getReferrerData().then((value) => value && setReferrerData(value))
     }
     fetcher()
     const handleHashChange = () => {
@@ -58,7 +64,12 @@ const Home = () => {
     }
     window.addEventListener('hashchange', handleHashChange, false)
     handleHashChange()
+    const timeout = setTimeout(() => {
+      location.href = '/auth/login' // هدایت کاربر به صفحه لاگین بعد از مدت زمان مشخص
+    }, 30 * 60 * 1000) // 30 دقیقه
+
     return () => {
+      clearTimeout(timeout)
       window.removeEventListener('hashchange', handleHashChange, false)
     }
   }, [setMenu, setGroupData, setSubGroupData])

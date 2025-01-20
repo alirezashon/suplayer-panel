@@ -1,4 +1,3 @@
-
 export interface WalletInfoProps {
   balance: string
   availableBalance: string
@@ -18,6 +17,17 @@ export interface IbanInterface {
   isDraggable?: boolean
   bankCode?: string
   bankName?: string
+}
+export interface IUserResponse {
+  customer_status: string
+  mobile: string
+  first_name: string
+  last_name: string
+  full_name: string
+  city_level: number
+  customer_code: string
+  role: string
+  approve_status: number
 }
 export interface IShabaDestinationList {
   sid: string | any
@@ -110,7 +120,7 @@ export interface BeneficiaryData {
   visitor_tel: string
   visitor_full_name: string
   visitor_name: string
-  visitore_code?:string
+  visitore_code?: string
   visitor_family: string
   visitor_status: number
   CityUID: string

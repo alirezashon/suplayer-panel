@@ -7,9 +7,10 @@ import persian_en from 'react-date-object/locales/persian_fa'
 
 interface Props {
   setDate: (date: string) => void
+  placeholder?:string
 }
 
-const Calendar: React.FC<Props> = ({ setDate }) => {
+const Calendar: React.FC<Props> = ({ setDate,placeholder }) => {
   const [selectedDate, setSelectedDate] = useState<DateObject | null>(null)
 
   const handleChange = (date: DateObject) => {
@@ -21,6 +22,7 @@ const Calendar: React.FC<Props> = ({ setDate }) => {
     <div className='flex justify-center '>
         <DatePicker
           containerClassName={'w-full '}
+          placeholder={placeholder}
           value={selectedDate}
           onChange={handleChange}
           calendar={persian}

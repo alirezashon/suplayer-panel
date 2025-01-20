@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Edit2, People, ProfileCircle, Trash } from 'iconsax-react'
 import { useMenu } from '@/Context/Menu'
 import AddModal from './AddModal'
+import AddSubGroup from '../SubGroups/AddModal'
 import DeleteModal from './DeleteModal'
 import { useData } from '@/Context/Data'
 
@@ -9,8 +10,12 @@ const MyGroups: React.FC = () => {
   const { setMenu } = useMenu()
   const { groupData, setGroupData } = useData()
   const [showAddModal, setShowAddModal] = useState<null | string[]>(null)
+  const [addSubGroup, setAddSubGroup] = useState<number | null>()
   const [showDeleteModal, setShowDeleteModal] = useState<null | string[]>(null)
-
+  const changeRoute = () => {
+    setMenu('subgroups')
+    location.hash = 'subgroups'
+  }
   return (
     <div className='m-4'>
       <div className='flex justify-between items-center mb-7'>
@@ -46,6 +51,9 @@ const MyGroups: React.FC = () => {
           sup_group_code={showAddModal[1]}
           close={setShowAddModal}
         />
+      )}
+      {addSubGroup && (
+        <AddSubGroup groupId={addSubGroup} close={() => setAddSubGroup(null)} />
       )}
       {showDeleteModal && (
         <DeleteModal
@@ -122,15 +130,16 @@ const MyGroups: React.FC = () => {
                 </div>
                 <button
                   onClick={() => {
-                    location.hash = 'subgroups'
-                    setMenu('subgroups')
+                    group.supervisors_count > 0
+                      ? changeRoute()
+                      : setAddSubGroup(group.sup_group_id)
                   }}
                   className={`w-full h-10  font-semibold rounded ${
-                    group.sup_group_code.length === 0
+                    group.supervisors_count === 0
                       ? 'bg-[#7747C0] hover:bg-[#7747C0] text-white'
                       : 'border border-[#7747C0] text-[#7747C0] hover:bg-[#7747C0] hover:text-white'
                   } transition duration-300`}>
-                  {group.sup_group_code.length > 0
+                  {group.supervisors_count > 0
                     ? 'مشاهده زیر گروه‌ها'
                     : 'تعریف زیر گروه'}
                 </button>

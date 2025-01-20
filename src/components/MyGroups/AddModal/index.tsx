@@ -1,4 +1,6 @@
 import { getCookieByKey } from '@/actions/cookieToken'
+import { getGroupData } from '@/actions/setData'
+import { useData } from '@/Context/Data'
 import { CreateGroup, EditGroup } from '@/services/items'
 import { CloseSquare, Grammerly } from 'iconsax-react'
 import { useState } from 'react'
@@ -16,6 +18,7 @@ const AddModal = ({
   const [name, setName] = useState<string>(existName || '')
   const [isConfirmed, setIsConfirmed] = useState(false)
   const [status, setStatus] = useState<React.ReactElement>()
+  const { setGroupData } = useData()
   const setResult = (state: boolean, text?: string) => {
     state
       ? setStatus(
@@ -37,7 +40,7 @@ const AddModal = ({
       const response = await CreateGroup({ accessToken, name })
       if (response.status === 1) {
         setResult(true)
-        location.reload()
+        await getGroupData().then((value) => setGroupData(value))
       } else if (response.status === '-1') {
         setResult(false, response.message)
       } else {
@@ -47,7 +50,7 @@ const AddModal = ({
       const response = await EditGroup({ accessToken, name, sup_group_code })
       if (response.status === 1) {
         toast.success(response.message)
-        location.reload()
+        await getGroupData().then((value) => setGroupData(value))
       } else if (response.status === '-1') {
         setResult(false, response.message)
       } else {

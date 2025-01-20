@@ -3,11 +3,12 @@ import { People, ProfileCircle } from 'iconsax-react'
 import { useMenu } from '@/Context/Menu'
 import GroupsDetail from '../GroupDetail'
 import { useData } from '@/Context/Data'
-
+import AddSubGroup from '../../SubGroups/AddModal'
 const ShowGroups: React.FC = () => {
   const { setMenu } = useMenu()
   const [showGroup, setShowGroup] = useState<string>('')
   const { groupData } = useData()
+  const [addSubGroup, setAddSubGroup] = useState<number | null>()
 
   return (
     <>
@@ -25,6 +26,12 @@ const ShowGroups: React.FC = () => {
               </span>
             </p>
           </div>
+          {addSubGroup && (
+            <AddSubGroup
+              groupId={addSubGroup}
+              close={() => setAddSubGroup(null)}
+            />
+          )}
           <div className='p-6 bg-white rounded-lg border border-gray-200'>
             <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4'>
               {groupData &&
@@ -72,8 +79,7 @@ const ShowGroups: React.FC = () => {
                       onClick={() => {
                         group.supervisors_count > 0
                           ? setShowGroup(group.sup_group_code)
-                          : (location.hash = 'subgroups') &&
-                            setMenu('subgroups')
+                          : setAddSubGroup(group.sup_group_id)
                       }}
                       className={`w-full h-10  font-semibold rounded ${
                         group.supervisors_count === 0

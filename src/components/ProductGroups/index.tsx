@@ -5,13 +5,14 @@ import DeleteModal from './DeleteModal'
 import { useMenu } from '@/Context/Menu'
 import Image from 'next/image'
 import { useData } from '@/Context/Data'
+import { ProductGroupData } from '@/interfaces'
 
 const ProductGroups: React.FC = () => {
   const { productGroupData } = useData()
   const [showAddModal, setShowAddModal] = useState<boolean | string>(false)
-  const [showDeleteModal, setShowDeleteModal] = useState<boolean | string>(
-    false
-  )
+  const [showDeleteModal, setShowDeleteModal] = useState<
+    ProductGroupData | boolean
+  >(false)
   const { setMenu } = useMenu()
 
   return (
@@ -53,8 +54,8 @@ const ProductGroups: React.FC = () => {
           )}
           {showDeleteModal && (
             <DeleteModal
-              name={`${showDeleteModal}`}
-              close={setShowDeleteModal}
+              data={showDeleteModal as ProductGroupData}
+              close={() => setShowDeleteModal(false)}
             />
           )}
           <div className='p-6 bg-white rounded-lg border border-gray-200'>
@@ -73,14 +74,18 @@ const ProductGroups: React.FC = () => {
                         size={20}
                         color='#8455D2'
                         cursor={'pointer'}
-                        onClick={() => setShowAddModal(product.group_desc)}
+                        onClick={() =>
+                          setShowAddModal(
+                            product.group_desc + '^k3W@4r6w' + product.group_pid
+                          )
+                        }
                       />
                       <Trash
                         size={20}
                         color='#D42620'
                         cursor={'pointer'}
                         onClick={() => {
-                          setShowDeleteModal(product.group_desc)
+                          setShowDeleteModal(product)
                         }}
                       />
                     </div>

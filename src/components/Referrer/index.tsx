@@ -1,15 +1,23 @@
 import { useState } from 'react'
-import { Trash, Edit2, SearchNormal } from 'iconsax-react'
+import {
+  Trash,
+  Edit2,
+  SearchNormal,
+  FolderAdd,
+  MoreSquare,
+  Message,
+} from 'iconsax-react'
 import AddModal from './AddModal'
 import DeleteModal from './DeleteModal'
 import Image from 'next/image'
 import { useMenu } from '@/Context/Menu'
 import { ReferrerData } from '@/interfaces'
+import Calendar from '../shared/Calendar'
 
-const sampleData = [
+const referrerData: ReferrerData[] = [
   {
     personnel_code: '001',
-    pers_chart_id: 1,
+    pers_chart_id: 1579,
     pers_job_id: 1,
     pers_type: 1,
     pers_tob: 1,
@@ -24,7 +32,7 @@ const sampleData = [
   },
   {
     personnel_code: '002',
-    pers_chart_id: 2,
+    pers_chart_id: 23,
     pers_job_id: 2,
     pers_type: 1,
     pers_tob: 2,
@@ -39,7 +47,7 @@ const sampleData = [
   },
   {
     personnel_code: '003',
-    pers_chart_id: 3,
+    pers_chart_id: 93,
     pers_job_id: 3,
     pers_type: 2,
     pers_tob: 1,
@@ -54,7 +62,7 @@ const sampleData = [
   },
   {
     personnel_code: '004',
-    pers_chart_id: 4,
+    pers_chart_id: 4778,
     pers_job_id: 4,
     pers_type: 2,
     pers_tob: 2,
@@ -69,7 +77,7 @@ const sampleData = [
   },
   {
     personnel_code: '005',
-    pers_chart_id: 5,
+    pers_chart_id: 57,
     pers_job_id: 5,
     pers_type: 3,
     pers_tob: 1,
@@ -84,36 +92,59 @@ const sampleData = [
   },
 ]
 
-const tabs = ['همه', 'شخص', 'کسب و کار']
 const Referrer: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<number>(0)
   const [showAddModal, setShowAddModal] = useState<boolean | string>(false)
   const [showDeleteModal, setShowDeleteModal] = useState<boolean | string>(
     false
   )
-  const [data, setData] = useState<ReferrerData[]>(sampleData)
+  const [data, setData] = useState<ReferrerData[]>(referrerData)
+  const [selectedItems, setSelectedItems] = useState<number[]>([])
   const { setMenu } = useMenu()
   const headers = [
     'ردیف',
     'نام',
     'نام خانوادگی',
-    'نوع بازاریاب',
+    'سمت بازاریاب',
     'وضعیت',
     'فعالسازی/انتصاب',
     'جزئیات',
     'عملیات',
   ]
+  const initialData = referrerData.map((referrer) => ({
+    pers_name: referrer.pers_name,
+    pers_family: referrer.pers_family,
+    pers_chart_id: referrer.pers_chart_id,
+    pers_status: referrer.pers_status,
+    pers_tob: referrer.pers_tob,
+  }))
+
+  const handleHeaderCheckboxChange = () => {
+    if (selectedItems.length === initialData.length) {
+      setSelectedItems([]) // اگر همه انتخاب شده بودند، پاک کن
+    } else {
+      setSelectedItems(initialData.map((_, index) => index)) // همه را انتخاب کن
+    }
+  }
+
+  const handleRowCheckboxChange = (index: number) => {
+    if (selectedItems.includes(index)) {
+      setSelectedItems(selectedItems.filter((item) => item !== index)) // اگر انتخاب شده بود، حذف کن
+    } else {
+      setSelectedItems([...selectedItems, index]) // اگر انتخاب نشده بود، اضافه کن
+    }
+  }
+
   return (
     <>
       {showAddModal && (
         <AddModal
-          data={{
-            name: 'علی',
-            lastName: 'محمتی',
-            speciality: '0',
-            phone: '093329902012',
-            address: 'دورقوزابارت',
-          }}
+          // data={{
+          //   name: 'علی',
+          //   lastName: 'محمتی',
+          //   speciality: '0',
+          //   phone: '093329902012',
+          //   address: 'دورقوزابارت',
+          // }}
           close={setShowAddModal}
         />
       )}
@@ -145,62 +176,84 @@ const Referrer: React.FC = () => {
               بازاریاب‌های من
             </span>
           </p>
-          {data.length > 0 && (
-            <button
-              type='submit'
-              onClick={() => setShowAddModal(true)}
-              className='h-10 min-w-40 bg-[#7747C0] text-white rounded-lg hover:bg-purple-800'>
-              + بازاریاب جدید
-            </button>
+          {initialData.length > 0 && (
+            <div className='flex gap-5'>
+              <label className='flex justify-center items-center gap-1 h-10 min-w-40 border-button rounded-lg bg-white hover:bg-purple-100 cursor-pointer'>
+                <FolderAdd size={20} color='#7747C0' />
+                <span>بارگذاری اکسل</span>
+                <input
+                  type='file'
+                  accept='.xlsx, .xls'
+                  className='hidden'
+                  onChange={(e) => e}
+                />
+              </label>
+              <button
+                type='submit'
+                onClick={() => setShowAddModal(true)}
+                className='h-10 min-w-40 bg-[#7747C0] text-white rounded-lg hover:bg-purple-800'>
+                + بازاریاب جدید
+              </button>
+            </div>
           )}
         </div>
         <div className='p-6 bg-white rounded-lg border border-gray-200'>
-          <div className='flex border-b'>
-            {tabs.map((tab, index) => (
-              <button
-                key={index}
-                className={`px-5 py-3 transition-all duration-500 ${
-                  activeTab === index
-                    ? 'bg-[#E6DBFB80] border-b-2 border-[#704CB9] text-[#704CB9]'
-                    : 'text-[#344054]'
-                }`}
-                onClick={() => setActiveTab(index)}>
-                {tab}
-              </button>
-            ))}
-          </div>
           <form
             // onSubmit={handleSubmit}
             className='flex flex-col bg-[#F6F5FD] my-3 p-3 max-md:px-5 max-md:pb-24 rounded-lg'>
             <div className='flex gap-4 items-center'>
               <div className='flex flex-col w-full'>
                 <label className='text-base font-medium text-right text-gray-800'>
-                  نام زیر گروه خود را بنویسید
+                  نام
                 </label>
-                <input
-                  type='text'
-                  placeholder='مثال: دکترهای پوست، تهران غرب ...'
-                />
+                <input type='text' placeholder='نام' />
               </div>
               <div className='flex flex-col w-full'>
                 <label className='text-base font-medium text-right text-gray-800'>
-                  نام زیر گروه خود را بنویسید
+                  نام خانوادگی
                 </label>
-                <input
-                  type='text'
-                  placeholder='مثال: دکترهای پوست، تهران غرب ...'
-                />
+                <input type='text' placeholder='نام خانوادگی' />
               </div>
               <div className='my-4 w-full'>
-                <label id='status-label'> گروه خود را انتخاب کنید</label>
+                <label id='status-label'> نوع بازاریاب</label>
                 <select
                   className={`!w-full outline-none border rounded-lg h-10 px-1 cursor-pointer border-[#C9D0D8]`}>
+                  <option disabled value=''>
+                    مدیر فروش، مدیر منطقه، مدیر شعبه ...{' '}
+                  </option>
                   <option value=''>نام گروه</option>
                   <option value='0'>ناروه</option>
                 </select>
               </div>
             </div>
-
+            <div className='flex gap-4 items-center'>
+              <div className='flex flex-col w-full'>
+                <label className='text-base font-medium text-right text-gray-800'>
+                  شماره همراه
+                </label>
+                <input type='text' placeholder='شماره همراه' />
+              </div>
+              <div className='flex flex-col w-full'>
+                <label className='text-base font-medium text-right text-gray-800'>
+                  تاریخ تولد
+                </label>
+                <Calendar
+                  placeholder='تاریخ تولد'
+                  setDate={(value: string) => value}
+                />
+              </div>
+              <div className='my-4 w-full'>
+                <label id='status-label'> وضعیت</label>
+                <select
+                  className={`!w-full outline-none border rounded-lg h-10 px-1 cursor-pointer border-[#C9D0D8]`}>
+                  <option disabled value=''>
+                    فعال، غیر فعال
+                  </option>
+                  <option value=''>نام گروه</option>
+                  <option value='0'>ناروه</option>
+                </select>
+              </div>
+            </div>
             <div className='mt-10 w-full flex justify-end '>
               <button
                 type='submit'
@@ -209,26 +262,15 @@ const Referrer: React.FC = () => {
               </button>
             </div>
           </form>
-          {data.length > 0 ? (
+          {initialData.length > 0 ? (
             <div className='p-6 bg-white rounded-lg border border-gray-200 flex flex-col gap-5'>
-              <div className='flex gap-5 items-center'>
-                <div className='relative w-full flex items-center '>
-                  <div className='absolute left-3 z-20 cursor-pointer text-[#50545F]'>
-                    <SearchNormal size={24} color='gray' />
-                  </div>
-
-                  <input
-                    type='search'
-                    placeholder='جستجو'
-                    // value={search}
-                    // onChange={(e) => handleSearchChange(e.target.value)}
-                    className='absolute w-full z-10 border border-gray-300 rounded-md px-4 py-2 text-right outline-none focus:border-red-400'
-                  />
-                </div>
+              <div className='flex justify-end'>
                 <button
                   type='submit'
-                  className={`fill-button px-10 h-10 rounded-lg `}>
-                  جستجو
+                  onClick={() => setShowAddModal(true)}
+                  className='h-10 w-fit border-button px-3 flex items-center gap-2 rounded-lg hover:bg-purple-50'>
+                  <Message size={24} color='#7747C0' />
+                  <span>ارسال پیامک گروهی</span>
                 </button>
               </div>
               <table className='my-10 w-full'>
@@ -243,67 +285,88 @@ const Referrer: React.FC = () => {
                               'rounded-tl-lg'
                         } `}
                         key={headIndex}>
-                        <p
+                        <div
                           className={`flex justify-center items-center border-y h-10  ${
                             headIndex === 0
                               ? 'border-r rounded-tr-lg'
                               : headIndex === headers.length - 1 &&
                                 'border-l rounded-tl-lg'
                           }`}>
-                          {head}
-                        </p>
+                          {headIndex !== 0 ? (
+                            head
+                          ) : (
+                            <div className='flex items-center  justify-center gap-2'>
+                              <input
+                                onChange={handleHeaderCheckboxChange}
+                                checked={
+                                  selectedItems.length === initialData.length
+                                }
+                                type='checkbox'
+                                className=' cursor-pointer accent-[#7747C0] w-4'
+                              />
+                              <span className='mt-1'>{head}</span>
+                            </div>
+                          )}
+                        </div>
                       </th>
                     ))}
                   </tr>
                 </thead>
 
                 <tbody>
-                  {data.map((personnel, index) => (
+                  {initialData.map((personnel, index) => (
                     <tr key={index} className='border-b'>
-                      {[index + 1, ...[...Object.values(personnel), '']].map(
+                      {[index + 1, ...[...Object.values(personnel)]].map(
                         (detail, detailIndex) => (
-                          <td
-                            key={detailIndex}
-                            className={`text-center h-10 ${
-                              detailIndex === 0
-                                ? 'border-r'
-                                : detailIndex === 3 && 'border-l'
-                            }`}>
-                            {detailIndex !== 3 ? (
-                              detail
-                            ) : (
-                              <div className='justify-center flex gap-2'>
-                                <Trash
-                                  size={20}
-                                  color='#D42620'
-                                  cursor={'pointer'}
-                                  onClick={() => {
-                                    setData((prv) =>
-                                      prv.filter(
-                                        (ref) =>
-                                          ref.personnel_code !==
-                                          personnel.personnel_code
-                                      )
-                                    )
-                                    setShowDeleteModal(personnel.personnel_code)
-                                  }}
-                                />
-                                <Edit2
-                                  size={20}
-                                  color='#8455D2'
-                                  cursor={'pointer'}
-                                  onClick={
-                                    () => '' // setShowAddModal({
-                                    //   category: personnel.personnel_code,
-                                    //   title: personnel.pers_full_name,
-                                    // })
+                          <td key={detailIndex} className={`text-center h-10 `}>
+                            {detailIndex === 0 ? (
+                              <div className='flex items-center  justify-center gap-7'>
+                                <input
+                                  checked={selectedItems.includes(index)} // همگام‌سازی وضعیت چک‌باکس با selectedItems
+                                  onChange={() =>
+                                    handleRowCheckboxChange(index)
                                   }
+                                  type='checkbox'
+                                  className=' cursor-pointer accent-[#7747C0] w-4'
                                 />
+                                <p className='mt-1'>{detail}</p>
                               </div>
+                            ) : detailIndex === 4 ? (
+                              <p className='flex justify-center'>
+                                <span
+                                  className={`min-w-16 ${
+                                    detail === 1
+                                      ? 'bg-[#DAFEE5] text-[#0CAD41] rounded-lg'
+                                      : 'bg-[#FEE3E2] text-[#D42620] rounded-lg'
+                                  }`}>
+                                  {detail === 1 ? 'فعال' : 'غیرفعال'}
+                                </span>
+                              </p>
+                            ) : (
+                              detail
                             )}
                           </td>
                         )
                       )}
+                      <td className='text-center'>
+                        <p className='flex justify-center cursor-pointer'>
+                          <MoreSquare size={25} color='#7747C0' />
+                        </p>
+                      </td>
+                      <td className='text-center h-10 flex justify-center gap-2 border-l'>
+                        <Trash
+                          size={24}
+                          color='#7747C0'
+                          className='cursor-pointer'
+                          // onClick={() => setShowDeleteModal(account)}
+                        />
+                        <Edit2
+                          size={24}
+                          color='#7747C0'
+                          className='cursor-pointer'
+                          // onClick={() => setShowAddModal(account)}
+                        />
+                      </td>
                     </tr>
                   ))}
                 </tbody>

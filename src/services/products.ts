@@ -47,6 +47,7 @@ export const EditProductGroup = async ({
   group_pid?: number
   accessToken: string | undefined
   status?: number
+  
 }) => {
   try {
     const response = await fetch(
@@ -82,7 +83,7 @@ export const GetProductGroupsList = async ({
 }): Promise<ProductGroup[] | undefined> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_product_group_list`,
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_product_group_list?status_id=1`,
       {
         method: 'GET',
         headers: {
@@ -182,7 +183,7 @@ export const GetProductList = async ({
 }): Promise<ProductsData[] | undefined> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_products_list`,
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_products_list?status_id=1`,
       {
         method: 'GET',
         headers: {

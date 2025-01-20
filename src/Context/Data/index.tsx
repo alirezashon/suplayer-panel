@@ -1,9 +1,11 @@
 'use client'
 import {
-  Beneficiary,
+  BeneficiaryData,
   GroupData,
+  IUserResponse,
   ProductGroupData,
   ProductsData,
+  ReferrerData,
   SubGroup,
 } from '@/interfaces'
 import { createContext, useContext, useState, ReactNode } from 'react'
@@ -17,8 +19,12 @@ interface DataContextProps {
   setGroupData: (GroupData: GroupData[]) => void
   subGroupData: SubGroup[] | undefined
   setSubGroupData: (SubGroupData: SubGroup[]) => void
-  beneficiaryData: Beneficiary[] | undefined
-  setBeneficiaryData: (SubGroupData: Beneficiary[]) => void
+  beneficiaryData: BeneficiaryData[] | undefined
+  setBeneficiaryData: (SubGroupData: BeneficiaryData[]) => void
+  userInfo: IUserResponse | undefined
+  setUserInfo: (SubGroupData: IUserResponse) => void
+  referrerData: ReferrerData[] | undefined
+  setReferrerData: (SubGroupData: ReferrerData[]) => void
 }
 
 const DataContext = createContext<DataContextProps | undefined>(undefined)
@@ -28,7 +34,9 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
   const [productGroupData, setProductGroupData] = useState<ProductGroupData[]>()
   const [groupData, setGroupData] = useState<GroupData[]>()
   const [subGroupData, setSubGroupData] = useState<SubGroup[]>()
-  const [beneficiaryData, setBeneficiaryData] = useState<Beneficiary[]>()
+  const [beneficiaryData, setBeneficiaryData] = useState<BeneficiaryData[]>()
+  const [userInfo, setUserInfo] = useState<IUserResponse>()
+  const [referrerData, setReferrerData] = useState<ReferrerData[]>()
 
   return (
     <DataContext.Provider
@@ -43,6 +51,10 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
         setSubGroupData,
         beneficiaryData,
         setBeneficiaryData,
+        userInfo,
+        setUserInfo,
+        referrerData,
+        setReferrerData,
       }}>
       {children}
     </DataContext.Provider>

@@ -1,21 +1,36 @@
 import { getCookieByKey } from '@/actions/cookieToken'
-import { EditProductGroup } from '@/services/items'
+import { getProductGroupData } from '@/actions/setData'
+import { useData } from '@/Context/Data'
+import { ProductGroupData } from '@/interfaces'
+import { EditProductGroup } from '@/services/products'
 import { CloseSquare, Danger, Forbidden2, Trash } from 'iconsax-react'
 
 const DeleteModal = ({
   isActive,
-  name,
+  data,
   close,
 }: {
   isActive?: boolean
-  name: string
+  data: ProductGroupData
   close: (show: boolean) => void
 }) => {
-  const handleSubmit = async () => {
+  const { setProductGroupData } = useData()
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
     const accessToken = (await getCookieByKey('access_token')) || ''
-    {
-     await  EditProductGroup({ accessToken, status: 9, name })
-    }  }
+
+    await EditProductGroup({
+      accessToken,
+      status: 9,
+      name: data.group_desc,
+      group_id: data.id,
+    }).then(async () => {
+      await getProductGroupData().then(
+        (value) => value && setProductGroupData(value)
+      )
+      close(false)
+    })
+  }
 
   return (
     <div>
@@ -30,8 +45,7 @@ const DeleteModal = ({
             <div className='flex-1 shrink self-stretch my-auto min-w-[240px] max-md:max-w-full'>
               حذف گروه محصول
             </div>
-            <div
-              className=''>
+            <div className=''>
               <CloseSquare
                 size={24}
                 cursor='pointer'
@@ -50,13 +64,13 @@ const DeleteModal = ({
             <div className='flex font-bold my-5'>
               آیا مطمئن به حذف گروه محصول
               <p className='px-3 rounded-lg mx-1 bg-purple-300 text-[#6137A0]'>
-                {name}
+                {data.group_desc}
               </p>
               هستید؟
             </div>
           )}
           <div className='flex'>
-            <Danger color='#CDA125' size={22}/>
+            <Danger color='#CDA125' size={22} />
             <p className='text-[#CDA125]'>
               محصولات مرتبط به این گروه نیز حذف خواهد شد.
             </p>

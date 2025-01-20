@@ -185,8 +185,8 @@ const AddModal = ({
               </div>
             </div>
           ))}
-          {!existName && (
-            <div className='flex flex-col gap- my-5'>
+          {existName && (
+            <div className='flex flex-col gap-5 my-5'>
               <div className=''>
                 <label htmlFor=''>انتخاب ذی نفع</label>
                 <SelectList

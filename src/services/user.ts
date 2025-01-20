@@ -1,4 +1,5 @@
 import { getCookieByKey, IAccessTokenResponse } from '@/actions/cookieToken'
+import { IUserResponse } from '@/interfaces'
 
 export interface IAuthenticatedUser {
   access_token: string
@@ -182,7 +183,7 @@ export const GetCurrentUser = async ({
   accessToken,
 }: {
   accessToken: string | undefined
-}) => {
+}): Promise<IUserResponse | undefined> => {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/user/me`,
