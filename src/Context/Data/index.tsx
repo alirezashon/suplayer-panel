@@ -15,6 +15,8 @@ interface DataContextProps {
   setProductData: (ProductData: ProductsData[]) => void
   productGroupData: ProductGroupData[] | undefined
   setProductGroupData: (ProductData: ProductGroupData[]) => void
+  brandsData: ProductGroupData[] | undefined
+  setBrandsData: (ProductData: ProductGroupData[]) => void
   groupData: GroupData[] | undefined
   setGroupData: (GroupData: GroupData[]) => void
   subGroupData: SubGroup[] | undefined
@@ -32,6 +34,7 @@ const DataContext = createContext<DataContextProps | undefined>(undefined)
 export const DataProvider = ({ children }: { children: ReactNode }) => {
   const [productData, setProductData] = useState<ProductsData[]>()
   const [productGroupData, setProductGroupData] = useState<ProductGroupData[]>()
+  const [brandsData, setBrandsData] = useState<ProductGroupData[]>()
   const [groupData, setGroupData] = useState<GroupData[]>()
   const [subGroupData, setSubGroupData] = useState<SubGroup[]>()
   const [beneficiaryData, setBeneficiaryData] = useState<BeneficiaryData[]>()
@@ -55,6 +58,8 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
         setUserInfo,
         referrerData,
         setReferrerData,
+        brandsData,
+        setBrandsData
       }}>
       {children}
     </DataContext.Provider>

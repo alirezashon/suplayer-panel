@@ -1,19 +1,38 @@
 import { getCookieByKey } from '@/actions/cookieToken'
-import { getProductData } from '@/actions/setData'
+import { getProductData, getProductGroupData } from '@/actions/setData'
 import { useData } from '@/Context/Data'
 import { CreateProductGroup, EditProductGroup } from '@/services/products'
-import { CloseSquare, Trash } from 'iconsax-react'
+import { CloseSquare, Grammerly, Trash } from 'iconsax-react'
 import { FormEvent, useState } from 'react'
+import { ProductGroupData } from '@/interfaces'
+
 const AddModal = ({
-  existName,
+  data,
   close,
 }: {
-  existName?: string
+  data?: ProductGroupData
   close: (show: boolean) => void
 }) => {
-  const [productGroupName, setProductGroupName] = useState<string>('')
+  const [productGroupName, setProductGroupName] = useState<string>(
+    data?.group_desc || ''
+  )
   const [names, setNames] = useState<string[]>([''])
-  const { setProductData } = useData()
+  const { setProductGroupData, setBrandsData } = useData()
+  const [status, setStatus] = useState<React.ReactElement | null>()
+  const [isConfirmed, setIsConfirmed] = useState(false)
+  const setResult = (state: boolean, text?: string) => {
+    state
+      ? setStatus(
+          <p className='text-[#0F973D] flex items-center gap-2'>
+            عملیات موفقیت‌آمیز بود! <Grammerly size={24} color='#0F973D' />
+          </p>
+        )
+      : setStatus(
+          <p className='text-[#D42620] flex items-center gap-2'>
+            {text} <Grammerly size={24} color='#D42620' />
+          </p>
+        )
+  }
   const handleAddInput = () => {
     setNames([...names, ''])
   }
@@ -26,14 +45,34 @@ const AddModal = ({
     setNames((prev) => prev.map((item, i) => (i === index ? value : item)))
   }
 
+  const rerenderData = async () => {
+    await getProductGroupData().then((value) => {
+      if (value) {
+        setProductGroupData(value.productGroups)
+        setBrandsData(value.brands)
+      }
+    })
+  }
   const handleSubmit = async (e: FormEvent) => {
+    setIsConfirmed(true)
+
     e.preventDefault()
     const accessToken = (await getCookieByKey('access_token')) || ''
-    if (existName)
-      await EditProductGroup({ accessToken, name: productGroupName })
+    if (data?.group_desc)
+      await EditProductGroup({
+        accessToken,
+        name: productGroupName,
+        group_id: data?.id,
+      }).then(async (value) => {
+        if (value && value.status === 1) setResult(true)
+        else setResult(false, value && value.message)
+        await rerenderData()
+      })
     else {
       await CreateProductGroup({ accessToken, name: productGroupName }).then(
         async (value) => {
+          if (value && value.status === 1) setResult(true)
+          else setResult(false, value && value.message)
           if (value && value?.data?.regid)
             names?.length > 0 &&
               names.map(
@@ -45,12 +84,20 @@ const AddModal = ({
                       name: name,
                       group_pid: value.data.regid,
                     })
-                  ).then(() => setNames([]))
+                  ).then((value: Record<string, any> | undefined) => {
+                    if (value && value.status === 1) setResult(true)
+                    else setResult(false, value && value.message)
+                    setNames([])
+                  })
               )
-          await getProductData().then((value) => value && setProductData(value))
+          await rerenderData()
         }
       )
     }
+    setTimeout(() => {
+      setIsConfirmed(false)
+      setStatus(null)
+    }, 3333)
   }
   return (
     <div>
@@ -128,11 +175,36 @@ const AddModal = ({
               افزودن برند +
             </button>
           </div>
-          <button
-            type='submit'
-            className={`fill-button px-10 h-10 rounded-lg  mt-12`}>
-            ثبت
-          </button>
+          <div className='mt-10 w-full max-md:max-w-full'>
+            <div className='flex items-center'>
+              <button
+                type='submit'
+                style={{
+                  animation: `${
+                    isConfirmed
+                      ? 'hideSubmitAnimate 1s ease-in-out forwards '
+                      : 'showSubmitAnimate 1s ease-in-out forwards '
+                  }`,
+                }}
+                className={`w-full fill-button px-10 h-10 mt-10 rounded-lg transition-transform duration-200 ease-in-out hover:scale-105`}>
+                ثبت
+              </button>
+
+              <div
+                className={`absolute ${
+                  !isConfirmed && ' opacity-0 '
+                } transform -translate-x-1/2 transition-all duration-1000 ease-in-out`}
+                style={{
+                  animation: `${
+                    isConfirmed
+                      ? 'showSuccessText 1s ease-in-out forwards '
+                      : 'hideSuccessText 1s ease-in-out forwards '
+                  }`,
+                }}>
+                {status}
+              </div>
+            </div>
+          </div>
         </form>
       </div>
     </div>

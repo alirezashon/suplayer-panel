@@ -13,7 +13,7 @@ import Image from 'next/image'
 import { getCookieByKey } from '@/actions/cookieToken'
 import { AddDraftImage, DepositWithDraft } from '@/services/deposit'
 import Calendar from '@/components/shared/Calendar'
-import { generateDepositSignature } from '@/hooks/Deposit'
+import { generateDepositSignature } from '@/hooks/Signature'
 
 const Drafts = () => {
   const refs = useRef({

@@ -3,8 +3,11 @@ import { BeneficiaryData, Cities, County, States } from '@/interfaces'
 import { CreateBeneficiary, EditBeneficiary } from '@/services/items'
 import { GetCity, GetCounty, GetStates } from '@/services/location'
 import { CloseSquare, Grammerly } from 'iconsax-react'
+import dynamic from 'next/dynamic'
 import { useState, useRef, useEffect } from 'react'
 import toast from 'react-hot-toast'
+
+const Map = dynamic(() => import('../../Address/Map'), { ssr: false })
 
 interface AddModalProps {
   data?: BeneficiaryData
@@ -12,12 +15,16 @@ interface AddModalProps {
 }
 
 const AddModal = ({ data, close }: AddModalProps) => {
+  const [mapData, setMapData] = useState<[number, number]>([
+    35.72249924640049, 51.335191350784214,
+  ])
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [states, setStates] = useState<States[]>([])
   const [county, setCounty] = useState<County[]>([])
   const [cities, Setcities] = useState<Cities[]>([])
   const [beneficiaryType, setBeneficiaryType] = useState<1 | 2>(1)
   const [isConfirmed, setIsConfirmed] = useState(false)
+  const [address, setAddress] = useState<string>('')
 
   const detailsRefs = useRef({
     name: data?.visitor_family || '',
@@ -107,14 +114,14 @@ const AddModal = ({ data, close }: AddModalProps) => {
       return
     }
     if (data?.CityUID) {
-        EditBeneficiary({ ...data, accessToken})
-          .then((value) => {
-            // value?.status === '-1'
-            //   ? toast.error(value.message)
-            //   : toast.success(value.message)
-            close(false)
-          })
-          .catch(() => toast.error('خطایی پیش آمد'))
+      EditBeneficiary({ ...data, accessToken })
+        .then((value) => {
+          // value?.status === '-1'
+          //   ? toast.error(value.message)
+          //   : toast.success(value.message)
+          close(false)
+        })
+        .catch(() => toast.error('خطایی پیش آمد'))
     } else {
       await CreateBeneficiary({
         accessToken,
@@ -136,7 +143,6 @@ const AddModal = ({ data, close }: AddModalProps) => {
     }, 2222)
   }
 
-  
   return (
     <div>
       <div className='absolute bg-slate-600 opacity-50 w-full h-[200vh] z-50 top-0 right-0'></div>
@@ -378,6 +384,31 @@ const AddModal = ({ data, close }: AddModalProps) => {
                   ))}
               </select>
             </div>
+          </div>
+          <Map coord={mapData} setCoord={setMapData} setAddress={setAddress} />
+          <div className='flex gap-3'>
+            <div className=''>
+              <label htmlFor=''> طول جغرافیایی</label>
+              <input className='w-full' disabled value={mapData[0]} />
+            </div>
+            <div className=''>
+              <label htmlFor=''>عرض جغرافیایی</label>
+              <input className='w-full' disabled value={mapData[1]} />
+            </div>
+          </div>
+          <div className='my-4'>
+            <label>آدرس</label>
+            <input
+              value={address.length > 0 ? address : data?.visitor_address}
+              onChange={(e) => setAddress(e.target.value)}
+              type='text'
+              className={`w-full border ${
+                errors.address ? 'border-red-500' : ''
+              }`}
+            />
+            {errors.address && (
+              <span className='text-red-500'>{errors.address}</span>
+            )}
           </div>
           <div className='my-2'>
             <label>انتخاب وزن برای ذی‌ نفع</label>

@@ -14,7 +14,7 @@ import Dashboard from '@/components/Dashboard'
 import Deposite from '@/components/Deposite'
 import MyGroups from '@/components/MyGroups'
 import PorsantManagement from '@/components/PorsantManagement'
-import ProductGroups from '@/components/ProductGroups'
+import ProductGroupsPage from '@/components/ProductGroups'
 import Product from '@/components/Products'
 import Profile from '@/components/Profile'
 import Promotion from '@/components/Promotions'
@@ -39,6 +39,7 @@ const Home = () => {
     setBeneficiaryData,
     setUserInfo,
     setReferrerData,
+    setBrandsData,
   } = useData()
 
   useEffect(() => {
@@ -48,13 +49,17 @@ const Home = () => {
       if (groups) setGroupData(groups)
       const subGroups = await getSubGroupData()
       if (subGroups) setSubGroupData(subGroups)
-      const productsGroups = await getProductGroupData()
-      if (productsGroups) setProductGroupData(productsGroups)
       const products = await getProductData()
       if (products) setProductData(products)
       const beneficiaries = await getBeneficiaryData()
       if (beneficiaries) setBeneficiaryData(beneficiaries)
       await getReferrerData().then((value) => value && setReferrerData(value))
+      await getProductGroupData().then((value) => {
+        if (value) {
+          setProductGroupData(value.productGroups)
+          setBrandsData(value.brands)
+        }
+      })
     }
     fetcher()
     const handleHashChange = () => {
@@ -92,7 +97,7 @@ const Home = () => {
             ) : menu === 'referrers' ? (
               <Referrer />
             ) : menu === 'productgroups' ? (
-              <ProductGroups />
+              <ProductGroupsPage />
             ) : menu === 'products' ? (
               <Product />
             ) : menu === 'deposite' ? (

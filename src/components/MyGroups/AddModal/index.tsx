@@ -17,7 +17,7 @@ const AddModal = ({
 }) => {
   const [name, setName] = useState<string>(existName || '')
   const [isConfirmed, setIsConfirmed] = useState(false)
-  const [status, setStatus] = useState<React.ReactElement>()
+  const [status, setStatus] = useState<React.ReactElement| null>()
   const { setGroupData } = useData()
   const setResult = (state: boolean, text?: string) => {
     state
@@ -59,6 +59,7 @@ const AddModal = ({
     }
     setTimeout(() => {
       setIsConfirmed(false)
+      setStatus(null)
     }, 2222)
   }
   return (

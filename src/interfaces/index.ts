@@ -130,13 +130,7 @@ export interface BeneficiaryData {
   latitude: number
   longitude: number
 }
-export interface ProductGroup {
-  id: number
-  group_pid: number
-  group_desc: string
-  group_status: number
-  level: number
-}
+
 export interface ReferrerData {
   personnel_code: string
   pers_chart_id: number
@@ -152,12 +146,21 @@ export interface ReferrerData {
   CityUID: string
   pers_address: string
 }
+export interface ReferrerChartData {
+  id: number
+  chpid: number
+  chtitle: string
+  chstatus: number
+  chlevel: number
+  lev1_count: number
+}
 export interface ProductGroupData {
   id: number
   group_pid: number
   group_desc: string
   group_status: number
   level: number
+  lev1_count: number
 }
 export interface ProductsData {
   sysid: string

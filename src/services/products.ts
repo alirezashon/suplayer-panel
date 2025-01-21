@@ -1,4 +1,4 @@
-import { ProductGroup, ProductsData } from '@/interfaces'
+import {  ProductGroupData, ProductsData } from '@/interfaces'
 
 export const CreateProductGroup = async ({
   name,
@@ -80,7 +80,7 @@ export const GetProductGroupsList = async ({
   accessToken,
 }: {
   accessToken: string | undefined
-}): Promise<ProductGroup[] | undefined> => {
+}): Promise<ProductGroupData[] | undefined> => {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_product_group_list?status_id=1`,

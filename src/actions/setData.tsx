@@ -3,10 +3,10 @@ import { getCookieByKey } from './cookieToken'
 import {
   GetBeneficiaryList,
   GetGroupsList,
-  GetReferrerList,
   GetSubGroupsList,
 } from '@/services/items'
 import { GetCurrentUser } from '@/services/user'
+import { GetReferrerList } from '@/services/referrer'
 
 export const getGroupData = async () => {
   const accessToken = (await getCookieByKey('access_token')) || ''
@@ -21,8 +21,9 @@ export const getProductGroupData = async () => {
   const accessToken = (await getCookieByKey('access_token')) || ''
   const response = await GetProductGroupsList({ accessToken })
   if (Array.isArray(response)) {
-    const uniques = response?.filter((res) => res.group_pid === 0)
-    return uniques
+    const productGroups = response?.filter((res) => res.group_pid === 0)
+    const brands = response?.filter((res) => res.group_pid !== 0)
+    return { brands, productGroups }
   }
 }
 export const getProductData = async () => {
