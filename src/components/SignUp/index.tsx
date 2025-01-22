@@ -1,8 +1,5 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
-import { UserLoginAPI } from '@/services/user'
-import toast from 'react-hot-toast'
-import { IAccessTokenResponse, setTokenIntoCookie } from '@/actions/cookieToken'
 import { ArrowRight2, Eye, EyeSlash } from 'iconsax-react'
 import Loading from '../shared/LoadingSpinner'
 import Image from 'next/image'

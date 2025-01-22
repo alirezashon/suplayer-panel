@@ -1,5 +1,3 @@
-import { RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies'
-
 const crypto = require('crypto')
 
 const secretKey =
@@ -42,7 +40,7 @@ export const generateAllocationSignature = ({
   visitor_uid: string
 }) => {
   const signString = `${customerMobile}#${amount}#${sup_group_code}${supervisor_code}${visitor_uid}`
-  const stringToSign = Buffer.from(signString,'utf-8')
+  const stringToSign = Buffer.from(signString, 'utf-8')
   const sign = crypto
     .createHmac('sha512', hmacKey)
     .update(stringToSign)

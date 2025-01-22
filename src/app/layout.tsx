@@ -5,6 +5,7 @@ import { MenuProvider } from '@/Context/Menu'
 import { PromotionProvider } from '@/Context/Promotion'
 import ToastProvider from '../../providers/ToastProvider'
 import { DataProvider } from '@/Context/Data'
+import { StatesProvider } from '@/Context/States'
 
 export const metadata: Metadata = {
   title: ' ',
@@ -19,14 +20,16 @@ export default function RootLayout({
   return (
     <PromotionProvider>
       <MenuProvider>
-        <DataProvider>
-          <html lang='en'>
-            <body>
-              <ToastProvider />
-              {children}
-            </body>
-          </html>
-        </DataProvider>
+        <StatesProvider>
+          <DataProvider>
+            <html lang='en'>
+              <body>
+                <ToastProvider />
+                {children}
+              </body>
+            </html>
+          </DataProvider>
+        </StatesProvider>
       </MenuProvider>
     </PromotionProvider>
   )

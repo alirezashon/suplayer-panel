@@ -6,7 +6,8 @@ import { useMenu } from '@/Context/Menu'
 import Image from 'next/image'
 import { useData } from '@/Context/Data'
 import { ProductGroupData } from '@/interfaces'
-
+import { useStates } from '@/Context/States'
+import AddBrand from '../Brands/AddModal'
 const ProductGroups: React.FC<{
   setBrand: (value: ProductGroupData) => void
 }> = ({ setBrand }) => {
@@ -14,10 +15,14 @@ const ProductGroups: React.FC<{
   const [showAddModal, setShowAddModal] = useState<boolean | ProductGroupData>(
     false
   )
+  const [showAddBrand, setShowAddBrand] = useState<boolean | ProductGroupData>(
+    false
+  )
   const [showDeleteModal, setShowDeleteModal] = useState<
     ProductGroupData | boolean
   >(false)
   const { setMenu } = useMenu()
+  const { setProductGroupStates } = useStates()
 
   return (
     <>
@@ -50,6 +55,12 @@ const ProductGroups: React.FC<{
               + گروه محصول جدید
             </button>
           </div>
+          {showAddBrand && (
+            <AddBrand
+              parent={showAddBrand as ProductGroupData}
+              close={setShowAddBrand}
+            />
+          )}
           {showAddModal && (
             <AddModal
               data={showAddModal as ProductGroupData}
@@ -124,8 +135,10 @@ const ProductGroups: React.FC<{
                     onClick={() => {
                       if (productGroup.lev1_count > 0) {
                         setBrand(productGroup)
+                        setProductGroupStates('product-brands')
+                        location.hash = 'product-brands'
                       } else {
-                        setBrand(productGroup)
+                        setShowAddBrand(productGroup)
                       }
                     }}
                     className={`w-full py-2  font-semibold rounded ${

@@ -21,6 +21,7 @@ import {
   ArrowSquareRight,
   Chart,
   Setting2,
+  Blend,
 } from 'iconsax-react'
 import Image from 'next/image'
 import { useMenu } from '@/Context/Menu'
@@ -54,6 +55,7 @@ const Sidebar = ({
     Box,
     Setting2,
     Chart,
+    Blend,
     Ticket,
     MessageNotif,
     Call,
@@ -76,15 +78,21 @@ const Sidebar = ({
       className={`fixed top-0 right-0 h-full transition-all duration-700 ${
         isOpen ? 'min-w-[17%]' : 'w-[5%]'
       } bg-white flex flex-col overflow-y-auto border border-[#C9D0D8]`}>
-      <div className='sticky top-0 justify-center flex items-center border-b border-[#C9D0D8] bg-white'>
+      <div
+        className={`sticky top-0 ${
+          isOpen ? 'justify-between' : 'justify-center'
+        } flex items-center mx-3 py-1 border-b border-[#C9D0D8] bg-white`}>
         {isOpen && (
-          <Image
-            src={'/icons/logo.png'}
-            alt='logo'
-            width={200}
-            height={100}
-            className='w-[80%] h-[7vh] object-contain mt-4'
-          />
+          <div className='flex items-center gap-2'>
+            <Image
+              src={'/icons/logo.png'}
+              alt='logo'
+              width={55}
+              height={48}
+              className=' object-contain mt-4'
+            />
+            <div className='mt-3'>پورسانتو</div>
+          </div>
         )}
 
         {isOpen ? (
@@ -135,7 +143,7 @@ const Sidebar = ({
               {item.subItems && isOpen && (
                 <ArrowDown2
                   size={24}
-                  color={ menu === item.link ? 'white' : '#50545F'}
+                  color={menu === item.link ? 'white' : '#50545F'}
                   className={`transition-transform ${
                     openIndex === index ? 'rotate-180' : 'rotate-0'
                   }`}

@@ -183,7 +183,8 @@ export const GetProductList = async ({
 }): Promise<ProductsData[] | undefined> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_products_list?status_id=1`,
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_products_list`,
+      // `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_products_list?status_id=1`,
       {
         method: 'GET',
         headers: {

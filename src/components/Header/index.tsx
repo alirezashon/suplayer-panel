@@ -1,5 +1,4 @@
 'use client'
-import { getCookieByKey } from '@/actions/cookieToken'
 import { useData } from '@/Context/Data'
 import { useMenu } from '@/Context/Menu'
 import {
@@ -60,7 +59,7 @@ const Header: React.FC = () => {
     MessageNotif,
     Call,
   ]
-  
+
   return (
     <div
       className={'flex w-full justify-between items-center mb-4 p-5 bg-white '}>

@@ -31,7 +31,7 @@ const GroupsDetail: React.FC<{ id: string }> = ({ id }) => {
               className='flex flex-col items-start border rounded-lg p-2 shadow-md hover:shadow-lg transition duration-300'>
               <div className='flex items-center justify-between w-full '>
                 <span className='text-sm bg-[#E1DCF8] text-[#6137A0] px-2 py-1 rounded'>
-                  {product.sup_group_name}
+                  {product.supervisor_name}
                 </span>
               </div>
               <div className='flex mt-5'>

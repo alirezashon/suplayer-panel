@@ -13,7 +13,8 @@ const AddModal = ({
   close: (show: boolean) => void
 }) => {
   const [names, setNames] = useState<string[]>([existName || ''])
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
     const accessToken = (await getCookieByKey('access_token')) || ''
 
     names.map(async (name) => {
@@ -72,6 +73,13 @@ const AddModal = ({
                   <input
                     className='w-full'
                     defaultValue={name}
+                    onChange={(e) =>
+                      setNames((prev) =>
+                        prev.map((item, i) =>
+                          i === index ? e.target.value : item
+                        )
+                      )
+                    }
                     type='text'
                     placeholder='نام  محصول'
                   />
@@ -112,5 +120,4 @@ const AddModal = ({
     </div>
   )
 }
-
 export default AddModal

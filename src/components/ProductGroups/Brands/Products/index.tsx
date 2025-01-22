@@ -1,45 +1,17 @@
-import  { useState } from 'react'
+import { useState } from 'react'
 import { Trash, Edit2, SearchNormal } from 'iconsax-react'
 import AddModal from './AddModal'
 import DeleteModal from './DeleteModal'
 import Image from 'next/image'
+import { ProductsData } from '@/interfaces'
+import { useData } from '@/Context/Data'
 
-interface ProductCard {
-  category: string
-  title: string
-}
-
-const productData: ProductCard[] = [
-  {
-    category: 'محصولات پوستی',
-    title: ' فولیکا',
-  },
-  {
-    category: 'محصولات شامپو',
-    title: ' فولیکا',
-  },
-  {
-    category: 'محصولات آرایشی',
-    title: ' فولیکا',
-  },
-  {
-    category: 'محصولات پوستی',
-    title: ' محصولات',
-  },
-  {
-    category: 'محصولات آرایشی',
-    title: ' فولیکا',
-  },
-  {
-    category: 'محصولات شامپو',
-    title: ' فولیا',
-  },
-]
-const headers = ['ردیف', 'گروه محصول', 'نام محصول', 'عملیات']
+const headers = ['ردیف', 'گروه محصول','برند محصول', 'نام محصول', 'عملیات']
 const Product: React.FC = () => {
-  const [data, setData] = useState<ProductCard[]>(productData)
+  const { productData } = useData()
+  const [data, setData] = useState<ProductsData[]>()
   const [showAddModal, setShowAddModal] = useState<
-    boolean | { category: string, title: string }
+    boolean | { category: string; title: string }
   >(false)
   const [showDeleteModal, setShowDeleteModal] = useState<boolean | string>(
     false
@@ -52,7 +24,7 @@ const Product: React.FC = () => {
           <span className='text-[#98A2B3]'>محصولات من</span>/
           <span className='text-[#7747C0]'>گروه شامپو</span>
         </p>
-        {data.length > 0 && (
+        {productData && productData.length > 0 && (
           <button
             type='submit'
             onClick={() => setShowAddModal(true)}
@@ -73,7 +45,7 @@ const Product: React.FC = () => {
       {showDeleteModal && (
         <DeleteModal name={`${showDeleteModal}`} close={setShowDeleteModal} />
       )}
-      {data.length > 0 ? (
+      {productData && productData.length > 0 ? (
         <div className='p-6 bg-white rounded-lg border border-gray-200 flex flex-col gap-5'>
           <div className='flex gap-5 items-center'>
             <div className='relative w-full flex items-center '>
@@ -121,19 +93,18 @@ const Product: React.FC = () => {
             </thead>
 
             <tbody>
-              {data.map((product, index) => (
+              {productData?.map((product, index) => (
                 <tr key={index} className='border-b'>
-                  {[index + 1, ...[...Object.values(product), '']].map(
-                    (detail, detailIndex) => (
+            
                       <td
-                        key={detailIndex}
+                
                         className={`text-center h-10 ${
-                          detailIndex === 0
-                            ? 'border-r'
-                            : detailIndex === 3 && 'border-l'
+                         
+                             'border-r'
+                             
                         }`}>
-                        {detailIndex !== 3 ? (
-                          detail
+                        {index !== 4 ? (
+                          product.ini_name
                         ) : (
                           <div className='justify-center flex gap-2'>
                             <Trash
@@ -142,9 +113,11 @@ const Product: React.FC = () => {
                               cursor={'pointer'}
                               onClick={() => {
                                 setData((prv) =>
-                                  prv.filter((ref) => ref.title !== product.title)
+                                  prv?.filter(
+                                    (ref) => ref.type !== product.type
+                                  )
                                 )
-                                setShowDeleteModal(product.title)
+                                setShowDeleteModal(product.type)
                               }}
                             />
                             <Edit2
@@ -153,16 +126,15 @@ const Product: React.FC = () => {
                               cursor={'pointer'}
                               onClick={() =>
                                 setShowAddModal({
-                                  category: product.category,
-                                  title: product.title,
+                                  category: product.type,
+                                  title: product.type,
                                 })
                               }
                             />
                           </div>
                         )}
                       </td>
-                    )
-                  )}
+                  
                 </tr>
               ))}
             </tbody>

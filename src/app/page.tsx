@@ -15,16 +15,18 @@ import Deposite from '@/components/Deposite'
 import MyGroups from '@/components/MyGroups'
 import PorsantManagement from '@/components/PorsantManagement'
 import ProductGroupsPage from '@/components/ProductGroups'
-import Product from '@/components/Products'
+import Product from '@/components/ProductGroups/Brands/Products'
 import Profile from '@/components/Profile'
 import Promotion from '@/components/Promotions'
 import ReferralLevels from '@/components/Referral Levels'
 import Referrer from '@/components/Referrer'
 import Loading from '@/components/shared/LoadingSpinner'
 import SubGroups from '@/components/SubGroups'
+import Variables from '@/components/Variables'
 import Wallet from '@/components/Wallet'
 import { useData } from '@/Context/Data'
 import { useMenu } from '@/Context/Menu'
+import { useStates } from '@/Context/States'
 import MainLayout from '@/layouts/MainLayout'
 import { useEffect, useState } from 'react'
 
@@ -41,7 +43,7 @@ const Home = () => {
     setReferrerData,
     setBrandsData,
   } = useData()
-
+  const { setProductGroupStates } = useStates()
   useEffect(() => {
     const fetcher = async () => {
       await getUserInfo().then((value) => value && setUserInfo(value))
@@ -66,6 +68,8 @@ const Home = () => {
       const tag = location.hash.substring(1)
       setMenu(tag)
       setLoading(false)
+      if (['productgroups', 'product-brands'].includes(tag))
+        setProductGroupStates((tag as 'productgroups') || 'product-brands')
     }
     window.addEventListener('hashchange', handleHashChange, false)
     handleHashChange()
@@ -96,7 +100,7 @@ const Home = () => {
               <SubGroups />
             ) : menu === 'referrers' ? (
               <Referrer />
-            ) : menu === 'productgroups' ? (
+            ) : ['productgroups', 'product-brands'].includes(menu) ? (
               <ProductGroupsPage />
             ) : menu === 'products' ? (
               <Product />
@@ -126,6 +130,8 @@ const Home = () => {
               <Beneficiary />
             ) : menu === 'referral-levels' ? (
               <ReferralLevels />
+            ) : menu === 'variablels' ? (
+              <Variables />
             ) : (
               ['dashboard', ''].includes(menu) && <Dashboard />
             )}

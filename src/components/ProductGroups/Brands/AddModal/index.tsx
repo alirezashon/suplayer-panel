@@ -1,5 +1,5 @@
 import { getCookieByKey } from '@/actions/cookieToken'
-import { getProductData, getProductGroupData } from '@/actions/setData'
+import { getProductGroupData } from '@/actions/setData'
 import { useData } from '@/Context/Data'
 import { CreateProductGroup, EditProductGroup } from '@/services/products'
 import { CloseSquare, Grammerly, Trash } from 'iconsax-react'
@@ -14,7 +14,7 @@ const AddModal = ({
 }: {
   data?: ProductGroupData
   parent: ProductGroupData
-  setData: (value: ProductGroupData[]) => void
+  setData?: (value: ProductGroupData[]) => void
   close: (show: boolean) => void
 }) => {
   const { setBrandsData } = useData()
@@ -50,7 +50,10 @@ const AddModal = ({
     await getProductGroupData().then((value) => {
       if (value) {
         setBrandsData(value.brands)
-        setData(value.brands?.filter((brand) => brand.group_pid === parent.id))
+        setData &&
+          setData(
+            value.brands?.filter((brand) => brand.group_pid === parent.id)
+          )
       }
     })
   }

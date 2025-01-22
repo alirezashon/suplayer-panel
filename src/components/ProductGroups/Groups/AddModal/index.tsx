@@ -1,5 +1,5 @@
 import { getCookieByKey } from '@/actions/cookieToken'
-import { getProductData, getProductGroupData } from '@/actions/setData'
+import { getProductGroupData } from '@/actions/setData'
 import { useData } from '@/Context/Data'
 import { CreateProductGroup, EditProductGroup } from '@/services/products'
 import { CloseSquare, Grammerly, Trash } from 'iconsax-react'

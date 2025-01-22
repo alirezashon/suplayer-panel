@@ -2,7 +2,6 @@ import { useState } from 'react'
 import {
   Trash,
   Edit2,
-  SearchNormal,
   FolderAdd,
   MoreSquare,
   Message,

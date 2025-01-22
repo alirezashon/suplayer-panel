@@ -6,8 +6,10 @@ import { useMenu } from '@/Context/Menu'
 import Image from 'next/image'
 import { useData } from '@/Context/Data'
 import { ProductGroupData } from '@/interfaces'
+import { useStates } from '@/Context/States'
 const Brands: React.FC<{ data: ProductGroupData }> = ({ data }) => {
   const { setMenu } = useMenu()
+  const { setProductGroupStates } = useStates()
   const { brandsData } = useData()
   const [showAddModal, setShowAddModal] = useState<boolean | ProductGroupData>(
     false
@@ -18,8 +20,8 @@ const Brands: React.FC<{ data: ProductGroupData }> = ({ data }) => {
   >(false)
 
   useEffect(() => {
-    setBrand(brandsData?.filter((value) => value.group_pid === data.id))
-  }, [])
+    setBrand(brandsData?.filter((value) => value.group_pid === data?.id))
+  }, [brandsData])
 
   return (
     <>
@@ -40,6 +42,7 @@ const Brands: React.FC<{ data: ProductGroupData }> = ({ data }) => {
                 className='text-[#98A2B3]'
                 onClick={() => {
                   setMenu('productgroups')
+                  setProductGroupStates('productgroups')
                   location.hash = 'productgroups'
                 }}>
                 محصولات من

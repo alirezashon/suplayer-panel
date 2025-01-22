@@ -2,6 +2,7 @@ export interface SubItem {
   name: string
   link: string
   iconIndex?: number
+  subItems?: SubItem[]
 }
 
 export interface Items {
@@ -76,10 +77,28 @@ export const data: Items[] = [
     iconIndex: 11,
     subItems: [
       {
-        name: 'مدیریت سطوح بازاریابی',
+        name: 'تعریف چارت سازمانی',
         link: 'referral-levels',
         iconIndex: 12,
       },
+      {
+        name: 'تعریف متغیرها',
+        link: 'variablels',
+        iconIndex: 13,
+      },
+      //      {
+      //   name: 'مدیریت شاخص‌ها',
+      //   link: 'referral-levels',
+      //   iconIndex: 13,
+      //   subItems: [
+
+      //     // {
+      //     //   name: '',
+      //     //   link: 'referral-levels',
+      //     //   iconIndex: 12,
+      //     // },
+      //   ],
+      // },
     ],
   },
   // {
