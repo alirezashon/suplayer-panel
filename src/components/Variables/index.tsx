@@ -91,25 +91,25 @@ const Variables: React.FC = () => {
 
             <tbody>
               {data
-                ?.filter((account) => account.state === activeTab)
-                .map((account, index) => (
+                ?.filter((formula) => formula.state === activeTab)
+                .map((formula, index) => (
                   <tr key={index} className='border-b '>
                     <td className='text-center h-10'>{index + 1}</td>
-                    <td className='text-center h-10'>{account.name}</td>
+                    <td className='text-center h-10'>{formula.name}</td>
 
-                    <td className='text-center h-10'>{account.duration}</td>
+                    <td className='text-center h-10'>{formula.duration}</td>
                     <td className='text-center h-10 flex justify-center gap-2'>
                       <Trash
                         size={24}
                         color='#7747C0'
                         className='cursor-pointer'
-                        // onClick={() => setShowDeleteModal(account)}
+                        // onClick={() => setShowDeleteModal(formula)}
                       />
                       <Edit2
                         size={24}
                         color='#7747C0'
                         className='cursor-pointer'
-                        // onClick={() => setShowAddModal(account)}
+                        // onClick={() => setShowAddModal(formula)}
                       />
                     </td>
                   </tr>
