@@ -46,7 +46,7 @@ const DeleteModal = ({
           className='flex flex-col bg-white max-md:px-5 max-md:pb-24'>
           <div className='flex justify-between items-center w-full text-xl font-medium text-right text-gray-800 max-md:max-w-full'>
             <div className='flex-1 shrink self-stretch my-auto min-w-[240px] max-md:max-w-full'>
-              حذف زیر گروه
+              حذف فرمول 
             </div>
             <div
               className='
