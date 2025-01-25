@@ -7,6 +7,7 @@ import {
   getBeneficiaryData,
   getUserInfo,
   getReferrerData,
+  getReferrerChart,
 } from '@/actions/setData'
 import Beneficiary from '@/components/Beneficiary'
 import Campaign from '@/components/Campaign'
@@ -42,6 +43,7 @@ const Home = () => {
     setUserInfo,
     setReferrerData,
     setBrandsData,
+    setReferrerChartData
   } = useData()
   const { setProductGroupStates } = useStates()
   useEffect(() => {
@@ -62,6 +64,7 @@ const Home = () => {
           setBrandsData(value.brands)
         }
       })
+      await getReferrerChart().then((value)=>value && setReferrerChartData(value))
     }
     fetcher()
     const handleHashChange = () => {

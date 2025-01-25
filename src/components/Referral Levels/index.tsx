@@ -1,12 +1,9 @@
 import { useState } from 'react'
-import {
-  AddCircle,
-  ArrowLeft2,
-  Edit,
-} from 'iconsax-react'
+import { AddCircle, ArrowLeft2, Edit } from 'iconsax-react'
 import { useMenu } from '@/Context/Menu'
 import AddModal from './AddModal'
 import DeleteModal from './DeleteModal'
+import { useData } from '@/Context/Data'
 export interface TreeNode {
   id: string
   name: string
@@ -18,79 +15,43 @@ const ReferralLevels: React.FC = () => {
   const { setMenu } = useMenu()
   const [showAddModal, setShowAddModal] = useState<null | string[]>(null)
   const [showDeleteModal, setShowDeleteModal] = useState<null | string[]>(null)
-  const [openTrees, setOpenTrees] = useState<string[]>([])
-  // sampleData.ts
-  const data = [
-    {
-      id: '1',
-      name: 'محمد رضایی (مدیر فروش کل)',
-      level: 1,
-      children: [
-        {
-          id: '2',
-          name: 'علی کاظمی (مدیر شعبه تهران)',
-          level: 2,
-          children: [
-            {
-              id: '3',
-              name: 'سعید مرادی (مدیر منطقه ۱ تهران)',
-              level: 3,
-              children: [
-                { id: '4', name: 'فاطمه حسینی (سوپروایزر تیم ۱)', level: 4 },
-              ],
-            },
-          ],
-        },
-        {
-          id: '5',
-          name: 'مریم نوری (مدیر شعبه اصفهان)',
-          level: 2,
-          children: [
-            {
-              id: '6',
-              name: 'رضا احمدی (مدیر منطقه ۲ اصفهان)',
-              level: 3,
-              children: [
-                { id: '7', name: 'نسترن عباسی (سوپروایزر تیم ۲)', level: 4 },
-              ],
-            },
-          ],
-        },
-      ],
-    },
+  const [openTrees, setOpenTrees] = useState<number[]>([])
+  const { referrerChartData } = useData()
+  const colors = [
+    'text-purple-800',
+    'text-blue-800',
+    'text-yellow-600',
+    'text-green-800',
   ]
-  const renderTree = (nodes: TreeNode[]) => {
+
+  const renderTree = (parentId: number, level = 0) => {
+    const nodes = referrerChartData?.filter((node) => node.chpid === parentId)
     return (
       <ul className='pr-2 border-r-2 border-gray-300 rounded-b-2xl'>
-        {nodes.map((node) => (
+        {nodes?.map((node) => (
           <li key={node.id} className={`mb-4`}>
             <div
-              className={`flex items-center p-2 ${node.level!==3&&'pr-5'} rounded-lg ${
-                node.level === 1
-                  ? 'text-purple-800'
-                  : node.level === 2
-                  ? 'text-blue-800'
-                  : node.level === 3
-                  ? 'text-yellow-800'
-                  : 'text-green-800'
-              }`}>
-              {node.children && (
+              onClick={() =>
+                setOpenTrees((prev) =>
+                  prev.includes(node.id)
+                    ? prev.filter((nodeId) => nodeId !== node.id)
+                    : [...prev, node.id]
+                )
+              }
+              className={`flex items-center cursor-pointer p-2 ${
+                node.chlevel !== 3 && 'pr-5'
+              } rounded-lg ${colors[level % colors.length]}`}>
+              {
+                // node.lev1_count > 0 &&
                 <ArrowLeft2
                   size={24}
                   color='#98A2B3'
-                  onClick={() =>
-                    setOpenTrees((prv) =>
-                      prv?.includes(node.id)
-                        ? prv.filter((ids) => ids !== node.id)
-                        : [...prv, node.id]
-                    )
-                  }
-                  className={`cursor-pointer transition-all duration-500 ${
-                    openTrees?.includes(node.id) && '-rotate-90'
+                  className={` transition-all duration-500 ${
+                    openTrees?.includes(node?.id) && '-rotate-90'
                   }`}
                 />
-              )}
-              <span className='flex-1'>{node.name}</span>
+              }
+              <span className='flex-1'>{node.chtitle}</span>
               <button className='ml-2 text-gray-500 hover:text-gray-700'>
                 <Edit size={24} color='#7747C0' />
               </button>
@@ -98,9 +59,9 @@ const ReferralLevels: React.FC = () => {
                 <AddCircle size={24} color='#7747C0' />
               </button>
             </div>
-            {node.children &&
-              openTrees.includes(node.id) &&
-              renderTree(node.children)}
+            <div className={`pr-9`}>
+              {openTrees.includes(node.id) && renderTree(node.id, level + 1)}
+            </div>
           </li>
         ))}
       </ul>
@@ -132,7 +93,7 @@ const ReferralLevels: React.FC = () => {
           type='submit'
           onClick={() => setShowAddModal([])}
           className='h-10 min-w-40 bg-[#7747C0] text-white rounded-lg hover:bg-purple-800'>
-          + سطح جدید بازاریاب
+          + ایجاد بالاترین سطح
         </button>
       </div>
       {showAddModal && (
@@ -149,7 +110,7 @@ const ReferralLevels: React.FC = () => {
           close={setShowDeleteModal}
         />
       )}
-      <div className='bg-white p-6 border rounded-md'>{renderTree(data)}</div>
+      <div className='bg-white p-6 border rounded-md'>{renderTree(0)}</div>
     </div>
   )
 }

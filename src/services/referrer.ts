@@ -153,12 +153,12 @@ export const CreateReferrerChart = async ({
   accessToken,
   chpid,
   chtitle,
-  chstatus,
+  chstatus=0,
 }: {
   accessToken: string | undefined
-  chpid: number
+  chpid?: number
   chtitle: string
-  chstatus: number
+  chstatus?: number
 }) => {
   try {
     const response = await fetch(
@@ -186,11 +186,11 @@ export const EditReferrerChart = async ({
   accessToken,
   chpid,
   chtitle,
-  chstatus,
+  chstatus = 0,
 }: {
   chpid: number
   chtitle: string
-  chstatus: number
+  chstatus?: number
   accessToken: string | undefined
 }) => {
   try {

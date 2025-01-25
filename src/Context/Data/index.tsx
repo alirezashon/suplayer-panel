@@ -5,6 +5,7 @@ import {
   IUserResponse,
   ProductGroupData,
   ProductsData,
+  ReferrerChartData,
   ReferrerData,
   SubGroup,
 } from '@/interfaces'
@@ -27,6 +28,8 @@ interface DataContextProps {
   setUserInfo: (SubGroupData: IUserResponse) => void
   referrerData: ReferrerData[] | undefined
   setReferrerData: (SubGroupData: ReferrerData[]) => void
+  referrerChartData: ReferrerChartData[] | undefined
+  setReferrerChartData: (SubGroupData: ReferrerChartData[]) => void
 }
 
 const DataContext = createContext<DataContextProps | undefined>(undefined)
@@ -40,6 +43,8 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
   const [beneficiaryData, setBeneficiaryData] = useState<BeneficiaryData[]>()
   const [userInfo, setUserInfo] = useState<IUserResponse>()
   const [referrerData, setReferrerData] = useState<ReferrerData[]>()
+  const [referrerChartData, setReferrerChartData] =
+    useState<ReferrerChartData[]>()
 
   return (
     <DataContext.Provider
@@ -59,7 +64,9 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
         referrerData,
         setReferrerData,
         brandsData,
-        setBrandsData
+        setBrandsData,
+        referrerChartData,
+        setReferrerChartData,
       }}>
       {children}
     </DataContext.Provider>

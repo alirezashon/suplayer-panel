@@ -1,7 +1,14 @@
 import { getCookieByKey } from '@/actions/cookieToken'
-import { CreateGroup, EditGroup } from '@/services/items'
-import { CloseSquare, Grammerly } from 'iconsax-react'
+import {
+  ArrowLeft2,
+  ArrowRight2,
+  CloseSquare,
+  Grammerly,
+  TickSquare,
+} from 'iconsax-react'
 import { useState } from 'react'
+import { useData } from '@/Context/Data'
+import { CreateReferrerChart, EditReferrerChart } from '@/services/referrer'
 import toast from 'react-hot-toast'
 
 const AddModal = ({
@@ -15,22 +22,39 @@ const AddModal = ({
 }) => {
   const [name, setName] = useState<string>(existName || '')
   const [isConfirmed, setIsConfirmed] = useState(false)
-  const [level, setLevel] = useState<number>(1)
+  const [state, setState] = useState<number>(0)
+  const [parent, setParent] = useState<{ id: number; name: string }>({
+    id: 0,
+    name: 'stringawwww_O_0',
+  })
+  const { referrerChartData } = useData()
+  const [openNodes, setOpenNodes] = useState<number[]>([])
+  const [relationLevel, setrelationLevel] = useState<number>()
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsConfirmed(true)
     const accessToken = (await getCookieByKey('access_token')) || ''
+    setState(1)
     if (!sup_group_code) {
-      const response = await CreateGroup({ accessToken, name })
-      if (response.status === 1) {
-        toast.success(response.message)
-      } else if (response.status === '-1') {
-        toast.error(response.message)
-      } else {
-        toast.error('لطفا دوباره امتحان کنید')
-      }
+      await CreateReferrerChart({
+        accessToken,
+        chpid: state === 0 ? 0 : parent?.id,
+        chtitle: name,
+      }).then((value) => {
+        if (value.status === 1) {
+          setParent({ id: value.data.regid, name })
+          toast.success(value.message)
+        } else if (value.status === '-1') {
+          toast.error(value.message)
+        } else toast.error('لطفا دوباره امتحان کنید')
+      })
     } else {
-      const response = await EditGroup({ accessToken, name, sup_group_code })
+      const response = await EditReferrerChart({
+        accessToken,
+        chpid: state === 0 ? 0 : parent?.id,
+        chtitle: name,
+      })
       if (response.status === 1) {
         toast.success(response.message)
       } else if (response.status === '-1') {
@@ -43,18 +67,76 @@ const AddModal = ({
       setIsConfirmed(false)
     }, 2222)
   }
+
+  const getChildren = (parentId: number) => {
+    return referrerChartData?.filter((node) => node.chpid === parentId)
+  }
+
+  // تغییر وضعیت باز و بسته شدن گره‌ها
+  const toggleNode = (id: number) => {
+    setOpenNodes((prev) =>
+      prev.includes(id) ? prev.filter((nodeId) => nodeId !== id) : [...prev, id]
+    )
+  }
+
+  const renderTree = (parentId: number) => {
+    const nodes = referrerChartData?.filter((node) => node.chpid === parentId)
+
+    return (
+      <ul className='list-none pl-4'>
+        {nodes?.map((node) => (
+          <li key={node.chtitle} className='mb-4'>
+            <div
+              onClick={() => toggleNode(node.id)}
+              className={`flex cursor-pointer items-center p-2 rounded-lg ${
+                node.chlevel === 1
+                  ? 'text-purple-800'
+                  : node.chlevel === 2
+                  ? 'text-blue-800'
+                  : node.chlevel === 3
+                  ? 'text-yellow-800'
+                  : 'text-green-800'
+              }`}>
+              {
+                <ArrowLeft2
+                  size={24}
+                  color='#98A2B3'
+                  className={` transition-all duration-500 ${
+                    openNodes?.includes(node.id) && '-rotate-90'
+                  }`}
+                />
+              }
+              <span className='flex-1'>{node.chtitle}</span>
+            </div>
+            <p className='pr-9'>
+              {openNodes.includes(node.id) && renderTree(node.id)}
+            </p>
+          </li>
+        ))}
+      </ul>
+    )
+  }
   return (
     <div>
       <div className='absolute bg-slate-600 opacity-50 w-full h-[200vh] z-50 top-0 right-0'></div>
       <div
-        className={`fixed p-10 z-50 right-0 top-0 max-md:left-[0] max-md:w-[100%] w-[40vw] h-full bg-white border border-gray-300 shadow-lg transition-transform duration-300 ease-in-out right-side-animate 
+        style={{ overflow: 'hidden' }}
+        className={`fixed p-8 z-50 right-0 top-0 max-md:left-[0] max-md:w-[100%] w-[40vw] overflow-y-auto h-full bg-white border border-gray-300 shadow-lg transition-transform duration-300 ease-in-out right-side-animate 
      `}>
         <form
           onSubmit={handleSubmit}
-          className='flex flex-col bg-white max-w-[594px] pb-[852px] max-md:px-5 max-md:pb-24'>
+          className='flex flex-col bg-white max-w-[594px] pb-[852px] max-md:px-5 max-md:pb-24 '>
           <div className='flex justify-between items-center w-full text-xl font-medium text-right text-gray-800 max-md:max-w-full'>
-            <div className='flex-1 shrink self-stretch my-auto min-w-[240px] max-md:max-w-full'>
-              {existName ? 'ویرایش گروه جدید' : 'تعریف گروه جدید'}
+            <div className='flex shrink self-stretch my-auto min-w-[240px] max-md:max-w-full'>
+              {state > 0 && (
+                <ArrowRight2
+                  color='#50545F'
+                  cursor={'pointer'}
+                  size={24}
+                  onClick={() => setState(state - 1)}
+                />
+              )}
+              {state === 2 ? 'ایجاد بالاترین سطح' : ' ایجاد سطح جدید'}
             </div>
             <div
               className='
@@ -67,56 +149,152 @@ const AddModal = ({
               />
             </div>
           </div>
-          <div className='mt-10 w-full max-md:max-w-full'>
-            <div className='flex flex-col mt-7'>
-              <p className='text-[#8455D2]'>انتخاب سطح بازاریاب</p>
-              <div className='grid grid-cols-2 gap-3 my-2'>
-                {['سطح 1', 'سطح 2', 'سطح 3', 'سطح 4'].map(
-                  (beneficiary, index) => (
-                    <label
-                      key={index}
-                      className='flex items-center gap-3 cursor-pointer'>
+          {state === 0 ? (
+            <>
+              <div className='mt-10 w-full max-md:max-w-full'>
+                <div className='flex flex-col w-full my-3'>
+                  <label className='text-base font-medium text-right text-gray-800'>
+                    نام بالاترین سطح چارت سازمانی خود را وارد کنید.
+                  </label>
+                  <input
+                    defaultValue={name}
+                    onChange={(e) => setName(e.target.value)}
+                    type='text'
+                    placeholder='مثال: مدیر منطقه'
+                  />
+                </div>
+              </div>
+              <div className='flex flex-col w-full my-3'>
+                <label className='text-base font-medium text-right text-gray-800'>
+                  نام بخش یا مستعار این سطح را وارد کنید
+                </label>
+                <input
+                  defaultValue={name}
+                  onChange={(e) => setName(e.target.value)}
+                  type='text'
+                  placeholder='مثال:  شمال تهران'
+                />
+              </div>
+            </>
+          ) : state === 1 ? (
+            <div className='my-5 '>
+              <div className='flex bg-[#EFFEF3] gap-2 p-2 font-bold'>
+                <TickSquare color='#0F973D' size={24} variant='Bold' />
+                <p>سطح شما با موفقیت ایجاد شد</p>
+              </div>
+              <p className='my-5 text-[#8455D2]'>انتخاب سطح جدید</p>
+              <div className='flex flex-col gap-3 mt-2'>
+                {['سطح بعدی', 'سطح همتراز'].map((level, index) => (
+                  <div className='flex flex-col' key={index}>
+                    <label className='flex items-center gap-3 cursor-pointer'>
                       <input
                         type='radio'
                         defaultChecked={index === 0}
-                        name='beneficiary'
-                        value={beneficiary}
-                        onChange={() => setLevel(index + 1)}
+                        name='level'
+                        value={level}
+                        // onChange={() => setBeneficiaryType(index === 0 ? 1 : 2)}
                         className='w-5 h-5 cursor-pointer accent-[#7747C0]'
                       />
-                      <span className='text-gray-700'>{beneficiary}</span>
+                      <span className='text-gray-700'>{level}</span>
                     </label>
-                  )
-                )}
+                    <p className='text-slate-500'>
+                      پیش‌نمایش سطح {index === 0 ? 'بعدی' : 'همتراز'} به صورت
+                      زیر می‌باشد.
+                    </p>
+
+                    <ul className='list-none pl-4 mt-3'>
+                      <li className='mb-4'>
+                        <div
+                          // onClick={() => toggleNode(node.id)}
+                          className={`flex cursor-pointer items-center p-2 rounded-lg `}>
+                          <ArrowLeft2
+                            size={24}
+                            color='#98A2B3'
+                            className={` transition-all duration-500`}
+                          />
+                          <span className='flex-1'>
+                            {index === 0 ? parent.name : name}
+                          </span>
+                        </div>
+                        <div className={`${index === 0 && 'pr-9'}`}>
+                          <ul className='list-none pl-4'>
+                            <li className='mb-4'>
+                              <div
+                                className={`flex cursor-pointer items-center p-2 rounded-lg `}>
+                                <ArrowLeft2
+                                  size={24}
+                                  color='#98A2B3'
+                                  className={`transition-all duration-500 ${
+                                    index === 0 && '-rotate-90'
+                                  }`}
+                                />
+                                <span className='flex-1 text-slate-500'>
+                                  {index === 0
+                                    ? 'نام سطح بعدی'
+                                    : 'نام سطح همتراز'}
+                                </span>
+                              </div>
+                            </li>
+                          </ul>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                ))}
               </div>
             </div>
-            <div className='flex flex-col w-full my-3'>
-              <label className='text-base font-medium text-right text-gray-800'>
-                نام سمت سطح {level}
-              </label>
-              <input
-                defaultValue={name}
-                onChange={(e) => setName(e.target.value)}
-                type='text'
-                placeholder='مثال: مدیر منطقه'
-              />
+          ) : (
+            <div className='flex flex-col'>
+              <div className='flex justify-between mt-5'>
+                <p className='text-[#8455D2]'>والد سطح</p>
+                <div className='flex gap-2'>
+                  <p className='font-bold'>مدیر فروش کل (شمال ایران)</p>
+                  <p className='bg-[#E1DCF8] text-[#7747C0] px-2 rounded-lg'>
+                    سطح ۱
+                  </p>
+                </div>
+              </div>
+              <ul className='list-none pl-4'>
+                <li className='mb-4'>
+                  <div
+                    // onClick={() => toggleNode(node.id)}
+                    className={`flex cursor-pointer items-center p-2 rounded-lg `}>
+                    <ArrowLeft2
+                      size={24}
+                      color='#98A2B3'
+                      className={` transition-all duration-500`}
+                    />
+                    <span className='flex-1'>
+                      {/* {index === 0 ? parent.name : name} */}
+                    </span>
+                  </div>
+                  <div className='pr-9'>
+                    <ul className='list-none pl-4'>
+                      <li className='mb-4'>
+                        <div
+                          // onClick={() => toggleNode(node.id)}
+                          className={`flex cursor-pointer items-center p-2 rounded-lg `}>
+                          <ArrowLeft2
+                            size={24}
+                            color='#98A2B3'
+                            className={` transition-all duration-500`}
+                          />
+                          <span className='flex-1'></span>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </li>
+              </ul>
             </div>
-          </div>
-          <div className='flex flex-col w-full my-3'>
-            <label className='text-base font-medium text-right text-gray-800'>
-              نام بازایاب را بنویسید
-            </label>
-            <input
-              defaultValue={name}
-              onChange={(e) => setName(e.target.value)}
-              type='text'
-              placeholder='مثال: محمد رضایی'
-            />
-          </div>
+          )}
           <div className='mt-10 w-full max-md:max-w-full'>
-            <div className='flex items-center'>
+            <div className='flex items-center gap-4'>
               <button
-                type='submit'
+                type={state === 0 ? 'submit' : 'button'}
+                onClick={() => {
+                  state === 1 && setState(2)
+                }}
                 style={{
                   animation: `${
                     isConfirmed
@@ -125,7 +303,22 @@ const AddModal = ({
                   }`,
                 }}
                 className={`w-full fill-button px-10 h-10 mt-10 rounded-lg transition-transform duration-200 ease-in-out hover:scale-105`}>
-                ثبت
+                {state === 1 ? 'ثبت و ادامه' : 'ادامه'}
+              </button>
+              <button
+                type='button'
+                onClick={() => {
+                  setState(0)
+                }}
+                style={{
+                  animation: `${
+                    isConfirmed
+                      ? 'hideSubmitAnimate 1s ease-in-out forwards '
+                      : 'showSubmitAnimate 1s ease-in-out forwards '
+                  }`,
+                }}
+                className={`w-full border-button px-10 h-10 mt-10 rounded-lg transition-transform duration-200 ease-in-out hover:scale-105`}>
+                {state === 0 ? 'انصراف' : 'ثبت و خروج'}
               </button>
               <div
                 className={`absolute ${

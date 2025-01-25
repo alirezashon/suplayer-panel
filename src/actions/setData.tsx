@@ -6,7 +6,7 @@ import {
   GetSubGroupsList,
 } from '@/services/items'
 import { GetCurrentUser } from '@/services/user'
-import { GetReferrerList } from '@/services/referrer'
+import { GetReferrerChartList, GetReferrerList } from '@/services/referrer'
 
 export const getGroupData = async () => {
   const accessToken = (await getCookieByKey('access_token')) || ''
@@ -41,4 +41,8 @@ export const getReferrerData = async () => {
 export const getUserInfo = async () => {
   const accessToken = (await getCookieByKey('access_token')) || ''
   return await GetCurrentUser({ accessToken })
+}
+export const getReferrerChart = async () => {
+  const accessToken = (await getCookieByKey('access_token')) || ''
+  return await GetReferrerChartList({ accessToken })
 }
