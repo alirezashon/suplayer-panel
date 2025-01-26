@@ -92,7 +92,7 @@ export const EditReferrer = async ({
 }) => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_personnel_list`,
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/edit_personnel`,
       {
         method: 'POST',
         headers: {
@@ -130,7 +130,7 @@ export const GetReferrerList = async ({
 }): Promise<ReferrerData[] | undefined> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_visitors_list`,
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_personnel_list`,
       {
         method: 'GET',
         headers: {
@@ -153,7 +153,7 @@ export const CreateReferrerChart = async ({
   accessToken,
   chpid,
   chtitle,
-  chstatus=0,
+  chstatus = 0,
 }: {
   accessToken: string | undefined
   chpid?: number

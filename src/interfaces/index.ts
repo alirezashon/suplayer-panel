@@ -60,37 +60,37 @@ export interface GroupData {
   visors_count: number
 }
 export interface PromotionInterface {
-  promotionDate: string // تاریخ پروموشن
-  startDate: string // تاریخ شروع پروموشن
-  endDate: string // تاریخ پایان پروموشن
-  selectedPharmacy: string // داروخانه انتخاب شده
-  selectedDoctorGroup: string // گروه پزشکان انتخاب شده
-  ctaLink: string // لینک CTA
-  brandSlogan: string // شعار یا جمله برند
-  promotionImage: string // لینک عکس پروموشن
-  discountType: 'cash' | 'product' // نوع تخفیف
-  status: string
-  viewCount: string
-  clickedCount: string
+  cstatus: number
+  ctitle: string
+  start_date: string
+  exp_date: string
+  cta_link: string
+  distype: number
+  file_uid: string
+  desc: string
+  sgroup_id: number
+  supervisor_id: number
+  pgroup_id: number
+  chart_id: number
+  product_uid: string
 }
 export interface CampaignInterface {
-  type: string // نوع کمپین
-  name: string // نام کمپین
-  smsType: string // نوع پیامک
-  productCampaign: string // نوع کمپین محصول
-  startDate: string // تاریخ شروع
-  endDate: string // تاریخ پایان
-  country: string // کشور
-  province: string // استان
-  city: string // شهر
-  county: string // شهرستان
-  budget: string // بودجه
-  expectedResponse: string // پاسخ مورد انتظار
-  description: string // شرح کمپین
-  status: string // وضعیت کمپین
-  selectedGroups: string[] // گروه‌ و زیرگروه‌های انتخاب شده
-  joinedBrands: string[] // گروه و برند محصول عضو شده
-  category: string // گروه محصول
+  cstatus: number
+  ctitle: string
+  ctype: number
+  start_date: string
+  exp_date: string
+  loc_type: number
+  loc_uid: string
+  budget: number
+  expected_response: number
+  expected_amunt: number
+  desc: string
+  sgroup_id: number
+  supervisor_id: number
+  pgroup_id: number
+  chart_id: number
+  product_uid: string
 }
 
 export interface CardProps {

@@ -1,104 +1,25 @@
 import { useState } from 'react'
-import {
-  Trash,
-  Edit2,
-  FolderAdd,
-  MoreSquare,
-  Message,
-} from 'iconsax-react'
+import { Trash, Edit2, FolderAdd, MoreSquare, Message } from 'iconsax-react'
 import AddModal from './AddModal'
 import DeleteModal from './DeleteModal'
 import Image from 'next/image'
 import { useMenu } from '@/Context/Menu'
-import { ReferrerData } from '@/interfaces'
 import Calendar from '../shared/Calendar'
-
-const referrerData: ReferrerData[] = [
-  {
-    personnel_code: '001',
-    pers_chart_id: 1579,
-    pers_job_id: 1,
-    pers_type: 1,
-    pers_tob: 1,
-    pers_uid: 'UID001',
-    pers_tel: '09123456789',
-    pers_full_name: 'الهه محسنی',
-    pers_name: 'الهه',
-    pers_family: 'محسنی',
-    pers_status: 1, // فعال
-    CityUID: 'City001',
-    pers_address: 'تهران، سعادت آباد',
-  },
-  {
-    personnel_code: '002',
-    pers_chart_id: 23,
-    pers_job_id: 2,
-    pers_type: 1,
-    pers_tob: 2,
-    pers_uid: 'UID002',
-    pers_tel: '09123456780',
-    pers_full_name: 'رضا احمدی',
-    pers_name: 'رضا',
-    pers_family: 'احمدی',
-    pers_status: 0, // غیرفعال
-    CityUID: 'City002',
-    pers_address: 'تهران، ونک',
-  },
-  {
-    personnel_code: '003',
-    pers_chart_id: 93,
-    pers_job_id: 3,
-    pers_type: 2,
-    pers_tob: 1,
-    pers_uid: 'UID003',
-    pers_tel: '09123456781',
-    pers_full_name: 'مریم صادقی',
-    pers_name: 'مریم',
-    pers_family: 'صادقی',
-    pers_status: 1, // فعال
-    CityUID: 'City003',
-    pers_address: 'کرج، جهانشهر',
-  },
-  {
-    personnel_code: '004',
-    pers_chart_id: 4778,
-    pers_job_id: 4,
-    pers_type: 2,
-    pers_tob: 2,
-    pers_uid: 'UID004',
-    pers_tel: '09123456782',
-    pers_full_name: 'علی اکبری',
-    pers_name: 'علی',
-    pers_family: 'اکبری',
-    pers_status: 0, // غیرفعال
-    CityUID: 'City004',
-    pers_address: 'شیراز، معالی آباد',
-  },
-  {
-    personnel_code: '005',
-    pers_chart_id: 57,
-    pers_job_id: 5,
-    pers_type: 3,
-    pers_tob: 1,
-    pers_uid: 'UID005',
-    pers_tel: '09123456783',
-    pers_full_name: 'زهرا محمدی',
-    pers_name: 'زهرا',
-    pers_family: 'محمدی',
-    pers_status: 1, // فعال
-    CityUID: 'City005',
-    pers_address: 'اصفهان، چهارباغ',
-  },
-]
+import { useData } from '@/Context/Data'
+import AppointmentModal from './Appointment'
+import { ReferrerData } from '@/interfaces'
 
 const Referrer: React.FC = () => {
   const [showAddModal, setShowAddModal] = useState<boolean | string>(false)
+  const [showAppointmentModal, setShowAppointmentModal] = useState<
+    boolean | ReferrerData
+  >(false)
   const [showDeleteModal, setShowDeleteModal] = useState<boolean | string>(
     false
   )
-  const [data, setData] = useState<ReferrerData[]>(referrerData)
   const [selectedItems, setSelectedItems] = useState<number[]>([])
   const { setMenu } = useMenu()
+  const { referrerData } = useData()
   const headers = [
     'ردیف',
     'نام',
@@ -109,7 +30,7 @@ const Referrer: React.FC = () => {
     'جزئیات',
     'عملیات',
   ]
-  const initialData = referrerData.map((referrer) => ({
+  const initialData = referrerData?.map((referrer) => ({
     pers_name: referrer.pers_name,
     pers_family: referrer.pers_family,
     pers_chart_id: referrer.pers_chart_id,
@@ -118,10 +39,10 @@ const Referrer: React.FC = () => {
   }))
 
   const handleHeaderCheckboxChange = () => {
-    if (selectedItems.length === initialData.length) {
+    if (selectedItems.length === initialData?.length) {
       setSelectedItems([]) // اگر همه انتخاب شده بودند، پاک کن
     } else {
-      setSelectedItems(initialData.map((_, index) => index)) // همه را انتخاب کن
+      initialData && setSelectedItems(initialData?.map((_, index) => index)) // همه را انتخاب کن
     }
   }
 
@@ -135,6 +56,12 @@ const Referrer: React.FC = () => {
 
   return (
     <>
+      {showAppointmentModal && (
+        <AppointmentModal
+          data={showAppointmentModal as ReferrerData}
+          close={setShowAppointmentModal}
+        />
+      )}
       {showAddModal && (
         <AddModal
           // data={{
@@ -175,7 +102,7 @@ const Referrer: React.FC = () => {
               بازاریاب‌های من
             </span>
           </p>
-          {initialData.length > 0 && (
+          {initialData && initialData?.length > 0 && (
             <div className='flex gap-5'>
               <label className='flex justify-center items-center gap-1 h-10 min-w-40 border-button rounded-lg bg-white hover:bg-purple-100 cursor-pointer'>
                 <FolderAdd size={20} color='#7747C0' />
@@ -261,7 +188,7 @@ const Referrer: React.FC = () => {
               </button>
             </div>
           </form>
-          {initialData.length > 0 ? (
+          {initialData && initialData?.length > 0 ? (
             <div className='p-6 bg-white rounded-lg border border-gray-200 flex flex-col gap-5'>
               <div className='flex justify-end'>
                 <button
@@ -313,7 +240,7 @@ const Referrer: React.FC = () => {
                 </thead>
 
                 <tbody>
-                  {initialData.map((personnel, index) => (
+                  {initialData?.map((personnel, index) => (
                     <tr key={index} className='border-b'>
                       {[index + 1, ...[...Object.values(personnel)]].map(
                         (detail, detailIndex) => (
@@ -341,6 +268,16 @@ const Referrer: React.FC = () => {
                                   {detail === 1 ? 'فعال' : 'غیرفعال'}
                                 </span>
                               </p>
+                            ) : detailIndex === 5 ? (
+                              <button
+                                className='border-button px-2 rounded-md'
+                                onClick={() =>
+                                  setShowAppointmentModal(
+                                    personnel as ReferrerData
+                                  )
+                                }>
+                                انتصاب دادن
+                              </button>
                             ) : (
                               detail
                             )}

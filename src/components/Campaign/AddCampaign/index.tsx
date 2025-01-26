@@ -1,8 +1,9 @@
 import Calendar from '@/components/shared/Calendar'
+import CitySelector from '@/components/shared/CitySelector'
 import SelectList from '@/components/shared/SelectList'
 import { CampaignInterface } from '@/interfaces'
 import { ArrowRight2, CloseSquare, Message } from 'iconsax-react'
-import { FormEvent, useState } from 'react'
+import { FormEvent, useRef, useState } from 'react'
 
 const AddCampaign = ({
   existData,
@@ -11,13 +12,8 @@ const AddCampaign = ({
   existData?: CampaignInterface
   close: (show: boolean) => void
 }) => {
-  const [prvData,] = useState<CampaignInterface | null>(
-    existData || null
-  )
-  const [time, setTime] = useState<{ start: string; end: string }>({
-    start: '',
-    end: '',
-  })
+  const [prvData] = useState<CampaignInterface | null>(existData || null)
+
   const [step, setStep] = useState<number>(1)
   const [showDetails, setshowDetails] = useState<boolean>(false)
   const [formData, setFormData] = useState({
@@ -30,6 +26,24 @@ const AddCampaign = ({
     description: '',
   })
 
+  const refs = useRef({
+    cstatus: 0,
+    ctitle: '',
+    ctype: 0,
+    start_date: '',
+    exp_date: '',
+    loc_type: 0,
+    loc_uid: '',
+    budget: 0,
+    expected_response: 0,
+    expected_amunt: 0,
+    desc: '',
+    sgroup_id: 0,
+    supervisor_id: 0,
+    pgroup_id: 0,
+    chart_id: 0,
+    product_uid: '',
+  })
   const [errors, setErrors] = useState<Record<string, string>>({
     startDate: '',
     endDate: '',
@@ -48,7 +62,7 @@ const AddCampaign = ({
   ]
   const handleInputChange = (e: any) => {
     const { name, value } = e.target
-    setFormData({ ...formData, [name]: value })
+    refs.current = { ...formData, [name]: value }
     setErrors({ ...errors, [name]: '' })
   }
 
@@ -107,7 +121,7 @@ const AddCampaign = ({
             />
           </div>
         </div>
-        {showDetails ? (
+        {!showDetails ? (
           <>
             <div className='w-full flex justify-around items-center mb-6 '>
               <div className='w-[65%] absolute flex'>
@@ -146,8 +160,8 @@ const AddCampaign = ({
                       نام
                     </label>
                     <input
-                      defaultValue={prvData?.name}
-                      // onChange={(e)=>setName(existData)}
+                      defaultValue={prvData?.ctitle}
+                      onChange={(e) => (refs.current.ctitle = e.target.value)}
                       type='text'
                       placeholder='نام کمپین خود را بنویسید'
                     />
@@ -165,7 +179,7 @@ const AddCampaign = ({
                       <label className=' m-1 text-sm'>تاریخ شروع</label>
                       <Calendar
                         setDate={(value: string) =>
-                          setTime({ start: value, end: time.end })
+                          (refs.current.start_date = value)
                         }
                       />
                       {errors.startDate && (
@@ -179,7 +193,7 @@ const AddCampaign = ({
                       <label className=' m-1 text-sm'>تاریخ پایان</label>
                       <Calendar
                         setDate={(value: string) =>
-                          setTime({ start: time.start, end: value })
+                          (refs.current.exp_date = value)
                         }
                       />
                       {errors.endDate && (
@@ -196,40 +210,20 @@ const AddCampaign = ({
                         label='کشور'
                       />
                     </div>
-                    <div className='w-full'>
-                      <label className='my-2'> استان </label>
-                      <SelectList
-                        items={items}
-                        setSelectedItems={setSelectedItems}
-                        label='استان'
-                      />
-                    </div>
                   </div>
-                  <div className='flex gap-4'>
-                    <div className='w-full'>
-                      <label className='m-1'> شهرستان </label>
-                      <SelectList
-                        items={items}
-                        setSelectedItems={setSelectedItems}
-                        label='شهرستان'
-                      />
-                    </div>
-                    <div className='w-full'>
-                      <label className='m-1'> شهر </label>
-                      <SelectList
-                        items={items}
-                        setSelectedItems={setSelectedItems}
-                        label='شهر'
-                      />
-                    </div>
-                  </div>
+
+                  <CitySelector
+                    setResult={(value: string) =>
+                      (refs.current.loc_uid = value)
+                    }
+                  />
 
                   <div>
                     <label className='block mb-2 text-sm'>بودجه</label>
                     <input
                       type='url'
                       name='ctaLink'
-                      defaultValue={formData.ctaLink}
+                      defaultValue={existData?.budget}
                       onChange={handleInputChange}
                       className='w-full p-2 border rounded-md'
                       placeholder='بودجه کمپین را تعریف کنید'

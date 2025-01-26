@@ -17,7 +17,7 @@ import {
 } from 'iconsax-react'
 
 const Dashboard = () => {
-  const { groupData, productData, beneficiaryData } = useData()
+  const { groupData, productData, beneficiaryData ,referrerData} = useData()
   const { setMenu } = useMenu()
 
   const promotionsData = [
@@ -108,9 +108,9 @@ const Dashboard = () => {
             <span>بازاریاب‌های من</span>
             <Profile2User size={22} color='#666BC9' />
           </div>
-          {groupData && groupData?.length < 0 ? (
+          {referrerData && referrerData?.length > 0 ? (
             <div className='flex justify-between items-center mt-6 text-zinc-900'>
-              <span className='text-xl'>{groupData?.length}</span>
+              <span className='text-xl'>{referrerData?.length}</span>
               <div onClick={()=>{
                 location.hash = 'referrers'
                 setMenu('referrers')
