@@ -9,7 +9,7 @@ const Done = ({ campaign }: { campaign: CampaignInterface }) => {
         <div className='flex gap-2'>
           <span
             className={`text-xs px-2 py-1 rounded bg-[#E6DBFB80] text-[#704CB9]`}>
-            {campaign.name}
+            {campaign.ctitle}
           </span>
         </div>
       </div>
@@ -19,7 +19,7 @@ const Done = ({ campaign }: { campaign: CampaignInterface }) => {
           <Calendar size={24} color='#7747C0' />
           <p className='text-gray-600 mb-2'> تاریخ شروع</p>
         </div>
-        <p>{campaign.startDate}</p>
+        <p>{campaign.start_date}</p>
       </div>
 
       <div className='my-4 px-1 flex justify-between '>
@@ -27,7 +27,7 @@ const Done = ({ campaign }: { campaign: CampaignInterface }) => {
           <Calendar size={24} color='#7747C0' />
           <p className='text-gray-600 mb-2'> تاریخ پایان</p>
         </div>
-        <p>{campaign.endDate}</p>
+        <p>{campaign.exp_date}</p>
       </div>
       <div className='my-4 px-1 flex justify-between '>
         <div className='flex gap-1 '>

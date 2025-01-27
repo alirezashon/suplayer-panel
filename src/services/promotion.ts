@@ -1,5 +1,5 @@
 import { PromotionInterface } from '@/interfaces'
-export const CreatPromotion = async ({
+export const CreatePromotion = async ({
   cstatus,
   ctitle,
   start_date,
@@ -158,6 +158,66 @@ export const GetPromotionList = async ({
 
     return await response.json()
   } catch (error) {
+    console.log(error)
+  }
+}
+
+export const AddPromotionImage = async ({
+  src,
+  accessToken,
+}: {
+  src: FormData
+  accessToken: string
+}): Promise<{ status: string; rec_id_file: string } | undefined> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/uploadpromotionimage`,
+      {
+        method: 'POST',
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+        body: src,
+      }
+    )
+
+    if (response.status !== 200) {
+      return
+    }
+
+    return await response.json()
+  } catch (error: unknown) {
+    console.log(error)
+  }
+}
+
+export const CheckPromotionImage = async ({
+  id,
+  accessToken,
+}: {
+  id: string
+  accessToken: string
+}) => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/checkpromotionimage`,
+      {
+        method: 'POST',
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          file_uid: id,
+        }),
+      }
+    )
+
+    if (response.status !== 200) {
+      return
+    }
+
+    return await response.json()
+  } catch (error: unknown) {
     console.log(error)
   }
 }

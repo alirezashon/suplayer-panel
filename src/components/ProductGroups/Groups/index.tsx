@@ -26,6 +26,24 @@ const ProductGroups: React.FC<{
 
   return (
     <>
+      {showAddBrand && (
+        <AddBrand
+          parent={showAddBrand as ProductGroupData}
+          close={setShowAddBrand}
+        />
+      )}
+      {showAddModal && (
+        <AddModal
+          data={showAddModal as ProductGroupData}
+          close={setShowAddModal}
+        />
+      )}
+      {showDeleteModal && (
+        <DeleteModal
+          data={showDeleteModal as ProductGroupData}
+          close={() => setShowDeleteModal(false)}
+        />
+      )}
       {productGroupData && productGroupData.length > 0 ? (
         <div className='m-4'>
           <div className='flex justify-between items-center mb-7'>
@@ -49,30 +67,12 @@ const ProductGroups: React.FC<{
               </span>
             </p>
             <button
-              type='submit'
               onClick={() => setShowAddModal(true)}
               className='h-10 min-w-40 bg-[#7747C0] text-white rounded-lg hover:bg-purple-800'>
               + گروه محصول جدید
             </button>
           </div>
-          {showAddBrand && (
-            <AddBrand
-              parent={showAddBrand as ProductGroupData}
-              close={setShowAddBrand}
-            />
-          )}
-          {showAddModal && (
-            <AddModal
-              data={showAddModal as ProductGroupData}
-              close={setShowAddModal}
-            />
-          )}
-          {showDeleteModal && (
-            <DeleteModal
-              data={showDeleteModal as ProductGroupData}
-              close={() => setShowDeleteModal(false)}
-            />
-          )}
+
           <div className='p-6 bg-white rounded-lg border border-gray-200'>
             <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4'>
               {productGroupData.map((productGroup) => (
@@ -169,7 +169,6 @@ const ProductGroups: React.FC<{
           <h1 className='text-2xl'> تعریف گروه محصول</h1>
           <div className='flex gap-4'>
             <button
-              type='submit'
               onClick={() => setShowAddModal(true)}
               className='h-10 min-w-40 bg-[#7747C0] text-white rounded-lg hover:bg-purple-800'>
               + گروه محصول جدید

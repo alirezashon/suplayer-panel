@@ -7,6 +7,8 @@ import {
 } from '@/services/items'
 import { GetCurrentUser } from '@/services/user'
 import { GetReferrerChartList, GetReferrerList } from '@/services/referrer'
+import { GetCampaignList } from '@/services/campaign'
+import { GetPromotionList } from '@/services/promotion'
 
 export const getGroupData = async () => {
   const accessToken = (await getCookieByKey('access_token')) || ''
@@ -45,4 +47,12 @@ export const getUserInfo = async () => {
 export const getReferrerChart = async () => {
   const accessToken = (await getCookieByKey('access_token')) || ''
   return await GetReferrerChartList({ accessToken })
+}
+export const getCampaignData = async () => {
+  const accessToken = (await getCookieByKey('access_token')) || ''
+  return await GetCampaignList({ accessToken })
+}
+export const getPromotiuonData = async () => {
+  const accessToken = (await getCookieByKey('access_token')) || ''
+  return await GetPromotionList({ accessToken })
 }

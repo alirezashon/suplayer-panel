@@ -1,29 +1,43 @@
 import { getCookieByKey } from '@/actions/cookieToken'
 import Calendar from '@/components/shared/Calendar'
 import SelectList from '@/components/shared/SelectList'
+import { useData } from '@/Context/Data'
+import { AddPromotionImage, CreatePromotion } from '@/services/promotion'
 import { DocumentCloud, Eye, EyeSlash, TickCircle, Trash } from 'iconsax-react'
 import Image from 'next/image'
-import { FormEvent, useState } from 'react'
+import { FormEvent, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
 
 const AddPromotion = () => {
-  const [time, setTime] = useState<{ start: string; end: string }>({
-    start: '',
-    end: '',
-  })
+  const { groupData, subGroupData, productGroupData, brandsData, productData } =
+    useData()
+
   const [uploadStatus, setUploadStatus] = useState<
     'idle' | 'uploading' | 'success' | 'error' | 'showImage'
   >('idle')
   const [progress, setProgress] = useState<number>(0)
   const [draftSrc, setDraftSrc] = useState<string>()
-  const [formData, setFormData] = useState({
-    startDate: '',
-    endDate: '',
-    ctaLink: '',
-    promotionImage: null,
-    discountType: '',
-    title: '',
-    description: '',
+
+  const refs = useRef({
+    cstatus: 0,
+    cta_link: '',
+    distype: 0,
+    file_uid: '',
+    ctitle: '',
+    ctype: 0,
+    start_date: '',
+    exp_date: '',
+    loc_type: 0,
+    loc_uid: '',
+    budget: '',
+    expected_response: 0,
+    expected_amount: 0,
+    desc: '',
+    sgroup_id: 0,
+    supervisor_id: 0,
+    pgroup_id: 0,
+    chart_id: 0,
+    product_uid: '',
   })
 
   const [errors, setErrors] = useState<Record<string, string>>({
@@ -35,41 +49,36 @@ const AddPromotion = () => {
     title: '',
     description: '',
   })
-  const [, setSelectedItems] = useState<Array<string | number>>([])
-  const items = [
-    { id: 1, label: 'گروه زنان و زایمان' },
-    { id: 2, label: 'گروه پوست و مو' },
-    { id: 3, label: 'گروه پزشکان عمومی' },
-    { id: 4, label: 'گروه قلب و عروق' },
-  ]
+
   const handleInputChange = (e: any) => {
     const { name, value } = e.target
-    setFormData({ ...formData, [name]: value })
+    refs.current = {
+      ...refs.current,
+      [name]: value,
+    }
     setErrors({ ...errors, [name]: '' })
   }
-
   const validateForm = () => {
     const newErrors: Record<string, string> = {}
 
-    if (!formData.startDate) newErrors.startDate = 'این فیلد اجباری است'
-    if (!formData.endDate) newErrors.endDate = 'این فیلد اجباری است'
-    if (!formData.ctaLink) newErrors.ctaLink = 'این فیلد اجباری است'
-    if (!formData.promotionImage)
-      newErrors.promotionImage = 'این فیلد اجباری است'
-    if (!formData.discountType) newErrors.discountType = 'این فیلد اجباری است'
-    if (!formData.title) newErrors.title = 'این فیلد اجباری است'
-    if (!formData.description) newErrors.description = 'این فیلد اجباری است'
+    if (!refs.current.ctitle) newErrors.ctitle = 'این فیلد اجباری است'
+    if (!refs.current.start_date) newErrors.start_date = 'این فیلد اجباری است'
+    if (!refs.current.exp_date) newErrors.exp_date = 'این فیلد اجباری است'
+    if (!refs.current.budget) newErrors.budget = 'این فیلد اجباری است'
+    if (!refs.current.expected_amount)
+      newErrors.expected_amount = 'این فیلد اجباری است'
+    if (!refs.current.loc_uid) newErrors.loc_uid = 'این فیلد اجباری است'
 
     setErrors(newErrors)
 
     return Object.keys(newErrors).length === 0
   }
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     if (validateForm()) {
-      // Submit the form data
-      console.log('Form submitted:', formData)
+      const accessToken = await getCookieByKey('access_token')
+      await CreatePromotion({ accessToken, ...refs.current })
     }
   }
 
@@ -117,12 +126,12 @@ const AddPromotion = () => {
             }
           }, 200)
           const accessToken = (await getCookieByKey('access_token')) || ''
-          const result = ''
-          //  await AddDraftImage({
-          //   src: formData,
-          //   accessToken,
-          // })
+          const result = await AddPromotionImage({
+            src: formData,
+            accessToken,
+          })
           if (result) {
+            refs.current.file_uid = result.rec_id_file
           }
         } catch (error) {
           setUploadStatus('error')
@@ -204,35 +213,99 @@ const AddPromotion = () => {
           <div className='flex w-full flex-col gap-3'>
             <p className='text-lg font-bold'>مخاطبین خود را انتخاب کنید</p>
             <div className=''>
-              <label className='mb-2'> انتخاب داروخانه </label>
+              <label className='mb-2'> گروه خود را انتخاب کنید </label>
               <SelectList
-                items={items}
-                setSelectedItems={setSelectedItems}
-                label='داروخانه مد نظر خود را انتخاب کنید'
+                items={
+                  groupData?.map((gp) => {
+                    return {
+                      id: gp.sup_group_id,
+                      label: gp.sup_group_name,
+                    }
+                  }) || []
+                }
+                setSelectedItems={(value: any) =>
+                  (refs.current.sgroup_id = value)
+                }
+                label='نام گروه'
               />
             </div>
             <div className=''>
-              <label className='mb-2'> گروه پزشکان من </label>
+              <label className='mb-2'> زیرگروه خود را انتخاب کنید </label>
               <SelectList
-                items={items}
-                setSelectedItems={setSelectedItems}
+                items={
+                  subGroupData?.map((gp) => {
+                    return {
+                      id: gp.sup_group_id,
+                      label: gp.sup_group_name,
+                    }
+                  }) || []
+                }
+                setSelectedItems={(value: any) =>
+                  (refs.current.supervisor_id = value)
+                }
                 label='گروه پزشکان من خود را انتخاب کنید'
               />
             </div>
-            <p className='text-lg font-bold'>
-              شعار | جمله برند خود را انتخاب کنید
-            </p>
+            <p className='text-lg font-bold'>محصولات خود را انتخاب کنید</p>
             <div>
               <label className='block mb-2 text-sm'>
-                شعار یا جمله برند پروموشن
+                گروه محصول را انتخاب کنید
               </label>
-              <input
-                type='url'
-                name='ctaLink'
-                value={formData.ctaLink}
-                onChange={handleInputChange}
-                className='w-full p-2 border rounded-md'
-                placeholder='شعار یا جمله برند خود را وارد نمایید'
+              <SelectList
+                items={
+                  productData?.map((pgp) => {
+                    return {
+                      id: pgp.id,
+                      label: pgp.group_desc,
+                    }
+                  }) || []
+                }
+                setSelectedItems={(value: any) =>
+                  (refs.current.pgroup_id = value)
+                }
+                label={' گروه محصول'}
+              />
+              {errors.ctaLink && (
+                <p className='text-red-500 text-sm'>{errors.ctaLink}</p>
+              )}
+            </div>
+            <div>
+              <label className='block mb-2 text-sm'>
+                برند محصول را انتخاب کنید
+              </label>
+              <SelectList
+                items={
+                  productGroupData?.map((brand) => {
+                    return {
+                      id: brand.id,
+                      label: brand.group_desc,
+                    }
+                  }) || []
+                }
+                setSelectedItems={(value: any) =>
+                  (refs.current.chart_id = value)
+                }
+                label={' برند محصول'}
+              />
+              {errors.ctaLink && (
+                <p className='text-red-500 text-sm'>{errors.ctaLink}</p>
+              )}
+            </div>
+            <div>
+              <label className='block mb-2 text-sm'>محصول را انتخاب کنید</label>
+              <SelectList
+                items={
+                  productData?.map((product) => {
+                    return {
+                      id: product.id,
+                      label: product.ini_name,
+                    }
+                  }) || []
+                }
+                setSelectedItems={(value: any) =>
+                  (refs.current.product_uid = value)
+                }
+                label={'  محصول'}
               />
               {errors.ctaLink && (
                 <p className='text-red-500 text-sm'>{errors.ctaLink}</p>
@@ -240,7 +313,7 @@ const AddPromotion = () => {
             </div>
             <div className='col-span-2'>
               <p className='text-lg font-bold'>نوع تخفیف خود را انتخاب کنید</p>
-              <div className='flex flex-col gap-2 my-1'>
+              <div className='flex gap-40 my-5'>
                 <label className='flex items-center'>
                   <input
                     type='radio'
@@ -265,47 +338,82 @@ const AddPromotion = () => {
               {errors.discountType && (
                 <p className='text-red-500 text-sm'>{errors.discountType}</p>
               )}
+              <input
+                name='expected_amount'
+                value={refs.current.expected_amount}
+                onChange={handleInputChange}
+                className=' p-2 border rounded-md'
+                placeholder=' درصد تخفیف'
+              />
             </div>
           </div>
           <div className='flex flex-col w-full gap-3'>
-            <p className='text-lg font-bold'> تاریخ پروموشن را وارد کنید </p>
+            <p className='text-lg font-bold'> اطلاعات ثبت پروموشن </p>
             <div>
-              <label className='block mb-1 text-sm'>تاریخ شروع</label>
-              <Calendar
-                setDate={(value: string) =>
-                  setTime({ start: value, end: time.end })
-                }
+              <label className='block mb-1 text-sm'>
+                شعار یا جمله برند پروموشن را بنویسید
+              </label>
+              <input
+                name='desc'
+                value={refs.current.desc}
+                onChange={handleInputChange}
+                className='w-full p-2 border rounded-md'
+                placeholder='لینک CTA پروموشن'
               />
+            </div>
+            <div className='flex gap-5'>
+              <div className='w-full '>
+                <label className='block mb-1 text-sm'>تاریخ شروع پروموشن</label>
+                <Calendar
+                  placeholder='تاریخ شروع'
+                  setDate={(value: string) => (refs.current.start_date = value)}
+                />
+              </div>
               {errors.startDate && (
                 <p className='text-red-500 text-sm'>{errors.startDate}</p>
               )}
+              <div className='w-full '>
+                <label className='block mb-1 text-sm'>
+                  تاریخ پایان پروموشن
+                </label>
+                <Calendar
+                  placeholder='تاریخ پایان'
+                  setDate={(value: string) => (refs.current.exp_date = value)}
+                />
+                {errors.endDate && (
+                  <p className='text-red-500 text-sm'>{errors.endDate}</p>
+                )}
+              </div>
             </div>
-
-            <div>
-              <label className='block mb-1 text-sm'>تاریخ پایان</label>
-              <Calendar
-                setDate={(value: string) =>
-                  setTime({ start: time.start, end: value })
-                }
-              />
-              {errors.endDate && (
-                <p className='text-red-500 text-sm'>{errors.endDate}</p>
-              )}
-            </div>
-            <p className='text-lg font-bold'>لینک CTA خود را وارد کنید</p>
+            <p className='text-lg font-bold'>
+              لینک CTA پروموشن خود را وارد کنید.
+            </p>
 
             <div>
               <label className='block mb-2 text-sm'>لینک CTA پروموشن</label>
               <input
                 type='url'
-                name='ctaLink'
-                value={formData.ctaLink}
+                name='cta_link'
+                value={refs.current.cta_link}
                 onChange={handleInputChange}
                 className='w-full p-2 border rounded-md'
                 placeholder='لینک CTA پروموشن'
               />
               {errors.ctaLink && (
                 <p className='text-red-500 text-sm'>{errors.ctaLink}</p>
+              )}
+            </div>
+            <div>
+              <label className='block mb-2 text-sm'>بودجه</label>
+              <input
+                name='budget'
+                defaultValue={refs.current.budget}
+                onChange={handleInputChange}
+                className='w-full p-2 border rounded-md'
+                placeholder='بودجه کمپین را تعریف کنید'
+              />
+              {errors.budget && (
+                <p className='text-red-500 text-sm'>{errors.budget}</p>
               )}
             </div>
             <div>

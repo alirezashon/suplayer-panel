@@ -42,7 +42,7 @@ const Kanban = ({
           {length > 0 && (
             <button
               onClick={() => {
-               setShowAddModal(true)
+                setShowAddModal(true)
               }}
               className='h-10 min-w-40 bg-[#7747C0] text-white rounded-lg hover:bg-purple-800'>
               + کمپین جدید
@@ -127,7 +127,7 @@ const Kanban = ({
               <h1 className='text-2xl'> تعریف کمپین </h1>
               <button
                 type='submit'
-                onClick={() => setMenu('new-campaign')}
+                onClick={() => setShowAddModal(true)}
                 className='h-10 min-w-40 bg-[#7747C0] text-white rounded-lg hover:bg-purple-800'>
                 + کمپین جدید
               </button>

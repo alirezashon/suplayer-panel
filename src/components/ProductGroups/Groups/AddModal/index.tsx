@@ -75,21 +75,21 @@ const AddModal = ({
           else setResult(false, value && value.message)
           if (value && value?.data?.regid)
             names?.length > 0 &&
-              names.map(
-                async (name) =>
-                  name.length > 0 &&
-                  (
-                    await CreateProductGroup({
+              (await Promise.all(
+                names.map(async (name) => {
+                  if (name.length > 0) {
+                    const response = await CreateProductGroup({
                       accessToken,
                       name: name,
                       group_pid: value.data.regid,
                     })
-                  ).then((value: Record<string, any> | undefined) => {
-                    if (value && value.status === 1) setResult(true)
-                    else setResult(false, value && value.message)
-                    setNames([])
-                  })
-              )
+
+                    if (response && response.status === 1) setResult(true)
+                    else setResult(false, response && response.message)
+                  }
+                })
+              ))
+          setNames([])
           await rerenderData()
         }
       )

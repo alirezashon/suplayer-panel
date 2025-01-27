@@ -1,10 +1,12 @@
 'use client'
 import {
   BeneficiaryData,
+  CampaignInterface,
   GroupData,
   IUserResponse,
   ProductGroupData,
   ProductsData,
+  PromotionInterface,
   ReferrerChartData,
   ReferrerData,
   SubGroup,
@@ -30,6 +32,10 @@ interface DataContextProps {
   setReferrerData: (SubGroupData: ReferrerData[]) => void
   referrerChartData: ReferrerChartData[] | undefined
   setReferrerChartData: (SubGroupData: ReferrerChartData[]) => void
+  campaignData: CampaignInterface[] | undefined
+  setCampaignData: (SubGroupData: CampaignInterface[]) => void
+  promotionData: PromotionInterface[] | undefined
+  setPromotionData: (SubGroupData: PromotionInterface[]) => void
 }
 
 const DataContext = createContext<DataContextProps | undefined>(undefined)
@@ -43,9 +49,10 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
   const [beneficiaryData, setBeneficiaryData] = useState<BeneficiaryData[]>()
   const [userInfo, setUserInfo] = useState<IUserResponse>()
   const [referrerData, setReferrerData] = useState<ReferrerData[]>()
+  const [campaignData, setCampaignData] = useState<CampaignInterface[]>()
   const [referrerChartData, setReferrerChartData] =
     useState<ReferrerChartData[]>()
-
+  const [promotionData, setPromotionData] = useState<PromotionInterface[]>()
   return (
     <DataContext.Provider
       value={{
@@ -67,6 +74,10 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
         setBrandsData,
         referrerChartData,
         setReferrerChartData,
+        campaignData,
+        setCampaignData,
+        promotionData,
+        setPromotionData,
       }}>
       {children}
     </DataContext.Provider>

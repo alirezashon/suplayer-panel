@@ -1,6 +1,6 @@
 import { CampaignInterface } from '@/interfaces'
 
-export const CreatCampaign = async ({
+export const CreateCampaign = async ({
   cstatus,
   ctitle,
   ctype,
@@ -162,7 +162,7 @@ export const GetCampaignList = async ({
 }): Promise<CampaignInterface[] | undefined> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_campaign_list?status_id=1`,
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_campaign_list`,
       {
         method: 'GET',
         headers: {

@@ -19,22 +19,6 @@ const CitySelector = ({
       await GetStates({ accessToken }).then(async (value) => {
         if (value) {
           setStates(value)
-          await GetCounty({ accessToken, state: value[0].StateCode }).then(
-            async (counties) => {
-              if (counties) {
-                setCounty(counties)
-                await GetCity({
-                  accessToken,
-                  state: value[0].StateCode,
-                  county: counties[0].CountyCode,
-                }).then((cityList) => {
-                  if (cityList) {
-                    Setcities(cityList)
-                  }
-                })
-              }
-            }
-          )
         }
       })
     }

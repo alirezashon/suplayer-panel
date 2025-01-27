@@ -9,7 +9,7 @@ const Done = ({ promotion }: { promotion: PromotionInterface }) => {
         <div className='flex gap-2'>
           <span
             className={`text-xs px-2 py-1 rounded bg-[#E6DBFB80] text-[#704CB9]`}>
-            {promotion.selectedDoctorGroup}
+            {promotion.ctitle}
           </span>
         </div>
       </div>

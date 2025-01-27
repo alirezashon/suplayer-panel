@@ -1,7 +1,10 @@
+import { getCookieByKey } from '@/actions/cookieToken'
 import Calendar from '@/components/shared/Calendar'
 import CitySelector from '@/components/shared/CitySelector'
 import SelectList from '@/components/shared/SelectList'
+import { useData } from '@/Context/Data'
 import { CampaignInterface } from '@/interfaces'
+import { CreateCampaign } from '@/services/campaign'
 import { ArrowRight2, CloseSquare, Message } from 'iconsax-react'
 import { FormEvent, useRef, useState } from 'react'
 
@@ -12,20 +15,10 @@ const AddCampaign = ({
   existData?: CampaignInterface
   close: (show: boolean) => void
 }) => {
-  const [prvData] = useState<CampaignInterface | null>(existData || null)
-
   const [step, setStep] = useState<number>(1)
   const [showDetails, setshowDetails] = useState<boolean>(false)
-  const [formData, setFormData] = useState({
-    startDate: '',
-    endDate: '',
-    ctaLink: '',
-    campaignImage: null,
-    discountType: '',
-    title: '',
-    description: '',
-  })
-
+  const { groupData, subGroupData, productGroupData, brandsData, productData } =
+    useData()
   const refs = useRef({
     cstatus: 0,
     ctitle: '',
@@ -36,7 +29,7 @@ const AddCampaign = ({
     loc_uid: '',
     budget: 0,
     expected_response: 0,
-    expected_amunt: 0,
+    expected_amount: 0,
     desc: '',
     sgroup_id: 0,
     supervisor_id: 0,
@@ -45,49 +38,45 @@ const AddCampaign = ({
     product_uid: '',
   })
   const [errors, setErrors] = useState<Record<string, string>>({
-    startDate: '',
-    endDate: '',
-    ctaLink: '',
-    campaignImage: '',
-    discountType: '',
-    title: '',
-    description: '',
+    ctitle: '',
+    start_date: '',
+    exp_date: '',
+    budget: '',
+    expected_amount: '',
+    loc_uid: '',
   })
   const [, setSelectedItems] = useState<Array<string | number>>([])
-  const items = [
-    { id: 1, label: 'گروه زنان و زایمان' },
-    { id: 2, label: 'گروه پوست و مو' },
-    { id: 3, label: 'گروه پزشکان عمومی' },
-    { id: 4, label: 'گروه قلب و عروق' },
-  ]
+
   const handleInputChange = (e: any) => {
     const { name, value } = e.target
-    refs.current = { ...formData, [name]: value }
+    refs.current = {
+      ...refs.current,
+      [name]: value,
+    }
     setErrors({ ...errors, [name]: '' })
   }
 
-  const validateForm = () => {
+  const validateForm = (step: number) => {
     const newErrors: Record<string, string> = {}
-
-    if (!formData.startDate) newErrors.startDate = 'این فیلد اجباری است'
-    if (!formData.endDate) newErrors.endDate = 'این فیلد اجباری است'
-    if (!formData.ctaLink) newErrors.ctaLink = 'این فیلد اجباری است'
-    if (!formData.campaignImage) newErrors.campaignImage = 'این فیلد اجباری است'
-    if (!formData.discountType) newErrors.discountType = 'این فیلد اجباری است'
-    if (!formData.title) newErrors.title = 'این فیلد اجباری است'
-    if (!formData.description) newErrors.description = 'این فیلد اجباری است'
+    if (step === 1) {
+      if (!refs.current.ctitle) newErrors.ctitle = 'این فیلد اجباری است'
+      if (!refs.current.start_date) newErrors.start_date = 'این فیلد اجباری است'
+      if (!refs.current.exp_date) newErrors.exp_date = 'این فیلد اجباری است'
+      if (!refs.current.budget) newErrors.budget = 'این فیلد اجباری است'
+      if (!refs.current.expected_amount)
+        newErrors.expected_amount = 'این فیلد اجباری است'
+      if (!refs.current.loc_uid) newErrors.loc_uid = 'این فیلد اجباری است'
+    }
 
     setErrors(newErrors)
-
-    return Object.keys(newErrors).length === 0
+    console.log(newErrors)
+    Object.keys(newErrors).length === 0 && setStep(step + 1)
   }
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
-    if (validateForm()) {
-      // Submit the form data
-      console.log('Form submitted:', formData)
-    }
+    const accessToken = await getCookieByKey('access_token')
+    await CreateCampaign({ ...refs.current , accessToken })
   }
 
   return (
@@ -97,15 +86,7 @@ const AddCampaign = ({
         style={{ scrollbarWidth: 'none' }}
         className={`fixed p-5 z-50 right-0 top-0 max-md:left-[0] max-md:w-[100%] w-[40vw] h-full bg-white border border-gray-300 shadow-lg transition-transform duration-300 ease-in-out right-side-animate overflow-y-auto
           `}>
-        <div
-          onClick={() =>
-            showDetails
-              ? setshowDetails(false)
-              : step > 1
-              ? setStep(step - 1)
-              : ''
-          }
-          className='flex justify-between items-center w-full text-xl font-medium text-right text-gray-800 max-md:max-w-full'>
+        <div className='flex justify-between items-center w-full text-xl font-medium text-right text-gray-800 max-md:max-w-full'>
           <div className='flex-1 flex items-center shrink self-stretch my-auto min-w-[240px] max-md:max-w-full'>
             {step !== 1 && <ArrowRight2 size={24} color='#50545F' />}
             تعریف کمپین
@@ -138,7 +119,7 @@ const AddCampaign = ({
               ].map((section, index) => (
                 <div className='flex flex-col items-center' key={index}>
                   <div
-                    onClick={() => setStep(index + 1)}
+                    onClick={() => validateForm(index)}
                     className={`w-10 h-10 z-30 p-6 flex items-center justify-center rounded-full border-4  border-white mt-5 cursor-pointer text-white ${
                       step >= index + 1
                         ? ' bg-[#7747C0] '
@@ -160,76 +141,64 @@ const AddCampaign = ({
                       نام
                     </label>
                     <input
-                      defaultValue={prvData?.ctitle}
+                      defaultValue={refs.current.ctitle || existData?.ctitle}
                       onChange={(e) => (refs.current.ctitle = e.target.value)}
                       type='text'
                       placeholder='نام کمپین خود را بنویسید'
                     />
-                  </div>
-                  <div className=''>
-                    <label className='my-2'> نوع کمپین </label>
-                    <SelectList
-                      items={items}
-                      setSelectedItems={setSelectedItems}
-                      label='تبلیغات'
-                    />
+                    {errors.ctitle && (
+                      <p className='text-red-500 text-sm'>{errors.ctitle}</p>
+                    )}
                   </div>
                   <div className='flex gap-4'>
                     <div className='w-full'>
                       <label className=' m-1 text-sm'>تاریخ شروع</label>
                       <Calendar
+                        placeholder={refs.current.start_date || 'تاریخ شروع'}
                         setDate={(value: string) =>
                           (refs.current.start_date = value)
                         }
                       />
-                      {errors.startDate && (
+                      {errors.start_date && (
                         <p className='text-red-500 text-sm'>
-                          {errors.startDate}
+                          {errors.start_date}
                         </p>
                       )}
                     </div>
-
                     <div className='w-full'>
                       <label className=' m-1 text-sm'>تاریخ پایان</label>
                       <Calendar
+                        placeholder={refs.current.exp_date || 'تاریخ پایان'}
                         setDate={(value: string) =>
                           (refs.current.exp_date = value)
                         }
                       />
-                      {errors.endDate && (
-                        <p className='text-red-500 text-sm'>{errors.endDate}</p>
+                      {errors.exp_date && (
+                        <p className='text-red-500 text-sm'>
+                          {errors.exp_date}
+                        </p>
                       )}
                     </div>
                   </div>
-                  <div className='flex gap-4'>
-                    <div className='w-full'>
-                      <label className='my-2'> کشور </label>
-                      <SelectList
-                        items={items}
-                        setSelectedItems={setSelectedItems}
-                        label='کشور'
-                      />
-                    </div>
-                  </div>
-
                   <CitySelector
                     setResult={(value: string) =>
                       (refs.current.loc_uid = value)
                     }
                   />
-
+                  {errors.loc_uid && (
+                    <p className='text-red-500 text-sm'>{errors.loc_uid}</p>
+                  )}
                   <div>
                     <label className='block mb-2 text-sm'>بودجه</label>
                     <input
-                      type='url'
-                      name='ctaLink'
-                      defaultValue={existData?.budget}
+                      name='budget'
+                      defaultValue={refs.current.budget || existData?.budget}
                       onChange={handleInputChange}
                       className='w-full p-2 border rounded-md'
                       placeholder='بودجه کمپین را تعریف کنید'
                     />
-                    {errors.ctaLink && (
-                      <p className='text-red-500 text-sm'>{errors.ctaLink}</p>
+                    {errors.budget && (
+                      <p className='text-red-500 text-sm'>{errors.budget}</p>
                     )}
                   </div>
                   <div className='flex gap-4'>
@@ -238,9 +207,8 @@ const AddCampaign = ({
                         پاسخ مورد انتظار
                       </label>
                       <input
-                        type='url'
-                        name='ctaLink'
-                        defaultValue={formData.ctaLink}
+                        name='expected_response'
+                        defaultValue={refs.current.expected_response}
                         onChange={handleInputChange}
                         className='w-full p-2 border rounded-md'
                         placeholder='   % '
@@ -254,28 +222,28 @@ const AddCampaign = ({
                         درآمد مورد انتظار
                       </label>
                       <input
-                        type='url'
-                        name='ctaLink'
-                        defaultValue={formData.ctaLink}
+                        name='expected_amount'
+                        defaultValue={refs.current.expected_amount}
                         onChange={handleInputChange}
                         className='w-full p-2 border rounded-md'
                         placeholder='ریال'
                       />
-                      {errors.ctaLink && (
-                        <p className='text-red-500 text-sm'>{errors.ctaLink}</p>
+                      {errors.expected_amount && (
+                        <p className='text-red-500 text-sm'>
+                          {errors.expected_amount}
+                        </p>
                       )}
                     </div>
                   </div>
                   <div>
                     <label className='block mb-2 text-sm'>شرح</label>
                     <textarea
-                      defaultValue={formData.ctaLink}
+                      rows={4}
+                      defaultValue={refs.current.desc}
+                      onChange={(e) => (refs.current.desc = e.target.value)}
                       className='w-full p-2 border rounded-md outline-none resize-none'
                       placeholder='شرح کمپین را بنویسید'
                     />
-                    {errors.ctaLink && (
-                      <p className='text-red-500 text-sm'>{errors.ctaLink}</p>
-                    )}
                   </div>
                 </div>
               ) : step === 2 ? (
@@ -290,7 +258,14 @@ const AddCampaign = ({
                   <div className=''>
                     <label className='my-2'> گروه خود را انتخاب کنید </label>
                     <SelectList
-                      items={items}
+                      items={
+                        groupData?.map((gp) => {
+                          return {
+                            id: gp.sup_group_id,
+                            label: gp.sup_group_name,
+                          }
+                        }) || []
+                      }
                       setSelectedItems={setSelectedItems}
                       label='نام گروه'
                     />
@@ -298,7 +273,14 @@ const AddCampaign = ({
                   <div className=''>
                     <label className='my-2'> زیرگروه خود را انتخاب کنید </label>
                     <SelectList
-                      items={items}
+                      items={
+                        subGroupData?.map((sub) => {
+                          return {
+                            id: sub.supervisor_id,
+                            label: sub.supervisor_name,
+                          }
+                        }) || []
+                      }
                       setSelectedItems={setSelectedItems}
                       label='نام زیرگروه'
                     />
@@ -316,7 +298,14 @@ const AddCampaign = ({
                   <div className=''>
                     <label className='my-2'> گروه محصول را انتخاب کنید </label>
                     <SelectList
-                      items={items}
+                      items={
+                        productGroupData?.map((pgp) => {
+                          return {
+                            id: pgp.id,
+                            label: pgp.group_desc,
+                          }
+                        }) || []
+                      }
                       setSelectedItems={setSelectedItems}
                       label='گروه محصول'
                     />
@@ -324,7 +313,14 @@ const AddCampaign = ({
                   <div className=''>
                     <label className='my-2'> برند محصول را انتخاب کنید</label>
                     <SelectList
-                      items={items}
+                      items={
+                        brandsData?.map((brands) => {
+                          return {
+                            id: brands.id,
+                            label: brands.group_desc,
+                          }
+                        }) || []
+                      }
                       setSelectedItems={setSelectedItems}
                       label='برندها'
                     />
@@ -332,7 +328,14 @@ const AddCampaign = ({
                   <div className=''>
                     <label className='my-2'> محصول را انتخاب کنید</label>
                     <SelectList
-                      items={items}
+                      items={
+                        productData?.map((gp) => {
+                          return {
+                            id: gp.id,
+                            label: gp.ini_name,
+                          }
+                        }) || []
+                      }
                       setSelectedItems={setSelectedItems}
                       label='محصول'
                     />
@@ -341,12 +344,9 @@ const AddCampaign = ({
               )}
               <div className='mt-10 w-full max-md:max-w-full'>
                 <button
-                  type='submit'
-                  onClick={() =>
-                    step !== 3 ? setStep(step + 1) : setshowDetails(true)
-                  }
+                  onClick={() => (step < 3 ? validateForm(step) : handleSubmit)}
                   className={`fill-button px-10 h-10 rounded-lg w-full`}>
-                  {step < 2 ? 'ادامه' : 'ثبت'}
+                  {step < 3 ? 'ادامه' : 'ثبت'}
                 </button>
               </div>
             </form>
@@ -369,10 +369,6 @@ const AddCampaign = ({
               <div className='flex flex-col'>
                 <p className='text-[#5F6474]'>تاریخ پایان</p>
                 <p className='text-[#8455D2]'>۱۴۰۳/۱۰/۲۳</p>
-              </div>
-              <div className='flex flex-col'>
-                <p className='text-[#5F6474]'>کشور</p>
-                <p className='text-[#8455D2]'>ایران</p>
               </div>
               <div className='flex flex-col'>
                 <p className='text-[#5F6474]'>استان</p>
