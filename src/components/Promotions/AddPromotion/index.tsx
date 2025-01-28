@@ -265,8 +265,8 @@ const AddPromotion = () => {
                 }
                 label={' گروه محصول'}
               />
-              {errors.ctaLink && (
-                <p className='text-red-500 text-sm'>{errors.ctaLink}</p>
+              {errors.pgroup_id && (
+                <p className='text-red-500 text-sm'>{errors.pgroup_id}</p>
               )}
             </div>
             <div>
