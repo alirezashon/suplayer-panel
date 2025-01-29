@@ -2,6 +2,7 @@
 import {
   BeneficiaryData,
   CampaignInterface,
+  DraftsData,
   GroupData,
   IUserResponse,
   ProductGroupData,
@@ -36,6 +37,8 @@ interface DataContextProps {
   setCampaignData: (SubGroupData: CampaignInterface[]) => void
   promotionData: PromotionInterface[] | undefined
   setPromotionData: (SubGroupData: PromotionInterface[]) => void
+  draftsData: DraftsData[] | undefined
+  setDraftsData: (SubGroupData: DraftsData[]) => void
 }
 
 const DataContext = createContext<DataContextProps | undefined>(undefined)
@@ -53,6 +56,8 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
   const [referrerChartData, setReferrerChartData] =
     useState<ReferrerChartData[]>()
   const [promotionData, setPromotionData] = useState<PromotionInterface[]>()
+  const [draftsData, setDraftsData] = useState<DraftsData[]>()
+
   return (
     <DataContext.Provider
       value={{
@@ -78,6 +83,8 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
         setCampaignData,
         promotionData,
         setPromotionData,
+        draftsData,
+        setDraftsData,
       }}>
       {children}
     </DataContext.Provider>

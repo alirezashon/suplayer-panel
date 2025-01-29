@@ -145,7 +145,7 @@ const Referrer: React.FC = () => {
                 <select
                   className={`!w-full outline-none border rounded-lg h-10 px-1 cursor-pointer border-[#C9D0D8]`}>
                   <option disabled value=''>
-                    مدیر فروش، مدیر منطقه، مدیر شعبه ...{' '}
+                    مدیر فروش، مدیر منطقه، مدیر شعبه ...
                   </option>
                   <option value=''>نام گروه</option>
                   <option value='0'>ناروه</option>

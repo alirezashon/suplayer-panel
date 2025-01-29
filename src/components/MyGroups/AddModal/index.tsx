@@ -17,7 +17,8 @@ const AddModal = ({
 }) => {
   const [name, setName] = useState<string>(existName || '')
   const [isConfirmed, setIsConfirmed] = useState(false)
-  const [status, setStatus] = useState<React.ReactElement| null>()
+  const [status, setStatus] = useState<React.ReactElement | null>()
+  const [errors, setErrors] = useState<Record<string, string>>()
   const { setGroupData } = useData()
   const setResult = (state: boolean, text?: string) => {
     state
@@ -34,6 +35,10 @@ const AddModal = ({
   }
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (name.length < 1) {
+      setErrors({ name: 'این فیلد اجباریست' })
+      return
+    }
     setIsConfirmed(true)
     const accessToken = (await getCookieByKey('access_token')) || ''
     if (!sup_group_code) {
@@ -94,11 +99,18 @@ const AddModal = ({
               </label>
               <input
                 defaultValue={name}
-                onChange={(e) => setName(e.target.value)}
-                type='text'
+                onChange={(e) => {
+                  errors?.name && setErrors({})
+                  setName(e.target.value)
+                }}
+                className={`${
+                  errors?.name &&
+                  'border-red-300 border-2 shadow-red-200 shadow-md error-input-animated'
+                }`}
                 placeholder='نام گروه محصول'
               />
             </div>
+            {errors?.name && <p className='text-red-500 m-1'>{errors?.name}</p>}
           </div>
 
           <div className='mt-10 w-full max-md:max-w-full'>

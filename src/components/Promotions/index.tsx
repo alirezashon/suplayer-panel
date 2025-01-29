@@ -16,20 +16,6 @@ const Promotion = () => {
   const { menu } = useMenu()
   return (
     <div>
-      <div className='bg-[#F6F2CB] px-7 py-2'>
-        <p className='font-bold'>قوانین و مسئولیت‌ها</p>
-        <div className='flex px-7 py-2'>
-          <Danger color='#A9791C' size={28} />
-          <p className='text-[#8D5C1B] '>
-            سایت امکان تعریف کمپین و پروموشن و نمایش آن در گروه‌های موردنظر را
-            فراهم می‌کند. بااین‌حال، مسئولیت کامل محتوا، شرایط، و پیامدهای این
-            کمپین‌ها بر عهده تعریف‌کننده است.
-            <br />
-            سایت صرفاً بستر ارائه این خدمات را فراهم می‌کند و هیچ مسئولیتی در
-            قبال نتایج، عواقب جانبی، یا مغایرت‌های احتمالی ندارد.
-          </p>
-        </div>
-      </div>
       {menu === 'promotion' ? (
         <Kanban
           done={

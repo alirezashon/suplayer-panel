@@ -1,11 +1,9 @@
 import { getCookieByKey } from '@/actions/cookieToken'
 import { Cities, County, ReferrerData, States } from '@/interfaces'
-import { CreateReferrer } from '@/services/referrer'
+import { CreateReferrer, DefineAppointmentTask } from '@/services/referrer'
 import { GetCity, GetCounty, GetStates } from '@/services/location'
-import { ArrowDown2, CloseSquare, Profile, SearchNormal } from 'iconsax-react'
+import { ArrowDown2, CloseSquare, Profile } from 'iconsax-react'
 import { useState, useRef, useEffect } from 'react'
-import Calendar from '@/components/shared/Calendar'
-import toast from 'react-hot-toast'
 import { useData } from '@/Context/Data'
 
 interface AppointmentModalProps {
@@ -15,131 +13,30 @@ interface AppointmentModalProps {
 
 const AppointmentModal = ({ data, close }: AppointmentModalProps) => {
   const [errors, setErrors] = useState<Record<string, string>>({})
-  const [states, setStates] = useState<States[]>([])
-  const [county, setCounty] = useState<County[]>([])
-  const [cities, Setcities] = useState<Cities[]>([])
-  const [referrerType, setReferrerType] = useState<number>(0)
   const [step, setStep] = useState<number>(1)
-  const {
-    referrerChartData,
-    groupData,
-    subGroupData,
-    productGroupData,
-    brandsData,
-    productData,
-  } = useData()
+  const { groupData, subGroupData, productGroupData, brandsData, productData } =
+    useData()
   const refs = useRef({
-    groupId: 0,
-    subGroupId: 0,
+    groupId: '',
+    subGroupId: '',
     productGroupId: 0,
     brandId: 1,
     productId: 0,
   })
-  const nameRef = useRef<HTMLInputElement>(null)
-  const lastNameRef = useRef<HTMLInputElement>(null)
-  const specialityRef = useRef<HTMLInputElement>(null)
-  const phoneRef = useRef<HTMLInputElement>(null)
-  const addressRef = useRef<HTMLInputElement>(null)
-  const locationRefs = useRef({ state: '', county: '', city: '' })
-
-  const beneficiaries = ['شخص', 'کسب و کار']
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
     setErrors({})
-    const formData = {
-      name: nameRef.current?.value.trim() || '',
-      lastName: lastNameRef.current?.value.trim() || '',
-      speciality: specialityRef.current?.value.trim() || '',
-      phone: phoneRef.current?.value.trim() || '',
-      address: addressRef.current?.value.trim() || '',
-    }
 
-    const newErrors: Record<string, string> = {}
-    Object.keys(formData).forEach((key) => {
-      if (!formData[key as keyof typeof formData]) {
-        newErrors[key] = 'این فیلد اجباری است'
-      }
-    })
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors)
-      return
-    }
     const accessToken = (await getCookieByKey('access_token')) || ''
-    await CreateReferrer({
+    await DefineAppointmentTask({
       accessToken,
-      personnel_code: '',
-      pers_chart_id: 0,
-      pers_job_id: 0,
-      pers_type: 1,
-      pers_tob: referrerType,
-      pers_uid: '',
-      pers_tel: formData.phone,
-      pers_full_name: formData.name + formData.lastName,
-      pers_name: formData.name,
-      pers_family: formData.lastName,
-      pers_status: 1,
-      CityUID: '',
-      pers_address: formData.address,
-    })
-  }
-  useEffect(() => {
-    const getLocs = async () => {
-      const accessToken = await getCookieByKey('access_token')
-      await GetStates({ accessToken }).then(async (value) => {
-        if (value) {
-          setStates(value)
-          await GetCounty({ accessToken, state: value[0].StateCode }).then(
-            async (counties) => {
-              if (counties) {
-                setCounty(counties)
-                await GetCity({
-                  accessToken,
-                  state: value[0].StateCode,
-                  county: counties[0].CountyCode,
-                }).then((cityList) => {
-                  if (cityList) {
-                    Setcities(cityList)
-                  }
-                })
-              }
-            }
-          )
-        }
-      })
-    }
-    getLocs()
-  }, [])
-
-  const getCounty = async (state: string) => {
-    const accessToken = await getCookieByKey('access_token')
-    await GetCounty({ accessToken, state: state }).then(async (counties) => {
-      if (counties) {
-        setCounty(counties)
-        await GetCity({
-          accessToken,
-          state: state,
-          county: locationRefs.current.county,
-        }).then((cityList) => {
-          if (cityList) {
-            Setcities(cityList)
-          }
-        })
-      }
-    })
-  }
-  const getCity = async (county: string) => {
-    const accessToken = await getCookieByKey('access_token')
-    await GetCity({
-      accessToken,
-      state: locationRefs.current.state,
-      county: county,
-    }).then((cityList) => {
-      if (cityList) {
-        Setcities(cityList)
-      }
+      personnel_uid: data?.pers_uid || '',
+      supervisor_code: refs.current.subGroupId || '',
+      sup_group_code: refs.current.groupId || '',
+      visitor_uid: '',
+      task_kpi_uid: '',
     })
   }
 
@@ -196,9 +93,7 @@ const AppointmentModal = ({ data, close }: AppointmentModalProps) => {
               <label>گروه خود را انتخاب کنید</label>
               <select
                 className='w-full border rounded-lg h-10 px-1 outline-none'
-                onChange={(e) =>
-                  (refs.current.groupId = parseInt(`${e.target.value}`))
-                }>
+                onChange={(e) => (refs.current.groupId = e.target.value)}>
                 {groupData?.map((group) => (
                   <option key={group.sup_group_id} value={group.sup_group_id}>
                     {group.sup_group_name}
@@ -213,9 +108,7 @@ const AppointmentModal = ({ data, close }: AppointmentModalProps) => {
               <label>زیرگروه خود را انتخاب کنید</label>
               <select
                 className='w-full border rounded-lg h-10 px-1 outline-none'
-                onChange={(e) =>
-                  (refs.current.subGroupId = parseInt(`${e.target.value}`))
-                }>
+                onChange={(e) => (refs.current.subGroupId = e.target.value)}>
                 {subGroupData?.map((subGroupData) => (
                   <option
                     key={subGroupData.supervisor_id}
@@ -259,9 +152,7 @@ const AppointmentModal = ({ data, close }: AppointmentModalProps) => {
               <label>برند محصول را انتخاب کنید</label>
               <select
                 className='w-full border rounded-lg h-10 px-1 outline-none'
-                onChange={(e) =>
-                  (refs.current.groupId = parseInt(`${e.target.value}`))
-                }>
+                onChange={(e) => (refs.current.groupId = e.target.value)}>
                 {brandsData?.map((brand) => (
                   <option key={brand.id} value={brand.id}>
                     {brand.group_desc}
@@ -276,9 +167,7 @@ const AppointmentModal = ({ data, close }: AppointmentModalProps) => {
               <label>محصول را انتخاب کنید</label>
               <select
                 className='w-full border rounded-lg h-10 px-1 outline-none'
-                onChange={(e) =>
-                  (refs.current.groupId = parseInt(`${e.target.value}`))
-                }>
+                onChange={(e) => (refs.current.groupId = e.target.value)}>
                 {productData?.map((product) => (
                   <option key={product.id} value={product.id}>
                     {product.ini_name}
@@ -291,7 +180,7 @@ const AppointmentModal = ({ data, close }: AppointmentModalProps) => {
             </div>
             <div className='w-full mt-10 sticky bottom-0 left-0 right-0 bg-white p-2 max-w-[40vw] mx-auto'>
               <button
-                onClick={() => setStep(2)}
+                onClick={handleSubmit}
                 className='w-full h-10 text-white bg-[#7747C0] rounded-lg'>
                 ثبت نهایی
               </button>

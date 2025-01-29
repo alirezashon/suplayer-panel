@@ -1,4 +1,5 @@
 import { getCookieByKey } from '@/actions/cookieToken'
+import { getSubGroupData } from '@/actions/setData'
 import RadioTreeSelector from '@/components/shared/RadioTrees'
 import SelectList from '@/components/shared/SelectList'
 import { useData } from '@/Context/Data'
@@ -16,7 +17,7 @@ const AddModal = ({
   groupId: number
   close: (show: boolean) => void
 }) => {
-  const { groupData } = useData()
+  const { groupData, setSubGroupData } = useData()
   const [data, setData] = useState<{ name: string; groupId: number }>({
     name: existName?.split('#$%^@!~')[0] || '',
     groupId,
@@ -24,7 +25,7 @@ const AddModal = ({
   const [isConfirmed, setIsConfirmed] = useState(false)
   const [nestedNames, setNestedNames] = useState<string[]>([])
   const [, setSelectedItems] = useState<Array<string | number>>([])
-
+  const [errors, setErrors] = useState<Record<string, string>>()
   const [status, setStatus] = useState<React.ReactElement>()
   const setResult = (state: boolean, text?: string) => {
     state
@@ -72,14 +73,19 @@ const AddModal = ({
   }
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (data.name.length < 1) {
+      setErrors({ name: 'این فیلد اجباریست' })
+      return
+    }
     setIsConfirmed(true)
     await saveData(data.groupId, data.name)
+    await Promise.all(
+      nestedNames.map(async (name) => await saveData(data.groupId, name))
+    )
+    await getSubGroupData().then((value) => value && setSubGroupData(value))
 
-    nestedNames.map(async (name) => await saveData(data.groupId, name))
     setTimeout(() => {
       setIsConfirmed(false)
-      // close(false)
-      // location.reload()
     }, 3333)
   }
   const sampleData = [
@@ -145,17 +151,28 @@ const AddModal = ({
                 نام زیر گروه خود را بنویسید
               </label>
               <input
-                onChange={(e) =>
+                onChange={(e) => {
+                  errors?.name && setErrors({})
                   setData({ name: e.target.value, groupId: data.groupId })
-                }
+                }}
                 defaultValue={data.name}
-                type='text'
+                className={`${
+                  errors?.name &&
+                  'border-red-300 border-2 shadow-red-200 shadow-md error-input-animated'
+                }`}
                 placeholder='مثال: دکترهای پوست، تهران غرب ...'
               />
+              {errors?.name && (
+                <p className='text-red-500 m-1'>{errors?.name}</p>
+              )}
             </div>
           </div>
           {nestedNames.map((name, index) => (
-            <div className={`mt-7 w-full flex gap-5 ${index === nestedNames.length-1 && 'add-new-input-animated'}`} key={index}>
+            <div
+              className={`mt-7 w-full flex gap-5 ${
+                index === nestedNames.length - 1 && 'add-new-input-animated'
+              }`}
+              key={index}>
               <div className='flex flex-col w-full'>
                 <label className='text-base font-medium text-right text-gray-800'>
                   نام زیر گروه خود را بنویسید
@@ -164,7 +181,6 @@ const AddModal = ({
                   <input
                     className='w-full'
                     defaultValue={name}
-                    type='text'
                     placeholder='نام زیر گروه خود را بنویسید'
                   />
                   {

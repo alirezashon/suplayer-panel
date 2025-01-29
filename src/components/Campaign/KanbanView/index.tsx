@@ -25,6 +25,9 @@ const Kanban = ({
   const [showAddModal, setShowAddModal] = useState<boolean | CampaignInterface>(
     false
   )
+  const [showDeleteModal, setShowDeleteModal] = useState<
+    boolean | CampaignInterface
+  >(false)
 
   return (
     <>
@@ -69,7 +72,12 @@ const Kanban = ({
                   </div>
                 </div>
                 {toDo.map((campaign, index) => (
-                  <Wait key={index} campaign={campaign} />
+                  <Wait
+                    key={index}
+                    campaign={campaign}
+                    enableEdit={setShowAddModal}
+                    deleteIt={setShowDeleteModal}
+                  />
                 ))}
               </div>
               <div className='flex-1 flex flex-col gap-3'>

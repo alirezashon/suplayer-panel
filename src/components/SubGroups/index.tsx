@@ -63,12 +63,12 @@ const SubGroups: React.FC = () => {
         </div>
         <div className='p-6 mt-5 bg-white rounded-lg border border-gray-200'>
           <div
-            className='max-w-[67%] flex border-b overflow-x-auto'
+            className=' flex border-b overflow-x-auto'
             style={{ scrollbarWidth: 'none' }}>
             {groupData?.map((tab, index) => (
               <button
                 key={index}
-                className={`px-5 py-3 transition-all duration-500 ${
+                className={`px-5 py-3 transition-all duration-500 text-nowrap ${
                   activeTab === tab.sup_group_id
                     ? 'bg-[#E6DBFB80] border-b-2 border-[#704CB9] text-[#704CB9]'
                     : 'text-[#344054]'
@@ -135,32 +135,38 @@ const SubGroups: React.FC = () => {
                       <div className='flex my-5'>
                         <People size={24} color='#704CB9' />
                         <p className='text-sm  px-2 py-1 rounded'>
-                          {subGroup.sup_group_id > 0 ? (
+                          {subGroup.visitor_count > 0 ? (
                             <>
                               <span className='text-[#757575]'>
-                                تعداد زیر‌گروه‌ها:
+                                تعداد ذی‌نفع:
                               </span>
-                              {subGroup.sup_group_name}
+                              {subGroup.visitor_count}
                             </>
                           ) : (
-                            ' زیر گروهی تعریف نشده است'
+                            'ذی‌نفع تعریف نشده است'
                           )}
                         </p>
                       </div>
-                      <button
-                        onClick={() => {
-                          location.hash = 'subgroups'
-                          setMenu('subgroups')
-                        }}
-                        className={`w-full h-10  font-semibold rounded ${
-                          subGroup.sup_group_name.length === 0
-                            ? 'bg-[#7747C0] hover:bg-[#7747C0] text-white'
-                            : 'border border-[#7747C0] text-[#7747C0] hover:bg-[#7747C0] hover:text-white'
-                        } transition duration-300`}>
-                        {subGroup.sup_group_name.length > 0
-                          ? 'مشاهده زیر گروه‌ها'
-                          : 'تعریف زیر گروه'}
-                      </button>
+                      {subGroup.visitor_count > 0 ? (
+                        <button
+                          onClick={() => setShowAddModal(true)}
+                          className='h-10 w-full border-button  rounded-md hover:bg-purple-800'>
+                          مشاهده جزئیات
+                        </button>
+                      ) : (
+                        <div className='flex w-full gap-3'>
+                          <button
+                            onClick={() => setShowAddModal(true)}
+                            className='h-10 w-full fill-button  rounded-md hover:bg-purple-800'>
+                            انتصاب ذی‌نفع
+                          </button>
+                          <button
+                            onClick={() => setShowAddModal(true)}
+                            className='h-10 w-full border-button  rounded-md hover:bg-purple-800'>
+                            انتصاب بازاریاب
+                          </button>
+                        </div>
+                      )}
                     </div>
                   )
               )}

@@ -19,7 +19,7 @@ const Done = ({ promotion }: { promotion: PromotionInterface }) => {
           <Personalcard size={24} color='#7747C0' />
           <p className='text-gray-600 mb-2'> شعار</p>
         </div>
-        <p>{promotion.brandSlogan}</p>
+        <p>{promotion.ctitle}</p>
       </div>
 
       <div className='my-4 px-1 flex justify-between '>
@@ -27,14 +27,14 @@ const Done = ({ promotion }: { promotion: PromotionInterface }) => {
           <Eye size={24} color='#7747C0' />
           <p className='text-gray-600 mb-2'> تعداد بازدید</p>
         </div>
-        <p>{promotion.viewCount}</p>
+        <p>{promotion.file_uid}</p>
       </div>
       <div className='my-4 px-1 flex justify-between '>
         <div className='flex gap-1 '>
           <MouseCircle size={24} color='#7747C0' />
           <p className='text-gray-600 mb-2'> تعداد کلیک</p>
         </div>
-        <p>{promotion.clickedCount}</p>
+        <p>{promotion.exp_date}</p>
       </div>
     </div>
   )

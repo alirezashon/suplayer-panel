@@ -1,13 +1,7 @@
-import { useState } from 'react'
-import OnlinePayment from './OnlinePayment'
 import Report from './Report'
-import PayByID from './PayByID'
-import PaymentLink from './PaymentLink'
 import Drafts from './Drafts'
 
 const Deposite = () => {
-  const [tab, setTab] = useState<number>(0)
-
   return (
     <div className=''>
       {/* <div className='flex border-b'>
@@ -97,7 +91,7 @@ const Deposite = () => {
       ) : (
         tab === 3 && <Drafts />
       )} */}
-       <Drafts />
+      <Drafts />
       <Report />
     </div>
   )

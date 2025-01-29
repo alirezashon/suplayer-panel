@@ -1,7 +1,6 @@
 'use client'
-import { getCookieByKey } from '@/actions/cookieToken'
-import { DraftsData } from '@/interfaces'
-import { GetdDraftsList } from '@/services/deposit'
+import { getDraftsData } from '@/actions/setData'
+import { useData } from '@/Context/Data'
 import { ExportCurve, Receipt1 } from 'iconsax-react'
 import dynamic from 'next/dynamic'
 import { useEffect, useState } from 'react'
@@ -10,25 +9,14 @@ const Table = dynamic(() => import('../../Table'), {
   ssr: false,
 })
 const Report = () => {
-  const [data, setData] = useState<DraftsData[]>([])
-  // const data = Array.from({ length: 15 }, (_, index) => ({
-  //   draftNumber: '12345678',
-  //   mablaghRial: '3,000,000,00',
-  //   username: 'فاطمه جلیلی',
-  //   mande: '3,000,000,00',
-  //   tarikh: '۲۷ مهر ۱۴۰۳',
-  //   hesab: 'حساب معین',
-  //   status: index % 2 === 0 ? ' موفق' : 'ناموفق',
-  // }))
+  const { draftsData, setDraftsData } = useData()
+
   useEffect(() => {
     const fetchData = async () => {
-      const accessToken = await getCookieByKey('access_token')
-      await GetdDraftsList({ accessToken }).then(
-        (value) => value && setData(value)
-      )
+      await getDraftsData().then((value) => value && setDraftsData(value))
     }
     fetchData()
-  }, [setData])
+  }, [setDraftsData])
   const headers = [
     'نوع اعتبار',
     ' مبلغ (ریال )',
@@ -42,7 +30,7 @@ const Report = () => {
     'دانلود سند',
     'جزئیات',
   ]
-  const initialData = data.map((item) => {
+  const initialData = draftsData?.map((item) => {
     return [
       'cheque_type',
       'amount',
@@ -139,7 +127,7 @@ const Report = () => {
             جستجو
           </button>
         </div>
-        {data && <Table data={initialData} headers={headers} />}
+        {initialData && <Table data={initialData} headers={headers} />}
       </div>
     </div>
   )

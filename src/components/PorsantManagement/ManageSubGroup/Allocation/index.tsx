@@ -1,12 +1,7 @@
+import { useData } from '@/Context/Data'
+import { BeneficiaryData } from '@/interfaces'
 import { Printer, WalletMoney } from 'iconsax-react'
 import { useState } from 'react'
-interface BeneficiaryData {
-  mobileNumber: string
-  lastName: string
-  firstName: string
-  row: number
-  assignableCredit?: string
-}
 
 const headers = [
   'ردیف',
@@ -17,20 +12,7 @@ const headers = [
 ]
 const Allocation = () => {
   const [filterType, setFilterType] = useState<number>(0)
-  const [data, setData] = useState<BeneficiaryData[]>([
-    {
-      mobileNumber: '09123414534',
-      lastName: 'محمدی',
-      firstName: 'علی',
-      row: 1,
-    },
-    {
-      mobileNumber: '09123414535',
-      lastName: 'احمدی',
-      firstName: 'حسین',
-      row: 2,
-    },
-  ])
+  const { beneficiaryData } = useData()
 
   const [editedData, setEditedData] = useState<BeneficiaryData[]>([])
   const walletBoxStyle = {
@@ -41,17 +23,16 @@ const Allocation = () => {
     padding: '1.5rem',
   }
   const handleCreditChange = (index: number, value: string) => {
-    const updatedData = [...data]
-    updatedData[index].assignableCredit = value
-    setData(updatedData)
-
-    setEditedData(updatedData)
+    // const updatedData = [...data]
+    // updatedData[index].assignableCredit = value
+    // setData(updatedData)
+    // setEditedData(updatedData)
   }
   return (
     <div className='m-4'>
       <div className='flex justify-between items-center mb-7'>
         <p>
-          <span className='text-[#98A2B3]'>مدیریت پورسانت‌دهی </span> /
+          <span className='text-[#98A2B3]'>مدیریت پورسانت‌ دهی </span> /
           <span className='text-[#7747C0]'>
             گروه مو / منطقه ۵ / تخصیص گروهی
           </span>
@@ -113,22 +94,20 @@ const Allocation = () => {
                 </tr>
               </thead>
               <tbody>
-                {data.map((row, index) => (
+                {beneficiaryData?.map((row, index) => (
                   <tr key={index} className='border-b'>
-                    <td className='text-center px-4 py-2 border-r'>
-                      {row.row}
-                    </td>
-                    <td className='text-center px-4 py-2'>{row.firstName}</td>
-                    <td className='text-center px-4 py-2'>{row.lastName}</td>
+                    <td className='text-center px-4 py-2 border-r'>{index}</td>
+                    <td className='text-center px-4 py-2'>{row.visitor_name}</td>
+                    <td className='text-center px-4 py-2'>{row.visitor_family}</td>
                     <td className='text-center px-4 py-2'>
-                      {row.mobileNumber}
+                      {row.visitor_tel}
                     </td>
                     <td className='text-center px-4 py-2'>
                       <input
                         type='text'
                         inputMode='numeric'
                         placeholder='مبلغ اعتبار را وارد کنید'
-                        defaultValue={row.assignableCredit}
+                        defaultValue={row.visitor_specialty}
                         onChange={(e) =>
                           handleCreditChange(index, e.target.value)
                         }

@@ -1,135 +1,106 @@
 import { useRef, useState } from 'react'
-import {
-  TickCircle,
-  MoneySend,
-  DocumentUpload,
-  Trash,
-  EyeSlash,
-  Eye,
-  ReceiptSquare,
-} from 'iconsax-react'
+import { MoneySend, ReceiptSquare } from 'iconsax-react'
 import toast from 'react-hot-toast'
-import Image from 'next/image'
 import { getCookieByKey } from '@/actions/cookieToken'
 import { AddDraftImage, DepositWithDraft } from '@/services/deposit'
 import Calendar from '@/components/shared/Calendar'
 import { generateDepositSignature } from '@/hooks/Signature'
-
+import UploadPicture from '@/components/shared/UploadPicture'
+import { useData } from '@/Context/Data'
+import { getDraftsData } from '@/actions/setData'
+const errorClass =
+  'border-red-300 border-2 shadow-red-200 shadow-md error-input-animated'
 const Drafts = () => {
+  const { setDraftsData } = useData()
   const refs = useRef({
+    cheque_type: '',
     amount: '',
-    sheba: '',
-    description: '',
-    chequeNumber: '',
-    documentNumber:'',
-    chequeDate: '',
-    sayadNumber: '',
-    chequeBank: '',
-    chequeBranch: '',
+    cheque_number: '',
+    cheque_date: '',
     cheque_id_file: '',
+    sayad_number: '',
+    cheque_bank: '',
+    cheque_branch: '',
+    shaba_number: '',
+    description: '',
   })
-  const amountInputRef = useRef<HTMLInputElement>(null)
-  const shebaInputRef = useRef<HTMLInputElement>(null)
-  const descriptionInputRef = useRef<HTMLTextAreaElement>(null)
-  const [uploadStatus, setUploadStatus] = useState<
-    'idle' | 'uploading' | 'success' | 'error' | 'showImage'
-  >('idle')
-  const [progress, setProgress] = useState<number>(0)
   const [chequeType, setChequeType] = useState<1 | 2>(1)
-  const [draftSrc, setDraftSrc] = useState<string>()
-  const handleImageUpload = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const file = event.target.files?.[0]
-    if (!['image/png', 'image/jpg', 'image/jpeg'].includes(`${file?.type}`)) {
-      toast.error('پسوند فایل قابل قبول نمی باشد')
-      setUploadStatus('error')
-      return
+  const [errors, setErrors] = useState<Record<string, string>>({
+    amount: '',
+    cheque_number: '',
+    cheque_date: '',
+  })
+  const handleInputChange = (e: any) => {
+    const { name, value } = e.target
+    refs.current = {
+      ...refs.current,
+      [name]: value,
     }
-    if (file?.size && file?.size < 50000) {
-      toast.error('حجم فایل کمتر از حد مجاز است')
-      setUploadStatus('error')
-      return
-    }
-    if (file?.size && file?.size > 2200000) {
-      toast.error('حجم فایل بیشتر از حد مجاز است')
-      setUploadStatus('error')
-      return
-    }
-    if (file) {
-      const formData = new FormData()
-      console.log(file)
-      formData.append('file', file)
+    setErrors({ ...errors, [name]: '' })
+  }
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {}
 
-      setUploadStatus('uploading')
-      const reader = new FileReader()
-      reader.onloadend = async () => {
-        try {
-          const newAvatarUrl = reader.result as string
-          setDraftSrc(newAvatarUrl)
-          setUploadStatus('showImage')
+    if (!refs.current.amount) newErrors.amount = 'این فیلد اجباریست'
+    if (!refs.current.cheque_number)
+      newErrors.cheque_number = 'این فیلد اجباریست'
+    if (!refs.current.cheque_date) newErrors.cheque_date = 'این فیلد اجباریست'
 
-          // Simulate upload progress
-          let progressValue = 0
-          const interval = setInterval(() => {
-            if (progressValue >= 100) {
-              clearInterval(interval)
-              setProgress(100)
-            } else {
-              progressValue += 10
-              setProgress(progressValue)
-            }
-          }, 200)
-          const accessToken = (await getCookieByKey('access_token')) || ''
-          const result = await AddDraftImage({
-            src: formData,
-            accessToken,
-          })
-          if (result) {
-            refs.current.cheque_id_file = result.rec_id_file
-          }
-        } catch (error) {
-          setUploadStatus('error')
-          toast.error('خطا در بارگذاری')
-          return error
-        }
-      }
-      reader.readAsDataURL(file)
-    }
+    setErrors(newErrors)
+    console.table(newErrors)
+    return Object.keys(newErrors).length === 0
   }
   const handleSubmit = async () => {
     const accessToken = (await getCookieByKey('access_token')) || ''
     const customerMobile = (await getCookieByKey('mobile')) || ''
     const Signature = await generateDepositSignature({
-      amount: refs.current.amount,
-      cheque_date: refs.current.chequeDate,
+      amount: refs.current.amount.toString(),
+      cheque_date: refs.current.cheque_date,
       customerMobile,
     })
     const chequeData = {
       accessToken,
       cheque_type: chequeType,
       amount: parseInt(`${refs.current.amount}`),
-      cheque_number: refs.current.chequeNumber,
-      cheque_date: refs.current.chequeDate,
+      cheque_number: refs.current.cheque_number,
+      cheque_date: refs.current.cheque_date,
       cheque_id_file: refs.current.cheque_id_file || '',
-      sayad_number: refs.current.sayadNumber,
-      cheque_bank: refs.current.chequeBank,
-      cheque_branch: refs.current.chequeBranch,
-      shaba_number: refs.current.sheba,
+      sayad_number: refs.current.sayad_number,
+      cheque_bank: refs.current.cheque_bank,
+      cheque_branch: refs.current.cheque_branch,
+      shaba_number: refs.current.shaba_number,
       description: refs.current.description,
       Signature,
     }
     try {
-      const response = await DepositWithDraft(chequeData)
-      if (response) {
-        toast.success(`${response.message}`)
-      } else {
+      if (validateForm()) {
+        const response = await DepositWithDraft(chequeData)
+        if (response) {
+          toast.success(`${response.message}`)
+          await getDraftsData().then((value) => value && setDraftsData(value))
+        } else {
+        }
       }
     } catch (error) {
       toast.error('خطا در ثبت اطلاعات. لطفاً مجدداً تلاش کنید.')
     }
   }
-
+  const UploadImage = async (formData: FormData): Promise<boolean> => {
+    try {
+      const accessToken = (await getCookieByKey('access_token')) || ''
+      const result = await AddDraftImage({
+        src: formData,
+        accessToken,
+      })
+      if (result) {
+        refs.current.cheque_id_file = result.rec_id_file
+        return true
+      } else return false
+    } catch (error) {
+      console.error('Upload failed:', error)
+      return false
+    }
+  }
   return (
     <div className='min-h-screen flex justify-center p-4'>
       <div className='w-full flex bg-white rounded-lg shadow-lg p-6 gap-8'>
@@ -168,16 +139,19 @@ const Drafts = () => {
                 به ریال
               </label>
               <input
-                id='amount'
-                ref={amountInputRef}
+                name='amount'
                 defaultValue={refs.current.amount}
-                onChange={(e) => (refs.current.amount = e.target.value)}
-                type='text'
+                onChange={handleInputChange}
                 placeholder={`مبلغ ${
                   chequeType === 1 ? ' چک ' : 'سند'
                 } را به ریال وارد نمایید`}
-                className='w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400'
+                className={`w-full p-3 border ${
+                  errors.amount && errorClass
+                } rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400`}
               />
+              {errors.amount && (
+                <p className='text-red-500 m-1'>{errors.amount}</p>
+              )}
             </div>
             <div className='w-full'>
               <label
@@ -186,46 +160,53 @@ const Drafts = () => {
                 تاریخ {chequeType === 1 ? ' چک ' : ' سند '}
               </label>
               <Calendar
-                setDate={(value: string) => (refs.current.chequeDate = value)}
+                hasError={errors?.cheque_date?.length > 0}
+                placeholder={`تاریخ${chequeType === 1 ? ' چک ' : ' سند '}`}
+                setDate={(value: string) => (refs.current.cheque_date = value)}
               />
+              {errors.cheque_date && (
+                <p className='text-red-500 m-1'>{errors.cheque_date}</p>
+              )}
             </div>
           </div>
-
-          <div>
+          <div className='w-full'>
             <label
-              htmlFor='sheba'
+              htmlFor='cheque_number'
               className='block text-gray-600 mb-2 text-right'>
-              {chequeType === 1 ? ' شماره شبا حساب مبدا' : ''}
+              شماره سریال {chequeType === 1 ? ' چک ' : ' سند '}
             </label>
             <input
-              id='sheba'
-              ref={shebaInputRef}
-              defaultValue={refs.current.chequeNumber}
-              onChange={(e) => (refs.current.chequeNumber = e.target.value)}
-              type='text'
-              placeholder={`${
-                chequeType === 1 ? '۹۲۷۴۳۵۹۲' : 'شماره شبا را وارد کنید'
-              }`}
-              className='w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400'
+              name='cheque_number'
+              defaultValue={refs.current.cheque_number}
+              onChange={handleInputChange}
+              placeholder='شماره شبا را وارد کنید'
+              className={`w-full ${
+                errors.cheque_number && errorClass
+              } p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400`}
             />
+            {errors.cheque_number && (
+              <p className='text-red-500 m-1'>{errors.cheque_number}</p>
+            )}
           </div>
           {chequeType === 1 && (
             <div className='flex gap-10'>
               <div className='w-full'>
                 <label
-                  htmlFor='sheba'
+                  htmlFor='shaba_number'
                   className='block text-gray-600 mb-2 text-right'>
-                  شماره سریال {chequeType === 1 ? ' چک ' : ' سند '}
+                  شماره شبا حساب مبدا
                 </label>
                 <input
-                  id='sheba'
-                  defaultValue={refs.current.sheba}
-                  onChange={(e) => (refs.current.sheba = e.target.value)}
-                  type='text'
-                  placeholder='شماره شبا را وارد کنید'
+                  name='shaba_number'
+                  defaultValue={refs.current.shaba_number}
+                  onChange={handleInputChange}
+                  placeholder={`${
+                    chequeType === 1 ? '۹۲۷۴۳۵۹۲' : 'شماره شبا را وارد کنید'
+                  }`}
                   className='w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400'
                 />
               </div>
+
               <div className='w-full'>
                 <label
                   htmlFor='sheba'
@@ -233,10 +214,9 @@ const Drafts = () => {
                   شناسه {chequeType === 1 ? ' چک ' : ' سند '} صیاد
                 </label>
                 <input
-                  id='sheba'
-                  defaultValue={refs.current.sayadNumber}
-                  onChange={(e) => (refs.current.sayadNumber = e.target.value)}
-                  type='text'
+                  name='sayad_number'
+                  defaultValue={refs.current.sayad_number}
+                  onChange={handleInputChange}
                   placeholder={`شناسه${
                     chequeType === 1 ? ' چک ' : ' سند '
                   }صیاد را وارد کنید`}
@@ -253,41 +233,39 @@ const Drafts = () => {
                 نام بانک
               </label>
               <input
-                id='sheba'
-                defaultValue={refs.current.chequeBank}
-                onChange={(e) => (refs.current.chequeBank = e.target.value)}
-                type='text'
+                name='cheque_bank'
+                defaultValue={refs.current.cheque_bank}
+                onChange={handleInputChange}
                 placeholder='نام بانک را وارد کنید'
                 className='w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400'
               />
             </div>
             <div className='w-full'>
               <label
-                htmlFor='sheba'
+                htmlFor='cheque_branch'
                 className='block text-gray-600 mb-2 text-right'>
                 کد شعبه
               </label>
               <input
-                id='sheba'
-                defaultValue={refs.current.chequeBranch}
-                onChange={(e) => (refs.current.chequeBranch = e.target.value)}
-                type='text'
+                name='cheque_branch'
+                defaultValue={refs.current.cheque_branch}
+                onChange={handleInputChange}
                 placeholder='کد شعبه بانک را وارد کنید'
                 className='w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400'
               />
             </div>
           </div>
-          <div>
+
+          <div className='w-full'>
             <label
               htmlFor='description'
               className='block text-gray-600 mb-2 text-right'>
               شرح واریز
             </label>
             <textarea
-              id='description'
-              ref={descriptionInputRef}
+              name='description'
               defaultValue={refs.current.description}
-              onChange={(e) => (refs.current.description = e.target.value)}
+              onChange={handleInputChange}
               placeholder='شرح واریز'
               className='w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400'
               rows={3}
@@ -304,112 +282,12 @@ const Drafts = () => {
             </button>
           </div>
         </div>
-
-        <div className='flex flex-col w-full justify-between h-fit mb-6'>
+        <div className='flex flex-col w-full h-fit justify-between mb-6'>
           <h3 className='text-gray-700 text-lg font-bold flex items-center gap-2 mb-2'>
             <ReceiptSquare size='20' color='#704CB9' />
             عکس {chequeType === 1 ? ' چک ' : ' سند '}
           </h3>
-          <div className='flex gap-5'>
-            {draftSrc ? (
-              <div
-                className={`gap-5 w-full p-5 rounded-lg flex flex-col justify-center items-center border 
-            border-[#C9D0D8] border-dashed
-            text-[#50545F] cursor-pointer my-6`}>
-                {uploadStatus === 'showImage' && (
-                  <div
-                    className={`gap-5 w-full p-5 rounded-lg flex justify-center items-center cursor-pointer my-6`}>
-                    <Image
-                      src={draftSrc}
-                      width={77}
-                      height={77}
-                      className='w-full max-w-96'
-                      alt='Uploaded file preview'
-                    />
-                  </div>
-                )}
-                <div className='flex justify-between w-full items-center'>
-                  <div className='flex gap-3'>
-                    <TickCircle
-                      size={24}
-                      className='bg-[#0F973D] text-white rounded-full'
-                    />
-                    <p className='text-green-500 mt-2 text-sm'>
-                      بارگذاری با موفقیت انجام شد
-                    </p>
-                  </div>
-
-                  <div className='flex gap-3'>
-                    {uploadStatus === 'success' ? (
-                      <Eye
-                        onClick={() => setUploadStatus('showImage')}
-                        color='#2F27CE'
-                        size={24}
-                      />
-                    ) : (
-                      <EyeSlash
-                        onClick={() => setUploadStatus('success')}
-                        color='#2F27CE'
-                        size={24}
-                      />
-                    )}
-                    <Trash
-                      size={24}
-                      color='#BB1F1A'
-                      onClick={() => {
-                        setDraftSrc(undefined)
-                        setUploadStatus('idle')
-                      }}
-                    />
-
-                    {uploadStatus === 'error' && (
-                      <p className='text-red-500 mt-2 text-sm'>
-                        خطا در بارگذاری فایل
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <label
-                className={`flex-col gap-5 w-full p-5 rounded-lg flex justify-center items-center border ${
-                  uploadStatus === 'uploading'
-                    ? 'bg-gradient-to-r from-[#EFFEF3] to-[#D7FCEB]'
-                    : 'border-[#C9D0D8] border-dashed'
-                } text-[#50545F] cursor-pointer my-6`}
-                htmlFor='avatarUpload'>
-                <DocumentUpload
-                  size={32}
-                  className='bg-[#F5F7F8] p-1 rounded-full text-[#50545F]'
-                />
-                {uploadStatus === 'uploading' ? (
-                  <>
-                    <p>در حال بارگذاری فایل...</p>
-                    <progress
-                      value={progress}
-                      max='100'
-                      className='w-full rounded-full mt-2'></progress>
-                    <p className='text-[#B2BBC7] mt-2'>{progress}%</p>
-                  </>
-                ) : (
-                  <>
-                    <p>
-                      <b className='text-[#4B89E6]'>کلیک کنید</b> یا فایل خود را
-                      در این محل قرار دهید.
-                    </p>
-                    <p className='text-[#B2BBC7]'> PNG, JPG (max. 2mb)</p>
-                  </>
-                )}
-              </label>
-            )}
-            <input
-              id='avatarUpload'
-              type='file'
-              accept='image/*'
-              className='hidden'
-              onChange={handleImageUpload}
-            />
-          </div>
+          <UploadPicture uploadImage={UploadImage} />
         </div>
       </div>
     </div>

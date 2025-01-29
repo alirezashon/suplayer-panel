@@ -143,7 +143,7 @@ export const GetPromotionList = async ({
 }): Promise<PromotionInterface[] | undefined> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_promotion_list?status_id=1`,
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_promotion_list`,
       {
         method: 'GET',
         headers: {

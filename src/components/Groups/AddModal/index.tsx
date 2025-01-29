@@ -14,7 +14,13 @@ const AddModal = ({
 }) => {
   const [name, setName] = useState<string>(existName || '')
   const [isConfirmed, setIsConfirmed] = useState(false)
+  const [errors, setErrors] = useState<Record<string, string>>()
+
   const handleSubmit = async () => {
+    if (name.length < 1) {
+      setErrors({ name: 'این فیلد اجباریست' })
+      return
+    }
     setIsConfirmed(true)
     if (!sup_group_code) {
       const accessToken = (await getCookieByKey('access_token')) || ''
@@ -59,7 +65,10 @@ const AddModal = ({
               </label>
               <input
                 defaultValue={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => {
+                  // errors?.name && setErrors({})
+                  setName(e.target.value)
+                }}
                 type='text'
                 placeholder='مثال: دکترهای پوست، تهران غرب ...'
               />

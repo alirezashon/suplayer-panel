@@ -57,10 +57,10 @@ const GroupsDetail: React.FC<{ id: string }> = ({ id }) => {
               <div className='flex mb-5 mt-1'>
                 <People size={24} color='#704CB9' />
                 <p className='text-sm  px-2 py-1 rounded'>
-                  {product.supervisor_id ? (
+                  {product.visitor_count ? (
                     <>
                       <span className='text-[#757575]'>تعداد ذی‌ :</span>
-                      {product.supervisor_id}
+                      {product.visitor_count}
                     </>
                   ) : (
                     '   ذی‌نفعی‌ تعریف نشده است'

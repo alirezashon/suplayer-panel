@@ -10,14 +10,16 @@ import {
 import { useState } from 'react'
 import AddModal from './AddModal'
 import StatCard from './StatCard'
-import DoctorCard from './ReferrerCard'
+import BeneficiaryCard from './BeneficiaryCard'
 import { useMenu } from '@/Context/Menu'
+import { useData } from '@/Context/Data'
 
 const PorsantManagement = () => {
   const [showAddModal, setShowAddModal] = useState<boolean | string>(false)
   const [showDeleteState, setShowDeleteState] = useState<boolean>(false)
   const [, setDeleteState] = useState<string[]>([])
   const { setMenu } = useMenu()
+  const { beneficiaryData } = useData()
   return (
     <>
       {showAddModal && (
@@ -128,15 +130,10 @@ const PorsantManagement = () => {
         )}
 
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
-          {Array.from({ length: 8 }).map((_, index) => (
-            <DoctorCard
+          {beneficiaryData?.map((beneficiary, index) => (
+            <BeneficiaryCard
               key={index}
-              data={{
-                title: 'دکتر محدثه عالی',
-                allocation: '۴۰۰۰ میلیون ریال',
-                lastAllocation: '۲۰۰۰ میلیون ریال',
-                released: '۲۰۰۰ میلیون ریال',
-              }}
+              data={beneficiary}
               setDeleteItems={(value: string) =>
                 setDeleteState((prv) =>
                   prv.includes(value)

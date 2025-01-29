@@ -1,11 +1,16 @@
-import { useMenu } from '@/Context/Menu'
 import { CampaignInterface } from '@/interfaces'
 import { Calendar, Edit2, Moneys, Trash } from 'iconsax-react'
 import React from 'react'
 
-const Wait = ({ campaign }: { campaign: CampaignInterface }) => {
-  const { setMenu } = useMenu()
-
+const Wait = ({
+  campaign,
+  enableEdit,
+  deleteIt,
+}: {
+  campaign: CampaignInterface
+  enableEdit: (data: CampaignInterface) => void
+  deleteIt: (data: CampaignInterface) => void
+}) => {
   return (
     <div className='bg-white rounded-lg shadow border-2 border-[#FFCA5E] p-4 relative cursor-pointer'>
       <div className='flex justify-between items-center'>
@@ -20,20 +25,15 @@ const Wait = ({ campaign }: { campaign: CampaignInterface }) => {
             size={20}
             color='#8455D2'
             cursor={'pointer'}
-            onClick={() => {
-              setMenu('edit-campaign')
-            }}
+            onClick={() => enableEdit(campaign)}
           />
           <Trash
             size={20}
             color='#D42620'
             cursor={'pointer'}
-            //    onClick={() => {
-            //      setDone((prv) =>
-            //        prv.filter((ref) => ref.endDate !== campaign.endDate)
-            //      )
-            //      setShowDeleteModal(campaign.endDate)
-            //    }}
+            onClick={() => {
+              deleteIt(campaign)
+            }}
           />
         </div>
       </div>

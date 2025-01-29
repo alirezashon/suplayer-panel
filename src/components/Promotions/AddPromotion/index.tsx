@@ -19,7 +19,7 @@ const AddPromotion = () => {
   const [draftSrc, setDraftSrc] = useState<string>()
 
   const refs = useRef({
-    cstatus: 0,
+    cstatus: 1,
     cta_link: '',
     distype: 0,
     file_uid: '',
@@ -65,12 +65,11 @@ const AddPromotion = () => {
     if (!refs.current.start_date) newErrors.start_date = 'این فیلد اجباری است'
     if (!refs.current.exp_date) newErrors.exp_date = 'این فیلد اجباری است'
     if (!refs.current.budget) newErrors.budget = 'این فیلد اجباری است'
-    if (!refs.current.expected_amount)
-      newErrors.expected_amount = 'این فیلد اجباری است'
-    if (!refs.current.loc_uid) newErrors.loc_uid = 'این فیلد اجباری است'
+    if (!refs.current.file_uid) newErrors.file_uid = 'این فیلد اجباری است'
+    if (!refs.current.cta_link) newErrors.cta_link = 'این فیلد اجباری است'
 
     setErrors(newErrors)
-
+    console.table(newErrors)
     return Object.keys(newErrors).length === 0
   }
 
@@ -134,6 +133,7 @@ const AddPromotion = () => {
             refs.current.file_uid = result.rec_id_file
           }
         } catch (error) {
+          setDraftSrc('')
           setUploadStatus('error')
           toast.error('خطا در بارگذاری')
           return error
@@ -354,12 +354,15 @@ const AddPromotion = () => {
                 شعار یا جمله برند پروموشن را بنویسید
               </label>
               <input
-                name='desc'
-                value={refs.current.desc}
+                name='ctitle'
+                value={refs.current.ctitle}
                 onChange={handleInputChange}
                 className='w-full p-2 border rounded-md'
-                placeholder='لینک CTA پروموشن'
+                placeholder='شعار / جمله'
               />
+              {errors.ctitle && (
+                <p className='text-red-500 text-sm'>{errors.ctitle}</p>
+              )}
             </div>
             <div className='flex gap-5'>
               <div className='w-full '>
@@ -368,10 +371,10 @@ const AddPromotion = () => {
                   placeholder='تاریخ شروع'
                   setDate={(value: string) => (refs.current.start_date = value)}
                 />
+                {errors.start_date && (
+                  <p className='text-red-500 text-sm'>{errors.start_date}</p>
+                )}
               </div>
-              {errors.startDate && (
-                <p className='text-red-500 text-sm'>{errors.startDate}</p>
-              )}
               <div className='w-full '>
                 <label className='block mb-1 text-sm'>
                   تاریخ پایان پروموشن
@@ -380,8 +383,8 @@ const AddPromotion = () => {
                   placeholder='تاریخ پایان'
                   setDate={(value: string) => (refs.current.exp_date = value)}
                 />
-                {errors.endDate && (
-                  <p className='text-red-500 text-sm'>{errors.endDate}</p>
+                {errors.exp_date && (
+                  <p className='text-red-500 text-sm'>{errors.exp_date}</p>
                 )}
               </div>
             </div>
@@ -399,8 +402,8 @@ const AddPromotion = () => {
                 className='w-full p-2 border rounded-md'
                 placeholder='لینک CTA پروموشن'
               />
-              {errors.ctaLink && (
-                <p className='text-red-500 text-sm'>{errors.ctaLink}</p>
+              {errors.cta_link && (
+                <p className='text-red-500 text-sm'>{errors.cta_link}</p>
               )}
             </div>
             <div>
@@ -502,7 +505,6 @@ const AddPromotion = () => {
                           <div className='flex justify-between'>
                             <p>بارگذاری کنید</p>
                             <p className='text-[#B2BBC7]'>
-                              {' '}
                               PNG, JPG (max. 2mb)
                             </p>
                           </div>
@@ -522,6 +524,9 @@ const AddPromotion = () => {
                   onChange={handleImageUpload}
                 />
               </div>
+              {errors.file_uid && (
+                <p className='text-red-500 text-sm'>{errors.file_uid}</p>
+              )}
             </div>
           </div>
         </div>

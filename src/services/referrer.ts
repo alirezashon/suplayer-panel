@@ -148,7 +148,86 @@ export const GetReferrerList = async ({
     console.log(error)
   }
 }
+export const DefineAppointmentTask = async ({
+  accessToken,
+  personnel_uid,
+  supervisor_code,
+  sup_group_code,
+  visitor_uid,
+  task_kpi_uid,
+}: {
+  accessToken: string | undefined
+  personnel_uid: string
+  supervisor_code: string
+  sup_group_code: string
+  visitor_uid: string
+  task_kpi_uid: string
+}) => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_define_task`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          personnel_uid,
+          supervisor_code,
+          sup_group_code,
+          visitor_uid,
+          task_kpi_uid,
+        }),
+      }
+    )
 
+    return await response.json()
+  } catch (error: unknown) {
+    console.log(error)
+  }
+}
+export const EditAppointmentTask = async ({
+  accessToken,
+  personnel_uid,
+  supervisor_code,
+  sup_group_code,
+  visitor_uid,
+  task_kpi_uid,
+}: {
+  accessToken: string | undefined
+  personnel_uid: string
+  supervisor_code: string
+  sup_group_code: string
+  visitor_uid: string
+  task_kpi_uid: string
+  task_uid: string
+  status: number
+}) => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/edit_task`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          personnel_uid,
+          supervisor_code,
+          sup_group_code,
+          visitor_uid,
+          task_kpi_uid,
+        }),
+      }
+    )
+
+    return await response.json()
+  } catch (error: unknown) {
+    console.log(error)
+  }
+}
 export const CreateReferrerChart = async ({
   accessToken,
   chpid,

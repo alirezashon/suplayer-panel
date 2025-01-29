@@ -17,56 +17,16 @@ import {
 } from 'iconsax-react'
 
 const Dashboard = () => {
-  const { groupData, productData, beneficiaryData ,referrerData} = useData()
+  const {
+    groupData,
+    productData,
+    beneficiaryData,
+    referrerData,
+    promotionData,
+    campaignData,
+  } = useData()
   const { setMenu } = useMenu()
 
-  const promotionsData = [
-    {
-      timeRemaining: '۲۶:۴۳:۵۵',
-      title: 'پروموشن محصولات فولیکا',
-      slogan: 'مراقبت پوستی شما با ما',
-      viewCount: '۶',
-      clickCount: '۲۷',
-    },
-    {
-      timeRemaining: '۲۶:۴۳:۵۵',
-      title: 'پروموشن محصولات فولیکا',
-      slogan: 'مراقبت پوستی شما با ما',
-      viewCount: '۶',
-      clickCount: '۲۷',
-    },
-    {
-      timeRemaining: '۲۶:۴۳:۵۵',
-      title: 'پروموشن محصولات فولیکا',
-      slogan: 'مراقبت پوستی شما با ما',
-      viewCount: '۶',
-      clickCount: '۲۷',
-    },
-  ]
-
-  const campainsData = [
-    {
-      timeRemaining: '۲۶:۴۳:۵۵',
-      title: 'کمپین جدید',
-      StartDate: '۱۴۰۳/۰۱/۴',
-      endDate: '۱۴۰۳/۰۷/۴',
-      money: '۲۰۰۰۰۰۰۰۰۰ تومان',
-    },
-    {
-      timeRemaining: '۲۶:۴۳:۵۵',
-      title: 'کمپین جدید',
-      StartDate: '۱۴۰۳/۰۱/۴',
-      endDate: '۱۴۰۳/۰۷/۳',
-      money: '۲۰۰۰۰۰۰۰۰۰ تومان',
-    },
-    {
-      timeRemaining: '۲۶:۴۳:۵۵',
-      title: 'کمپین جدید',
-      StartDate: '۱۴۰۳/۰۱/۴',
-      endDate: '۱۴۰۳/۰۷/۳',
-      money: '۲۰۰۰۰۰۰۰۰۰ تومان',
-    },
-  ]
   return (
     <div className='flex flex-col m-5'>
       <div className='my-10 flex gap-4'>
@@ -78,10 +38,12 @@ const Dashboard = () => {
           {groupData && groupData?.length > 0 ? (
             <div className='flex justify-between items-center mt-6 text-zinc-900'>
               <span className='text-xl'>{groupData?.length}</span>
-              <div onClick={()=>{
-                location.hash = 'mygroups'
-                setMenu('mygroups')
-              }} className=' cursor-pointer flex items-center gap-2 text-[#7747C0]'>
+              <div
+                onClick={() => {
+                  location.hash = 'mygroups'
+                  setMenu('mygroups')
+                }}
+                className=' cursor-pointer flex items-center gap-2 text-[#7747C0]'>
                 <span>مشاهده بیشتر</span>
                 <ArrowLeft2 size={22} color='#7747C0' />
               </div>
@@ -111,10 +73,12 @@ const Dashboard = () => {
           {referrerData && referrerData?.length > 0 ? (
             <div className='flex justify-between items-center mt-6 text-zinc-900'>
               <span className='text-xl'>{referrerData?.length}</span>
-              <div onClick={()=>{
-                location.hash = 'referrers'
-                setMenu('referrers')
-              }} className=' cursor-pointer flex items-center gap-2 text-[#7747C0]'>
+              <div
+                onClick={() => {
+                  location.hash = 'referrers'
+                  setMenu('referrers')
+                }}
+                className=' cursor-pointer flex items-center gap-2 text-[#7747C0]'>
                 <span>مشاهده بیشتر</span>
                 <ArrowLeft2 size={22} color='#7747C0' />
               </div>
@@ -145,10 +109,12 @@ const Dashboard = () => {
           {beneficiaryData && beneficiaryData?.length > 0 ? (
             <div className='flex justify-between items-center mt-6 text-zinc-900'>
               <span className='text-xl'>{beneficiaryData?.length}</span>
-              <div onClick={()=>{
-                location.hash = 'beneficiary'
-                setMenu('beneficiary')
-              }} className=' cursor-pointer flex items-center gap-2 text-[#7747C0]'>
+              <div
+                onClick={() => {
+                  location.hash = 'beneficiary'
+                  setMenu('beneficiary')
+                }}
+                className=' cursor-pointer flex items-center gap-2 text-[#7747C0]'>
                 <span>مشاهده بیشتر</span>
                 <ArrowLeft2 size={22} color='#7747C0' />
               </div>
@@ -179,10 +145,12 @@ const Dashboard = () => {
           {productData && productData?.length > 0 ? (
             <div className='flex justify-between items-center mt-6 text-zinc-900'>
               <span className='text-xl'>{productData?.length}</span>
-              <div onClick={()=>{
-                location.hash = 'productgroups'
-                setMenu('productgroups')
-              }} className=' cursor-pointer flex items-center gap-2 text-[#7747C0]'>
+              <div
+                onClick={() => {
+                  location.hash = 'productgroups'
+                  setMenu('productgroups')
+                }}
+                className=' cursor-pointer flex items-center gap-2 text-[#7747C0]'>
                 <span>مشاهده بیشتر</span>
                 <ArrowLeft2 size={22} color='#7747C0' />
               </div>
@@ -205,110 +173,121 @@ const Dashboard = () => {
           )}
         </div>
       </div>
-      <div className='flex flex-col bg-white p-5 border rounded-lg'>
-        <div className='flex gap-3 items-center'>
-          <PresentionChart size={28} color='#7747C0' />
-          <div className='text-lg font-bold text-right text-zinc-900 max-md:max-w-full'>
-            پروموشن‌های در حال انجام
+      {promotionData?.length && (
+        <div className='flex flex-col bg-white p-5 border rounded-lg'>
+          <div className='flex gap-3 items-center'>
+            <PresentionChart size={28} color='#7747C0' />
+            <div className='text-lg font-bold text-right text-zinc-900 max-md:max-w-full'>
+              پروموشن‌های در حال انجام
+            </div>
+          </div>
+          <div className='flex flex-wrap gap-6 items-center mt-6 w-full max-md:max-w-full'>
+            {promotionData?.map((promotion, index) => (
+              <div
+                key={index}
+                className='flex flex-col grow shrink justify-center self-stretch p-6 my-auto rounded-lg border-2 border-[#B09CE9] min-h-[192px] min-w-[240px] w-[286px] max-md:px-5'>
+                {/* Title and Time */}
+                <div className='flex justify-between items-center gap-10 w-full'>
+                  <div className='gap-2 px-2 py-2.5 text-sm font-bold text-purple-800 bg-purple-200 rounded-lg min-h-[40px]'>
+                    {promotion.ctitle}
+                  </div>
+                  <div className='flex items-center gap-1'>
+                    <span className='text-sm font-medium text-zinc-950'>
+                      {promotion.pgroup_id}
+                    </span>
+                    <Timer size={22} color='#704CB9' />
+                  </div>
+                </div>
+                <div className='flex items-center gap-2 mt-6'>
+                  <Personalcard size={22} color='#704CB9' />
+                  <span className='text-sm text-[#757575]'>شعار پروموشن:</span>
+                  <div className='text-sm font-medium leading-6 text-zinc-950'>
+                    {promotion.ctitle}
+                  </div>
+                </div>
+
+                <div className='flex justify-between items-center gap-10 mt-6'>
+                  <div className='flex items-center gap-1'>
+                    <MouseCircle size={22} color='#704CB9' />
+                    <span className='text-xs text-neutral-500'>تعداد کلیک</span>
+                    <span className='text-xs text-zinc-950'>
+                      {promotion.ctitle}
+                    </span>
+                  </div>
+                  <div className='flex items-center gap-1'>
+                    <Eye size={22} color='#704CB9' />
+                    <span className='text-xs text-neutral-500'>
+                      تعداد بازدید
+                    </span>
+                    <span className='text-xs text-zinc-950'>
+                      {promotion.ctitle}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
-        <div className='flex flex-wrap gap-6 items-center mt-6 w-full max-md:max-w-full'>
-          {promotionsData.map((promotion, index) => (
-            <div
-              key={index}
-              className='flex flex-col grow shrink justify-center self-stretch p-6 my-auto rounded-lg border-2 border-[#B09CE9] min-h-[192px] min-w-[240px] w-[286px] max-md:px-5'>
-              {/* Title and Time */}
-              <div className='flex justify-between items-center gap-10 w-full'>
-                <div className='gap-2 px-2 py-2.5 text-sm font-bold text-purple-800 bg-purple-200 rounded-lg min-h-[40px]'>
-                  {promotion.title}
-                </div>
-                <div className='flex items-center gap-1'>
-                  <span className='text-sm font-medium text-zinc-950'>
-                    {promotion.timeRemaining}
-                  </span>
-                  <Timer size={22} color='#704CB9' />
-                </div>
-              </div>
-              <div className='flex items-center gap-2 mt-6'>
-                <Personalcard size={22} color='#704CB9' />
-                <span className='text-sm text-[#757575]'>شعار پروموشن:</span>
-                <div className='text-sm font-medium leading-6 text-zinc-950'>
-                  {promotion.slogan}
-                </div>
-              </div>
-
-              <div className='flex justify-between items-center gap-10 mt-6'>
-                <div className='flex items-center gap-1'>
-                  <MouseCircle size={22} color='#704CB9' />
-                  <span className='text-xs text-neutral-500'>تعداد کلیک</span>
-                  <span className='text-xs text-zinc-950'>
-                    {promotion.clickCount}
-                  </span>
-                </div>
-                <div className='flex items-center gap-1'>
-                  <Eye size={22} color='#704CB9' />
-                  <span className='text-xs text-neutral-500'>تعداد بازدید</span>
-                  <span className='text-xs text-zinc-950'>
-                    {promotion.viewCount}
-                  </span>
-                </div>
-              </div>
+      )}
+      {campaignData?.length && (
+        <div className='flex flex-col bg-white p-5 my-10 border rounded-lg'>
+          <div className='flex gap-3 items-center'>
+            <StatusUp size={28} color='#7747C0' />
+            <div className='text-lg font-bold text-right text-zinc-900 max-md:max-w-full'>
+              کمپین‌های در حال انجام
             </div>
-          ))}
-        </div>
-      </div>
+          </div>
+          <div className='flex flex-wrap gap-6 items-center mt-6 w-full max-md:max-w-full'>
+            {campaignData?.map((campain, index) => (
+              <div
+                key={index}
+                className='flex flex-col grow shrink justify-center self-stretch p-6 my-auto rounded-lg border-2 border-[##B09CE9] min-h-[192px] min-w-[240px] w-[286px] max-md:px-5'>
+                <div className='flex justify-between items-center gap-10 w-full'>
+                  <div className='gap-2 px-2 py-2.5 text-sm font-bold text-purple-800 bg-purple-200 rounded-lg min-h-[40px]'>
+                    {campain.ctitle}
+                  </div>
+                  <div className='flex items-center gap-1'>
+                    <span className='text-sm font-medium text-zinc-950'>
+                      {campain.start_date}
+                    </span>
+                    <Timer size={22} color='#704CB9' />
+                  </div>
+                </div>
+                <div className='flex items-center gap-2 mt-3 w-full justify-between'>
+                  <div className='flex gap-1'>
+                    <Calendar size={22} color='#704CB9' />
+                    <span className='text-sm text-[#757575]'>تاریخ شروع </span>
+                  </div>
+                  <div className='text-sm font-medium leading-6 text-zinc-950'>
+                    {campain.start_date}
+                  </div>
+                </div>
 
-      <div className='flex flex-col bg-white p-5 my-10 border rounded-lg'>
-        <div className='flex gap-3 items-center'>
-          <StatusUp size={28} color='#7747C0' />
-          <div className='text-lg font-bold text-right text-zinc-900 max-md:max-w-full'>
-            کمپین‌های در حال انجام
+                <div className='flex items-center gap-2 mt-3 w-full justify-between'>
+                  <div className='flex gap-1'>
+                    <Calendar size={22} color='#704CB9' />
+                    <span className='text-xs text-neutral-500'>
+                      تاریخ پایان{' '}
+                    </span>
+                  </div>
+                  <span className='text-xs text-zinc-950'>
+                    {campain.exp_date}
+                  </span>
+                </div>
+                <div className='flex items-center gap-2 mt-3 w-full justify-between'>
+                  <div className='flex gap-1'>
+                    <Moneys size={22} color='#704CB9' />
+                    <span className='text-xs text-neutral-500'>بودجه </span>
+                  </div>
+                  <span className='text-xs text-zinc-950'>
+                    {campain.budget}
+                  </span>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
-        <div className='flex flex-wrap gap-6 items-center mt-6 w-full max-md:max-w-full'>
-          {campainsData.map((campain, index) => (
-            <div
-              key={index}
-              className='flex flex-col grow shrink justify-center self-stretch p-6 my-auto rounded-lg border-2 border-[##B09CE9] min-h-[192px] min-w-[240px] w-[286px] max-md:px-5'>
-              <div className='flex justify-between items-center gap-10 w-full'>
-                <div className='gap-2 px-2 py-2.5 text-sm font-bold text-purple-800 bg-purple-200 rounded-lg min-h-[40px]'>
-                  {campain.title}
-                </div>
-                <div className='flex items-center gap-1'>
-                  <span className='text-sm font-medium text-zinc-950'>
-                    {campain.timeRemaining}
-                  </span>
-                  <Timer size={22} color='#704CB9' />
-                </div>
-              </div>
-              <div className='flex items-center gap-2 mt-3 w-full justify-between'>
-                <div className='flex gap-1'>
-                  <Calendar size={22} color='#704CB9' />
-                  <span className='text-sm text-[#757575]'>تاریخ شروع </span>
-                </div>
-                <div className='text-sm font-medium leading-6 text-zinc-950'>
-                  {campain.StartDate}
-                </div>
-              </div>
-
-              <div className='flex items-center gap-2 mt-3 w-full justify-between'>
-                <div className='flex gap-1'>
-                  <Calendar size={22} color='#704CB9' />
-                  <span className='text-xs text-neutral-500'>تاریخ پایان </span>
-                </div>
-                <span className='text-xs text-zinc-950'>{campain.endDate}</span>
-              </div>
-              <div className='flex items-center gap-2 mt-3 w-full justify-between'>
-                <div className='flex gap-1'>
-                  <Moneys size={22} color='#704CB9' />
-                  <span className='text-xs text-neutral-500'>بودجه </span>
-                </div>
-                <span className='text-xs text-zinc-950'>{campain.money}</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+      )}
     </div>
   )
 }

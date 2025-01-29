@@ -20,22 +20,22 @@ const AddCampaign = ({
   const { groupData, subGroupData, productGroupData, brandsData, productData } =
     useData()
   const refs = useRef({
-    cstatus: 0,
-    ctitle: '',
-    ctype: 0,
-    start_date: '',
-    exp_date: '',
-    loc_type: 0,
-    loc_uid: '',
-    budget: 0,
-    expected_response: 0,
-    expected_amount: 0,
-    desc: '',
-    sgroup_id: 0,
-    supervisor_id: 0,
-    pgroup_id: 0,
-    chart_id: 0,
-    product_uid: '',
+    cstatus: existData?.cstatus || 0,
+    ctitle: existData?.ctitle || '',
+    ctype: existData?.ctype || 0,
+    start_date: existData?.start_date || '',
+    exp_date: existData?.exp_date || '',
+    loc_type: existData?.loc_type || 0,
+    loc_uid: existData?.loc_uid || '',
+    budget: existData?.budget || 0,
+    expected_response: existData?.expected_response || 0,
+    expected_amount: existData?.expected_amunt || 0,
+    desc: existData?.desc || '',
+    sgroup_id: existData?.sgroup_id || 0,
+    supervisor_id: existData?.supervisor_id || 0,
+    pgroup_id: existData?.pgroup_id || 0,
+    chart_id: existData?.chart_id || 0,
+    product_uid: existData?.product_uid || '',
   })
   const [errors, setErrors] = useState<Record<string, string>>({
     ctitle: '',
@@ -76,7 +76,7 @@ const AddCampaign = ({
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     const accessToken = await getCookieByKey('access_token')
-    await CreateCampaign({ ...refs.current , accessToken })
+    await CreateCampaign({ ...refs.current, accessToken })
   }
 
   return (

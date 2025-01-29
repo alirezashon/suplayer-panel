@@ -49,6 +49,7 @@ export interface SubGroup {
   sup_type: number
   sup_group_id: number
   sup_group_name: string
+  visitor_count: number
 }
 
 export interface GroupData {
@@ -93,12 +94,6 @@ export interface CampaignInterface {
   product_uid: string
 }
 
-export interface CardProps {
-  title: string
-  allocation: string
-  lastAllocation: string
-  released: string
-}
 export interface States {
   StateCode: string
   StateDesc: string

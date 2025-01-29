@@ -1,14 +1,6 @@
-import { Printer, SearchNormal, WalletMoney } from 'iconsax-react'
+import { useData } from '@/Context/Data'
+import { Printer, SearchNormal } from 'iconsax-react'
 import { useState } from 'react'
-
-interface BeneficiaryData {
-  mobileNumber: string
-  lastName: string
-  firstName: string
-  row: number
-  assignableCredit?: string
-  uploadedFile?: File | null
-}
 
 const headers = [
   'ردیف',
@@ -21,27 +13,11 @@ const headers = [
 ]
 
 const Release = () => {
-  const [data, setData] = useState<BeneficiaryData[]>([
-    {
-      mobileNumber: '09121234567',
-      lastName: 'محمدی',
-      firstName: 'علی',
-      row: 1,
-      assignableCredit: '300,000,000 ریال',
-    },
-    {
-      mobileNumber: '09121234568',
-      lastName: 'احمدی',
-      firstName: 'حسین',
-      row: 2,
-      assignableCredit: '200,000,000 ریال',
-    },
-  ])
-
+  const { beneficiaryData } = useData()
   const handleFileUpload = (index: number, file: File | null) => {
-    const updatedData = [...data]
-    updatedData[index].uploadedFile = file
-    setData(updatedData)
+    // const updatedData = [...data]
+    // updatedData[index].uploadedFile = file
+    // setData(updatedData)
   }
 
   return (
@@ -102,23 +78,17 @@ const Release = () => {
                 </tr>
               </thead>
               <tbody>
-                {data.map((row, index) => (
+                {beneficiaryData?.map((row, index) => (
                   <tr key={index} className='border-b'>
                     <td className='text-center px-4 py-2 border-r'>
-                      {row.row}
+                      {index}
                     </td>
+                    <td className='text-center px-4 py-2'>{row.visitor_name}</td>
+                    <td className='text-center px-4 py-2'>{row.visitor_family}</td>
                     <td className='text-center px-4 py-2'>
-                      {row.firstName}
+                      {row.visitor_tel}
                     </td>
-                    <td className='text-center px-4 py-2'>
-                      {row.lastName}
-                    </td>
-                    <td className='text-center px-4 py-2'>
-                      {row.assignableCredit}
-                    </td>
-                    <td className='text-center px-4 py-2'>
-                      10,000,000 ریال
-                    </td>
+                    <td className='text-center px-4 py-2'>10,000,000 ریال</td>
                     <td className='text-center px-4 py-2'>
                       <input
                         type='text'
