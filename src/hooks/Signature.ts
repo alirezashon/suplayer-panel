@@ -1,4 +1,4 @@
-const crypto = require('crypto')
+import crypto from 'crypto'
 
 const secretKey =
   'jnCeAJyBgDTJo4MPWHmzoL1wSRy6ZXKbVyy2MthFBv4Drt3yuxdZsSCgFIKYcFNrhWr59hXHvEoGkgKkX7Otx63rMbyIHdUEKO2caskuA0yNezbOSxrtcIuYFUFBZ4bxJk7r1ZFR6llzQnrEzrHBovHY3Stzeh1fWp9dLqabRoRnhjqclAY02PLrsjeFbBWrxf9FGDw0DiIFVq7Blw4ND9Xiy2xYirq8eSiaDKLzPIkYwHycrqBOpZxTXX6Arq1g'

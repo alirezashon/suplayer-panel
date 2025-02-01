@@ -4,10 +4,9 @@ import { useMenu } from '@/Context/Menu'
 import AddModal from './AddModal'
 import AddSubGroup from '../SubGroups/AddModal'
 import DeleteModal from './DeleteModal'
-import { useData } from '@/Context/Data'
 const Variables: React.FC = () => {
   const { setMenu } = useMenu()
-  const { groupData } = useData()
+  // const { groupData } = useData()
   const [showAddModal, setShowAddModal] = useState<null | string[]>(null)
   const [addSubGroup, setAddSubGroup] = useState<number | null>()
   const [showDeleteModal, setShowDeleteModal] = useState<null | string[]>(null)

@@ -4,15 +4,7 @@ import { getCookieByKey } from '@/actions/cookieToken'
 import { GetdDraftImage } from '@/services/deposit'
 import { Import, MoreSquare } from 'iconsax-react'
 
-const Table = ({
-  data,
-  headers,
-  indexOfProfitLoss,
-}: {
-  data: object[]
-  headers: string[]
-  indexOfProfitLoss?: number
-}) => {
+const Table = ({ data, headers }: { data: object[]; headers: string[] }) => {
   const downloadDraftImage = async (id: string) => {
     const accessToken = (await getCookieByKey('access_token')) || ''
     console.log(id)
@@ -79,7 +71,7 @@ const Table = ({
                   ) : (
                     <span className='flex justify-center'>
                       <Import
-                      onClick={()=>downloadDraftImage(detail)}
+                        onClick={() => downloadDraftImage(detail)}
                         size={24}
                         color='#7747C0'
                         className='cursor-pointer'

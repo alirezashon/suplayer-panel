@@ -1,5 +1,4 @@
 import { getCookieByKey } from '@/actions/cookieToken'
-import { getGroupData } from '@/actions/setData'
 import { useData } from '@/Context/Data'
 import { CreateGroup, EditGroup } from '@/services/items'
 import { CloseSquare, Grammerly } from 'iconsax-react'
@@ -19,19 +18,22 @@ const AddModal = ({
   const [isConfirmed, setIsConfirmed] = useState(false)
   const [status, setStatus] = useState<React.ReactElement | null>()
   const { setGroupData } = useData()
-  const setResult = (state: boolean, text?: string) => {
-    state
-      ? setStatus(
-          <p className='text-[#0F973D] flex items-center gap-2'>
-            عملیات موفقیت‌آمیز بود! <Grammerly size={24} color='#0F973D' />
-          </p>
-        )
-      : setStatus(
-          <p className='text-[#D42620] flex items-center gap-2'>
-            {text} <Grammerly size={24} color='#D42620' />
-          </p>
-        )
-  }
+ const setResult = (state: boolean, text?: string) => {
+    if (state) {
+      setStatus(
+        <p className='text-[#0F973D] flex items-center gap-2'>
+          عملیات موفقیت‌آمیز بود! <Grammerly size={24} color='#0F973D' />
+        </p>
+      )
+    } else {
+      setStatus(
+        <p className='text-[#D42620] flex items-center gap-2'>
+          {text} <Grammerly size={24} color='#D42620' />
+        </p>
+      )
+    }
+}
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsConfirmed(true)

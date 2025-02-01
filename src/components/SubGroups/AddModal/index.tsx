@@ -28,18 +28,21 @@ const AddModal = ({
   const [errors, setErrors] = useState<Record<string, string>>()
   const [status, setStatus] = useState<React.ReactElement>()
   const setResult = (state: boolean, text?: string) => {
-    state
-      ? setStatus(
-          <p className='text-[#0F973D] flex items-center gap-2'>
-            عملیات موفقیت‌آمیز بود! <Grammerly size={24} color='#0F973D' />
-          </p>
-        )
-      : setStatus(
-          <p className='text-[#D42620] flex items-center gap-2'>
-            {text} <Grammerly size={24} color='#D42620' />
-          </p>
-        )
+    if (state) {
+      setStatus(
+        <p className='text-[#0F973D] flex items-center gap-2'>
+          عملیات موفقیت‌آمیز بود! <Grammerly size={24} color='#0F973D' />
+        </p>
+      )
+    } else {
+      setStatus(
+        <p className='text-[#D42620] flex items-center gap-2'>
+          {text} <Grammerly size={24} color='#D42620' />
+        </p>
+      )
+    }
   }
+
   const items = [
     { id: 1, label: 'گروه زنان و زایمان' },
     { id: 2, label: 'گروه پوست و مو' },
@@ -152,7 +155,7 @@ const AddModal = ({
               </label>
               <input
                 onChange={(e) => {
-                  errors?.name && setErrors({})
+                  if (errors?.name) setErrors({})
                   setData({ name: e.target.value, groupId: data.groupId })
                 }}
                 defaultValue={data.name}

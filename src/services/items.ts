@@ -1,7 +1,6 @@
 import {
   BeneficiaryData,
   GroupData,
-  ReferrerData,
   SubGroup,
 } from '@/interfaces'
 

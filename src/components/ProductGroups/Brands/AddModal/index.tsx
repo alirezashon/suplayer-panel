@@ -22,19 +22,22 @@ const AddModal = ({
   const [names, setNames] = useState<string[]>([''])
   const [status, setStatus] = useState<React.ReactElement | null>()
   const [isConfirmed, setIsConfirmed] = useState(false)
-  const setResult = (state: boolean, text?: string) => {
-    state
-      ? setStatus(
-          <p className='text-[#0F973D] flex items-center gap-2'>
-            عملیات موفقیت‌آمیز بود! <Grammerly size={24} color='#0F973D' />
-          </p>
-        )
-      : setStatus(
-          <p className='text-[#D42620] flex items-center gap-2'>
-            {text} <Grammerly size={24} color='#D42620' />
-          </p>
-        )
-  }
+ const setResult = (state: boolean, text?: string) => {
+    if (state) {
+      setStatus(
+        <p className='text-[#0F973D] flex items-center gap-2'>
+          عملیات موفقیت‌آمیز بود! <Grammerly size={24} color='#0F973D' />
+        </p>
+      )
+    } else {
+      setStatus(
+        <p className='text-[#D42620] flex items-center gap-2'>
+          {text} <Grammerly size={24} color='#D42620' />
+        </p>
+      )
+    }
+}
+
   const handleAddInput = () => {
     setNames([...names, ''])
   }
