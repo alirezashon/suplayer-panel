@@ -50,6 +50,10 @@ export interface SubGroup {
   sup_group_id: number
   sup_group_name: string
   visitor_count: number
+  assignment_amount: number
+  withdrawable_amount: number
+  campaign_count: number
+  personnel_count: number
 }
 
 export interface GroupData {
@@ -148,6 +152,7 @@ export interface ReferrerChartData {
   chstatus: number
   chlevel: number
   lev1_count: number
+  chlabel: string | null
 }
 export interface ProductGroupData {
   id: number

@@ -44,19 +44,22 @@ interface DataContextProps {
 const DataContext = createContext<DataContextProps | undefined>(undefined)
 
 export const DataProvider = ({ children }: { children: ReactNode }) => {
-  const [productData, setProductData] = useState<ProductsData[]>()
-  const [productGroupData, setProductGroupData] = useState<ProductGroupData[]>()
-  const [brandsData, setBrandsData] = useState<ProductGroupData[]>()
-  const [groupData, setGroupData] = useState<GroupData[]>()
-  const [subGroupData, setSubGroupData] = useState<SubGroup[]>()
-  const [beneficiaryData, setBeneficiaryData] = useState<BeneficiaryData[]>()
+  const [productData, setProductData] = useState<ProductsData[]>([])
+  const [productGroupData, setProductGroupData] = useState<ProductGroupData[]>(
+    []
+  )
+  const [brandsData, setBrandsData] = useState<ProductGroupData[]>([])
+  const [groupData, setGroupData] = useState<GroupData[]>([])
+  const [subGroupData, setSubGroupData] = useState<SubGroup[]>([])
+  const [beneficiaryData, setBeneficiaryData] = useState<BeneficiaryData[]>([])
   const [userInfo, setUserInfo] = useState<IUserResponse>()
-  const [referrerData, setReferrerData] = useState<ReferrerData[]>()
-  const [campaignData, setCampaignData] = useState<CampaignInterface[]>()
-  const [referrerChartData, setReferrerChartData] =
-    useState<ReferrerChartData[]>()
-  const [promotionData, setPromotionData] = useState<PromotionInterface[]>()
-  const [draftsData, setDraftsData] = useState<DraftsData[]>()
+  const [referrerData, setReferrerData] = useState<ReferrerData[]>([])
+  const [campaignData, setCampaignData] = useState<CampaignInterface[]>([])
+  const [referrerChartData, setReferrerChartData] = useState<
+    ReferrerChartData[]
+  >([])
+  const [promotionData, setPromotionData] = useState<PromotionInterface[]>([])
+  const [draftsData, setDraftsData] = useState<DraftsData[]>([])
 
   return (
     <DataContext.Provider

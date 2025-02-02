@@ -1,5 +1,10 @@
+import { getCookieByKey } from '@/actions/cookieToken'
 import { useData } from '@/Context/Data'
+import { useMenu } from '@/Context/Menu'
+import { useStates } from '@/Context/States'
+import { generateAllocationSignature } from '@/hooks/Signature'
 import { BeneficiaryData } from '@/interfaces'
+import { DefineAllocation } from '@/services/allocation'
 import { Printer, WalletMoney } from 'iconsax-react'
 import { useState } from 'react'
 
@@ -12,9 +17,11 @@ const headers = [
 ]
 const Allocation = () => {
   const [filterType, setFilterType] = useState<number>(0)
-  const { beneficiaryData } = useData()
-
+  const { beneficiaryData, userInfo } = useData()
   const [editedData, setEditedData] = useState<BeneficiaryData[]>([])
+  const { setMenu } = useMenu()
+  const { selectedSubGroupData, selectedGroupData, setSelectedGroupData } =
+    useStates()
   const walletBoxStyle = {
     background:
       'linear-gradient(white, white) padding-box, conic-gradient(rgb(246, 230, 255), #ffffff 18%, #644a9e 31% 43%, rgb(228, 228, 255), #ffffff, #7a5fb7, #e7d9d5, #e4e0ed) border-box',
@@ -28,14 +35,47 @@ const Allocation = () => {
     // setData(updatedData)
     // setEditedData(updatedData)
   }
+  const handleSubmit = async () => {
+    const accessToken = (await getCookieByKey('access_token')) || ''
+    const Signature = generateAllocationSignature({
+      amount: '',
+      customerMobile: `${userInfo?.mobile}`,
+      sup_group_code: '',
+      supervisor_code: '',
+      visitor_uid: '',
+    })
+    // await DefineAllocation({ accessToken, Signature, })
+  }
   return (
     <div className='m-4'>
       <div className='flex justify-between items-center mb-7'>
         <p>
-          <span className='text-[#98A2B3]'>مدیریت پورسانت‌ دهی </span> /
-          <span className='text-[#7747C0]'>
-            گروه مو / منطقه ۵ / تخصیص گروهی
+          <span
+            className='text-[#98A2B3] cursor-pointer'
+            onClick={() => {
+              setMenu('porsant')
+              location.hash = 'porsant'
+              setSelectedGroupData(null)
+            }}>
+            مدیریت پورسانت‌دهی/
           </span>
+          <span
+            className='text-[#98A2B3] cursor-pointer'
+            onClick={() => {
+              setMenu('porsant')
+              location.hash = 'porsant'
+            }}>
+            {selectedGroupData?.sup_group_name}/
+          </span>
+          <span
+            className='text-[#98A2B3] cursor-pointer'
+            onClick={() => {
+              setMenu('porsantmanagement')
+              location.hash = 'porsantmanagement'
+            }}>
+            {selectedGroupData?.sup_group_name}/
+          </span>
+          <span className='text-[#7747C0]'> تخصیص گروهی </span>
         </p>
       </div>
       <div className='flex flex-col bg-white p-3'>
@@ -65,7 +105,7 @@ const Allocation = () => {
                 <label className='flex items-center gap-3 cursor-pointer'>
                   <input
                     type='radio'
-                    defaultChecked={index === 0}
+                    defaultChecked={filterType === index}
                     name='beneficiary'
                     value={beneficiary}
                     onChange={() => setFilterType(index === 0 ? 1 : 2)}
@@ -97,17 +137,18 @@ const Allocation = () => {
                 {beneficiaryData?.map((row, index) => (
                   <tr key={index} className='border-b'>
                     <td className='text-center px-4 py-2 border-r'>{index}</td>
-                    <td className='text-center px-4 py-2'>{row.visitor_name}</td>
-                    <td className='text-center px-4 py-2'>{row.visitor_family}</td>
                     <td className='text-center px-4 py-2'>
-                      {row.visitor_tel}
+                      {row.visitor_name}
                     </td>
+                    <td className='text-center px-4 py-2'>
+                      {row.visitor_family}
+                    </td>
+                    <td className='text-center px-4 py-2'>{row.visitor_tel}</td>
                     <td className='text-center px-4 py-2'>
                       <input
                         type='text'
                         inputMode='numeric'
                         placeholder='مبلغ اعتبار را وارد کنید'
-                        defaultValue={row.visitor_specialty}
                         onChange={(e) =>
                           handleCreditChange(index, e.target.value)
                         }
@@ -119,7 +160,9 @@ const Allocation = () => {
               </tbody>
             </table>
             <div className='flex items-center justify-between'>
-              <div className='flex text-[#7747C0]'>
+              <div
+                className='flex text-[#7747C0] cursor-pointer'
+                onClick={() => print()}>
                 <Printer size={22} color='#7747C0' />
                 <p>چاپ لیست</p>
               </div>

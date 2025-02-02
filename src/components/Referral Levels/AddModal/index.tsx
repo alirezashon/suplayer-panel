@@ -6,7 +6,7 @@ import {
   Grammerly,
   TickSquare,
 } from 'iconsax-react'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useData } from '@/Context/Data'
 import { CreateReferrerChart, EditReferrerChart } from '@/services/referrer'
 import toast from 'react-hot-toast'
@@ -20,7 +20,6 @@ const AddModal = ({
   close: (show: null) => void
   sup_group_code: string
 }) => {
-  const [name, setName] = useState<string>(existName || '')
   const [isConfirmed, setIsConfirmed] = useState(false)
   const [state, setState] = useState<number>(0)
   const [parent, setParent] = useState<{ id: number; name: string }>({
@@ -30,9 +29,23 @@ const AddModal = ({
   const { referrerChartData } = useData()
   const [openNodes, setOpenNodes] = useState<number[]>([])
   const [relationLevel, setrelationLevel] = useState<number>()
+  const [errors, setErrors] = useState<Record<string, string>>()
+  const refs = useRef({ chtitle: '', chlabel: '' })
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    refs.current = {
+      ...refs.current,
+      [name]: value,
+    }
+    setErrors({ ...errors, [name]: '' })
+  }
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (refs.current?.chtitle.length < 1) {
+      setErrors({ name: 'این فیلد اجباریست' })
+      return
+    }
     setIsConfirmed(true)
     const accessToken = (await getCookieByKey('access_token')) || ''
     setState(1)
@@ -40,10 +53,11 @@ const AddModal = ({
       await CreateReferrerChart({
         accessToken,
         chpid: state === 0 ? 0 : parent?.id,
-        chtitle: name,
+        chtitle: refs.current.chtitle,
+        chlabel: refs.current?.chlabel,
       }).then((value) => {
         if (value.status === 1) {
-          setParent({ id: value.data.regid, name })
+          setParent({ id: value.data.regid, name: refs.current.chtitle })
           toast.success(value.message)
         } else if (value.status === '-1') {
           toast.error(value.message)
@@ -53,7 +67,9 @@ const AddModal = ({
       const response = await EditReferrerChart({
         accessToken,
         chpid: state === 0 ? 0 : parent?.id,
-        chtitle: name,
+        chtitle: refs.current.chtitle,
+        chid: 0,
+        chlabel: '',
       })
       if (response.status === 1) {
         toast.success(response.message)
@@ -157,9 +173,9 @@ const AddModal = ({
                     نام بالاترین سطح چارت سازمانی خود را وارد کنید.
                   </label>
                   <input
-                    defaultValue={name}
-                    onChange={(e) => setName(e.target.value)}
-                    type='text'
+                    defaultValue={refs.current.chtitle}
+                    onChange={handleChange}
+                    name='chtitle'
                     placeholder='مثال: مدیر منطقه'
                   />
                 </div>
@@ -169,9 +185,9 @@ const AddModal = ({
                   نام بخش یا مستعار این سطح را وارد کنید
                 </label>
                 <input
-                  defaultValue={name}
-                  onChange={(e) => setName(e.target.value)}
-                  type='text'
+                  defaultValue={refs.current.chlabel}
+                  onChange={handleChange}
+                  name='chlabel'
                   placeholder='مثال:  شمال تهران'
                 />
               </div>
@@ -213,7 +229,7 @@ const AddModal = ({
                             className={` transition-all duration-500`}
                           />
                           <span className='flex-1'>
-                            {index === 0 ? parent.name : name}
+                            {index === 0 ? parent.name : refs.current.chtitle}
                           </span>
                         </div>
                         <div className={`${index === 0 && 'pr-9'}`}>

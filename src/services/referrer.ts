@@ -233,11 +233,13 @@ export const CreateReferrerChart = async ({
   chpid,
   chtitle,
   chstatus = 0,
+  chlabel,
 }: {
   accessToken: string | undefined
   chpid?: number
   chtitle: string
   chstatus?: number
+  chlabel?: string
 }) => {
   try {
     const response = await fetch(
@@ -252,6 +254,7 @@ export const CreateReferrerChart = async ({
           chpid,
           chtitle,
           chstatus,
+          chlabel,
         }),
       }
     )
@@ -263,13 +266,17 @@ export const CreateReferrerChart = async ({
 }
 export const EditReferrerChart = async ({
   accessToken,
+  chid = 0,
   chpid,
   chtitle,
   chstatus = 0,
+  chlabel,
 }: {
+  chid: number
   chpid: number
   chtitle: string
   chstatus?: number
+  chlabel?: string
   accessToken: string | undefined
 }) => {
   try {
@@ -282,9 +289,11 @@ export const EditReferrerChart = async ({
           authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
+          chid,
           chpid,
           chtitle,
           chstatus,
+          chlabel,
         }),
       }
     )

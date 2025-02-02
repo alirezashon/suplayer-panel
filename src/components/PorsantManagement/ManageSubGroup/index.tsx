@@ -13,6 +13,7 @@ import StatCard from './StatCard'
 import BeneficiaryCard from './BeneficiaryCard'
 import { useMenu } from '@/Context/Menu'
 import { useData } from '@/Context/Data'
+import { useStates } from '@/Context/States'
 
 const PorsantManagement = () => {
   const [showAddModal, setShowAddModal] = useState<boolean | string>(false)
@@ -20,6 +21,8 @@ const PorsantManagement = () => {
   const [, setDeleteState] = useState<string[]>([])
   const { setMenu } = useMenu()
   const { beneficiaryData } = useData()
+  const { selectedSubGroupData, selectedGroupData, setSelectedGroupData } =
+    useStates()
   return (
     <>
       {showAddModal && (
@@ -32,9 +35,28 @@ const PorsantManagement = () => {
         <div className='flex justify-between items-center mb-6'>
           <div className='flex justify-between items-center mb-7'>
             <p>
-              <span className='text-[#98A2B3]'>مدیریت پورسانت‌دهی </span> /
-              <span className='text-[#98A2B3]'>گروه من </span>/
-              <span className='text-[#7747C0]'>منطقه ۵</span>
+              <span
+                className='text-[#98A2B3] cursor-pointer'
+                onClick={() => {
+                  setMenu('porsant')
+                  location.hash = 'porsant'
+                  setSelectedGroupData(null)
+                }}>
+                مدیریت پورسانت‌دهی
+              </span>
+              /
+              <span
+                className='text-[#98A2B3] cursor-pointer'
+                onClick={() => {
+                  setMenu('porsant')
+                  location.hash = 'porsant'
+                }}>
+                {selectedGroupData?.sup_group_name}
+              </span>
+              /
+              <span className='text-[#7747C0]'>
+                {selectedSubGroupData?.supervisor_name}
+              </span>
             </p>
           </div>
           {!showDeleteState && (
@@ -97,32 +119,32 @@ const PorsantManagement = () => {
           <div className='grid grid-cols-5 max-md:grid-cols-1 max-lg:grid-cols-2 gap-4 mb-6'>
             <StatCard
               title='بازاریاب زیرگروه'
-              value='محمد کوشکی'
+              value={`${selectedSubGroupData?.visitor_count}`}
               Icon={ProfileCircle}
               backgroundImage='/images/red-theme-card.svg'
             />
             <StatCard
               title='مبلغ تخصیص داده شده'
-              value='۳۰,۰۰۰ میلیون ریال'
+              value={`${selectedSubGroupData?.assignment_amount} میلیون ریال`}
               Icon={Moneys}
               backgroundImage='/images/red-theme-card.svg'
             />
             <StatCard
-              title='کمپین افق دارو'
-              value='کمپین افق دارو'
+              title='تعداد کمپین'
+              value={`${selectedSubGroupData?.campaign_count}`}
               Icon={StatusUp}
               backgroundImage='/images/red-theme-card.svg'
             />
             <StatCard
               title='مبلغ قابل آزادسازی'
-              value='۴۰,۰۰۰ میلیون ریال'
+              value={`${selectedSubGroupData?.withdrawable_amount} میلیون ریال`}
               Icon={MoneyTick}
               backgroundImage='/images/green-theme-card.svg'
             />
 
             <StatCard
               title='ذی‌نفعان'
-              value=' کوشکی'
+              value={`${selectedSubGroupData?.visitor_count}`}
               Icon={User}
               backgroundImage='/images/green-theme-card.svg'
             />

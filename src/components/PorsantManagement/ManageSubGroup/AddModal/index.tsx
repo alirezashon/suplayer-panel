@@ -1,3 +1,6 @@
+import SelectList from '@/components/shared/SelectList'
+import { useData } from '@/Context/Data'
+import { BeneficiaryData } from '@/interfaces'
 import { CloseSquare } from 'iconsax-react'
 import { useState } from 'react'
 const AddModal = ({
@@ -8,18 +11,8 @@ const AddModal = ({
   close: (show: boolean) => void
 }) => {
   const [names, setNames] = useState<(string | number)[]>([''])
-  const [isOpen, setIsOpen] = useState(false)
-
-  const toggleItem = (id: string | number) => {
-    let updatedSelectedItems
-    if (names.includes(id)) {
-      updatedSelectedItems = names.filter((item) => item !== id)
-    } else {
-      updatedSelectedItems = [...names, id]
-    }
-    setNames(updatedSelectedItems)
-    setNames(updatedSelectedItems)
-  }
+  const [selected, setSelected] = useState<BeneficiaryData[]>([])
+  const { beneficiaryData } = useData()
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     console.log('Submitted Names:', names)
@@ -63,47 +56,25 @@ const AddModal = ({
                 <label className='text-base font-medium text-right text-gray-800'>
                   انتخاب ذی‌نفع‌های من
                 </label>
-                <div className='relative w-full'>
-                  <div
-                    className='border border-gray-300 rounded-md h-10 py-2 px-4 cursor-pointer flex justify-between items-center'
-                    onClick={() => setIsOpen((prev) => !prev)}>
-                    <span className='text-gray-700'>جستجو</span>
-                    <span className='text-gray-400'>&#x25BC;</span>
-                  </div>
-
-                  {isOpen && (
-                    <div className='absolute w-full border border-gray-300 bg-white rounded-md mt-2 shadow-md z-10'>
-                      {Array(10)
-                        .fill('دکتر محدثه عالمی')
-                        .map((item, index) => (
-                          <div
-                            key={index}
-                            className={`flex items-center gap-2 px-4 py-2 cursor-pointer ${
-                              !names.includes(item.id) &&
-                              'text-[#7747C0] hover:bg-gray-100 hover:text-[#7747C0]'
-                            }`}
-                            onClick={() => toggleItem(item.id)}>
-                            <input
-                              type='checkbox'
-                              checked={names.includes(item.id)}
-                              readOnly
-                              className={`form-checkbox appearance-none 
-    h-5 w-5 border-2  rounded-md
-    ${names.includes(item.id) ? 'bg-[#7747C0]' : 'bg-white'}
-  `}
-                            />
-                            <span
-                              className={`${
-                                names.includes(item)
-                                  ? 'text-[#7747C0]'
-                                  : 'text-gray-700'
-                              }`}>
-                              {item}
-                            </span>
-                          </div>
-                        ))}
-                    </div>
-                  )}
+                <div className=''>
+                  <label className='my-2'> گروه خود را انتخاب کنید </label>
+                  <SelectList
+                    items={
+                      beneficiaryData?.map((bn) => ({
+                        id: bn.visitor_name,
+                        label: bn.visitor_name,
+                      })) || []
+                    }
+                    setSelectedItems={(value: (string | number)[]) =>
+                      setSelected((prv) => [
+                        ...prv,
+                        ...(beneficiaryData?.filter(
+                          (data) => data.visitor_name === `${value}`
+                        ) || []),
+                      ])
+                    }
+                    label='نام گروه'
+                  />
                 </div>
               </div>
             ))}

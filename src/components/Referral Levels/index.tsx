@@ -1,9 +1,19 @@
 import { useState } from 'react'
-import { AddCircle, ArrowLeft2, Edit } from 'iconsax-react'
+import {
+  AddCircle,
+  ArrowLeft2,
+  CloseCircle,
+  Edit,
+  TickCircle,
+} from 'iconsax-react'
 import { useMenu } from '@/Context/Menu'
 import AddModal from './AddModal'
 import DeleteModal from './DeleteModal'
 import { useData } from '@/Context/Data'
+import { ReferrerChartData } from '@/interfaces'
+import { getCookieByKey } from '@/actions/cookieToken'
+import { EditReferrerChart } from '@/services/referrer'
+import { getReferrerChart } from '@/actions/setData'
 export interface TreeNode {
   id: string
   name: string
@@ -16,16 +26,41 @@ const ReferralLevels: React.FC = () => {
   const [showAddModal, setShowAddModal] = useState<null | string[]>(null)
   const [showDeleteModal, setShowDeleteModal] = useState<null | string[]>(null)
   const [openTrees, setOpenTrees] = useState<number[]>([])
-  const { referrerChartData } = useData()
+  const { referrerChartData, setReferrerChartData } = useData()
+  const [editableRow, setEditableRow] = useState<ReferrerChartData | null>()
   const colors = [
     'text-purple-800',
     'text-blue-800',
     'text-yellow-600',
     'text-green-800',
   ]
-
+  const labels = [
+    'bg-purple-200',
+    'bg-blue-200',
+    'bg-yellow-200',
+    'bg-green-200',
+  ]
   const renderTree = (parentId: number, level = 0) => {
     const nodes = referrerChartData?.filter((node) => node.chpid === parentId)
+    const EditChart = async () => {
+      const accessToken = await getCookieByKey('access_token')
+      const { chpid, chtitle, chstatus, chlabel } =
+        editableRow as ReferrerChartData
+      await EditReferrerChart({
+        accessToken,
+        chid: parseInt(`${editableRow?.id}`),
+        chpid,
+        chtitle,
+        chlabel: chlabel || '',
+        chstatus,
+      }).then(async (result) => {
+        result &&
+          (await getReferrerChart().then((value) => {
+            if (value) setReferrerChartData(value)
+            setEditableRow(null)
+          }))
+      })
+    }
     return (
       <ul className='pr-2 border-r-2 border-gray-300 rounded-b-2xl'>
         {nodes?.map((node) => (
@@ -38,7 +73,7 @@ const ReferralLevels: React.FC = () => {
                     : [...prev, node.id]
                 )
               }
-              className={`flex items-center cursor-pointer p-2 ${
+              className={`flex items-center  p-2 ${
                 node.chlevel !== 3 && 'pr-5'
               } rounded-lg ${colors[level % colors.length]}`}>
               {
@@ -46,13 +81,73 @@ const ReferralLevels: React.FC = () => {
                 <ArrowLeft2
                   size={24}
                   color='#98A2B3'
-                  className={` transition-all duration-500 ${
+                  className={`transition-all duration-500 cursor-pointer ${
                     openTrees?.includes(node?.id) && '-rotate-90'
                   }`}
                 />
               }
-              <span className='flex-1'>{node.chtitle}</span>
-              <button className='ml-2 text-gray-500 hover:text-gray-700'>
+              <div className='flex-1 flex gap-5 items-center'>
+                {editableRow && editableRow?.id === node.id ? (
+                  <div className='flex items-center gap-5'>
+                    <input
+                      value={editableRow?.chtitle || ''} // مقدار اولیه را خالی نگه می‌داریم
+                      onChange={(e) =>
+                        setEditableRow(
+                          (prv) =>
+                            prv && {
+                              ...prv,
+                              chtitle: e.target.value,
+                            }
+                        )
+                      }
+                    />
+                  </div>
+                ) : (
+                  <span className='cursor-pointer'>{node.chtitle}</span>
+                )}
+                <span
+                  className={`${
+                    labels[level % labels.length]
+                  } min-w-16 px-2 py-[2px] rounded-md text-[12px] text-center min-h-4`}>
+                  {editableRow?.id === node.id ? (
+                    <input
+                      defaultValue={node?.chlabel || ''}
+                      onChange={(e) =>
+                        setEditableRow(
+                          (prv) =>
+                            prv && {
+                              ...prv,
+                              chlabel: e.target.value,
+                            }
+                        )
+                      }
+                      className='max-w-32 px-2 rounded-md text-center border-none bg-transparent'
+                    />
+                  ) : (
+                    node?.chlabel
+                  )}
+                </span>
+                {editableRow?.id === node.id && (
+                  <div className='flex gap-1'>
+                    <TickCircle
+                      cursor={'pointer'}
+                      size={24}
+                      color='#0F973D'
+                      onClick={EditChart}
+                    />
+                    <CloseCircle
+                      cursor={'pointer'}
+                      size={24}
+                      color='#D42620'
+                      onClick={() => setEditableRow(null)}
+                    />
+                  </div>
+                )}
+              </div>
+
+              <button
+                className='ml-2 text-gray-500 hover:text-gray-700'
+                onClick={() => setEditableRow(node)}>
                 <Edit size={24} color='#7747C0' />
               </button>
               <button className='ml-2 text-gray-500 hover:text-gray-700'>

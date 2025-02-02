@@ -1,29 +1,20 @@
 import { useState } from 'react'
 import { People, ProfileCircle } from 'iconsax-react'
-import { useMenu } from '@/Context/Menu'
 import GroupsDetail from '../GroupDetail'
 import { useData } from '@/Context/Data'
 import AddSubGroup from '../../SubGroups/AddModal'
+import { useStates } from '@/Context/States'
 const ShowGroups: React.FC = () => {
-  const { setMenu } = useMenu()
-  const [showGroup, setShowGroup] = useState<string>('')
   const { groupData } = useData()
   const [addSubGroup, setAddSubGroup] = useState<number | null>()
-
+  const { selectedGroupData, setSelectedGroupData } = useStates()
   return (
     <>
-      {!showGroup ? (
+      {!selectedGroupData ? (
         <div className='m-4'>
           <div className='flex justify-between items-center mb-7'>
             <p className='cursor-pointer'>
-              <span
-                className='text-[#98A2B3]'
-                onClick={() => {
-                  setMenu('groupmanagement')
-                  location.hash = 'groupmanagement'
-                }}>
-                مدیریت پورسانت‌ دهی
-              </span>
+              <span className='text-[#98A2B3]'>مدیریت پورسانت‌ دهی</span>
             </p>
           </div>
           {addSubGroup && (
@@ -48,15 +39,13 @@ const ShowGroups: React.FC = () => {
                     <div className='flex'>
                       <ProfileCircle size={24} color='#704CB9' />
                       <p className='text-sm  px-2 py-1 rounded'>
-                        {Number(`${'group.referrers'}`) > 0 ? (
+                        {group?.visors_count ? (
                           <>
-                            <span className='text-[#757575]'>
-                              تعداد بازاریاب:
-                            </span>
-                            {'group.referrers'}
+                            <span className='text-[#757575]'>تعداد ذی‌نفع</span>
+                            {group.visors_count}
                           </>
                         ) : (
-                          'بازاریابی تعریف نشده است'
+                          ' ذی‌نفعی تعریف نشده است'
                         )}
                       </p>
                     </div>
@@ -66,7 +55,7 @@ const ShowGroups: React.FC = () => {
                         {group.supervisors_count > 0 ? (
                           <>
                             <span className='text-[#757575]'>
-                              تعداد زیر‌گروه‌ها:
+                              تعداد زیر‌گروه‌ها
                             </span>
                             {group.supervisors_count}
                           </>
@@ -78,7 +67,7 @@ const ShowGroups: React.FC = () => {
                     <button
                       onClick={() => {
                         group.supervisors_count > 0
-                          ? setShowGroup(group.sup_group_code)
+                          ? setSelectedGroupData(group)
                           : setAddSubGroup(group.sup_group_id)
                       }}
                       className={`w-full h-10  font-semibold rounded ${
@@ -96,7 +85,7 @@ const ShowGroups: React.FC = () => {
           </div>
         </div>
       ) : (
-        <GroupsDetail id={showGroup} />
+        <GroupsDetail />
       )}
     </>
   )

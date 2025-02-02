@@ -30,13 +30,15 @@ const Referrer: React.FC = () => {
     'جزئیات',
     'عملیات',
   ]
-  const initialData = referrerData?.map((referrer) => ({
-    pers_name: referrer.pers_name,
-    pers_family: referrer.pers_family,
-    pers_chart_id: referrer.pers_chart_id,
-    pers_status: referrer.pers_status,
-    pers_tob: referrer.pers_tob,
-  }))
+  const initialData = Array.isArray(referrerData)
+    ? referrerData?.map((referrer) => ({
+        pers_name: referrer.pers_name,
+        pers_family: referrer.pers_family,
+        pers_chart_id: referrer.pers_chart_id,
+        pers_status: referrer.pers_status,
+        pers_tob: referrer.pers_tob,
+      }))
+    : []
 
   const handleHeaderCheckboxChange = () => {
     if (selectedItems.length === initialData?.length) {

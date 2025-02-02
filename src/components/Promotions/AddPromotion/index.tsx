@@ -232,14 +232,14 @@ const AddPromotion = () => {
             <div className=''>
               <label className='mb-2'> زیرگروه خود را انتخاب کنید </label>
               <SelectList
-                items={
-                  subGroupData?.map((gp) => {
-                    return {
+              items={
+                Array.isArray(subGroupData)
+                  ? subGroupData.map((gp) => ({
                       id: gp.sup_group_id,
                       label: gp.sup_group_name,
-                    }
-                  }) || []
-                }
+                    }))
+                  : []
+              }
                 setSelectedItems={(value: any) =>
                   (refs.current.supervisor_id = value)
                 }

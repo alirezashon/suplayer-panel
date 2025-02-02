@@ -1,3 +1,58 @@
+export const DefineAllocation = async ({
+  commission_type,
+  allocation_type,
+  source_type,
+  sup_group_code,
+  supervisor_code,
+  visitor_uid,
+  amount,
+  currency_type,
+  Signature,
+  accessToken,
+}: {
+  commission_type: number
+  allocation_type: number
+  source_type: number
+  sup_group_code: string
+  supervisor_code: string
+  visitor_uid: string
+  amount: number
+  currency_type: number
+  Signature: string
+  accessToken: string
+}) => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_commission_allocation`,
+      {
+        method: 'POST',
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          commission_type,
+          allocation_type,
+          source_type,
+          sup_group_code,
+          supervisor_code,
+          visitor_uid,
+          amount,
+          currency_type,
+          Signature,
+        }),
+      }
+    )
+
+    if (response.status !== 200) {
+      return
+    }
+
+    return await response.json()
+  } catch (error: unknown) {
+    console.log(error)
+  }
+}
+
 export const GetReferrerProductList = async ({
   accessToken,
 }: {

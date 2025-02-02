@@ -83,15 +83,19 @@ const Home = () => {
       setLoading(false)
       if (['productgroups', 'product-brands'].includes(tag))
         setProductGroupStates((tag as 'productgroups') || 'product-brands')
+      const accessToken = document.cookie
+        .split('; ')
+        .find((row) => row.startsWith('access_token='))
+        ?.split('=')[1]
+  
+      if (!accessToken) {
+        location.href = '/auth/login'
+        return
+      }
     }
     window.addEventListener('hashchange', handleHashChange, false)
     handleHashChange()
-    const timeout = setTimeout(() => {
-      location.href = '/auth/login' // هدایت کاربر به صفحه لاگین بعد از مدت زمان مشخص
-    }, 30 * 60 * 1000) // 30 دقیقه
-
     return () => {
-      clearTimeout(timeout)
       window.removeEventListener('hashchange', handleHashChange, false)
     }
   }, [setMenu, setGroupData, setSubGroupData])
