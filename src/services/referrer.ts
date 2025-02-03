@@ -15,6 +15,10 @@ export const CreateReferrer = async ({
   pers_status,
   CityUID,
   pers_address,
+  last_educational_degree_id,
+  last_educational_major_id,
+  marital_status_id,
+  sex_id,
 }: {
   accessToken: string | undefined
   personnel_code: string
@@ -30,6 +34,10 @@ export const CreateReferrer = async ({
   pers_status: number
   CityUID: string
   pers_address: string
+  last_educational_degree_id: number
+  last_educational_major_id: number
+  marital_status_id: number
+  sex_id: number
 }) => {
   try {
     const response = await fetch(
@@ -42,18 +50,22 @@ export const CreateReferrer = async ({
         },
         body: JSON.stringify({
           personnel_code,
-          pers_chart_id: 0,
-          pers_job_id: 0,
-          pers_type: 0,
-          pers_tob: 0,
+          pers_chart_id,
+          pers_job_id,
+          pers_type,
+          pers_tob,
           pers_uid,
           pers_tel,
           pers_full_name,
           pers_name,
           pers_family,
-          pers_status: 0,
+          pers_status,
           CityUID,
           pers_address,
+          last_educational_degree_id,
+          last_educational_major_id,
+          marital_status_id,
+          sex_id,
         }),
       }
     )
@@ -64,31 +76,45 @@ export const CreateReferrer = async ({
   }
 }
 export const EditReferrer = async ({
-  name,
-  family,
-  fullName,
-  mobile,
   accessToken,
+  personnel_code,
+  pers_chart_id,
+  pers_job_id,
+  pers_type,
+  pers_tob,
+  pers_uid,
+  pers_tel,
+  pers_full_name,
+  pers_name,
+  pers_family,
+  pers_status,
   CityUID,
-  address,
-  expertise,
-  weight,
-  lat,
-  long,
-  status,
+  pers_address,
+  last_educational_degree_id,
+  last_educational_major_id,
+  marital_status_id,
+  sex_id,
+  personnel_uid,
 }: {
-  name: string
-  family: string
-  fullName: string
-  mobile: string
   accessToken: string | undefined
+  personnel_code: string
+  pers_chart_id: number
+  pers_job_id: number
+  pers_type: number
+  pers_tob: number
+  pers_uid: string
+  pers_tel: string
+  pers_full_name: string
+  pers_name: string
+  pers_family: string
+  pers_status: number
   CityUID: string
-  address: string
-  expertise: string
-  weight: number
-  lat: number
-  long: number
-  status?: number
+  pers_address: string
+  last_educational_degree_id: number
+  last_educational_major_id: number
+  marital_status_id: number
+  sex_id: number
+  personnel_uid: string
 }) => {
   try {
     const response = await fetch(
@@ -100,21 +126,24 @@ export const EditReferrer = async ({
           authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
-          supervisor_id: 0,
-          visitor_type: 1,
-          visitor_uid: mobile,
-          visitor_full_name: fullName,
-          visitor_name: name,
-          visitor_family: family,
-          visitor_status: status,
-          visitor_tob: 0,
-          visitor_tel: mobile,
+          personnel_code,
+          pers_chart_id,
+          pers_job_id,
+          pers_type,
+          pers_tob,
+          pers_uid,
+          pers_tel,
+          pers_full_name,
+          pers_name,
+          pers_family,
+          pers_status,
           CityUID,
-          visitor_address: address,
-          visitor_specialty: expertise,
-          default_weight: weight,
-          latitude: lat,
-          longitude: long,
+          pers_address,
+          last_educational_degree_id,
+          last_educational_major_id,
+          marital_status_id,
+          sex_id,
+          personnel_uid,
         }),
       }
     )
@@ -130,7 +159,8 @@ export const GetReferrerList = async ({
 }): Promise<ReferrerData[] | undefined> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_personnel_list`,
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_personnel_list?`,
+      // status_id=1
       {
         method: 'GET',
         headers: {

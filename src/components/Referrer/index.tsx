@@ -10,13 +10,15 @@ import AppointmentModal from './Appointment'
 import { ReferrerData } from '@/interfaces'
 
 const Referrer: React.FC = () => {
-  const [showAddModal, setShowAddModal] = useState<boolean | string>(false)
+  const [showAddModal, setShowAddModal] = useState<boolean | ReferrerData>(
+    false
+  )
   const [showAppointmentModal, setShowAppointmentModal] = useState<
     boolean | ReferrerData
   >(false)
-  const [showDeleteModal, setShowDeleteModal] = useState<boolean | string>(
-    false
-  )
+  const [showDeleteModal, setShowDeleteModal] = useState<
+    boolean | ReferrerData
+  >(false)
   const [selectedItems, setSelectedItems] = useState<number[]>([])
   const { setMenu } = useMenu()
   const { referrerData } = useData()
@@ -65,22 +67,12 @@ const Referrer: React.FC = () => {
         />
       )}
       {showAddModal && (
-        <AddModal
-          // data={{
-          //   name: 'علی',
-          //   lastName: 'محمتی',
-          //   speciality: '0',
-          //   phone: '093329902012',
-          //   address: 'دورقوزابارت',
-          // }}
-          close={setShowAddModal}
-        />
+        <AddModal data={showAddModal as ReferrerData} close={setShowAddModal} />
       )}
       {showDeleteModal && (
         <DeleteModal
-          name={`${showAddModal}`}
+          data={showDeleteModal as ReferrerData}
           close={setShowDeleteModal}
-          isActive
         />
       )}
       <div className='flex flex-col p-5'>
@@ -296,13 +288,25 @@ const Referrer: React.FC = () => {
                           size={24}
                           color='#7747C0'
                           className='cursor-pointer'
-                          // onClick={() => setShowDeleteModal(account)}
+                          onClick={() =>
+                            setShowDeleteModal(
+                              referrerData?.filter(
+                                (data) => data.pers_name === personnel.pers_name
+                              )[0] as ReferrerData
+                            )
+                          }
                         />
                         <Edit2
                           size={24}
                           color='#7747C0'
                           className='cursor-pointer'
-                          // onClick={() => setShowAddModal(account)}
+                          onClick={() =>
+                            setShowAddModal(
+                              referrerData?.filter(
+                                (data) => data.pers_name === personnel.pers_name
+                              )[0] as ReferrerData
+                            )
+                          }
                         />
                       </td>
                     </tr>

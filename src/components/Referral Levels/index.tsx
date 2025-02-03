@@ -23,8 +23,11 @@ export interface TreeNode {
 
 const ReferralLevels: React.FC = () => {
   const { setMenu } = useMenu()
-  const [showAddModal, setShowAddModal] = useState<null | string[]>(null)
-  const [showDeleteModal, setShowDeleteModal] = useState<null | string[]>(null)
+  const [addModal, setAddModal] = useState<{
+    show: boolean
+    data?: ReferrerChartData
+  }>()
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean | string[]>()
   const [openTrees, setOpenTrees] = useState<number[]>([])
   const { referrerChartData, setReferrerChartData } = useData()
   const [editableRow, setEditableRow] = useState<ReferrerChartData | null>()
@@ -33,12 +36,14 @@ const ReferralLevels: React.FC = () => {
     'text-blue-800',
     'text-yellow-600',
     'text-green-800',
+    'text-red-700',
   ]
   const labels = [
     'bg-purple-200',
     'bg-blue-200',
     'bg-yellow-200',
     'bg-green-200',
+    'bg-red-200',
   ]
   const renderTree = (parentId: number, level = 0) => {
     const nodes = referrerChartData?.filter((node) => node.chpid === parentId)
@@ -151,7 +156,11 @@ const ReferralLevels: React.FC = () => {
                 <Edit size={24} color='#7747C0' />
               </button>
               <button className='ml-2 text-gray-500 hover:text-gray-700'>
-                <AddCircle size={24} color='#7747C0' />
+                <AddCircle
+                  size={24}
+                  color='#7747C0'
+                  onClick={() => setAddModal({ show: true, data: node })}
+                />
               </button>
             </div>
             <div className={`pr-9`}>
@@ -186,23 +195,16 @@ const ReferralLevels: React.FC = () => {
         </p>
         <button
           type='submit'
-          onClick={() => setShowAddModal([])}
+          onClick={() => setAddModal({ show: true })}
           className='h-10 min-w-40 bg-[#7747C0] text-white rounded-lg hover:bg-purple-800'>
           + ایجاد بالاترین سطح
         </button>
       </div>
-      {showAddModal && (
+
+      {addModal?.show && (
         <AddModal
-          existName={showAddModal[0]}
-          sup_group_code={showAddModal[1]}
-          close={setShowAddModal}
-        />
-      )}
-      {showDeleteModal && (
-        <DeleteModal
-          sup_group_code={showDeleteModal[1]}
-          name={`${showDeleteModal[0]}`}
-          close={setShowDeleteModal}
+          close={() => setAddModal({ show: false })}
+          data={addModal.data}
         />
       )}
       <div className='bg-white p-6 border rounded-md'>{renderTree(0)}</div>

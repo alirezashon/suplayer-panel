@@ -1,6 +1,6 @@
 import { getCookieByKey } from '@/actions/cookieToken'
 import { Cities, County, States } from '@/interfaces'
-import { GetCity, GetCounty, GetStates } from '@/services/location'
+import { GetCity, GetCounty, GetStates } from '@/services/general'
 import { useState, useRef, useEffect } from 'react'
 
 const CitySelector = ({

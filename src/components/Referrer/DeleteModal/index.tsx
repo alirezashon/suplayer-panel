@@ -1,16 +1,60 @@
+import { getCookieByKey } from '@/actions/cookieToken'
+import { ReferrerData } from '@/interfaces'
+import { EditReferrer } from '@/services/referrer'
 import { CloseSquare, Forbidden2, Trash } from 'iconsax-react'
 
 const DeleteModal = ({
   isActive,
-  name,
+  data,
   close,
 }: {
   isActive?: boolean
-  name: string
+  data: ReferrerData
   close: (show: boolean) => void
 }) => {
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    const accessToken = (await getCookieByKey('access_token')) || ''
+    const {
+      personnel_code,
+      pers_chart_id,
+      pers_job_id,
+      pers_type,
+      pers_tob,
+      pers_uid,
+      pers_tel,
+      pers_full_name,
+      pers_name,
+      pers_family,
+      CityUID,
+      pers_address,
+      last_educational_degree_id,
+      last_educational_major_id,
+      marital_status_id,
+      sex_id,
+      personnel_uid,
+    } = data
+    await EditReferrer({
+      accessToken,
+      personnel_code,
+      pers_chart_id,
+      pers_job_id,
+      pers_type,
+      pers_tob,
+      pers_uid,
+      pers_tel,
+      pers_full_name,
+      pers_name,
+      pers_family,
+      pers_status: 9,
+      CityUID,
+      pers_address,
+      last_educational_degree_id,
+      last_educational_major_id,
+      marital_status_id,
+      sex_id,
+      personnel_uid,
+    })
   }
 
   return (
@@ -47,7 +91,7 @@ const DeleteModal = ({
             <div className='font-bold my-5'>
               آیا مطمئن به حذف
               <span className='px-3 rounded-lg mx-1 bg-purple-300 text-[#6137A0]'>
-                {name}
+                {data.pers_full_name}
               </span>
               هستید؟
             </div>

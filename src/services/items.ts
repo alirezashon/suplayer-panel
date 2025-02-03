@@ -1,8 +1,4 @@
-import {
-  BeneficiaryData,
-  GroupData,
-  SubGroup,
-} from '@/interfaces'
+import { BeneficiaryData, GroupData, SubGroup } from '@/interfaces'
 
 export const CreateGroup = async ({
   name,
@@ -187,31 +183,39 @@ export const GetSubGroupsList = async ({
   }
 }
 export const CreateBeneficiary = async ({
-  name,
-  family,
-  fullName,
-  mobile,
   accessToken,
+  supervisor_id,
+  visitor_type,
+  visitor_tob,
+  visitor_uid,
+  visitor_tel,
+  visitor_full_name,
+  visitor_name,
+  visitor_family,
+  visitor_status,
   CityUID,
-  address,
-  expertise,
-  weight,
-  lat,
-  long,
-  tob,
+  visitor_address,
+  visitor_specialty,
+  default_weight,
+  latitude,
+  longitude,
 }: {
-  name: string
-  family: string
-  fullName: string
-  mobile: string
   accessToken: string | undefined
+  supervisor_id: number
+  visitor_type: number
+  visitor_tob: number
+  visitor_uid: string
+  visitor_tel: string
+  visitor_full_name: string
+  visitor_name: string
+  visitor_family: string
+  visitor_status: number
   CityUID: string
-  address: string
-  expertise: string
-  weight: number
-  lat: number
-  long: number
-  tob: number
+  visitor_address: string
+  visitor_specialty: string
+  default_weight: number
+  latitude: number
+  longitude: number
 }) => {
   try {
     const response = await fetch(
@@ -223,21 +227,21 @@ export const CreateBeneficiary = async ({
           authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
-          supervisor_id: 0,
-          visitor_type: 1,
-          visitor_uid: mobile,
-          visitor_full_name: fullName,
-          visitor_name: name,
-          visitor_family: family,
-          visitor_status: 1,
-          visitor_tob: tob,
-          visitor_tel: mobile,
+          supervisor_id,
+          visitor_type,
+          visitor_tob,
+          visitor_uid,
+          visitor_tel,
+          visitor_full_name,
+          visitor_name,
+          visitor_family,
+          visitor_status,
           CityUID,
-          visitor_address: address,
-          visitor_specialty: expertise,
-          default_weight: weight,
-          latitude: lat,
-          longitude: long,
+          visitor_address,
+          visitor_specialty,
+          default_weight,
+          latitude,
+          longitude,
         }),
       }
     )
@@ -344,4 +348,3 @@ export const GetBeneficiaryList = async ({
     console.log(error)
   }
 }
-

@@ -7,7 +7,8 @@ import { DocumentCloud, Eye, EyeSlash, TickCircle, Trash } from 'iconsax-react'
 import Image from 'next/image'
 import { FormEvent, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
-
+const errorClass =
+  'border-red-300 border-2 shadow-red-200 shadow-md error-input-animated'
 const AddPromotion = () => {
   const { groupData, subGroupData, productGroupData, brandsData, productData } =
     useData()
@@ -232,18 +233,18 @@ const AddPromotion = () => {
             <div className=''>
               <label className='mb-2'> زیرگروه خود را انتخاب کنید </label>
               <SelectList
-              items={
-                Array.isArray(subGroupData)
-                  ? subGroupData.map((gp) => ({
-                      id: gp.sup_group_id,
-                      label: gp.sup_group_name,
-                    }))
-                  : []
-              }
+                items={
+                  Array.isArray(subGroupData)
+                    ? subGroupData.map((gp) => ({
+                        id: gp.supervisor_id,
+                        label: gp.supervisor_name,
+                      }))
+                    : []
+                }
                 setSelectedItems={(value: any) =>
                   (refs.current.supervisor_id = value)
                 }
-                label='گروه پزشکان من خود را انتخاب کنید'
+                label={'گروه پزشکان من خود را انتخاب کنید'}
               />
             </div>
             <p className='text-lg font-bold'>محصولات خود را انتخاب کنید</p>
@@ -340,7 +341,7 @@ const AddPromotion = () => {
               )}
               <input
                 name='expected_amount'
-                value={refs.current.expected_amount}
+                value={refs.current.expected_amount || ''}
                 onChange={handleInputChange}
                 className=' p-2 border rounded-md'
                 placeholder=' درصد تخفیف'
@@ -357,7 +358,9 @@ const AddPromotion = () => {
                 name='ctitle'
                 value={refs.current.ctitle}
                 onChange={handleInputChange}
-                className='w-full p-2 border rounded-md'
+                className={`w-full p-2 border rounded-md ${
+                  errors.ctitle && errorClass
+                }`}
                 placeholder='شعار / جمله'
               />
               {errors.ctitle && (
@@ -369,6 +372,7 @@ const AddPromotion = () => {
                 <label className='block mb-1 text-sm'>تاریخ شروع پروموشن</label>
                 <Calendar
                   placeholder='تاریخ شروع'
+                  hasError={errors.start_date ? true : false}
                   setDate={(value: string) => (refs.current.start_date = value)}
                 />
                 {errors.start_date && (
@@ -381,6 +385,7 @@ const AddPromotion = () => {
                 </label>
                 <Calendar
                   placeholder='تاریخ پایان'
+                  hasError={errors.exp_date ? true : false}
                   setDate={(value: string) => (refs.current.exp_date = value)}
                 />
                 {errors.exp_date && (
@@ -399,7 +404,9 @@ const AddPromotion = () => {
                 name='cta_link'
                 value={refs.current.cta_link}
                 onChange={handleInputChange}
-                className='w-full p-2 border rounded-md'
+                className={`w-full p-2 border rounded-md ${
+                  errors.cta_link && errorClass
+                }`}
                 placeholder='لینک CTA پروموشن'
               />
               {errors.cta_link && (
@@ -412,7 +419,9 @@ const AddPromotion = () => {
                 name='budget'
                 defaultValue={refs.current.budget}
                 onChange={handleInputChange}
-                className='w-full p-2 border rounded-md'
+                className={`w-full p-2 border rounded-md ${
+                  errors.budget && errorClass
+                }`}
                 placeholder='بودجه کمپین را تعریف کنید'
               />
               {errors.budget && (
@@ -487,7 +496,9 @@ const AddPromotion = () => {
                       uploadStatus === 'uploading'
                         ? 'bg-gradient-to-r from-[#EFFEF3] to-[#D7FCEB]'
                         : 'border-[#C9D0D8] border-dashed'
-                    } text-[#50545F] cursor-pointer my-2`}
+                    } text-[#50545F] cursor-pointer my-2 ${
+                      errors.ctitle && errorClass
+                    }`}
                     htmlFor='avatarUpload'>
                     <DocumentCloud size={32} color='#50545F' />
                     <div className='flex w-full'>

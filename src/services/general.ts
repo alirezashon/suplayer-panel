@@ -1,4 +1,4 @@
-import { Cities, County, States } from '@/interfaces'
+import { Cities, County, EducationalDegree, Major, States } from '@/interfaces'
 
 export const GetStates = async ({
   accessToken,
@@ -79,6 +79,55 @@ export const GetCity = async ({
       throw new Error('Failed to GetAssistantList')
     }
 
+    const result = await response.json()
+    return result.data
+  } catch (error) {
+    console.log(error)
+  }
+}
+export const GetMajor = async ({
+  accessToken,
+}: {
+  accessToken: string | undefined
+}): Promise<Major[] | undefined> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/educational_major`,
+      {
+        method: 'GET',
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+      }
+    )
+    if (!response.ok || response.status === 500) {
+      throw new Error('Failed to GetAssistantList')
+    }
+    const result = await response.json()
+    return result.data
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const GetEducationalDegree = async ({
+  accessToken,
+}: {
+  accessToken: string | undefined
+}): Promise<EducationalDegree[] | undefined> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/educational_degree`,
+      {
+        method: 'GET',
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+      }
+    )
+    if (!response.ok || response.status === 500) {
+      throw new Error('Failed to GetAssistantList')
+    }
     const result = await response.json()
     return result.data
   } catch (error) {

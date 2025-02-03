@@ -144,6 +144,21 @@ export interface ReferrerData {
   pers_status: number
   CityUID: string
   pers_address: string
+  cust_id: number
+  manager_id: number
+  personnel_uid: string
+  last_educational_degree_id: number 
+  last_educational_degree_title: number 
+  last_educational_major_id: number 
+  last_educational_major_title: number 
+  marital_status_id: number 
+  sex_id: number 
+  CityCode: string
+  CityDesc: string
+  CountyCode: string
+  CountyDesc: string
+  StateCode: string
+  StateDesc: string
 }
 export interface ReferrerChartData {
   id: number
@@ -203,4 +218,12 @@ export interface DraftsData {
   cheque_status: number
   cheque_status_date: string
   status_description: string
+}
+export interface Major {
+  id: number
+  title: string
+}
+export interface EducationalDegree {
+  id: number
+  title: string
 }

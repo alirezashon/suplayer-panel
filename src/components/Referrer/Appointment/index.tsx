@@ -1,7 +1,7 @@
 import { getCookieByKey } from '@/actions/cookieToken'
 import { Cities, County, ReferrerData, States } from '@/interfaces'
 import { CreateReferrer, DefineAppointmentTask } from '@/services/referrer'
-import { GetCity, GetCounty, GetStates } from '@/services/location'
+import { GetCity, GetCounty, GetStates } from '@/services/general'
 import { ArrowDown2, CloseSquare, Profile } from 'iconsax-react'
 import { useState, useRef, useEffect } from 'react'
 import { useData } from '@/Context/Data'
