@@ -1,4 +1,10 @@
-import { BeneficiaryData, GroupData, SubGroup } from '@/interfaces'
+import {
+  BeneficiaryData,
+  FormulaData,
+  GroupData,
+  KPIData,
+  SubGroup,
+} from '@/interfaces'
 
 export const CreateGroup = async ({
   name,
@@ -344,6 +350,230 @@ export const GetBeneficiaryList = async ({
     }
 
     return await response.json()
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const CreateFormula = async ({
+  formula_uid,
+  formula_title,
+  formula_desc,
+  formula_str,
+  formula_status,
+  start_date,
+  due_date,
+  accessToken,
+}: {
+  formula_uid: string
+  formula_title: string
+  formula_desc: string
+  formula_str: string
+  formula_status: number
+  start_date: string
+  due_date: string
+  accessToken: string | undefined
+}) => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_define_kpi_formula`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          formula_uid,
+          formula_title,
+          formula_desc,
+          formula_str,
+          formula_status,
+          start_date,
+          due_date,
+        }),
+      }
+    )
+
+    return await response.json()
+  } catch (error: unknown) {
+    console.log(error)
+  }
+}
+export const EditFormula = async ({
+  formula_uid,
+  formula_title,
+  formula_desc,
+  formula_str,
+  formula_status,
+  start_date,
+  due_date,
+  accessToken,
+}: {
+  formula_uid: string
+  formula_title: string
+  formula_desc: string
+  formula_str: string
+  formula_status: number
+  start_date: string
+  due_date: string
+  accessToken: string | undefined
+}) => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/edit_super_grpups`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          formula_uid,
+          formula_title,
+          formula_desc,
+          formula_str,
+          formula_status,
+          start_date,
+          due_date,
+        }),
+      }
+    )
+
+    return await response.json()
+  } catch (error: unknown) {
+    console.log(error)
+  }
+}
+export const GetFormulassList = async ({
+  accessToken,
+}: {
+  accessToken: string | undefined
+}): Promise<FormulaData[] | undefined> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_kpi_formula_list?status_id=1`,
+      {
+        method: 'GET',
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+      }
+    )
+
+    if (!response.ok || response.status === 500) {
+      throw new Error('Failed to GetAssistantList')
+    }
+
+    return await response.json()
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const CreateKPITask = async ({
+  kpi_title,
+  kpi_code,
+  kpi_type,
+  kpi_time_series,
+  kpi_internal_uid,
+  accessToken,
+}: {
+  kpi_title: string
+  kpi_code: string
+  kpi_type: number
+  kpi_time_series: number
+  kpi_internal_uid: string
+  accessToken: string | undefined
+}) => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_define_task_kpi`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          kpi_title,
+          kpi_code,
+          kpi_type,
+          kpi_time_series,
+          kpi_internal_uid,
+        }),
+      }
+    )
+
+    return await response.json()
+  } catch (error: unknown) {
+    console.log(error)
+  }
+}
+export const EditKPITask = async ({
+  task_kpi_uid,
+  kpi_code,
+  kpi_title,
+  kpi_type,
+  kpi_time_series,
+  status,
+  accessToken,
+}: {
+  task_kpi_uid: string
+  kpi_code: string
+  kpi_title: string
+  kpi_type: number
+  kpi_time_series: number
+  status?: number
+  accessToken: string | undefined
+}) => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/edit_task_kpi`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          task_kpi_uid,
+          kpi_code,
+          kpi_title,
+          kpi_type,
+          kpi_time_series,
+          status,
+        }),
+      }
+    )
+
+    return await response.json()
+  } catch (error: unknown) {
+    console.log(error)
+  }
+}
+export const GetKPITaskList = async ({
+  accessToken,
+}: {
+  accessToken: string | undefined
+}): Promise<KPIData[] | undefined> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_task_kpi_list?status_id=1`,
+      {
+        method: 'GET',
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+      }
+    )
+
+    if (!response.ok || response.status === 500) {
+      throw new Error('Failed to GetAssistantList')
+    }
+
+    const result = await response.json()
+    return result.data
   } catch (error) {
     console.log(error)
   }

@@ -1,24 +1,31 @@
 import { getCookieByKey } from '@/actions/cookieToken'
+import { getKPITaskData } from '@/actions/setData'
+import { errorClass } from '@/app/assets/style'
 import { useData } from '@/Context/Data'
-import { CreateGroup, EditGroup } from '@/services/items'
+import { KPIData } from '@/interfaces'
+import { CreateKPITask, EditKPITask } from '@/services/items'
 import { CloseSquare, Grammerly } from 'iconsax-react'
-import { useState } from 'react'
-import toast from 'react-hot-toast'
+import { useRef, useState } from 'react'
 
-const AddModal = ({
-  existName,
-  close,
-  sup_group_code,
-}: {
-  existName?: string
-  close: (show: null) => void
-  sup_group_code: string
-}) => {
-  const [name, setName] = useState<string>(existName || '')
+const AddModal = ({ data, close }: { data: KPIData; close: () => void }) => {
+  const [name, setName] = useState<string>(data?.kpi_title || '')
   const [isConfirmed, setIsConfirmed] = useState(false)
   const [status, setStatus] = useState<React.ReactElement | null>()
-  const { setGroupData } = useData()
- const setResult = (state: boolean, text?: string) => {
+  const [errors, setErrors] = useState<Record<string, string | number>>({
+    kpi_title: '',
+    kpi_code: '',
+    kpi_time_series: '',
+  })
+
+  const { setKPITaskData } = useData()
+  const refs = useRef({
+    kpi_title: data.kpi_title || '',
+    kpi_code: data.kpi_code || '',
+    kpi_type: data.kpi_type || 1,
+    kpi_time_series: data.kpi_time_series || 1,
+    kpi_internal_uid: '',
+  })
+  const setResult = (state: boolean, text?: string) => {
     if (state) {
       setStatus(
         <p className='text-[#0F973D] flex items-center gap-2'>
@@ -32,33 +39,58 @@ const AddModal = ({
         </p>
       )
     }
-}
-
+  }
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target
+    refs.current = {
+      ...refs.current,
+      [name]: value,
+    }
+    setErrors({ ...errors, [name]: '' })
+  }
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    const newErrors: Record<string, string> = {}
+    if (!refs.current.kpi_time_series)
+      newErrors.kpi_time_series = 'این فیلد اجباریست'
+    if (!refs.current.kpi_title) newErrors.kpi_title = 'این فیلد اجباریست'
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors)
+      return
+    }
     setIsConfirmed(true)
     const accessToken = (await getCookieByKey('access_token')) || ''
-    // if (!sup_group_code) {
-    //   const response = await CreateGroup({ accessToken, name })
-    //   if (response.status === 1) {
-    //     setResult(true)
-    //     await getGroupData().then((value) => setGroupData(value))
-    //   } else if (response.status === '-1') {
-    //     setResult(false, response.message)
-    //   } else {
-    //     setResult(false, response.message)
-    //   }
-    // } else {
-    //   const response = await EditGroup({ accessToken, name, sup_group_code })
-    //   if (response.status === 1) {
-    //     toast.success(response.message)
-    //     await getGroupData().then((value) => setGroupData(value))
-    //   } else if (response.status === '-1') {
-    //     setResult(false, response.message)
-    //   } else {
-    //     setResult(false, response.message)
-    //   }
-    // }
+    if (!data.id) {
+      const response = await CreateKPITask({ accessToken, ...refs.current })
+      if (response.status === 1) {
+        setResult(true)
+        await getKPITaskData().then((value) => value && setKPITaskData(value))
+      } else if (response.status === '-1') {
+        setResult(false, response.message)
+      } else {
+        setResult(false, response.message)
+      }
+    } else {
+      const response = await EditKPITask({
+        accessToken,
+        kpi_title: refs.current.kpi_title,
+        kpi_code: refs.current.kpi_code,
+        kpi_type: refs.current.kpi_type,
+        kpi_time_series: refs.current.kpi_time_series,
+        task_kpi_uid: data.task_kpi_uid,
+        status: data.cstatus,
+      })
+      if (response.status === 1) {
+        setResult(true)
+        await getKPITaskData().then((value) => value && setKPITaskData(value))
+      } else if (response.status === '-1') {
+        setResult(false, response.message)
+      } else {
+        setResult(false, response.message)
+      }
+    }
     setTimeout(() => {
       setIsConfirmed(false)
       setStatus(null)
@@ -75,7 +107,7 @@ const AddModal = ({
           className='flex flex-col bg-white max-w-[594px] pb-[852px] max-md:px-5 max-md:pb-24'>
           <div className='flex justify-between items-center w-full text-xl font-medium text-right text-gray-800 max-md:max-w-full'>
             <div className='flex-1 shrink self-stretch my-auto min-w-[240px] max-md:max-w-full'>
-              {existName ? 'ویرایش متغیر خارجی' : ' تعریف متغیر خارجی '}
+              {data?.kpi_title ? 'ویرایش متغیر خارجی' : ' تعریف متغیر خارجی '}
             </div>
             <div
               className='
@@ -84,7 +116,7 @@ const AddModal = ({
                 size={24}
                 cursor='pointer'
                 color='#50545F'
-                onClick={() => close(null)}
+                onClick={() => close()}
               />
             </div>
           </div>
@@ -96,10 +128,14 @@ const AddModal = ({
               </label>
               <input
                 defaultValue={name}
-                onChange={(e) => setName(e.target.value)}
-                type='text'
+                name='kpi_title'
+                onChange={handleChange}
+                className={`${errors.kpi_title && errorClass}`}
                 placeholder='نام متغیر خارجی'
               />
+              {errors.kpi_title && (
+                <span className='text-red-500'>{errors.kpi_title}</span>
+              )}
             </div>
           </div>
 
@@ -108,24 +144,28 @@ const AddModal = ({
               <label className='text-base font-medium text-right text-gray-800'>
                 کد متغیر خارجی
               </label>
-              <input
-                defaultValue={name}
-                onChange={(e) => setName(e.target.value)}
-                type='text'
-                placeholder='کد متغیر خارجی'
-              />
+              <select
+                name='kpi_code'
+                className={`${
+                  errors.kpi_code && errorClass
+                } w-full border rounded-lg h-10 px-1 outline-none`}
+                onChange={handleChange}>
+                <option value={1}>تبدیل</option>
+                <option value={2}>فعالسازی </option>
+              </select>
+              {errors.kpi_code && (
+                <span className='text-red-500'>{errors.kpi_code}</span>
+              )}
             </div>
           </div>
           <div className='my-2'>
             <label>انتخاب بازه زمانی</label>
             <select
-              // defaultValue={
-              //   data?.default_weight || detailsRefs.current.weight || ''
-              // }
-              // onChange={(e) =>
-              //   (detailsRefs.current.weight = parseInt(`${e.target.value}`))
-              // }
-              className='w-full border rounded-lg h-10 px-1'>
+              onChange={handleChange}
+              name='kpi_time_series'
+              className={`${
+                errors.kpi_time_series && errorClass
+              } w-full border rounded-lg h-10 px-1 outline-none`}>
               <option value={''} disabled>
                 روزانه/ ماهانه/ سالانه
               </option>
@@ -133,6 +173,9 @@ const AddModal = ({
               <option value={3}> ماهانه</option>
               <option value={4}>سالانه </option>
             </select>
+            {errors.kpi_time_series && (
+              <span className='text-red-500'>{errors.kpi_time_series}</span>
+            )}
           </div>
 
           <div className='mt-10 w-full max-md:max-w-full'>

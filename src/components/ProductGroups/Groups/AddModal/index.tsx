@@ -3,8 +3,9 @@ import { getProductGroupData } from '@/actions/setData'
 import { useData } from '@/Context/Data'
 import { CreateProductGroup, EditProductGroup } from '@/services/products'
 import { CloseSquare, Grammerly, Trash } from 'iconsax-react'
-import { FormEvent, useState } from 'react'
+import { FormEvent, useRef, useState } from 'react'
 import { ProductGroupData } from '@/interfaces'
+import { errorClass } from '@/app/assets/style'
 
 const AddModal = ({
   data,
@@ -13,14 +14,17 @@ const AddModal = ({
   data?: ProductGroupData
   close: (show: boolean) => void
 }) => {
-  const [productGroupName, setProductGroupName] = useState<string>(
-    data?.group_desc || ''
-  )
-  const [names, setNames] = useState<string[]>([''])
+  const [errors, setErrors] = useState<Record<string, string | string[]>>({
+    group_desc: '',
+    brands: [],
+  })
   const { setProductGroupData, setBrandsData } = useData()
   const [status, setStatus] = useState<React.ReactElement | null>()
   const [isConfirmed, setIsConfirmed] = useState(false)
- const setResult = (state: boolean, text?: string) => {
+  const [groupDesc, setGroupDesc] = useState(data?.group_desc || '')
+  const [brands, setBrands] = useState<string[]>([''])
+
+  const setResult = (state: boolean, text?: string) => {
     if (state) {
       setStatus(
         <p className='text-[#0F973D] flex items-center gap-2'>
@@ -34,18 +38,38 @@ const AddModal = ({
         </p>
       )
     }
-}
+  }
+
+  const handleChangeInput =
+    (index?: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = e.target
+      if (name === 'brands' && typeof index === 'number') {
+        setBrands((prev) =>
+          prev.map((brand, i) => (i === index ? value : brand))
+        )
+      } else {
+        setGroupDesc(value)
+      }
+    }
 
   const handleAddInput = () => {
-    setNames([...names, ''])
+    setBrands((prev) => [...prev, ''])
   }
 
   const handleRemoveInput = (index: number) => {
-    setNames((prev) => prev.filter((_, i) => i !== index))
+    setBrands((prev) => prev.filter((_, i) => i !== index))
   }
 
   const handleInputChange = (value: string, index: number) => {
-    setNames((prev) => prev.map((item, i) => (i === index ? value : item)))
+    setBrands((prev) => prev.map((item, i) => (i === index ? value : item)))
+    const newErrors = { ...errors }
+    if (!Array.isArray(newErrors.brands)) {
+      newErrors.brands = []
+    }
+    if (brands.length > 1 && value.trim()) {
+      newErrors.brands = newErrors.brands.filter((_, i) => i !== index)
+      setErrors(newErrors)
+    }
   }
 
   const rerenderData = async () => {
@@ -57,14 +81,22 @@ const AddModal = ({
     })
   }
   const handleSubmit = async (e: FormEvent) => {
-    setIsConfirmed(true)
-
     e.preventDefault()
+    const newErrors: Record<string, string | string[]> = {}
+    if (!groupDesc) newErrors.group_desc = 'این فیلد اجباریست'
+    const emptyBrands = brands.filter((brand) => !brand.trim())
+    if (emptyBrands.length > 0) newErrors.brands = 'تمام فیلدهای برند اجباریست'
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors)
+      return
+    }
+    setIsConfirmed(true)
     const accessToken = (await getCookieByKey('access_token')) || ''
     if (data?.group_desc)
       await EditProductGroup({
         accessToken,
-        name: productGroupName,
+        name: groupDesc,
         group_id: data?.id,
       }).then(async (value) => {
         if (value && value.status === 1) setResult(true)
@@ -72,30 +104,31 @@ const AddModal = ({
         await rerenderData()
       })
     else {
-      await CreateProductGroup({ accessToken, name: productGroupName }).then(
-        async (value) => {
-          if (value && value.status === 1) setResult(true)
-          else setResult(false, value && value.message)
-          if (value && value?.data?.regid)
-            names?.length > 0 &&
-              (await Promise.all(
-                names.map(async (name) => {
-                  if (name.length > 0) {
-                    const response = await CreateProductGroup({
-                      accessToken,
-                      name: name,
-                      group_pid: value.data.regid,
-                    })
+      await CreateProductGroup({
+        accessToken,
+        name: groupDesc,
+      }).then(async (value) => {
+        if (value && value.status === 1) setResult(true)
+        else setResult(false, value && value.message)
+        if (value && value?.data?.regid)
+          brands?.length > 0 &&
+            (await Promise.all(
+              brands.map(async (name) => {
+                if (name.length > 0) {
+                  const response = await CreateProductGroup({
+                    accessToken,
+                    name: name,
+                    group_pid: value.data.regid,
+                  })
 
-                    if (response && response.status === 1) setResult(true)
-                    else setResult(false, response && response.message)
-                  }
-                })
-              ))
-          setNames([])
-          await rerenderData()
-        }
-      )
+                  if (response && response.status === 1) setResult(true)
+                  else setResult(false, response && response.message)
+                }
+              })
+            ))
+        setBrands([])
+        await rerenderData()
+      })
     }
     setTimeout(() => {
       setIsConfirmed(false)
@@ -133,30 +166,34 @@ const AddModal = ({
                 نام گروه محصول
               </label>
               <input
-                defaultValue={productGroupName}
-                onChange={(e) => setProductGroupName(e.target.value)}
-                type='text'
+                name='group_desc'
+                value={groupDesc}
+                onChange={handleChangeInput()}
+                className={`${errors.group_desc && errorClass}`}
                 placeholder='نام گروه محصول'
               />
             </div>
           </div>
           <div className='mt-2 w-full max-md:max-w-full'>
-            {names.map((name, index) => (
+            {brands.map((name, index) => (
               <div
                 key={index}
                 className={`mt-4 ${
-                  index === names.length - 1 && 'add-new-input-animated'
+                  index === brands.length - 1 && 'add-new-input-animated'
                 }`}>
                 <label className='text-base font-medium text-right text-gray-800'>
                   نام برند محصول خود را بنویسید
                 </label>
                 <div className='flex items-center gap-2'>
                   <input
+                    name='brands'
                     value={name}
                     onChange={(e) => handleInputChange(e.target.value, index)}
                     type='text'
                     placeholder='مثال: فولیکا'
-                    className='flex-1 border border-gray-300 rounded-lg px-4 py-2'
+                    className={`${
+                      errors?.brands && errors.brands[index] && errorClass
+                    } flex-1 border border-gray-300 rounded-lg px-4 py-2`}
                   />
                   {index > 0 && (
                     <Trash

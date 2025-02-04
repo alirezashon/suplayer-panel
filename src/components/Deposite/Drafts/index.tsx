@@ -8,8 +8,7 @@ import { generateDepositSignature } from '@/hooks/Signature'
 import UploadPicture from '@/components/shared/UploadPicture'
 import { useData } from '@/Context/Data'
 import { getDraftsData } from '@/actions/setData'
-const errorClass =
-  'border-red-300 border-2 shadow-red-200 shadow-md error-input-animated'
+
 const Drafts = () => {
   const { setDraftsData } = useData()
   const refs = useRef({

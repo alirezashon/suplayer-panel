@@ -76,7 +76,9 @@ const AddCampaign = ({
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     const accessToken = await getCookieByKey('access_token')
-    await CreateCampaign({ ...refs.current, accessToken })
+    await CreateCampaign({ ...refs.current, accessToken }).then(
+      (result) => result && setshowDetails(true)
+    )
   }
 
   return (

@@ -1,9 +1,8 @@
 import { getCookieByKey } from '@/actions/cookieToken'
-import { Cities, County, ReferrerData, States } from '@/interfaces'
-import { CreateReferrer, DefineAppointmentTask } from '@/services/referrer'
-import { GetCity, GetCounty, GetStates } from '@/services/general'
+import { ReferrerData } from '@/interfaces'
+import { DefineAppointmentTask } from '@/services/referrer'
 import { ArrowDown2, CloseSquare, Profile } from 'iconsax-react'
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import { useData } from '@/Context/Data'
 
 interface AppointmentModalProps {
@@ -14,8 +13,15 @@ interface AppointmentModalProps {
 const AppointmentModal = ({ data, close }: AppointmentModalProps) => {
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [step, setStep] = useState<number>(1)
-  const { groupData, subGroupData, productGroupData, brandsData, productData } =
-    useData()
+  const [showDetails, setShowDetails] = useState<boolean>(false)
+  const {
+    groupData,
+    subGroupData,
+    productGroupData,
+    brandsData,
+    productData,
+    referrerChartData,
+  } = useData()
   const refs = useRef({
     groupId: '',
     subGroupId: '',
@@ -57,12 +63,102 @@ const AppointmentModal = ({ data, close }: AppointmentModalProps) => {
             onClick={() => close(false)}
           />
         </div>
-        <div className='flex justify-between px-10 mt-3'>
-          <div className='flex'>
-            <Profile size={24} color='#000000' />
-            <p>{data?.pers_full_name}</p>
-          </div>
-          <ArrowDown2 size={24} color='#000000' />
+        <div className='flex justify-between  p-2 mx-8 mt-3 border rounded-lg'>
+          {!showDetails ? (
+            <div className='flex'>
+              <Profile size={24} color='#000000' />
+              <p>{`${data?.pers_name} ${data?.pers_family}`}</p>
+              <p className='bg-[#DAFEE5] text-[#0F973D] min-w-12 rounded-lg'>
+                {Array.isArray(referrerChartData) &&
+                  referrerChartData.find(
+                    (chart) => chart.id === data?.pers_chart_id
+                  )?.chlabel}
+              </p>
+            </div>
+          ) : (
+            <div className=''>
+              <div className='grid grid-cols-2 gap-6 mt-5'>
+                <div className='flex flex-col'>
+                  <p className='text-[#5F6474]'>نام</p>
+                  <p className='text-[#8455D2]'>{data?.pers_name}</p>
+                </div>
+                <div className='flex flex-col'>
+                  <p className='text-[#5F6474]'>نام خانوادگی</p>
+                  <p className='text-[#8455D2]'>{data?.pers_family}</p>
+                </div>
+                <div className='flex flex-col'>
+                  <p className='text-[#5F6474]'> نوع بازاریاب</p>
+                  <p className='text-[#8455D2]'>{data?.pers_chart_id}</p>
+                </div>
+                <div className='flex flex-col'>
+                  <p className='text-[#5F6474]'>شماره همراه</p>
+                  <p className='text-[#8455D2]'>{data?.pers_tel}</p>
+                </div>
+                <div className='flex flex-col'>
+                  <p className='text-[#5F6474]'>تاریخ تولد</p>
+                  <p className='text-[#8455D2]'>{'فیلدش تو بک نیست'}</p>
+                </div>
+                <div className='flex flex-col'>
+                  <p className='text-[#5F6474]'>تحصیلات</p>
+                  <p className='text-[#8455D2]'>
+                    {data?.last_educational_degree_title}
+                  </p>
+                </div>
+                <div className='flex flex-col'>
+                  <p className='text-[#5F6474]'>جنسیت</p>
+                  <p className='text-[#8455D2]'>{data?.sex_id}</p>
+                </div>
+                <div className='flex flex-col'>
+                  <p className='text-[#5F6474]'>وضعیت تاهل</p>
+                  <p className='text-[#8455D2]'>{'فیلدش تو بک نیست'}</p>
+                </div>
+                <div className='flex flex-col'>
+                  <p className='text-[#5F6474]'> استان </p>
+                  <p className='text-[#8455D2]'>{data?.StateDesc}</p>
+                </div>
+                <div className='flex flex-col'>
+                  <p className='text-[#5F6474]'>شهر</p>
+                  <p className='text-[#8455D2]'>{data?.CityDesc}</p>
+                </div>
+              </div>
+              <div className='flex flex-col my-3'>
+                <p className='text-[#5F6474]'>آدرس</p>
+                <p className='text-[#8455D2]'>{data?.pers_address}</p>
+              </div>
+              <div className='flex flex-col my-3'>
+                <p className='text-[#5F6474]'>وضعیت بازاریاب</p>
+                <p className='text-[#0F973D] bg-[#DAFEE5] w-fit min-w-16 mx-3 rounded-lg text-center'>
+                  {data?.pers_status}
+                </p>
+              </div>
+              <div className='flex flex-col mt-5'>
+                <p className='text-[#5F6474]'> گروه‌ و زیرگروه‌های عضو شده</p>
+                <div className='flex gap-3'>
+                  {
+                    <p className='text-[#3B5A4F] bg-[#A1E3CB] px-5 py-1 rounded-full w-fit'>
+                      {'نیاز به اضافه شدن در بک'}
+                    </p>
+                  }
+                </div>
+              </div>
+              <div className='flex flex-col mt-5'>
+                <p className='text-[#5F6474]'>گروه و برند محصول عضو شده </p>
+                <div className='flex gap-3'>
+                  {
+                    <p className='text-[#3B5A4F] bg-[#A1E3CB] px-5 py-1 rounded-full w-fit'>
+                      {'نیاز به اضافه شدن در بک'}
+                    </p>
+                  }
+                </div>
+              </div>
+            </div>
+          )}
+          <ArrowDown2
+            size={24}
+            color='#000000'
+            className={`cursor-pointer`}
+            onClick={() => setShowDetails(!showDetails)}
+          />
         </div>
         <div className='w-full flex justify-around items-center mb-6 '>
           <div className='w-[55%] absolute flex'>

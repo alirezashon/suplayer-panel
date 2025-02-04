@@ -8,6 +8,7 @@ import Calendar from '../shared/Calendar'
 import { useData } from '@/Context/Data'
 import AppointmentModal from './Appointment'
 import { ReferrerData } from '@/interfaces'
+import ShowDetails from './ShowDetails'
 
 const Referrer: React.FC = () => {
   const [showAddModal, setShowAddModal] = useState<boolean | ReferrerData>(
@@ -19,6 +20,9 @@ const Referrer: React.FC = () => {
   const [showDeleteModal, setShowDeleteModal] = useState<
     boolean | ReferrerData
   >(false)
+  const [showdetailModal, setShowDetailModal] = useState<null | ReferrerData>(
+    null
+  )
   const [selectedItems, setSelectedItems] = useState<number[]>([])
   const { setMenu } = useMenu()
   const { referrerData } = useData()
@@ -60,6 +64,12 @@ const Referrer: React.FC = () => {
 
   return (
     <>
+      {showdetailModal && (
+        <ShowDetails
+          data={showdetailModal}
+          close={() => setShowDetailModal(null)}
+        />
+      )}
       {showAppointmentModal && (
         <AppointmentModal
           data={showAppointmentModal as ReferrerData}
@@ -280,7 +290,18 @@ const Referrer: React.FC = () => {
                       )}
                       <td className='text-center'>
                         <p className='flex justify-center cursor-pointer'>
-                          <MoreSquare size={25} color='#7747C0' />
+                          <MoreSquare
+                            size={25}
+                            color='#7747C0'
+                            onClick={() =>
+                              setShowDetailModal(
+                                referrerData?.filter(
+                                  (referrer) =>
+                                    referrer.pers_name === personnel.pers_name
+                                )[0] as ReferrerData
+                              )
+                            }
+                          />
                         </p>
                       </td>
                       <td className='text-center h-10 flex justify-center gap-2 border-l'>

@@ -5,6 +5,7 @@ import {
   DraftsData,
   GroupData,
   IUserResponse,
+  KPIData,
   ProductGroupData,
   ProductsData,
   PromotionInterface,
@@ -39,6 +40,8 @@ interface DataContextProps {
   setPromotionData: (SubGroupData: PromotionInterface[]) => void
   draftsData: DraftsData[] | undefined
   setDraftsData: (SubGroupData: DraftsData[]) => void
+  KPITaskData: KPIData[] | undefined
+  setKPITaskData: (SubGroupData: KPIData[]) => void
 }
 
 const DataContext = createContext<DataContextProps | undefined>(undefined)
@@ -60,6 +63,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
   >([])
   const [promotionData, setPromotionData] = useState<PromotionInterface[]>([])
   const [draftsData, setDraftsData] = useState<DraftsData[]>([])
+  const [KPITaskData, setKPITaskData] = useState<KPIData[]>([])
 
   return (
     <DataContext.Provider
@@ -88,6 +92,8 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
         setPromotionData,
         draftsData,
         setDraftsData,
+        KPITaskData,
+        setKPITaskData,
       }}>
       {children}
     </DataContext.Provider>

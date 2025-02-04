@@ -6,6 +6,9 @@ import dynamic from 'next/dynamic'
 import { useState, useRef } from 'react'
 import toast from 'react-hot-toast'
 import CitySelector from '@/components/shared/CitySelector'
+import { errorClass } from '@/app/assets/style'
+import { getBeneficiaryData } from '@/actions/setData'
+import { useData } from '@/Context/Data'
 
 const Map = dynamic(() => import('../../Address/Map'), { ssr: false })
 
@@ -18,17 +21,11 @@ const AddModal = ({ data, close }: AddModalProps) => {
   const [mapData, setMapData] = useState<[number, number]>([
     35.72249924640049, 51.335191350784214,
   ])
-  const [errors, setErrors] = useState<Record<string, string>>({})
-  const [beneficiaryType, setBeneficiaryType] = useState<1 | 2>(1)
   const [isConfirmed, setIsConfirmed] = useState(false)
-
-  const detailsRefs = useRef({
-    name: data?.visitor_family || '',
-    lastName: '',
-    speciality: '',
-    phone: '',
-    address: '',
-    weight: 1,
+  const [errors, setErrors] = useState<Record<string, string | number>>({
+    visitor_name: data?.visitor_family || '',
+    visitor_family: '',
+    visitor_tel: '',
   })
   const refs = useRef({
     supervisor_id: 0,
@@ -47,26 +44,31 @@ const AddModal = ({ data, close }: AddModalProps) => {
     latitude: 0,
     longitude: 0,
   })
+  const { setBeneficiaryData } = useData()
   const beneficiaries = ['شخص', 'کسب و کار']
-
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    refs.current = {
+      ...refs.current,
+      [name]: value,
+    }
+    setErrors({ ...errors, [name]: '' })
+  }
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsConfirmed(true)
-    const accessToken = await getCookieByKey('access_token')
-
-    setErrors({})
-
     const newErrors: Record<string, string> = {}
-    Object.keys(detailsRefs).forEach((key) => {
-      if (!detailsRefs[key as keyof typeof detailsRefs]) {
-        newErrors[key] = 'این فیلد اجباری است'
-      }
-    })
-
+    if (!refs.current.visitor_name) newErrors.visitor_name = 'این فیلد اجباریست'
+    if (!refs.current.visitor_family)
+      newErrors.visitor_family = 'این فیلد اجباریست'
+    if (!refs.current.visitor_tel) newErrors.visitor_tel = 'این فیلد اجباریست'
+    setErrors(newErrors)
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors)
       return
     }
+    const accessToken = await getCookieByKey('access_token')
+
     if (data?.CityUID) {
       EditBeneficiary({ ...data, accessToken })
         .then((value) => {
@@ -80,7 +82,15 @@ const AddModal = ({ data, close }: AddModalProps) => {
       await CreateBeneficiary({
         accessToken,
         ...refs.current,
-      })
+        visitor_full_name:
+          refs.current.visitor_name + ' ' + refs.current.visitor_family,
+      }).then(
+        async (value) =>
+          value &&
+          (await getBeneficiaryData().then(
+            (data) => data && setBeneficiaryData(data)
+          ))
+      )
     }
     setTimeout(() => {
       setIsConfirmed(false)
@@ -117,7 +127,9 @@ const AddModal = ({ data, close }: AddModalProps) => {
                     defaultChecked={index === 0}
                     name='beneficiary'
                     value={beneficiary}
-                    onChange={() => setBeneficiaryType(index === 0 ? 1 : 2)}
+                    onChange={() =>
+                      (refs.current.visitor_tob = index === 0 ? 1 : 2)
+                    }
                     className='w-5 h-5 cursor-pointer accent-[#7747C0]'
                   />
                   <span className='text-gray-700'>{beneficiary}</span>
@@ -125,41 +137,40 @@ const AddModal = ({ data, close }: AddModalProps) => {
               ))}
             </div>
           </div>
-          {beneficiaryType === 1 ? (
+          {refs.current.visitor_tob === 1 ? (
             <>
               <div className='flex gap-4 my-2'>
                 <div className='flex flex-col w-full'>
                   <label>نام</label>
                   <input
                     defaultValue={
-                      data?.visitor_name || detailsRefs.current.name || ''
+                      data?.visitor_name || refs.current.visitor_name || ''
                     }
-                    onChange={(e) =>
-                      (detailsRefs.current.name = e.target.value)
-                    }
+                    name='visitor_name'
+                    onChange={handleChange}
                     placeholder='پرهام'
-                    className={`border ${errors.name ? 'border-red-500' : ''}`}
+                    className={` ${errors.visitor_name && errorClass}`}
                   />
-                  {errors.name && (
-                    <span className='text-red-500'>{errors.name}</span>
+                  {errors.visitor_name && (
+                    <span className='text-red-500'>{errors.visitor_name}</span>
                   )}
                 </div>
                 <div className='flex flex-col w-full'>
                   <label>نام خانوادگی</label>
                   <input
                     defaultValue={
-                      data?.visitor_family || detailsRefs.current.lastName || ''
+                      data?.visitor_family || refs.current.visitor_family || ''
                     }
                     onChange={(e) =>
-                      (detailsRefs.current.lastName = e.target.value)
+                      (refs.current.visitor_family = e.target.value)
                     }
                     placeholder='پازکی'
-                    className={`border ${
-                      errors.lastName ? 'border-red-500' : ''
-                    }`}
+                    className={` ${errors.visitor_family && errorClass}`}
                   />
-                  {errors.lastName && (
-                    <span className='text-red-500'>{errors.lastName}</span>
+                  {errors.visitor_family && (
+                    <span className='text-red-500'>
+                      {errors.visitor_family}
+                    </span>
                   )}
                 </div>
               </div>
@@ -169,35 +180,27 @@ const AddModal = ({ data, close }: AddModalProps) => {
                   <input
                     defaultValue={
                       data?.visitor_specialty ||
-                      detailsRefs.current.speciality ||
+                      refs.current.visitor_specialty ||
                       ''
                     }
-                    onChange={(e) =>
-                      (detailsRefs.current.speciality = e.target.value)
-                    }
+                    name='visitor_specialty'
+                    onChange={handleChange}
                     placeholder='متخصص پوست و مو'
-                    className={`border ${
-                      errors.speciality ? 'border-red-500' : ''
-                    }`}
                   />
-                  {errors.speciality && (
-                    <span className='text-red-500'>{errors.speciality}</span>
-                  )}
                 </div>
                 <div className='flex flex-col w-full'>
                   <label>شماره همراه ذی‌ نفع</label>
                   <input
                     defaultValue={
-                      data?.visitor_tel || detailsRefs.current.phone || ''
+                      data?.visitor_tel || refs.current.visitor_tel || ''
                     }
-                    onChange={(e) =>
-                      (detailsRefs.current.phone = e.target.value)
-                    }
+                    name='visitor_tel'
+                    onChange={handleChange}
                     placeholder='۰۹۱۲۷۶۸۵۶۴۷۳'
-                    className={`border ${errors.phone ? 'border-red-500' : ''}`}
+                    className={`border ${errors.visitor_tel && errorClass}`}
                   />
-                  {errors.phone && (
-                    <span className='text-red-500'>{errors.phone}</span>
+                  {errors.visitor_tel && (
+                    <span className='text-red-500'>{errors.visitor_tel}</span>
                   )}
                 </div>
               </div>
@@ -209,31 +212,27 @@ const AddModal = ({ data, close }: AddModalProps) => {
                   <label>نام کسب و کار</label>
                   <input
                     defaultValue={
-                      data?.visitor_full_name || detailsRefs.current.name || ''
+                      data?.visitor_full_name || refs.current.visitor_name || ''
                     }
-                    onChange={(e) =>
-                      (detailsRefs.current.name = e.target.value)
-                    }
-                    placeholder='پرهام'
-                    className={`border ${errors.name ? 'border-red-500' : ''}`}
+                    name='visitor_name'
+                    onChange={handleChange}
+                    placeholder='نام کسب و کار'
+                    className={`border ${errors.visitor_name && errorClass}`}
                   />
-                  {errors.name && (
-                    <span className='text-red-500'>{errors.name}</span>
+                  {errors.visitor_name && (
+                    <span className='text-red-500'>{errors.visitor_name}</span>
                   )}
                 </div>
                 <div className='flex flex-col w-full'>
                   <label>تلفن ثابت (با کد شهر) </label>
                   <input
                     defaultValue={
-                      data?.visitor_tel || detailsRefs.current.phone || ''
+                      data?.visitor_tel || refs.current.visitor_tel || ''
                     }
-                    onChange={(e) =>
-                      (detailsRefs.current.phone = e.target.value)
-                    }
+                    name='visitor_tel'
+                    onChange={handleChange}
                     placeholder='021-77889999'
-                    className={`border ${
-                      errors.lastName ? 'border-red-500' : ''
-                    }`}
+                    className={`border ${errors.lastName && errorClass}`}
                   />
                   {errors.lastName && (
                     <span className='text-red-500'>{errors.lastName}</span>
@@ -246,32 +245,23 @@ const AddModal = ({ data, close }: AddModalProps) => {
                   <input
                     defaultValue={
                       data?.visitor_family ||
-                      detailsRefs.current.speciality ||
+                      refs.current.visitor_specialty ||
                       ''
                     }
-                    onChange={(e) =>
-                      (detailsRefs.current.speciality = e.target.value)
-                    }
+                    name='visitor_specialty'
+                    onChange={handleChange}
                     placeholder='متخصص پوست و مو'
-                    className={`border ${
-                      errors.speciality ? 'border-red-500' : ''
-                    }`}
                   />
-                  {errors.speciality && (
-                    <span className='text-red-500'>{errors.speciality}</span>
-                  )}
                 </div>
                 <div className='flex flex-col w-full'>
                   <label>شماره همراه </label>
                   <input
                     defaultValue={
-                      data?.visitor_tel || detailsRefs.current.phone || ''
+                      data?.visitor_tel || refs.current.visitor_tel || ''
                     }
-                    onChange={(e) =>
-                      (detailsRefs.current.phone = e.target.value)
-                    }
+                    onChange={handleChange}
+                    name='visitor_tel'
                     placeholder='۰۹۱۲۷۶۸۵۶۴۷۳'
-                    className={`border ${errors.phone ? 'border-red-500' : ''}`}
                   />
                   {errors.phone && (
                     <span className='text-red-500'>{errors.phone}</span>
@@ -304,9 +294,11 @@ const AddModal = ({ data, close }: AddModalProps) => {
           <div className='my-4'>
             <label>آدرس</label>
             <input
-              value={data?.visitor_address || refs.current.visitor_address}
-              onChange={(e) => (refs.current.visitor_address = e.target.value)}
-              type='text'
+              defaultValue={
+                data?.visitor_address || refs.current.visitor_address
+              }
+              name='visitor_address'
+              onChange={handleChange}
               className={`w-full border ${
                 errors.address ? 'border-red-500' : ''
               }`}
@@ -319,10 +311,10 @@ const AddModal = ({ data, close }: AddModalProps) => {
             <label>انتخاب وزن برای ذی‌ نفع</label>
             <select
               defaultValue={
-                data?.default_weight || detailsRefs.current.weight || ''
+                data?.default_weight || refs.current.default_weight || ''
               }
               onChange={(e) =>
-                (detailsRefs.current.weight = parseInt(`${e.target.value}`))
+                (refs.current.default_weight = parseInt(`${e.target.value}`))
               }
               className='w-full border rounded-lg h-10 px-1'>
               <option value={1}>1</option>

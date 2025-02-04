@@ -147,12 +147,12 @@ export interface ReferrerData {
   cust_id: number
   manager_id: number
   personnel_uid: string
-  last_educational_degree_id: number 
-  last_educational_degree_title: number 
-  last_educational_major_id: number 
-  last_educational_major_title: number 
-  marital_status_id: number 
-  sex_id: number 
+  last_educational_degree_id: number
+  last_educational_degree_title: number
+  last_educational_major_id: number
+  last_educational_major_title: number
+  marital_status_id: number
+  sex_id: number
   CityCode: string
   CityDesc: string
   CountyCode: string
@@ -226,4 +226,23 @@ export interface Major {
 export interface EducationalDegree {
   id: number
   title: string
+}
+export interface FormulaData {
+  formula_uid: string
+  formula_title: string
+  formula_desc: string
+  formula_str: string
+  formula_status: number
+  start_date: string
+  due_date: string
+}
+export interface KPIData {
+  id: number
+  task_kpi_uid: string
+  kpi_code: string
+  kpi_title: string
+  kpi_type: number
+  kpi_time_series: number
+  desc: string
+  cstatus: number
 }

@@ -10,6 +10,7 @@ import {
   getReferrerChart,
   getCampaignData,
   getPromotiuonData,
+  getKPITaskData,
 } from '@/actions/setData'
 import Beneficiary from '@/components/Beneficiary'
 import Campaign from '@/components/Campaign'
@@ -48,6 +49,7 @@ const Home = () => {
     setReferrerChartData,
     setCampaignData,
     setPromotionData,
+    setKPITaskData,
   } = useData()
   const { setProductGroupStates } = useStates()
   useEffect(() => {
@@ -75,6 +77,7 @@ const Home = () => {
       await getPromotiuonData().then(
         (value) => value && setPromotionData(value)
       )
+      await getKPITaskData().then((result) => result && setKPITaskData(result))
     }
     fetcher()
     const handleHashChange = () => {
@@ -87,7 +90,7 @@ const Home = () => {
         .split('; ')
         .find((row) => row.startsWith('access_token='))
         ?.split('=')[1]
-  
+
       if (!accessToken) {
         location.href = '/auth/login'
         return

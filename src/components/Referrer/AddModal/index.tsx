@@ -8,13 +8,14 @@ import toast from 'react-hot-toast'
 import { useData } from '@/Context/Data'
 import CitySelector from '@/components/shared/CitySelector'
 import { GetEducationalDegree, GetMajor } from '@/services/general'
+import { useMenu } from '@/Context/Menu'
+import { errorClass } from '@/app/assets/style'
 
 interface AddModalProps {
   data?: ReferrerData
   close: (show: boolean) => void
 }
-const errorClass =
-  'border-red-300 border-2 shadow-red-200 shadow-md error-input-animated'
+
 const AddModal = ({ data, close }: AddModalProps) => {
   const [step, setStep] = useState<number>(1)
   const [educational, setEducational] = useState<{
@@ -37,7 +38,8 @@ const AddModal = ({ data, close }: AddModalProps) => {
     'bg-red-200',
   ]
   const { referrerChartData } = useData()
-  const beneficiaries = ['شخص', 'کسب و کار']
+  const { setMenu } = useMenu()
+  const refererTypes = ['شخص', 'کسب و کار']
   const refs = useRef({
     personnel_code: '',
     pers_chart_id: 0,
@@ -80,7 +82,6 @@ const AddModal = ({ data, close }: AddModalProps) => {
     if (!refs.current.pers_chart_id)
       newErrors.pers_chart_id = 'این فیلد اجباریست'
     setErrors(newErrors)
-
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors)
       return
@@ -151,46 +152,71 @@ const AddModal = ({ data, close }: AddModalProps) => {
         </div>
         {step === 1 ? (
           <div className='flex flex-col mt-3'>
-            <p className='text-[#7747C0]'>انتخاب نوع بازاریاب</p>
-            <div className='grid grid-cols-2  gap-5 mt-4 px-5'>
-              {referrerChartData?.map((chart, index) => (
-                <label
-                  key={index}
-                  className='flex items-center gap-3 cursor-pointer mx-2'>
-                  <input
-                    type='radio'
-                    defaultChecked={index === 0}
-                    name='beneficiary'
-                    value={refs.current.pers_chart_id || chart.id}
-                    onChange={() => (refs.current.pers_chart_id = chart.id)}
-                    className='w-5 h-5 cursor-pointer accent-[#7747C0]'
-                  />
-                  <p className='flex justify-between w-full items-center gap-2'>
-                    <span className='text-gray-700 text-nowrap'>
-                      {chart.chtitle}
-                    </span>
-                    <span
-                      className={`px-2  rounded-md text-nowrap ${
-                        bg[index % bg.length]
-                      } ${text[index % text.length]}`}>
-                      {chart.chlabel}
-                    </span>
-                  </p>
-                </label>
-              ))}
-            </div>
-            <div className='w-full mt-10 sticky bottom-0 left-0 right-0 bg-white flex items-center gap-4 p-2 max-w-[40vw] mx-auto'>
+            {errors.pers_chart_id != 0 && (
+              <span className='text-red-500'>{errors.pers_chart_id}</span>
+            )}
+            <p className='text-[#7747C0]'>انتخاب سطح بازاریاب</p>
+            {referrerChartData && referrerChartData.length > 0 ? (
+              <div className='w-full'>
+                <div className='grid grid-cols-2  gap-5 mt-4 px-5'>
+                  {referrerChartData?.map((chart, index) => (
+                    <label
+                      key={index}
+                      className='flex items-center gap-3 cursor-pointer mx-2'>
+                      <input
+                        type='radio'
+                        name='pers_chart_id'
+                        defaultChecked={chart.id === refs.current.pers_chart_id}
+                        onChange={() => {
+                          setErrors({})
+                          refs.current.pers_chart_id = chart.id
+                        }}
+                        className='w-5 h-5 cursor-pointer accent-[#7747C0]'
+                      />
+                      <p className='flex justify-between w-full items-center gap-2'>
+                        <span className='text-gray-700 text-nowrap'>
+                          {chart.chtitle}
+                        </span>
+                        <span
+                          className={`px-2  rounded-md text-nowrap ${
+                            bg[index % bg.length]
+                          } ${text[index % text.length]}`}>
+                          {chart.chlabel}
+                        </span>
+                      </p>
+                    </label>
+                  ))}
+                </div>
+                <div className='w-full mt-10 sticky bottom-0 left-0 right-0 bg-white flex items-center gap-4 p-2 max-w-[40vw] mx-auto'>
+                  <button
+                    onClick={() =>
+                      refs.current.pers_chart_id
+                        ? setStep(2)
+                        : setErrors((prv) => ({
+                            ...prv,
+                            pers_chart_id: 'لطفا یک گزینه را انتخاب کنید',
+                          }))
+                    }
+                    className='w-full h-10 text-white bg-[#7747C0] rounded-lg'>
+                    مرحله بعد
+                  </button>
+                  <button
+                    onClick={() => close(false)}
+                    className='flex justify-center items-center w-full h-10 border border-[#7747C0] text-[#7747C0] rounded-lg hover:bg-purple-100'>
+                    انصراف
+                  </button>
+                </div>
+              </div>
+            ) : (
               <button
-                onClick={() => setStep(2)}
-                className='w-full h-10 text-white bg-[#7747C0] rounded-lg'>
-                مرحله بعد
+                onClick={() => {
+                  location.hash = 'referral-levels'
+                  setMenu('referral-levels')
+                }}
+                className='fill-button h-10 rounded-md'>
+                تعریف سطح بازاریاب
               </button>
-              <button
-                onClick={() => close(false)}
-                className='flex justify-center items-center w-full h-10 border border-[#7747C0] text-[#7747C0] rounded-lg hover:bg-purple-100'>
-                انصراف
-              </button>
-            </div>
+            )}
           </div>
         ) : (
           <form
@@ -199,7 +225,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
             <div className='flex flex-col mt-3'>
               <p className='text-[#7747C0]'>انتخاب نوع بازاریاب</p>
               <div className='flex flex-col gap-3 mt-2'>
-                {beneficiaries.map((beneficiary, index) => (
+                {refererTypes.map((beneficiary, index) => (
                   <label
                     key={index}
                     className='flex items-center gap-3 cursor-pointer'>

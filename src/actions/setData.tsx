@@ -3,6 +3,7 @@ import { getCookieByKey } from './cookieToken'
 import {
   GetBeneficiaryList,
   GetGroupsList,
+  GetKPITaskList,
   GetSubGroupsList,
 } from '@/services/items'
 import { GetCurrentUser } from '@/services/user'
@@ -60,4 +61,8 @@ export const getPromotiuonData = async () => {
 export const getDraftsData = async () => {
   const accessToken = (await getCookieByKey('access_token')) || ''
   return await GetdDraftsList({ accessToken })
+}
+export const getKPITaskData = async () => {
+  const accessToken = (await getCookieByKey('access_token')) || ''
+  return await GetKPITaskList({ accessToken })
 }

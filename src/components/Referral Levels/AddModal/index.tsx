@@ -12,8 +12,7 @@ import { CreateReferrerChart } from '@/services/referrer'
 import toast from 'react-hot-toast'
 import { ReferrerChartData } from '@/interfaces'
 import { getReferrerChart } from '@/actions/setData'
-const errorClass =
-  'border-red-300 border-2 shadow-red-200 shadow-md error-input-animated'
+
 const AddModal = ({
   close,
   data,

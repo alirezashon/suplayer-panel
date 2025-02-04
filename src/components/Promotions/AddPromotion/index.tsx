@@ -7,8 +7,7 @@ import { DocumentCloud, Eye, EyeSlash, TickCircle, Trash } from 'iconsax-react'
 import Image from 'next/image'
 import { FormEvent, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
-const errorClass =
-  'border-red-300 border-2 shadow-red-200 shadow-md error-input-animated'
+
 const AddPromotion = () => {
   const { groupData, subGroupData, productGroupData, brandsData, productData } =
     useData()
