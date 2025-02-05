@@ -3,28 +3,54 @@ import { Trash, Edit2, SearchNormal } from 'iconsax-react'
 import AddModal from './AddModal'
 import DeleteModal from './DeleteModal'
 import Image from 'next/image'
-import { ProductsData } from '@/interfaces'
-import { useData } from '@/Context/Data'
+import { ProductGroupData, ProductsData } from '@/interfaces'
+import { useStates } from '@/Context/States'
+import { useMenu } from '@/Context/Menu'
 
-const headers = ['ردیف', 'گروه محصول','برند محصول', 'نام محصول', 'عملیات']
+const headers = ['ردیف', 'گروه محصول', 'برند محصول', 'نام محصول', 'عملیات']
 const Product: React.FC = () => {
-  const { productData } = useData()
+  const { selectedProductData } = useStates()
+  const { setMenu } = useMenu()
   const [data, setData] = useState<ProductsData[]>()
-  const [showAddModal, setShowAddModal] = useState<
-    boolean | { category: string; title: string }
-  >(false)
-  const [showDeleteModal, setShowDeleteModal] = useState<boolean | string>(
+  const [showAddModal, setShowAddModal] = useState<boolean | ProductsData>(
     false
   )
+  const [showDeleteModal, setShowDeleteModal] = useState<
+    boolean | ProductsData
+  >(false)
   return (
     <div className='m-4'>
       <div className='flex justify-between items-center mb-7'>
         <p>
-          <span className='text-[#98A2B3]'>تعاریف</span>/
-          <span className='text-[#98A2B3]'>محصولات من</span>/
-          <span className='text-[#7747C0]'>گروه شامپو</span>
+          <span className='text-[#98A2B3] cursor-pointer'>تعاریف</span>/
+          <span
+            className='text-[#98A2B3] cursor-pointer'
+            onClick={() => {
+              location.hash = 'productgroups'
+              setMenu('productgroups')
+            }}>
+            محصولات من
+          </span>
+          /
+          <span
+            className='text-[#98A2B3] cursor-pointer'
+            onClick={() => {
+              location.hash = 'productgroups'
+              setMenu('productgroups')
+            }}>
+            {selectedProductData?.group?.group_desc}
+          </span>
+          /
+          <span
+            className='text-[#7747C0]'
+            onClick={() => {
+              location.hash = 'product-brands'
+              setMenu('product-brands')
+            }}>
+            {selectedProductData?.brand.group_desc}
+          </span>
         </p>
-        {productData && productData.length > 0 && (
+        {selectedProductData?.data && selectedProductData?.data.length > 0 && (
           <button
             type='submit'
             onClick={() => setShowAddModal(true)}
@@ -35,17 +61,19 @@ const Product: React.FC = () => {
       </div>
       {showAddModal && (
         <AddModal
-          existName={typeof showAddModal === 'object' ? showAddModal.title : ''}
-          category={
-            typeof showAddModal === 'object' ? showAddModal.category : ''
-          }
+          editData={showAddModal as ProductsData}
+          groupName={selectedProductData?.group?.group_desc as string}
+          brand={selectedProductData?.brand as ProductGroupData}
           close={setShowAddModal}
         />
       )}
       {showDeleteModal && (
-        <DeleteModal name={`${showDeleteModal}`} close={setShowDeleteModal} />
+        <DeleteModal
+          data={showDeleteModal as ProductsData}
+          close={setShowDeleteModal}
+        />
       )}
-      {productData && productData.length > 0 ? (
+      {selectedProductData?.data && selectedProductData?.data.length > 0 ? (
         <div className='p-6 bg-white rounded-lg border border-gray-200 flex flex-col gap-5'>
           <div className='flex gap-5 items-center'>
             <div className='relative w-full flex items-center '>
@@ -93,48 +121,37 @@ const Product: React.FC = () => {
             </thead>
 
             <tbody>
-              {productData?.map((product, index) => (
+              {selectedProductData?.data?.map((product, index) => (
                 <tr key={index} className='border-b'>
-            
-                      <td
-                
-                        className={`text-center h-10 ${
-                         
-                             'border-r'
-                             
-                        }`}>
-                        {index !== 4 ? (
-                          product.ini_name
-                        ) : (
-                          <div className='justify-center flex gap-2'>
-                            <Trash
-                              size={20}
-                              color='#D42620'
-                              cursor={'pointer'}
-                              onClick={() => {
-                                setData((prv) =>
-                                  prv?.filter(
-                                    (ref) => ref.type !== product.type
-                                  )
-                                )
-                                setShowDeleteModal(product.type)
-                              }}
-                            />
-                            <Edit2
-                              size={20}
-                              color='#8455D2'
-                              cursor={'pointer'}
-                              onClick={() =>
-                                setShowAddModal({
-                                  category: product.type,
-                                  title: product.type,
-                                })
-                              }
-                            />
-                          </div>
-                        )}
-                      </td>
-                  
+                  <td className={`text-center h-10 border-r`}>{index}</td>
+                  <td className={`text-center h-10 `}>
+                    {selectedProductData?.group?.group_desc}
+                  </td>
+                  <td className={`text-center h-10 `}>
+                    {selectedProductData?.brand?.group_desc}
+                  </td>
+                  <td className={`text-center h-10 `}>{product?.ini_name}</td>
+                  <td className={`text-center h-10 border-l`}>
+                    <div className='justify-center flex gap-2'>
+                      <Trash
+                        size={20}
+                        color='#D42620'
+                        cursor={'pointer'}
+                        onClick={() => {
+                          setData((prv) =>
+                            prv?.filter((ref) => ref.type !== product.type)
+                          )
+                          setShowDeleteModal(product)
+                        }}
+                      />
+                      <Edit2
+                        size={20}
+                        color='#8455D2'
+                        cursor={'pointer'}
+                        onClick={() => setShowAddModal(product)}
+                      />
+                    </div>
+                  </td>
                 </tr>
               ))}
             </tbody>

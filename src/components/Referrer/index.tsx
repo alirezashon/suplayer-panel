@@ -1,15 +1,24 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Trash, Edit2, FolderAdd, MoreSquare, Message } from 'iconsax-react'
 import AddModal from './AddModal'
 import DeleteModal from './DeleteModal'
 import Image from 'next/image'
 import { useMenu } from '@/Context/Menu'
-import Calendar from '../shared/Calendar'
 import { useData } from '@/Context/Data'
 import AppointmentModal from './Appointment'
 import { ReferrerData } from '@/interfaces'
 import ShowDetails from './ShowDetails'
 
+const headers = [
+  'ردیف',
+  'نام',
+  'نام خانوادگی',
+  'سمت بازاریاب',
+  'وضعیت',
+  'فعالسازی/انتصاب',
+  'جزئیات',
+  'عملیات',
+]
 const Referrer: React.FC = () => {
   const [showAddModal, setShowAddModal] = useState<boolean | ReferrerData>(
     false
@@ -24,28 +33,24 @@ const Referrer: React.FC = () => {
     null
   )
   const [selectedItems, setSelectedItems] = useState<number[]>([])
+  const [initialData, setInitialData] = useState<Partial<ReferrerData>[]>([])
+
   const { setMenu } = useMenu()
   const { referrerData } = useData()
-  const headers = [
-    'ردیف',
-    'نام',
-    'نام خانوادگی',
-    'سمت بازاریاب',
-    'وضعیت',
-    'فعالسازی/انتصاب',
-    'جزئیات',
-    'عملیات',
-  ]
-  const initialData = Array.isArray(referrerData)
-    ? referrerData?.map((referrer) => ({
-        pers_name: referrer.pers_name,
-        pers_family: referrer.pers_family,
-        pers_chart_id: referrer.pers_chart_id,
-        pers_status: referrer.pers_status,
-        pers_tob: referrer.pers_tob,
-      }))
-    : []
 
+  useEffect(() => {
+    setInitialData(
+      Array.isArray(referrerData)
+        ? referrerData?.map((referrer) => ({
+            pers_name: referrer.pers_name,
+            pers_family: referrer.pers_family,
+            pers_chart_id: referrer.pers_chart_id,
+            pers_status: referrer.pers_status,
+            pers_tob: referrer.pers_tob,
+          }))
+        : []
+    )
+  }, [])
   const handleHeaderCheckboxChange = () => {
     if (selectedItems.length === initialData?.length) {
       setSelectedItems([]) // اگر همه انتخاب شده بودند، پاک کن
@@ -62,6 +67,29 @@ const Referrer: React.FC = () => {
     }
   }
 
+  const filterPersonnel = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target
+    const filteredData = referrerData?.filter((person) => {
+      const fieldValue = person?.[name as keyof ReferrerData]
+      if (typeof fieldValue === 'string') {
+        return !value || fieldValue.includes(value)
+      }
+      return !value
+    })
+
+    // فقط فیلدهای خاص را ذخیره می‌کنیم
+    const filteredFieldsData = filteredData?.map((person) => ({
+      pers_name: person.pers_name,
+      pers_family: person.pers_family,
+      pers_chart_id: person.pers_chart_id,
+      pers_status: person.pers_status,
+      pers_tob: person.pers_tob,
+    }))
+
+    setInitialData(filteredFieldsData as Partial<ReferrerData>[])
+  }
   return (
     <>
       {showdetailModal && (
@@ -136,15 +164,36 @@ const Referrer: React.FC = () => {
                 <label className='text-base font-medium text-right text-gray-800'>
                   نام
                 </label>
-                <input type='text' placeholder='نام' />
+                <input
+                  name='pers_name'
+                  onChange={filterPersonnel}
+                  placeholder='نام'
+                />
               </div>
               <div className='flex flex-col w-full'>
                 <label className='text-base font-medium text-right text-gray-800'>
                   نام خانوادگی
                 </label>
-                <input type='text' placeholder='نام خانوادگی' />
+                <input
+                  name='pers_family'
+                  onChange={filterPersonnel}
+                  placeholder='نام خانوادگی'
+                />
               </div>
-              <div className='my-4 w-full'>
+       
+              <div className='flex flex-col w-full'>
+                <label className='text-base font-medium text-right text-gray-800'>
+                  شماره همراه
+                </label>
+                <input
+                  name='pers_tel'
+                  onChange={filterPersonnel}
+                  placeholder='شماره همراه'
+                />
+              </div>
+            </div>
+            {/* <div className='flex gap-4 items-center'>
+                     <div className='my-4 w-full'>
                 <label id='status-label'> نوع بازاریاب</label>
                 <select
                   className={`!w-full outline-none border rounded-lg h-10 px-1 cursor-pointer border-[#C9D0D8]`}>
@@ -155,14 +204,7 @@ const Referrer: React.FC = () => {
                   <option value='0'>ناروه</option>
                 </select>
               </div>
-            </div>
-            <div className='flex gap-4 items-center'>
-              <div className='flex flex-col w-full'>
-                <label className='text-base font-medium text-right text-gray-800'>
-                  شماره همراه
-                </label>
-                <input type='text' placeholder='شماره همراه' />
-              </div>
+           
               <div className='flex flex-col w-full'>
                 <label className='text-base font-medium text-right text-gray-800'>
                   تاریخ تولد
@@ -183,7 +225,7 @@ const Referrer: React.FC = () => {
                   <option value='0'>ناروه</option>
                 </select>
               </div>
-            </div>
+            </div> */}
             <div className='mt-10 w-full flex justify-end '>
               <button
                 type='submit'

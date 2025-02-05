@@ -5,24 +5,26 @@ import { CreateProductGroup, EditProductGroup } from '@/services/products'
 import { CloseSquare, Grammerly, Trash } from 'iconsax-react'
 import { FormEvent, useState } from 'react'
 import { ProductGroupData } from '@/interfaces'
+import toast from 'react-hot-toast'
+import { errorClass } from '@/app/assets/style'
 
 const AddModal = ({
   data,
   parent,
-  setData,
   close,
 }: {
   data?: ProductGroupData
   parent: ProductGroupData
-  setData?: (value: ProductGroupData[]) => void
   close: (show: boolean) => void
 }) => {
-  const { setBrandsData } = useData()
+  const { setBrandsData, setProductGroupData } = useData()
   const [editName, setEditName] = useState<string>(data?.group_desc || '')
   const [names, setNames] = useState<string[]>([''])
   const [status, setStatus] = useState<React.ReactElement | null>()
   const [isConfirmed, setIsConfirmed] = useState(false)
- const setResult = (state: boolean, text?: string) => {
+  const [errors, setErrors] = useState<Record<string, string[]>>()
+
+  const setResult = (state: boolean, text?: string) => {
     if (state) {
       setStatus(
         <p className='text-[#0F973D] flex items-center gap-2'>
@@ -36,7 +38,7 @@ const AddModal = ({
         </p>
       )
     }
-}
+  }
 
   const handleAddInput = () => {
     setNames([...names, ''])
@@ -48,20 +50,39 @@ const AddModal = ({
 
   const handleInputChange = (value: string, index: number) => {
     setNames((prev) => prev.map((item, i) => (i === index ? value : item)))
+    const newErrors = { ...errors }
+    if (value.trim()) {
+      if (newErrors.brands) {
+        newErrors.brands = newErrors.brands.filter((_, i) => i !== index)
+      }
+    } else {
+      newErrors.brands = newErrors.brands || []
+      if (!newErrors.brands.includes('تمام فیلدهای برند اجباریست')) {
+        newErrors.brands.push('تمام فیلدهای برند اجباریست')
+      }
+    }
+    setErrors(newErrors)
   }
+
   const rerenderData = async () => {
     await getProductGroupData().then((value) => {
       if (value) {
         setBrandsData(value.brands)
-        setData &&
-          setData(
-            value.brands?.filter((brand) => brand.group_pid === parent.id)
-          )
       }
     })
   }
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
+    const newErrors: Record<string, string[]> = {}
+    const emptyBrands = names.filter((brand) => !brand.trim())
+    if (emptyBrands.length > 0)
+      newErrors.brands = ['تمام فیلدهای برند اجباریست']
+    // console.table(errors)
+    // if (Object.keys(newErrors).length > 0) {
+    //   setErrors(newErrors)
+    //   return
+    // }
+
     setIsConfirmed(true)
 
     const accessToken = (await getCookieByKey('access_token')) || ''
@@ -87,6 +108,16 @@ const AddModal = ({
                   accessToken,
                   name: name,
                   group_pid: parent.id,
+                }).then(async (result) => {
+                  if (result.status === 1) {
+                    toast.success(result.message)
+                    await getProductGroupData().then((value) => {
+                      if (value) {
+                        setProductGroupData(value.productGroups)
+                        setBrandsData(value.brands)
+                      }
+                    })
+                  } else toast.error(result.message)
                 })
             )
         )
@@ -147,7 +178,9 @@ const AddModal = ({
                     onChange={(e) => setEditName(e.target.value)}
                     type='text'
                     placeholder='مثال: فولیکا'
-                    className='flex-1 border border-gray-300 rounded-lg px-4 py-2'
+                    className={`flex-1 border border-gray-300 rounded-lg px-4 py-2 ${
+                      errors?.brands && errorClass
+                    }`}
                   />
                 </div>
               </div>
@@ -167,8 +200,11 @@ const AddModal = ({
                       onChange={(e) => handleInputChange(e.target.value, index)}
                       type='text'
                       placeholder='مثال: فولیکا'
-                      className='flex-1 border border-gray-300 rounded-lg px-4 py-2'
+                      className={`flex-1 border border-gray-300 rounded-lg px-4 py-2 ${
+                        errors?.brands && errorClass
+                      }`}
                     />
+
                     {index > 0 && (
                       <Trash
                         className='cursor-pointer'

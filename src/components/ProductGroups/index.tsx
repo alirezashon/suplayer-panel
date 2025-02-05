@@ -6,14 +6,9 @@ import { useStates } from '@/Context/States'
 
 const ProductGroupsPage = () => {
   const { productGroupStates } = useStates()
-  const [showBrand, setShowBrand] = useState<ProductGroupData>()
   return (
     <div>
-      {productGroupStates === 'product-brands' ? (
-        <Brands data={showBrand as ProductGroupData} />
-      ) : (
-        <ProductGroups setBrand={setShowBrand} />
-      )}
+      {productGroupStates === 'product-brands' ? <Brands /> : <ProductGroups />}
     </div>
   )
 }

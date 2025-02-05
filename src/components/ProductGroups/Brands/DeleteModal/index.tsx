@@ -8,12 +8,10 @@ import { CloseSquare, Danger, Forbidden2, Trash } from 'iconsax-react'
 const DeleteModal = ({
   isActive,
   data,
-  setData,
   close,
 }: {
   isActive?: boolean
   data: ProductGroupData
-  setData: (value: ProductGroupData[]) => void
   close: (show: boolean) => void
 }) => {
   const { setProductGroupData } = useData()
@@ -30,9 +28,6 @@ const DeleteModal = ({
       await getProductGroupData().then((value) => {
         if (value) {
           setProductGroupData(value.productGroups)
-          setData(
-            value.brands?.filter((brand) => brand.group_pid === data.group_pid)
-          )
         }
       })
       close(false)

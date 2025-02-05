@@ -8,10 +8,8 @@ import { useData } from '@/Context/Data'
 import { ProductGroupData } from '@/interfaces'
 import { useStates } from '@/Context/States'
 import AddBrand from '../Brands/AddModal'
-const ProductGroups: React.FC<{
-  setBrand: (value: ProductGroupData) => void
-}> = ({ setBrand }) => {
-  const { productGroupData } = useData()
+const ProductGroups: React.FC = () => {
+  const { productGroupData, brandsData } = useData()
   const [showAddModal, setShowAddModal] = useState<boolean | ProductGroupData>(
     false
   )
@@ -22,7 +20,7 @@ const ProductGroups: React.FC<{
     ProductGroupData | boolean
   >(false)
   const { setMenu } = useMenu()
-  const { setProductGroupStates } = useStates()
+  const { setProductGroupStates, setSelectedProductBrandData } = useStates()
 
   return (
     <>
@@ -134,7 +132,12 @@ const ProductGroups: React.FC<{
                   <button
                     onClick={() => {
                       if (productGroup.lev1_count > 0) {
-                        setBrand(productGroup)
+                        setSelectedProductBrandData({
+                          data: brandsData?.filter(
+                            (pg) => pg.group_pid === productGroup.id
+                          ) as ProductGroupData[],
+                          group: productGroup,
+                        })
                         setProductGroupStates('product-brands')
                         location.hash = 'product-brands'
                       } else {

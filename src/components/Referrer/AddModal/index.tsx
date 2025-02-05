@@ -3,13 +3,13 @@ import { EducationalDegree, Major, ReferrerData } from '@/interfaces'
 import { CreateReferrer } from '@/services/referrer'
 import { CloseSquare } from 'iconsax-react'
 import { useState, useRef, useEffect } from 'react'
-import Calendar from '@/components/shared/Calendar'
-import toast from 'react-hot-toast'
 import { useData } from '@/Context/Data'
 import CitySelector from '@/components/shared/CitySelector'
 import { GetEducationalDegree, GetMajor } from '@/services/general'
 import { useMenu } from '@/Context/Menu'
 import { errorClass } from '@/app/assets/style'
+import toast from 'react-hot-toast'
+import { getReferrerData } from '@/actions/setData'
 
 interface AddModalProps {
   data?: ReferrerData
@@ -37,10 +37,10 @@ const AddModal = ({ data, close }: AddModalProps) => {
     'bg-green-200',
     'bg-red-200',
   ]
-  const { referrerChartData } = useData()
+  const { referrerChartData, setReferrerData } = useData()
   const { setMenu } = useMenu()
   const refererTypes = ['شخص', 'کسب و کار']
-  const refs = useRef({
+  const [formData, setFormData] = useState({
     personnel_code: '',
     pers_chart_id: 0,
     pers_job_id: 0,
@@ -59,6 +59,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
     marital_status_id: 0,
     sex_id: 0,
   })
+
   const [errors, setErrors] = useState<Record<string, string | number>>({
     pers_chart_id: 0,
     pers_tel: '',
@@ -66,32 +67,43 @@ const AddModal = ({ data, close }: AddModalProps) => {
     pers_family: '',
     CityUID: '',
   })
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target
-    refs.current = {
-      ...refs.current,
-      [name]: value,
-    }
+    setFormData((prev) => ({ ...prev, [name]: value }))
     setErrors({ ...errors, [name]: '' })
   }
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     const newErrors: Record<string, string> = {}
-    if (!refs.current.pers_name) newErrors.pers_name = 'این فیلد اجباریست'
-    if (!refs.current.pers_family) newErrors.pers_family = 'این فیلد اجباریست'
-    if (!refs.current.pers_chart_id)
-      newErrors.pers_chart_id = 'این فیلد اجباریست'
+    if (!formData.pers_name) newErrors.pers_name = 'این فیلد اجباریست'
+    if (!formData.pers_family) newErrors.pers_family = 'این فیلد اجباریست'
+    if (!formData.pers_uid) newErrors.pers_uid = 'این فیلد اجباریست'
+    if (!formData.personnel_code) newErrors.personnel_code = 'این فیلد اجباریست'
+    if (!formData.pers_chart_id) newErrors.pers_chart_id = 'این فیلد اجباریست'
     setErrors(newErrors)
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors)
+      toast.error('لطفا خطا ها را رفع کنید')
       return
     }
     const accessToken = (await getCookieByKey('access_token')) || ''
     await CreateReferrer({
-      ...refs.current,
+      ...formData,
       pers_job_id: 1,
-      pers_full_name: refs.current.pers_name + refs.current.pers_family,
+      pers_tel: formData.pers_uid,
+      pers_full_name: formData.pers_name + formData.pers_family,
       accessToken,
+    }).then(async (value) => {
+      if (value.status === 1) {
+        toast.success(value.message)
+        await getReferrerData().then(
+          (result) => result && setReferrerData(result)
+        )
+        close(false)
+      }
+      if (!value.data) toast.error(value.message)
     })
   }
   useEffect(() => {
@@ -166,10 +178,10 @@ const AddModal = ({ data, close }: AddModalProps) => {
                       <input
                         type='radio'
                         name='pers_chart_id'
-                        defaultChecked={chart.id === refs.current.pers_chart_id}
+                        defaultChecked={chart.id === formData.pers_chart_id}
                         onChange={() => {
                           setErrors({})
-                          refs.current.pers_chart_id = chart.id
+                          formData.pers_chart_id = chart.id
                         }}
                         className='w-5 h-5 cursor-pointer accent-[#7747C0]'
                       />
@@ -190,7 +202,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
                 <div className='w-full mt-10 sticky bottom-0 left-0 right-0 bg-white flex items-center gap-4 p-2 max-w-[40vw] mx-auto'>
                   <button
                     onClick={() =>
-                      refs.current.pers_chart_id
+                      formData.pers_chart_id
                         ? setStep(2)
                         : setErrors((prv) => ({
                             ...prv,
@@ -234,7 +246,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
                       defaultChecked={index === 0}
                       name='beneficiary'
                       value={beneficiary}
-                      onChange={() => (refs.current.pers_tob = index)}
+                      onChange={() => (formData.pers_tob = index)}
                       className='w-5 h-5 cursor-pointer accent-[#7747C0]'
                     />
                     <span className='text-gray-700'>{beneficiary}</span>
@@ -274,27 +286,27 @@ const AddModal = ({ data, close }: AddModalProps) => {
               <div className='flex flex-col w-full'>
                 <label>وضعیت تاهل</label>
                 <select
-                  className='w-full border rounded-lg h-10 px-1 outline-none'
-                  onChange={(e) => {
-                    refs.current.marital_status_id = parseInt(
-                      `${e.target.value}`
-                    )
-                  }}>
+                  name='marital_status_id'
+                  className={`w-full border rounded-lg h-10 px-1 outline-none ${
+                    errors.marital_status_id && errorClass
+                  }`}
+                  onChange={handleChange}>
+                  <option value={0}>نامشخص</option>
                   <option value={1}>مجرد</option>
                   <option value={2}>متاهل </option>
                 </select>
               </div>
               <div className='flex flex-col w-full'>
-                <label>تخصص بازاریاب</label>
+                <label>شماره همراه</label>
                 <input
                   onChange={handleChange}
-                  name='pers_job_id'
-                  defaultValue={data?.pers_job_id || ''}
+                  name='pers_uid'
+                  defaultValue={data?.pers_uid || ''}
                   placeholder='متخصص پوست و مو'
-                  className={`border ${errors.pers_job_id && errorClass}`}
+                  className={`border ${errors.pers_uid && errorClass}`}
                 />
-                {errors.pers_job_id && (
-                  <span className='text-red-500'>{errors.pers_job_id}</span>
+                {errors.pers_uid && (
+                  <span className='text-red-500'>{errors.pers_uid}</span>
                 )}
               </div>
             </div>
@@ -304,7 +316,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
                 <select
                   className='w-full border rounded-lg h-10 px-1 outline-none'
                   onChange={(e) => {
-                    refs.current.last_educational_degree_id = parseInt(
+                    formData.last_educational_degree_id = parseInt(
                       `${e.target.value}`
                     )
                   }}>
@@ -320,7 +332,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
                 <select
                   className='w-full border rounded-lg h-10 px-1 outline-none'
                   onChange={(e) => {
-                    refs.current.last_educational_major_id = parseInt(
+                    formData.last_educational_major_id = parseInt(
                       `${e.target.value}`
                     )
                   }}>
@@ -336,20 +348,24 @@ const AddModal = ({ data, close }: AddModalProps) => {
               <div className='flex flex-col w-full'>
                 <label>جنسیت </label>
                 <select
-                  className='w-full border rounded-lg h-10 px-1 outline-none'
-                  onChange={(e) => {}}>
+                  name='sex_id'
+                  className={`w-full border rounded-lg h-10 px-1 outline-none ${
+                    errors.sex_id && errorClass
+                  }`}
+                  onChange={handleChange}>
                   <option value={1}>زن </option>
                   <option value={2}>مرد </option>
                 </select>
               </div>
               <div className='flex flex-col w-full'>
-                <label> تاریخ تولد </label>
-                <Calendar
-                  hasError={errors.personnel_code ? true : false}
-                  setDate={(value: string) =>
-                    (refs.current.personnel_code = value)
-                  }
-                  placeholder='۱۳۵۶/۰۶/۲۳'
+                <label> کد پرسنلی</label>
+                <input
+                  defaultValue={data?.personnel_code}
+                  name='personnel_code'
+                  onChange={handleChange}
+                  className={`w-full border ${
+                    errors.personnel_code && errorClass
+                  }`}
                 />
                 {errors.personnel_code && (
                   <span className='text-red-500'>{errors.personnel_code}</span>
@@ -357,14 +373,14 @@ const AddModal = ({ data, close }: AddModalProps) => {
               </div>
             </div>
             <CitySelector
-              setResult={(value: string) => (refs.current.CityUID = value)}
+              setResult={(value: string) => (formData.CityUID = value)}
             />
             <div className='my-4'>
               <label>آدرس</label>
               <input
                 defaultValue={data?.pers_address}
                 name='pers_address'
-                onChange={(e) => (refs.current.pers_address = e.target.value)}
+                onChange={(e) => (formData.pers_address = e.target.value)}
                 className={`w-full border ${errors.address && errorClass}`}
               />
             </div>

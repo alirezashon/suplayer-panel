@@ -1,4 +1,4 @@
-import {  ProductGroupData, ProductsData } from '@/interfaces'
+import { ProductGroupData, ProductsData } from '@/interfaces'
 
 export const CreateProductGroup = async ({
   name,
@@ -47,7 +47,6 @@ export const EditProductGroup = async ({
   group_pid?: number
   accessToken: string | undefined
   status?: number
-  
 }) => {
   try {
     const response = await fetch(
@@ -104,9 +103,11 @@ export const GetProductGroupsList = async ({
 
 export const CreateProduct = async ({
   name,
+  id,
   accessToken,
 }: {
   name: string
+  id: number
   accessToken: string | undefined
 }) => {
   try {
@@ -124,7 +125,7 @@ export const CreateProduct = async ({
           mu: '',
           min_price: 0,
           max_price: 0,
-          group_id: 0,
+          group_id: id,
           ini_code: '',
           ini_name: name,
           cui: 0,
@@ -145,9 +146,11 @@ export const CreateProduct = async ({
 }
 export const EditProduct = async ({
   name,
+  id,
   accessToken,
 }: {
   name: string
+  id: string
   accessToken: string | undefined
 }) => {
   try {
@@ -160,9 +163,20 @@ export const EditProduct = async ({
           authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
-          group_pid: 0,
-          group_desc: name,
-          group_status: 1,
+          sysid: 'string',
+          sstid: 'string',
+          sstt: 'string',
+          mu: 'string',
+          min_price: 0,
+          max_price: 0,
+          status: 0,
+          prd_chart_id: 0,
+          group_id: 0,
+          ini_code: id,
+          ini_name: name,
+          cui: 0,
+          nw: 0,
+          vra: 0,
         }),
       }
     )

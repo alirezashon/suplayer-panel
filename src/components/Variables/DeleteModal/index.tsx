@@ -1,7 +1,7 @@
 import { getCookieByKey } from '@/actions/cookieToken'
 import { KPIData } from '@/interfaces'
-import { EditGroup, EditKPITask } from '@/services/items'
-import { CloseSquare, Forbidden2, Trash } from 'iconsax-react'
+import {  EditKPITask } from '@/services/items'
+import { CloseSquare, Trash } from 'iconsax-react'
 import toast from 'react-hot-toast'
 
 const DeleteModal = ({ close, data }: { close: () => void; data: KPIData }) => {

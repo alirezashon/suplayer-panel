@@ -1,5 +1,10 @@
 'use client'
-import { GroupData, SubGroup } from '@/interfaces'
+import {
+  GroupData,
+  ProductGroupData,
+  ProductsData,
+  SubGroup,
+} from '@/interfaces'
 import { createContext, useContext, useState, ReactNode } from 'react'
 interface StatesContextProps {
   productGroupStates: 'productgroups' | 'product-brands'
@@ -8,6 +13,34 @@ interface StatesContextProps {
   setSelectedSubGroupData: (SubGroupData: SubGroup) => void
   selectedGroupData: GroupData | undefined | null
   setSelectedGroupData: (SubGroupData: GroupData | null) => void
+  selectedProductData:
+    | {
+        data: ProductsData[]
+        group: ProductGroupData
+        brand: ProductGroupData
+      }
+    | undefined
+    | null
+  setSelectedProductData: (
+    SubGroupData: {
+      data: ProductsData[]
+      group: ProductGroupData
+      brand: ProductGroupData
+    } | null
+  ) => void
+  selectedProductBrandData:
+    | {
+        data: ProductGroupData[]
+        group: ProductGroupData
+      }
+    | undefined
+    | null
+  setSelectedProductBrandData: (
+    SubGroupData: {
+      data: ProductGroupData[]
+      group: ProductGroupData
+    } | null
+  ) => void
 }
 const StatesContext = createContext<StatesContextProps | undefined>(undefined)
 export const StatesProvider = ({ children }: { children: ReactNode }) => {
@@ -16,6 +49,15 @@ export const StatesProvider = ({ children }: { children: ReactNode }) => {
   >('productgroups')
   const [selectedSubGroupData, setSelectedSubGroupData] = useState<SubGroup>()
   const [selectedGroupData, setSelectedGroupData] = useState<GroupData | null>()
+  const [selectedProductData, setSelectedProductData] = useState<{
+    data: ProductsData[]
+    group: ProductGroupData
+    brand: ProductGroupData
+  } | null>()
+  const [selectedProductBrandData, setSelectedProductBrandData] = useState<{
+    data: ProductGroupData[]
+    group: ProductGroupData
+  } | null>()
   return (
     <StatesContext.Provider
       value={{
@@ -25,6 +67,10 @@ export const StatesProvider = ({ children }: { children: ReactNode }) => {
         setSelectedSubGroupData,
         selectedGroupData,
         setSelectedGroupData,
+        selectedProductData,
+        setSelectedProductData,
+        selectedProductBrandData,
+        setSelectedProductBrandData,
       }}>
       {children}
     </StatesContext.Provider>

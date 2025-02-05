@@ -1,27 +1,49 @@
 import { getCookieByKey } from '@/actions/cookieToken'
+import { getProductData } from '@/actions/setData'
+import { useData } from '@/Context/Data'
+import { ProductGroupData, ProductsData } from '@/interfaces'
 import { CreateProduct, EditProduct } from '@/services/products'
 import { CloseSquare, Message, Trash } from 'iconsax-react'
 import { useState } from 'react'
+import toast from 'react-hot-toast'
 
 const AddModal = ({
-  existName,
-  category,
+  editData,
+  groupName,
+  brand,
   close,
 }: {
-  existName?: string
-  category: string
+  editData?: ProductsData
+  groupName: string
+  brand: ProductGroupData
   close: (show: boolean) => void
 }) => {
-  const [names, setNames] = useState<string[]>([existName || ''])
+  const { setProductData } = useData()
+  const [names, setNames] = useState<string[]>([editData?.ini_name || ''])
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     const accessToken = (await getCookieByKey('access_token')) || ''
 
     names.map(async (name) => {
-      if (!existName) {
-        await CreateProduct({ accessToken, name })
+      if (!editData?.ini_name) {
+        await CreateProduct({ accessToken, name, id: brand.id }).then(
+          async (result) => {
+            if (result.status === 1) {
+              toast.success(result.message)
+              await getProductData().then(
+                (data) => data && setProductData(data)
+              )
+              close(false)
+            } else toast.error(result.message)
+          }
+        )
       } else {
-        await EditProduct({ accessToken, name })
+        await EditProduct({ accessToken, name ,id:editData.id}).then(async (result) => {
+          if (result.status === 1) {
+            toast.success(result.message)
+            await getProductData().then((data) => data && setProductData(data))
+          } else toast.error(result.message)
+        })
       }
     })
   }
@@ -51,9 +73,13 @@ const AddModal = ({
               />
             </div>
           </div>
-          <div className='flex justify-between '>
+          <div className='flex justify-between mt-5'>
             <p className='text-[#8455D2]'>گروه محصول</p>
-            <p>{category}</p>
+            <p>{groupName}</p>
+          </div>
+          <div className='flex justify-between mt-3'>
+            <p className='text-[#8455D2]'>برند محصول</p>
+            <p>{brand.group_desc}</p>
           </div>
           <div className='flex justify-center mt-5 p-2 rounded-lg gap-2 bg-[#E2F1FC]'>
             <Message color='#1D91CC' size={22} />
@@ -101,13 +127,15 @@ const AddModal = ({
               </div>
             </div>
           ))}
-          <div className='flex justify-end my-5'>
-            <p
-              className='text-[#7747C0] cursor-pointer'
-              onClick={() => setNames((prv) => [...prv, ''])}>
-              + محصول جدید
-            </p>
-          </div>
+          {!editData?.ini_name && (
+            <div className='flex justify-end my-5'>
+              <p
+                className='text-[#7747C0] cursor-pointer'
+                onClick={() => setNames((prv) => [...prv, ''])}>
+                + محصول جدید
+              </p>
+            </div>
+          )}
           <div className='mt-10 w-full max-md:max-w-full'>
             <button
               type='submit'
