@@ -8,8 +8,9 @@ import CitySelector from '@/components/shared/CitySelector'
 import { GetEducationalDegree, GetMajor } from '@/services/general'
 import { useMenu } from '@/Context/Menu'
 import { errorClass } from '@/app/assets/style'
-import toast from 'react-hot-toast'
+
 import { getReferrerData } from '@/actions/setData'
+import { useStates } from '@/Context/States'
 
 interface AddModalProps {
   data?: ReferrerData
@@ -39,6 +40,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
   ]
   const { referrerChartData, setReferrerData } = useData()
   const { setMenu } = useMenu()
+  const { showModal } = useStates()
   const refererTypes = ['شخص', 'کسب و کار']
   const [formData, setFormData] = useState({
     personnel_code: '',
@@ -85,7 +87,12 @@ const AddModal = ({ data, close }: AddModalProps) => {
     setErrors(newErrors)
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors)
-      toast.error('لطفا خطا ها را رفع کنید')
+      showModal({
+        type: 'error',
+        main: <p>{' لطفا خطا ها را رفع کنید'}</p>,
+        title: 'خطا',
+        autoClose: 2,
+      })
       return
     }
     const accessToken = (await getCookieByKey('access_token')) || ''
@@ -96,14 +103,18 @@ const AddModal = ({ data, close }: AddModalProps) => {
       pers_full_name: formData.pers_name + formData.pers_family,
       accessToken,
     }).then(async (value) => {
+      showModal({
+        type: value.status === 1 ? 'success' : 'error',
+        main: <p>{value.message}</p>,
+        title: value.status === 1 ? 'موفق' : 'خطا',
+        autoClose: 3,
+      })
       if (value.status === 1) {
-        toast.success(value.message)
         await getReferrerData().then(
           (result) => result && setReferrerData(result)
         )
         close(false)
       }
-      if (!value.data) toast.error(value.message)
     })
   }
   useEffect(() => {

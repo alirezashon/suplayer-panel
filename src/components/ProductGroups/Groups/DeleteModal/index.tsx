@@ -1,6 +1,7 @@
 import { getCookieByKey } from '@/actions/cookieToken'
 import { getProductGroupData } from '@/actions/setData'
 import { useData } from '@/Context/Data'
+import { useStates } from '@/Context/States'
 import { ProductGroupData } from '@/interfaces'
 import { EditProductGroup } from '@/services/products'
 import { CloseSquare, Danger, Forbidden2, Trash } from 'iconsax-react'
@@ -14,7 +15,8 @@ const DeleteModal = ({
   data: ProductGroupData
   close: (show: boolean) => void
 }) => {
-  const { setProductGroupData } = useData()
+  const { setProductGroupData, setBrandsData } = useData()
+  const { showModal } = useStates()
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     const accessToken = (await getCookieByKey('access_token')) || ''
@@ -24,10 +26,19 @@ const DeleteModal = ({
       status: 9,
       name: data.group_desc,
       group_id: data.id,
-    }).then(async () => {
-      await getProductGroupData().then(
-        (value) => value && setProductGroupData(value)
-      )
+    }).then(async (result) => {
+      showModal({
+        type: result.status === 1 ? 'success' : 'error',
+        main: <p>{result.message}</p>,
+        title: result.status === 1 ? 'موفق' : 'خطا',
+        autoClose: 3,
+      })
+      await getProductGroupData().then((value) => {
+        if (value) {
+          setProductGroupData(value.productGroups)
+          setBrandsData(value.brands)
+        }
+      })
       close(false)
     })
   }

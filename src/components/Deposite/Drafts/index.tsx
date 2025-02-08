@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { MoneySend, ReceiptSquare } from 'iconsax-react'
-import toast from 'react-hot-toast'
+
 import { getCookieByKey } from '@/actions/cookieToken'
 import { AddDraftImage, DepositWithDraft } from '@/services/deposit'
 import Calendar from '@/components/shared/Calendar'
@@ -8,6 +8,8 @@ import { generateDepositSignature } from '@/hooks/Signature'
 import UploadPicture from '@/components/shared/UploadPicture'
 import { useData } from '@/Context/Data'
 import { getDraftsData } from '@/actions/setData'
+import { useStates } from '@/Context/States'
+import { errorClass } from '@/app/assets/style'
 
 const Drafts = () => {
   const { setDraftsData } = useData()
@@ -29,6 +31,8 @@ const Drafts = () => {
     cheque_number: '',
     cheque_date: '',
   })
+  const { showModal } = useStates()
+
   const handleInputChange = (e: any) => {
     const { name, value } = e.target
     refs.current = {
@@ -75,13 +79,21 @@ const Drafts = () => {
       if (validateForm()) {
         const response = await DepositWithDraft(chequeData)
         if (response) {
-          toast.success(`${response.message}`)
+          showModal({
+            main: <p>{response.message}</p>,
+            title: 'واریز',
+            autoClose: 3,
+          })
           await getDraftsData().then((value) => value && setDraftsData(value))
         } else {
         }
       }
     } catch (error) {
-      toast.error('خطا در ثبت اطلاعات. لطفاً مجدداً تلاش کنید.')
+      showModal({
+        main: <p>خطا در ثبت اطلاعات. لطفاً مجدداً تلاش کنید.</p>,
+        title: 'واریز',
+        autoClose: 3,
+      })
     }
   }
   const UploadImage = async (formData: FormData): Promise<boolean> => {

@@ -3,10 +3,10 @@ import { getSubGroupData } from '@/actions/setData'
 import RadioTreeSelector from '@/components/shared/RadioTrees'
 import SelectList from '@/components/shared/SelectList'
 import { useData } from '@/Context/Data'
+import { useStates } from '@/Context/States'
 import { CreateSubGroup, EditSubGroup } from '@/services/items'
 import { CloseSquare, Grammerly, Trash } from 'iconsax-react'
 import { useState } from 'react'
-import toast from 'react-hot-toast'
 
 const AddModal = ({
   existName,
@@ -18,6 +18,7 @@ const AddModal = ({
   close: (show: boolean) => void
 }) => {
   const { groupData, setSubGroupData } = useData()
+  const { showModal } = useStates()
   const [data, setData] = useState<{ name: string; groupId: number }>({
     name: existName?.split('#$%^@!~')[0] || '',
     groupId,
@@ -53,13 +54,18 @@ const AddModal = ({
   const saveData = async (groupID: number, name: string) => {
     const accessToken = (await getCookieByKey('access_token')) || ''
     if (!existName)
-      CreateSubGroup({ accessToken, groupID, name })
-        .then((value) =>
-          value.status === '-1'
-            ? setResult(false, value.message)
-            : setResult(true)
-        )
-        .catch(() => toast.error('خطایی پیش آمد'))
+      CreateSubGroup({ accessToken, groupID, name }).then((value) => {
+        showModal({
+          type: value.status === 1 ? 'success' : 'error',
+          main: <p>{value.message}</p>,
+          title: value.status === 1 ? 'موفق' : 'خطا',
+          autoClose: 3,
+        })
+
+        value.status === '-1'
+          ? setResult(false, value.message)
+          : setResult(true)
+      })
     else
       EditSubGroup({
         accessToken,
@@ -67,12 +73,25 @@ const AddModal = ({
         code: `${existName.split('#$%^@!~')[1]}`,
         name: data.name,
       })
-        .then((value) =>
+        .then((value) => {
+          showModal({
+            type: value.status === 1 ? 'success' : 'error',
+            main: <p>{value.message}</p>,
+            title: value.status === 1 ? 'موفق' : 'خطا',
+            autoClose: 3,
+          })
           value.status === '-1'
             ? setResult(false, value.message)
             : setResult(true)
+        })
+        .catch(() =>
+          showModal({
+            type: 'error',
+            main: <p>خطایی پیش آمد</p>,
+            title: 'خطا',
+            autoClose: 3,
+          })
         )
-        .catch(() => toast.error('خطایی پیش آمد'))
   }
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

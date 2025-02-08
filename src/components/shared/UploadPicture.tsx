@@ -1,3 +1,4 @@
+import { useStates } from '@/Context/States'
 import {
   DocumentUpload,
   Eye,
@@ -8,13 +9,13 @@ import {
 } from 'iconsax-react'
 import Image from 'next/image'
 import React, { useState } from 'react'
-import toast from 'react-hot-toast'
 
 const UploadPicture = ({
   uploadImage,
 }: {
   uploadImage: (value: FormData) => Promise<boolean>
 }) => {
+  const { showModal } = useStates()
   const [uploadStatus, setUploadStatus] = useState<
     'idle' | 'uploading' | 'success' | 'error' | 'showImage'
   >('idle')
@@ -26,17 +27,32 @@ const UploadPicture = ({
   ) => {
     const file = event.target.files?.[0]
     if (!['image/png', 'image/jpg', 'image/jpeg'].includes(`${file?.type}`)) {
-      toast.error('پسوند فایل قابل قبول نمی باشد')
+      showModal({
+        type: 'error',
+        main: <p>پسوند فایل قابل قبول نمی باشد</p>,
+        title: 'خطا',
+        autoClose: 3,
+      })
       setUploadStatus('error')
       return
     }
     if (file?.size && file?.size < 50000) {
-      toast.error('حجم فایل کمتر از حد مجاز است')
+      showModal({
+        type: 'error',
+        main: <p>حجم فایل کمتر از حد مجاز است</p>,
+        title: 'خطا',
+        autoClose: 3,
+      })
       setUploadStatus('error')
       return
     }
     if (file?.size && file?.size > 2200000) {
-      toast.error('حجم فایل بیشتر از حد مجاز است')
+      showModal({
+        type: 'error',
+        main: <p>حجم فایل بیشتر از حد مجاز است</p>,
+        title: 'خطا',
+        autoClose: 3,
+      })
       setUploadStatus('error')
       return
     }
@@ -68,7 +84,12 @@ const UploadPicture = ({
           if (!result) setDraftSrc('')
         } catch (error) {
           setUploadStatus('error')
-          toast.error('خطا در بارگذاری')
+          showModal({
+            type: 'error',
+            main: <p>خطا در بارگذاری</p>,
+            title: 'خطا',
+            autoClose: 3,
+          })
           return error
         }
       }

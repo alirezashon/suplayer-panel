@@ -5,10 +5,11 @@ import AddModal from './AddModal'
 import AddSubGroup from '../SubGroups/AddModal'
 import DeleteModal from './DeleteModal'
 import { useData } from '@/Context/Data'
+import Image from 'next/image'
 
 const MyGroups: React.FC = () => {
   const { setMenu } = useMenu()
-  const { groupData, setGroupData } = useData()
+  const { groupData } = useData()
   const [showAddModal, setShowAddModal] = useState<null | string[]>(null)
   const [addSubGroup, setAddSubGroup] = useState<number | null>()
   const [showDeleteModal, setShowDeleteModal] = useState<null | string[]>(null)
@@ -63,10 +64,9 @@ const MyGroups: React.FC = () => {
         />
       )}
       <div className='p-6 bg-white rounded-lg border border-gray-200'>
-        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4'>
-          {groupData &&
-            groupData?.length > 0 &&
-            groupData?.map((group, index) => (
+        {groupData && groupData?.length > 0 ? (
+          groupData?.map((group, index) => (
+            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4'>
               <div
                 key={index}
                 className='flex flex-col justify-between items-start border rounded-lg p-4 shadow-md hover:shadow-lg transition duration-300'>
@@ -144,8 +144,28 @@ const MyGroups: React.FC = () => {
                     : 'تعریف زیر گروه'}
                 </button>
               </div>
-            ))}
-        </div>
+            </div>
+          ))
+        ) : (
+          <div className='w-full flex flex-col gap-2 justify-center items-center'>
+            <h1 className='text-2xl'>گروهی ندارید</h1>
+            <Image
+              src={'/icons/empty-box.svg'}
+              width={444}
+              height={333}
+              alt=''
+              className='w-[10%]'
+            />
+            <div className='border min-w-[40%] my-5'></div>
+            <h1 className='text-2xl'> تعریف گروه</h1>
+            <button
+              type='submit'
+              onClick={() => setShowAddModal([])}
+              className='h-10 min-w-40 bg-[#7747C0] text-white rounded-lg hover:bg-purple-800'>
+              + گروه جدید
+            </button>
+          </div>
+        )}
       </div>
     </div>
   )

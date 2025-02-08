@@ -2,6 +2,7 @@ import { getCookieByKey } from '@/actions/cookieToken'
 import { getKPITaskData } from '@/actions/setData'
 import { errorClass } from '@/app/assets/style'
 import { useData } from '@/Context/Data'
+import { useStates } from '@/Context/States'
 import { KPIData } from '@/interfaces'
 import { CreateKPITask, EditKPITask } from '@/services/items'
 import { CloseSquare, Grammerly } from 'iconsax-react'
@@ -18,6 +19,7 @@ const AddModal = ({ data, close }: { data: KPIData; close: () => void }) => {
   })
 
   const { setKPITaskData } = useData()
+  const { showModal } = useStates()
   const refs = useRef({
     kpi_title: data.kpi_title || '',
     kpi_code: data.kpi_code || '',
@@ -64,6 +66,12 @@ const AddModal = ({ data, close }: { data: KPIData; close: () => void }) => {
     const accessToken = (await getCookieByKey('access_token')) || ''
     if (!data.id) {
       const response = await CreateKPITask({ accessToken, ...refs.current })
+      showModal({
+        type: response.status === 1 ? 'success' : 'error',
+        main: <p>{response.message}</p>,
+        title: response.status === 1 ? 'موفق' : 'خطا',
+        autoClose: 3,
+      })
       if (response.status === 1) {
         setResult(true)
         await getKPITaskData().then((value) => value && setKPITaskData(value))

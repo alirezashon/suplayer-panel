@@ -89,13 +89,14 @@ export interface CampaignInterface {
   loc_uid: string
   budget: number
   expected_response: number
-  expected_amunt: number
+  expected_amount: number
   desc: string
   sgroup_id: number
   supervisor_id: number
   pgroup_id: number
   chart_id: number
   product_uid: string
+  campaign_id?: number
 }
 
 export interface States {

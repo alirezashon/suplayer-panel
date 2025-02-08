@@ -1,4 +1,5 @@
 import { getCookieByKey } from '@/actions/cookieToken'
+import { useStates } from '@/Context/States'
 import { CreateGroup } from '@/services/items'
 import { CloseSquare, Grammerly } from 'iconsax-react'
 import { useState } from 'react'
@@ -15,6 +16,7 @@ const AddModal = ({
   const [name, setName] = useState<string>(existName || '')
   const [isConfirmed, setIsConfirmed] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>()
+  const { showModal } = useStates()
 
   const handleSubmit = async () => {
     if (name.length < 1) {
@@ -24,9 +26,31 @@ const AddModal = ({
     setIsConfirmed(true)
     if (!sup_group_code) {
       const accessToken = (await getCookieByKey('access_token')) || ''
-      const response = await CreateGroup({ accessToken, name })
-      if (response) {
-      }
+      await CreateGroup({ accessToken, name })
+        .then((value) => {
+          value?.status === 1
+            ? showModal({
+                type: 'success',
+                main: <p>{value.message}</p>,
+                title: 'خطا',
+                autoClose: 3,
+              })
+            : showModal({
+                type: 'error',
+                main: <p>{value.message}</p>,
+                title: 'خطا',
+                autoClose: 3,
+              })
+          close(false)
+        })
+        .catch(() =>
+          showModal({
+            type: 'error',
+            main: <p>خطایی پیش آمد</p>,
+            title: 'خطا',
+            autoClose: 3,
+          })
+        )
     }
     setTimeout(() => {
       setIsConfirmed(false)

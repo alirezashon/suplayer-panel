@@ -1,10 +1,10 @@
 import { getCookieByKey } from '@/actions/cookieToken'
 import { getGroupData } from '@/actions/setData'
 import { useData } from '@/Context/Data'
+import { useStates } from '@/Context/States'
 import { CreateGroup, EditGroup } from '@/services/items'
 import { CloseSquare, Grammerly } from 'iconsax-react'
 import { useState } from 'react'
-import toast from 'react-hot-toast'
 
 const AddModal = ({
   existName,
@@ -20,7 +20,9 @@ const AddModal = ({
   const [status, setStatus] = useState<React.ReactElement | null>()
   const [errors, setErrors] = useState<Record<string, string>>()
   const { setGroupData } = useData()
- const setResult = (state: boolean, text?: string) => {
+  const { showModal } = useStates()
+
+  const setResult = (state: boolean, text?: string) => {
     if (state) {
       setStatus(
         <p className='text-[#0F973D] flex items-center gap-2'>
@@ -34,7 +36,7 @@ const AddModal = ({
         </p>
       )
     }
-}
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -57,11 +59,27 @@ const AddModal = ({
     } else {
       const response = await EditGroup({ accessToken, name, sup_group_code })
       if (response.status === 1) {
-        toast.success(response.message)
+        showModal({
+          type: 'success',
+          main: <p>{response.message}</p>,
+          title: 'موفق',
+          autoClose: 3,
+        })
         await getGroupData().then((value) => setGroupData(value))
       } else if (response.status === '-1') {
         setResult(false, response.message)
+        showModal({
+          type: 'error',
+          main: <p>{response.message}</p>,
+          title: 'خطا',
+          autoClose: 3,
+        })
       } else {
+        showModal({
+          main: <p>{response.message}</p>,
+          title: 'خطا',
+          autoClose: 3,
+        })
         setResult(false, response.message)
       }
     }

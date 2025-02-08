@@ -33,8 +33,10 @@ import { useMenu } from '@/Context/Menu'
 import { useStates } from '@/Context/States'
 import MainLayout from '@/layouts/MainLayout'
 import { useEffect, useState } from 'react'
+import CustomModal from '@/components/shared/CustomModal'
 
 const Home = () => {
+  const { modalContent, closeModal } = useStates()
   const { menu, setMenu } = useMenu()
   const [loading, setLoading] = useState<boolean>(true)
   const {
@@ -106,6 +108,8 @@ const Home = () => {
   return (
     <MainLayout>
       <>
+        {modalContent && <CustomModal />}
+
         {loading ? (
           <div className='flex h-screen w-full justify-center items-center'>
             <Loading size={32} />

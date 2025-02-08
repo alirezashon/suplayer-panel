@@ -9,9 +9,11 @@ import {
 import { useEffect, useRef, useState } from 'react'
 import { useData } from '@/Context/Data'
 import { CreateReferrerChart } from '@/services/referrer'
-import toast from 'react-hot-toast'
+
 import { ReferrerChartData } from '@/interfaces'
 import { getReferrerChart } from '@/actions/setData'
+import { useStates } from '@/Context/States'
+import { errorClass } from '@/app/assets/style'
 
 const AddModal = ({
   close,
@@ -36,6 +38,7 @@ const AddModal = ({
     chlabel: '',
   })
   const { setReferrerChartData } = useData()
+  const { showModal } = useStates()
   const refs = useRef({ chtitle: '', chlabel: '' })
   useEffect(() => {
     if (data) {
@@ -69,20 +72,23 @@ const AddModal = ({
       chtitle: refs.current.chtitle,
       chlabel: refs.current?.chlabel,
     }).then(async (value) => {
+      showModal({
+        type: value.status === 1 ? 'success' : 'error',
+        main: <p>{value.message}</p>,
+        title: value.status === 1 ? 'موفق' : 'خطا',
+        autoClose: 3,
+      })
       if (value.status === 1) {
         setParent({
           id: value.data.regid,
           name: refs.current.chtitle,
           level: 0,
         })
-        toast.success(value.message)
         setState(1)
         await getReferrerChart().then(
           (value) => value && setReferrerChartData(value)
         )
-      } else if (value.status === '-1') {
-        toast.error(value.message)
-      } else toast.error('لطفا دوباره امتحان کنید')
+      }
     })
 
     setTimeout(() => {

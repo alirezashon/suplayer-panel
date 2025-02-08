@@ -1,8 +1,8 @@
 import { getCookieByKey } from '@/actions/cookieToken'
+import { useStates } from '@/Context/States'
 import { BeneficiaryData } from '@/interfaces'
-import { EditBeneficiary, EditSubGroup } from '@/services/items'
+import { EditBeneficiary } from '@/services/items'
 import { CloseSquare, Forbidden2, Trash } from 'iconsax-react'
-import toast from 'react-hot-toast'
 
 const DeleteModal = ({
   isActive = false,
@@ -15,18 +15,37 @@ const DeleteModal = ({
   groupId: number
   close: (show: boolean) => void
 }) => {
+  const { showModal } = useStates()
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     const accessToken = (await getCookieByKey('access_token')) || ''
     data &&
-      EditBeneficiary({ ...data, accessToken ,visitor_status:9})
+      EditBeneficiary({ ...data, accessToken, visitor_status: 9 })
         .then((value) => {
           value?.status === '-1'
-            ? toast.error(value.message)
-            : toast.success(value.message)
+            ? showModal({
+                type: 'success',
+                main: <p>{value.message}</p>,
+                title: 'خطا',
+                autoClose: 3,
+              })
+            : showModal({
+                type: 'error',
+                main: <p>{value.message}</p>,
+                title: 'خطا',
+                autoClose: 3,
+              })
           close(false)
         })
-        .catch(() => toast.error('خطایی پیش آمد'))
+        .catch(() =>
+          showModal({
+            type: 'error',
+            main: <p>خطایی پیش آمد</p>,
+            title: 'خطا',
+            autoClose: 3,
+          })
+        )
   }
 
   return (

@@ -3,7 +3,6 @@ import type { Metadata } from 'next'
 import './assets/globals.css'
 import { MenuProvider } from '@/Context/Menu'
 import { PromotionProvider } from '@/Context/Promotion'
-import ToastProvider from '../../providers/ToastProvider'
 import { DataProvider } from '@/Context/Data'
 import { StatesProvider } from '@/Context/States'
 
@@ -24,7 +23,6 @@ export default function RootLayout({
           <DataProvider>
             <html lang='en'>
               <body>
-                <ToastProvider />
                 {children}
               </body>
             </html>

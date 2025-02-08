@@ -5,8 +5,8 @@ import { CreateProductGroup, EditProductGroup } from '@/services/products'
 import { CloseSquare, Grammerly, Trash } from 'iconsax-react'
 import { FormEvent, useState } from 'react'
 import { ProductGroupData } from '@/interfaces'
-import toast from 'react-hot-toast'
 import { errorClass } from '@/app/assets/style'
+import { useStates } from '@/Context/States'
 
 const AddModal = ({
   data,
@@ -23,6 +23,7 @@ const AddModal = ({
   const [status, setStatus] = useState<React.ReactElement | null>()
   const [isConfirmed, setIsConfirmed] = useState(false)
   const [errors, setErrors] = useState<Record<string, string[]>>()
+  const { showModal } = useStates()
 
   const setResult = (state: boolean, text?: string) => {
     if (state) {
@@ -110,14 +111,25 @@ const AddModal = ({
                   group_pid: parent.id,
                 }).then(async (result) => {
                   if (result.status === 1) {
-                    toast.success(result.message)
+                    showModal({
+                      type: 'error',
+                      main: <p>{result.message}</p>,
+                      title: 'خطا',
+                      autoClose: 3,
+                    })
                     await getProductGroupData().then((value) => {
                       if (value) {
                         setProductGroupData(value.productGroups)
                         setBrandsData(value.brands)
                       }
                     })
-                  } else toast.error(result.message)
+                  } else
+                    showModal({
+                      type: 'error',
+                      main: <p>{result.message}</p>,
+                      title: 'خطا',
+                      autoClose: 3,
+                    })
                 })
             )
         )

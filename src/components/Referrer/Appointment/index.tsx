@@ -4,6 +4,7 @@ import { DefineAppointmentTask } from '@/services/referrer'
 import { ArrowDown2, CloseSquare, Profile } from 'iconsax-react'
 import { useState, useRef } from 'react'
 import { useData } from '@/Context/Data'
+import { useStates } from '@/Context/States'
 
 interface AppointmentModalProps {
   data?: ReferrerData
@@ -11,6 +12,7 @@ interface AppointmentModalProps {
 }
 
 const AppointmentModal = ({ data, close }: AppointmentModalProps) => {
+  const { showModal } = useStates()
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [step, setStep] = useState<number>(1)
   const [showDetails, setShowDetails] = useState<boolean>(false)
@@ -43,6 +45,13 @@ const AppointmentModal = ({ data, close }: AppointmentModalProps) => {
       sup_group_code: refs.current.groupId || '',
       visitor_uid: '',
       task_kpi_uid: '',
+    }).then((result) => {
+      showModal({
+        type: result.status === 1 ? 'success' : 'error',
+        main: <p>{result.message}</p>,
+        title: result.status === 1 ? 'موفق' : 'خطا',
+        autoClose: 3,
+      })
     })
   }
 

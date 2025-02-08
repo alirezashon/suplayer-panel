@@ -1,7 +1,7 @@
 import { getCookieByKey } from '@/actions/cookieToken'
+import { useStates } from '@/Context/States'
 import { EditGroup } from '@/services/items'
 import { CloseSquare, Danger, Forbidden2, Trash } from 'iconsax-react'
-import toast from 'react-hot-toast'
 
 const DeleteModal = ({
   isActive,
@@ -14,6 +14,7 @@ const DeleteModal = ({
   close: (show: null) => void
   sup_group_code: string
 }) => {
+  const { showModal } = useStates()
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     const accessToken = (await getCookieByKey('access_token')) || ''
@@ -23,13 +24,12 @@ const DeleteModal = ({
       sup_group_code,
       status: 9,
     })
-    if (response.status === 1) {
-      toast.success(response.message)
-    } else if (response.status === '-1') {
-      toast.error(response.message)
-    } else {
-      toast.error('لطفا دوباره امتحان کنید')
-    }
+    showModal({
+      type: response.status === 1 ? 'success' : 'error',
+      main: <p>{response.message}</p>,
+      title: response.status === 1 ? 'موفق' : 'خطا',
+      autoClose: 3,
+    })
   }
 
   return (

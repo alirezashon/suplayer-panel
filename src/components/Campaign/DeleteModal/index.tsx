@@ -1,16 +1,67 @@
+import { getCookieByKey } from '@/actions/cookieToken'
+import { useStates } from '@/Context/States'
+import { CampaignInterface } from '@/interfaces'
+import { EditProductCampaign } from '@/services/campaign'
 import { CloseSquare, Forbidden2, Trash } from 'iconsax-react'
 
 const DeleteModal = ({
   isActive,
-  name,
+  data,
   close,
 }: {
   isActive?: boolean
-  name: string
+  data: CampaignInterface
   close: (show: boolean) => void
 }) => {
-  const handleSubmit = (e: React.FormEvent) => {
+  const { showModal } = useStates()
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    const accessToken = (await getCookieByKey('access_token')) || ''
+    await EditProductCampaign({
+      accessToken,
+      cstatus: data.cstatus,
+      ctitle: data.ctitle,
+      ctype: data.ctype,
+      start_date: data.start_date,
+      exp_date: data.exp_date,
+      loc_type: data.loc_type,
+      loc_uid: data.loc_uid,
+      budget: data.budget,
+      expected_response: data.expected_response,
+      expected_amount: data.expected_amount,
+      desc: data.desc,
+      sgroup_id: data.sgroup_id,
+      supervisor_id: data.supervisor_id,
+      pgroup_id: data.pgroup_id,
+      chart_id: data.chart_id,
+      product_uid: data.product_uid,
+      campaign_id: data.campaign_id || 0,
+    })
+      .then((value) => {
+        value?.status === '-1'
+          ? showModal({
+              type: 'success',
+              main: <p>{value.message}</p>,
+              title: 'خطا',
+              autoClose: 3,
+            })
+          : showModal({
+              type: 'error',
+              main: <p>{value.message}</p>,
+              title: 'خطا',
+              autoClose: 3,
+            })
+        close(false)
+      })
+      .catch(() =>
+        showModal({
+          type: 'error',
+          main: <p>خطایی پیش آمد</p>,
+          title: 'خطا',
+          autoClose: 3,
+        })
+      )
   }
 
   return (
@@ -47,7 +98,7 @@ const DeleteModal = ({
             <div className='font-bold my-5'>
               آیا مطمئن به حذف
               <span className='px-3 rounded-lg mx-1 bg-purple-300 text-[#6137A0]'>
-                {name}
+                {data.ctitle}
               </span>
               هستید؟
             </div>

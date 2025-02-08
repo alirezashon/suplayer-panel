@@ -1,7 +1,9 @@
 import { getCookieByKey } from '@/actions/cookieToken'
+import { getGroupData } from '@/actions/setData'
+import { useData } from '@/Context/Data'
+import { useStates } from '@/Context/States'
 import { EditGroup } from '@/services/items'
 import { CloseSquare, Forbidden2, Trash } from 'iconsax-react'
-import toast from 'react-hot-toast'
 
 const DeleteModal = ({
   isActive,
@@ -14,6 +16,9 @@ const DeleteModal = ({
   close: (show: null) => void
   sup_group_code: string
 }) => {
+  const { showModal } = useStates()
+  const { setGroupData } = useData()
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     const accessToken = (await getCookieByKey('access_token')) || ''
@@ -23,14 +28,27 @@ const DeleteModal = ({
       sup_group_code,
       status: 9,
     })
-    if (response?.status === 1) {
-      toast.success(response.message)
-      location.hash ='#mygroups'
-      location.reload()
+    if (response.status === 1) {
+      showModal({
+        type: 'success',
+        main: <p>{response.message}</p>,
+        title: 'موفق',
+        autoClose: 3,
+      })
+      await getGroupData().then((value) => setGroupData(value))
     } else if (response.status === '-1') {
-      toast.error(response.message)
+      showModal({
+        type: 'error',
+        main: <p>{response.message}</p>,
+        title: 'خطا',
+        autoClose: 3,
+      })
     } else {
-      toast.error('لطفا دوباره امتحان کنید')
+      showModal({
+        main: <p>{response.message}</p>,
+        title: 'خطا',
+        autoClose: 3,
+      })
     }
     close(null)
   }

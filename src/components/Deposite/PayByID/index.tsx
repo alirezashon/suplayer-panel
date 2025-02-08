@@ -1,4 +1,4 @@
-import  { useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import {
   WalletMoney,
   CloseCircle,
@@ -9,8 +9,8 @@ import {
   EyeSlash,
   Eye,
 } from 'iconsax-react'
-import toast from 'react-hot-toast'
 import Image from 'next/image'
+import { useStates } from '@/Context/States'
 
 const PayByID = () => {
   const refs = useRef({
@@ -18,6 +18,7 @@ const PayByID = () => {
     sheba: '',
     description: '',
   })
+  const { showModal } = useStates()
   const amountInputRef = useRef<HTMLInputElement>(null)
   const shebaInputRef = useRef<HTMLInputElement>(null)
   const descriptionInputRef = useRef<HTMLTextAreaElement>(null)
@@ -31,17 +32,32 @@ const PayByID = () => {
   ) => {
     const file = event.target.files?.[0]
     if (!['image/png', 'image/jpg', 'image/jpeg'].includes(`${file?.type}`)) {
-      toast.error('پسوند فایل قابل قبول نمی باشد')
+      showModal({
+        type: 'error',
+        main: <p>پسوند فایل قابل قبول نمی باشد,</p>,
+        title: 'خطا',
+        autoClose: 3,
+      })
       setUploadStatus('error')
       return
     }
     if (file?.size && file?.size < 50000) {
-      toast.error('حجم فایل کمتر از حد مجاز است')
+      showModal({
+        type: 'error',
+        main: <p>حجم فایل کمتر از حد مجاز است</p>,
+        title: 'خطا',
+        autoClose: 3,
+      })
       setUploadStatus('error')
       return
     }
     if (file?.size && file?.size > 2200000) {
-      toast.error('حجم فایل بیشتر از حد مجاز است')
+      showModal({
+        type: 'error',
+        main: <p>حجم فایل بیشتر از حد مجاز است</p>,
+        title: 'خطا',
+        autoClose: 3,
+      })
       setUploadStatus('error')
       return
     }
@@ -71,7 +87,12 @@ const PayByID = () => {
           }, 200)
         } catch (error) {
           setUploadStatus('error')
-          toast.error('Failed to upload file!')
+          showModal({
+            type: 'error',
+            main: <p> خطا </p>,
+            title: 'خطا',
+            autoClose: 3,
+          })
           return error
         }
       }
@@ -183,7 +204,10 @@ const PayByID = () => {
                 )}
                 <div className='flex justify-between w-full items-center'>
                   <div className='flex gap-3'>
-                    <TickCircle size={24} className='bg-[#0F973D] text-white rounded-full' />
+                    <TickCircle
+                      size={24}
+                      className='bg-[#0F973D] text-white rounded-full'
+                    />
                     <p className='text-green-500 mt-2 text-sm'>
                       بارگذاری با موفقیت انجام شد
                     </p>
@@ -192,19 +216,19 @@ const PayByID = () => {
                   <div className='flex gap-3'>
                     {uploadStatus === 'success' ? (
                       <Eye
-                      size={24}
+                        size={24}
                         onClick={() => setUploadStatus('showImage')}
                         color='#2F27CE'
                       />
                     ) : (
                       <EyeSlash
-                      size={24}
+                        size={24}
                         onClick={() => setUploadStatus('success')}
                         color='#2F27CE'
                       />
                     )}
                     <Trash
-                    size={24}
+                      size={24}
                       color='#BB1F1A'
                       onClick={() => {
                         setIdentityCard(undefined)
@@ -243,14 +267,14 @@ const PayByID = () => {
                   </>
                 ) : (
                   <div className='flex justify-between w-full h-full'>
-                 <div className="">
-                  <DocumentUpload size={24} color='#50545F'/>
-                    <p>
-                       فیش واریز خود را بارگذاری کنید
-                    </p>
-                    <p className='text-[#B2BBC7]'> PNG, JPG (max. 2mb)</p>
-                 </div>
-                    <button className='bg-[#704CB9] text-white rounded-lg w-20 h-10'>بارگذاری</button>
+                    <div className=''>
+                      <DocumentUpload size={24} color='#50545F' />
+                      <p>فیش واریز خود را بارگذاری کنید</p>
+                      <p className='text-[#B2BBC7]'> PNG, JPG (max. 2mb)</p>
+                    </div>
+                    <button className='bg-[#704CB9] text-white rounded-lg w-20 h-10'>
+                      بارگذاری
+                    </button>
                   </div>
                 )}
               </label>
@@ -309,8 +333,6 @@ const PayByID = () => {
               </span>
             </p>
           </div>
-
-         
         </div>
       </div>
     </div>

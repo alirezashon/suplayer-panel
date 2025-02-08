@@ -4,6 +4,7 @@ import AddModal from './AddModal'
 import DeleteModal from './DeleteModal'
 import { useMenu } from '@/Context/Menu'
 import { useData } from '@/Context/Data'
+import Image from 'next/image'
 const SubGroups: React.FC = () => {
   const { setMenu } = useMenu()
   const { groupData, subGroupData } = useData()
@@ -78,11 +79,11 @@ const SubGroups: React.FC = () => {
               </button>
             ))}
           </div>
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6'>
-            {Array.isArray(subGroupData) &&
-              subGroupData?.map(
-                (subGroup, subIndex) =>
-                  subGroup.sup_group_id === activeTab && (
+          {Array.isArray(subGroupData) && subGroupData.length > 0 ? (
+            subGroupData?.map(
+              (subGroup, subIndex) =>
+                subGroup.sup_group_id === activeTab && (
+                  <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6'>
                     <div
                       key={subIndex}
                       className='flex flex-col justify-between items-start border rounded-lg p-4 shadow-md hover:shadow-lg transition duration-300'>
@@ -168,9 +169,29 @@ const SubGroups: React.FC = () => {
                         </div>
                       )}
                     </div>
-                  )
-              )}
-          </div>
+                  </div>
+                )
+            )
+          ) : (
+            <div className='w-full flex flex-col gap-2 justify-center items-center'>
+              <h1 className='text-2xl'>زیر گروهی ندارید</h1>
+              <Image
+                src={'/icons/empty-box.svg'}
+                width={444}
+                height={333}
+                alt=''
+                className='w-[10%]'
+              />
+              <div className='border min-w-[40%] my-5'></div>
+              <h1 className='text-2xl'> تعریف زیر گروه</h1>
+              <button
+                type='submit'
+                onClick={() => setShowAddModal(true)}
+                className='h-10 min-w-40 bg-[#7747C0] text-white rounded-lg hover:bg-purple-800'>
+                + زیر گروه جدید
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </>

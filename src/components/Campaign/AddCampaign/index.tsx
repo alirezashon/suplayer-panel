@@ -3,6 +3,7 @@ import Calendar from '@/components/shared/Calendar'
 import CitySelector from '@/components/shared/CitySelector'
 import SelectList from '@/components/shared/SelectList'
 import { useData } from '@/Context/Data'
+import { useStates } from '@/Context/States'
 import { CampaignInterface } from '@/interfaces'
 import { CreateCampaign } from '@/services/campaign'
 import { ArrowRight2, CloseSquare, Message } from 'iconsax-react'
@@ -19,6 +20,8 @@ const AddCampaign = ({
   const [showDetails, setshowDetails] = useState<boolean>(false)
   const { groupData, subGroupData, productGroupData, brandsData, productData } =
     useData()
+  const { showModal } = useStates()
+
   const refs = useRef({
     cstatus: existData?.cstatus || 0,
     ctitle: existData?.ctitle || '',
@@ -69,16 +72,38 @@ const AddCampaign = ({
     }
 
     setErrors(newErrors)
-    console.log(newErrors)
     Object.keys(newErrors).length === 0 && setStep(step + 1)
   }
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     const accessToken = await getCookieByKey('access_token')
-    await CreateCampaign({ ...refs.current, accessToken }).then(
-      (result) => result && setshowDetails(true)
-    )
+    await CreateCampaign({ ...refs.current, accessToken })
+      .then((result) => {
+        result && setshowDetails(true)
+        result?.status === '-1'
+          ? showModal({
+              type: 'success',
+              main: <p>{result.message}</p>,
+              title: 'خطا',
+              autoClose: 3,
+            })
+          : showModal({
+              type: 'error',
+              main: <p>{result.message}</p>,
+              title: 'خطا',
+              autoClose: 3,
+            })
+        close(false)
+      })
+      .catch(() =>
+        showModal({
+          type: 'error',
+          main: <p>خطایی پیش آمد</p>,
+          title: 'خطا',
+          autoClose: 3,
+        })
+      )
   }
 
   return (

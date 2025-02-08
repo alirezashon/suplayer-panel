@@ -1,11 +1,11 @@
 import { getCookieByKey } from '@/actions/cookieToken'
 import { getProductData } from '@/actions/setData'
 import { useData } from '@/Context/Data'
+import { useStates } from '@/Context/States'
 import { ProductGroupData, ProductsData } from '@/interfaces'
 import { CreateProduct, EditProduct } from '@/services/products'
 import { CloseSquare, Message, Trash } from 'iconsax-react'
 import { useState } from 'react'
-import toast from 'react-hot-toast'
 
 const AddModal = ({
   editData,
@@ -19,6 +19,7 @@ const AddModal = ({
   close: (show: boolean) => void
 }) => {
   const { setProductData } = useData()
+  const { showModal } = useStates()
   const [names, setNames] = useState<string[]>([editData?.ini_name || ''])
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -28,22 +29,36 @@ const AddModal = ({
       if (!editData?.ini_name) {
         await CreateProduct({ accessToken, name, id: brand.id }).then(
           async (result) => {
+            showModal({
+              type: result.status === 1 ? 'success' : 'error',
+              main: <p>{result.message}</p>,
+              title: result.status === 1 ? 'موفق' : 'خطا',
+              autoClose: 3,
+            })
             if (result.status === 1) {
-              toast.success(result.message)
               await getProductData().then(
                 (data) => data && setProductData(data)
               )
               close(false)
-            } else toast.error(result.message)
+            }
           }
         )
       } else {
-        await EditProduct({ accessToken, name ,id:editData.id}).then(async (result) => {
-          if (result.status === 1) {
-            toast.success(result.message)
-            await getProductData().then((data) => data && setProductData(data))
-          } else toast.error(result.message)
-        })
+        await EditProduct({ accessToken, name, id: editData.id }).then(
+          async (result) => {
+            showModal({
+              type: result.status === 1 ? 'success' : 'error',
+              main: <p>{result.message}</p>,
+              title: result.status === 1 ? 'موفق' : 'خطا',
+              autoClose: 3,
+            })
+            if (result.status === 1) {
+              await getProductData().then(
+                (data) => data && setProductData(data)
+              )
+            }
+          }
+        )
       }
     })
   }

@@ -4,11 +4,11 @@ import { CreateBeneficiary, EditBeneficiary } from '@/services/items'
 import { CloseSquare, Grammerly } from 'iconsax-react'
 import dynamic from 'next/dynamic'
 import { useState, useRef } from 'react'
-import toast from 'react-hot-toast'
 import CitySelector from '@/components/shared/CitySelector'
 import { errorClass } from '@/app/assets/style'
 import { getBeneficiaryData } from '@/actions/setData'
 import { useData } from '@/Context/Data'
+import { useStates } from '@/Context/States'
 
 const Map = dynamic(() => import('../../Address/Map'), { ssr: false })
 
@@ -45,6 +45,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
     longitude: 0,
   })
   const { setBeneficiaryData } = useData()
+  const { showModal } = useStates()
   const beneficiaries = ['شخص', 'کسب و کار']
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -72,12 +73,29 @@ const AddModal = ({ data, close }: AddModalProps) => {
     if (data?.CityUID) {
       EditBeneficiary({ ...data, accessToken })
         .then((value) => {
-          // value?.status === '-1'
-          //   ? toast.error(value.message)
-          //   : toast.success(value.message)
+          value?.status === '-1'
+            ? showModal({
+                type: 'success',
+                main: <p>{value.message}</p>,
+                title: 'خطا',
+                autoClose: 3,
+              })
+            : showModal({
+                type: 'error',
+                main: <p>{value.message}</p>,
+                title: 'خطا',
+                autoClose: 3,
+              })
           close(false)
         })
-        .catch(() => toast.error('خطایی پیش آمد'))
+        .catch(() =>
+          showModal({
+            type: 'error',
+            main: <p>خطایی پیش آمد</p>,
+            title: 'خطا',
+            autoClose: 3,
+          })
+        )
     } else {
       await CreateBeneficiary({
         accessToken,

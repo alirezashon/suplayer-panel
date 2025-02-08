@@ -1,10 +1,11 @@
 import { getCookieByKey } from '@/actions/cookieToken'
+import { useStates } from '@/Context/States'
 import { KPIData } from '@/interfaces'
-import {  EditKPITask } from '@/services/items'
+import { EditKPITask } from '@/services/items'
 import { CloseSquare, Trash } from 'iconsax-react'
-import toast from 'react-hot-toast'
 
 const DeleteModal = ({ close, data }: { close: () => void; data: KPIData }) => {
+  const { showModal } = useStates()
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     const accessToken = (await getCookieByKey('access_token')) || ''
@@ -17,13 +18,12 @@ const DeleteModal = ({ close, data }: { close: () => void; data: KPIData }) => {
       task_kpi_uid: data.task_kpi_uid,
       status: 9,
     })
-    if (response?.status === 1) {
-      toast.success('با موفقیت حذف شد')
-    } else if (response.status === '-1') {
-      toast.error(response.message)
-    } else {
-      toast.error('لطفا دوباره امتحان کنید')
-    }
+    showModal({
+      type: response.status === 1 ? 'success' : 'error',
+      main: <p>{response.message}</p>,
+      title: response.status === 1 ? 'موفق' : 'خطا',
+      autoClose: 3,
+    })
     close()
   }
 

@@ -6,6 +6,7 @@ import { CloseSquare, Grammerly, Trash } from 'iconsax-react'
 import { FormEvent, useRef, useState } from 'react'
 import { ProductGroupData } from '@/interfaces'
 import { errorClass } from '@/app/assets/style'
+import { useStates } from '@/Context/States'
 
 const AddModal = ({
   data,
@@ -23,6 +24,7 @@ const AddModal = ({
   const [isConfirmed, setIsConfirmed] = useState(false)
   const [groupDesc, setGroupDesc] = useState(data?.group_desc || '')
   const [brands, setBrands] = useState<string[]>([''])
+  const { showModal } = useStates()
 
   const setResult = (state: boolean, text?: string) => {
     if (state) {
@@ -99,6 +101,12 @@ const AddModal = ({
         name: groupDesc,
         group_id: data?.id,
       }).then(async (value) => {
+        showModal({
+          type: value.status === 1 ? 'success' : 'error',
+          main: <p>{value.message}</p>,
+          title: value.status === 1 ? 'موفق' : 'خطا',
+          autoClose: 3,
+        })
         if (value && value.status === 1) setResult(true)
         else setResult(false, value && value.message)
         await rerenderData()
@@ -108,6 +116,12 @@ const AddModal = ({
         accessToken,
         name: groupDesc,
       }).then(async (value) => {
+        showModal({
+          type: value.status === 1 ? 'success' : 'error',
+          main: <p>{value.message}</p>,
+          title: value.status === 1 ? 'موفق' : 'خطا',
+          autoClose: 3,
+        })
         if (value && value.status === 1) setResult(true)
         else setResult(false, value && value.message)
         if (value && value?.data?.regid)

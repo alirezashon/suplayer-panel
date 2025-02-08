@@ -1,12 +1,13 @@
 import { getCookieByKey } from '@/actions/cookieToken'
+import { errorClass } from '@/app/assets/style'
 import Calendar from '@/components/shared/Calendar'
 import SelectList from '@/components/shared/SelectList'
 import { useData } from '@/Context/Data'
+import { useStates } from '@/Context/States'
 import { AddPromotionImage, CreatePromotion } from '@/services/promotion'
 import { DocumentCloud, Eye, EyeSlash, TickCircle, Trash } from 'iconsax-react'
 import Image from 'next/image'
 import { FormEvent, useRef, useState } from 'react'
-import toast from 'react-hot-toast'
 
 const AddPromotion = () => {
   const { groupData, subGroupData, productGroupData, brandsData, productData } =
@@ -17,6 +18,7 @@ const AddPromotion = () => {
   >('idle')
   const [progress, setProgress] = useState<number>(0)
   const [draftSrc, setDraftSrc] = useState<string>()
+  const { showModal } = useStates()
 
   const refs = useRef({
     cstatus: 1,
@@ -69,7 +71,6 @@ const AddPromotion = () => {
     if (!refs.current.cta_link) newErrors.cta_link = 'این فیلد اجباری است'
 
     setErrors(newErrors)
-    console.table(newErrors)
     return Object.keys(newErrors).length === 0
   }
 
@@ -77,7 +78,14 @@ const AddPromotion = () => {
     e.preventDefault()
     if (validateForm()) {
       const accessToken = await getCookieByKey('access_token')
-      await CreatePromotion({ accessToken, ...refs.current })
+      await CreatePromotion({ accessToken, ...refs.current }).then((result) => {
+        showModal({
+          type: result.status === 1 ? 'success' : 'error',
+          main: <p>{result.message}</p>,
+          title: result.status === 1 ? 'موفق' : 'خطا',
+          autoClose: 3,
+        })
+      })
     }
   }
 
@@ -86,23 +94,37 @@ const AddPromotion = () => {
   ) => {
     const file = event.target.files?.[0]
     if (!['image/png', 'image/jpg', 'image/jpeg'].includes(`${file?.type}`)) {
-      toast.error('پسوند فایل قابل قبول نمی باشد')
+      showModal({
+        type: 'error',
+        main: <p>پسوند فایل قابل قبول نمی باشد</p>,
+        title: 'خطا',
+        autoClose: 3,
+      })
       setUploadStatus('error')
       return
     }
     if (file?.size && file?.size < 50000) {
-      toast.error('حجم فایل کمتر از حد مجاز است')
+      showModal({
+        type: 'error',
+        main: <p>حجم فایل کمتر از حد مجاز است</p>,
+        title: 'خطا',
+        autoClose: 3,
+      })
       setUploadStatus('error')
       return
     }
     if (file?.size && file?.size > 2200000) {
-      toast.error('حجم فایل بیشتر از حد مجاز است')
+      showModal({
+        type: 'error',
+        main: <p>حجم فایل بیشتر از حد مجاز است</p>,
+        title: 'خطا',
+        autoClose: 3,
+      })
       setUploadStatus('error')
       return
     }
     if (file) {
       const formData = new FormData()
-      console.log(file)
       formData.append('file', file)
 
       setUploadStatus('uploading')
@@ -131,11 +153,26 @@ const AddPromotion = () => {
           })
           if (result) {
             refs.current.file_uid = result.rec_id_file
+          } else {
+            setDraftSrc('')
+            setUploadStatus('error')
+            showModal({
+              type: 'error',
+              main: <p>خطا در بارگذاری</p>,
+              title: 'خطا',
+              autoClose: 3,
+            })
+            return
           }
         } catch (error) {
           setDraftSrc('')
           setUploadStatus('error')
-          toast.error('خطا در بارگذاری')
+          showModal({
+            type: 'error',
+            main: <p>خطا در بارگذاری</p>,
+            title: 'خطا',
+            autoClose: 3,
+          })
           return error
         }
       }
