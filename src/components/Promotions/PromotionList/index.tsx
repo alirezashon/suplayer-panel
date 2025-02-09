@@ -3,7 +3,6 @@ import { PromotionInterface } from '@/interfaces'
 import Done from '../PromotionCard/Done'
 import Progress from '../PromotionCard/Progress'
 import Wait from '../PromotionCard/Wait'
-
 const PromotionList = ({
   promotions,
   status,
@@ -12,7 +11,6 @@ const PromotionList = ({
   status: string
 }) => {
   const { setMenu } = useMenu()
-
   return (
     <>
       <div className='flex flex-col p-5'>
@@ -39,7 +37,7 @@ const PromotionList = ({
         <div className='grid grid-cols-[repeat(auto-fit,minmax(25%,1fr))] gap-6 p-6 bg-white rounded-lg border border-gray-200'>
           {promotions.map((promotion, index) =>
             status === '1' ? (
-              <Wait key={index} promotion={promotion}/>
+              <Wait key={index} promotion={promotion} />
             ) : status === '2' ? (
               <Progress key={index} promotion={promotion} />
             ) : (
@@ -51,5 +49,4 @@ const PromotionList = ({
     </>
   )
 }
-
 export default PromotionList

@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import Kanban from './KanbanView'
 import { useMenu } from '@/Context/Menu'
-import { CampaignInterface } from '@/interfaces'
 import CampaignList from './CampaignList'
 import { useData } from '@/Context/Data'
 import moment from 'moment-jalaali'

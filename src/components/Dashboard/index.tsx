@@ -173,7 +173,7 @@ const Dashboard = () => {
           )}
         </div>
       </div>
-      {promotionData?.length && (
+      {promotionData && promotionData?.length > 0 && (
         <div className='flex flex-col bg-white p-5 border rounded-lg'>
           <div className='flex gap-3 items-center'>
             <PresentionChart size={28} color='#7747C0' />
@@ -229,7 +229,7 @@ const Dashboard = () => {
           </div>
         </div>
       )}
-      {campaignData?.length && (
+      {campaignData?.length ? (
         <div className='flex flex-col bg-white p-5 my-10 border rounded-lg'>
           <div className='flex gap-3 items-center'>
             <StatusUp size={28} color='#7747C0' />
@@ -287,6 +287,8 @@ const Dashboard = () => {
             ))}
           </div>
         </div>
+      ) : (
+        ''
       )}
     </div>
   )

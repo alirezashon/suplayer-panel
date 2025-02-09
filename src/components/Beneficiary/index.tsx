@@ -46,7 +46,6 @@ const Beneficiary: React.FC = () => {
         <DeleteModal
           data={showDeleteModal as BeneficiaryData}
           close={setShowDeleteModal}
-          groupId={activeTab}
         />
       )}
       <div className='flex flex-col p-2'>

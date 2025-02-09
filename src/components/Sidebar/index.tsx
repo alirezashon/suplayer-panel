@@ -119,6 +119,8 @@ const Sidebar = ({
           <li key={index} className='w-full my-3'>
             <div
               className={`flex items-center p-[1vh] rounded-md cursor-pointer ${
+                index === 0 && !menu && 'bg-[#7747C0] text-white'
+              } ${
                 menu === item.link
                   ? 'bg-[#7747C0] text-white'
                   : 'text-[#242424]'

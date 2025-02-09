@@ -6,7 +6,11 @@ import {
   GetKPITaskList,
   GetSubGroupsList,
 } from '@/services/items'
-import { GetCurrentUser } from '@/services/user'
+import {
+  GetAccountBalance,
+  GetCurrentUser,
+  GetNoneRemovableBalance,
+} from '@/services/user'
 import { GetReferrerChartList, GetReferrerList } from '@/services/referrer'
 import { GetCampaignList } from '@/services/campaign'
 import { GetPromotionList } from '@/services/promotion'
@@ -65,4 +69,15 @@ export const getDraftsData = async () => {
 export const getKPITaskData = async () => {
   const accessToken = (await getCookieByKey('access_token')) || ''
   return await GetKPITaskList({ accessToken })
+}
+export const getBalance = async () => {
+  const accessToken = (await getCookieByKey('access_token')) || ''
+  const accountBalance = await GetAccountBalance({ accessToken })
+  const noneRemovable = await GetNoneRemovableBalance({ accessToken })
+
+  if (accountBalance && accountBalance[0] && noneRemovable)
+    return {
+      allBalance: Number(accountBalance[0]?.amount) || 0,
+      removable: Number(noneRemovable[0]?.amount) || 0,
+    }
 }

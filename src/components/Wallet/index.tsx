@@ -4,11 +4,14 @@ import { useEffect, useRef } from 'react'
 import Chart from 'chart.js/auto'
 import { Add, InfoCircle, Wallet3 } from 'iconsax-react'
 import { useMenu } from '@/Context/Menu'
+import { useData } from '@/Context/Data'
+import ShowAnimateNumber from '../shared/AnimateNumber'
 
 const Wallet: React.FC = () => {
   const chartRef = useRef<HTMLCanvasElement>(null)
   const chartInstanceRef = useRef<Chart | null>(null)
   const { setMenu } = useMenu()
+  const { balance } = useData()
 
   useEffect(() => {
     const ctx = chartRef.current?.getContext('2d')
@@ -92,14 +95,28 @@ const Wallet: React.FC = () => {
               <p>اعتبار قابل تخصیص</p>
               <InfoCircle size={16} color='#704CB9' />
             </div>
-            <b>۴۰.۰۰۰ میلیون ریال</b>
+            <b>
+              <ShowAnimateNumber
+                startValue={balance?.allBalance || 0}
+                targetValue={balance?.allBalance || 0}
+                incrementValue={balance?.allBalance || 0}
+              />
+              میلیون ریال
+            </b>
           </div>
           <div className='flex w-full justify-between'>
             <div className='flex gap-2 text-[#00000099]'>
               <p>قابل برداشت</p>
               <InfoCircle size={16} color='#704CB9' />
             </div>
-            <b>۴۰.۰۰۰ میلیون ریال</b>
+            <b>
+              <ShowAnimateNumber
+                startValue={balance?.allBalance || 0}
+                targetValue={balance?.allBalance || 0}
+                incrementValue={balance?.allBalance || 0}
+              />
+              میلیون ریال
+            </b>
           </div>
         </div>
         <div className='flex gap-10 px-10 my-3'>
@@ -108,14 +125,28 @@ const Wallet: React.FC = () => {
               <p>تخصیص داده شده</p>
               <InfoCircle size={16} color='#704CB9' />
             </div>
-            <b>۴۰.۰۰۰ میلیون ریال</b>
+            <b>
+              <ShowAnimateNumber
+                startValue={balance?.removable || 0}
+                targetValue={balance?.removable || 0}
+                incrementValue={balance?.removable || 0}
+              />
+              میلیون ریال
+            </b>
           </div>
           <div className='flex w-full justify-between'>
             <div className='flex gap-2 text-[#00000099]'>
               <p> قابل آزادسازی </p>
               <InfoCircle size={16} color='#704CB9' />
             </div>
-            <b>۴۰.۰۰۰ میلیون ریال</b>
+            <b>
+              <ShowAnimateNumber
+                startValue={balance?.removable || 0}
+                targetValue={balance?.removable || 0}
+                incrementValue={balance?.removable || 0}
+              />
+              میلیون ریال
+            </b>
           </div>
         </div>
         <div className='flex gap-[15%]'>

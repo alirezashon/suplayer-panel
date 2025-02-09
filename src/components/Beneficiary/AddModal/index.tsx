@@ -1,5 +1,5 @@
 import { getCookieByKey } from '@/actions/cookieToken'
-import { BeneficiaryData, Cities, County, States } from '@/interfaces'
+import { BeneficiaryData} from '@/interfaces'
 import { CreateBeneficiary, EditBeneficiary } from '@/services/items'
 import { CloseSquare, Grammerly } from 'iconsax-react'
 import dynamic from 'next/dynamic'

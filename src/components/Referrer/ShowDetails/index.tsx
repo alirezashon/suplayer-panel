@@ -7,21 +7,6 @@ interface ShowDetailsProps {
 }
 
 const ShowDetails = ({ data, close }: ShowDetailsProps) => {
-  const text = [
-    'text-purple-800',
-    'text-blue-800',
-    'text-yellow-600',
-    'text-green-800',
-    'text-red-700',
-  ]
-  const bg = [
-    'bg-purple-200',
-    'bg-blue-200',
-    'bg-yellow-200',
-    'bg-green-200',
-    'bg-red-200',
-  ]
-
   return (
     <div>
       <div className='absolute bg-slate-600 opacity-50 w-full h-[200vh] z-50 top-0 right-0'></div>

@@ -1,10 +1,17 @@
+import { useMenu } from '@/Context/Menu'
 import { PromotionInterface } from '@/interfaces'
 import { Eye, MouseCircle, Personalcard } from 'iconsax-react'
 import React from 'react'
 
 const Done = ({ promotion }: { promotion: PromotionInterface }) => {
+  const { setMenu } = useMenu()
   return (
-    <div className='bg-white rounded-lg shadow border-2 border-[#A1E3CB] p-4 relative cursor-pointer'>
+    <div
+      onClick={() => {
+        setMenu('promotion-view')
+        location.hash = 'promotion-view'
+      }}
+      className='bg-white rounded-lg shadow border-2 border-[#A1E3CB] p-4 relative cursor-pointer'>
       <div className='flex justify-between items-center'>
         <div className='flex gap-2'>
           <span

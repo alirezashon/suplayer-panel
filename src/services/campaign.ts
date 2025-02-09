@@ -125,7 +125,7 @@ export const EditProductCampaign = async ({
           authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
-          campaign_id: 0,
+          campaign_id: campaign_id || 0,
           cstatus,
           ctitle,
           ctype,

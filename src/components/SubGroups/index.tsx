@@ -83,9 +83,9 @@ const SubGroups: React.FC = () => {
             subGroupData?.map(
               (subGroup, subIndex) =>
                 subGroup.sup_group_id === activeTab && (
-                  <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6'>
+                  <div  key={subIndex} className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6'>
                     <div
-                      key={subIndex}
+                   
                       className='flex flex-col justify-between items-start border rounded-lg p-4 shadow-md hover:shadow-lg transition duration-300'>
                       <div className='flex items-center justify-between w-full mb-4'>
                         <span className='text-sm bg-[#E1DCF8] text-[#6137A0] px-2 py-1 rounded'>

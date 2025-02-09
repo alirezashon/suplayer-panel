@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react'
 import {
   CloseSquare,
-  Trash,
-  TickCircle,
   Warning2,
   TickSquare,
   CloseCircle,
@@ -39,19 +37,21 @@ const CustomModal = () => {
     }
   }, [modalContent])
   return (
-    <div className='fixed inset-0 flex justify-center items-center z-50'>
+    <div
+      className='fixed inset-0 flex justify-center items-center '
+      style={{ zIndex: '60' }}>
       {/* بک‌دراپ */}
       <div className='absolute bg-slate-600 opacity-50 w-full h-full z-40 top-0 right-0'></div>
       {/* جعبه مودال */}
-            <div className='p-10 rounded-lg max-md:w-[100%] w-[40vw] z-50 bg-white border border-gray-300 shadow-lg transition-transform duration-300 ease-in-out'>
-     {modalContent?.autoClose && (
-        <div className='w-full bg-gray-200 h-1 mb-10 overflow-hidden'>
-          <div
-            className='bg-purple-600 h-full transition-all duration-[16ms]'
-            style={{ width: `${progress}%` }}></div>
-        </div>
-      )}{' '}
-   {/* هدر مودال */}
+      <div className='p-10 rounded-lg max-md:w-[100%] w-[40vw] z-50 bg-white border border-gray-300 shadow-lg transition-transform duration-300 ease-in-out'>
+        {modalContent?.autoClose && (
+          <div className='w-full bg-gray-200 h-1 mb-10 overflow-hidden'>
+            <div
+              className='bg-purple-600 h-full'
+              style={{ width: `${progress}%` }}></div>
+          </div>
+        )}
+        {/* هدر مودال */}
         <div className='flex justify-between items-center w-full text-xl font-medium text-right text-gray-800 max-md:max-w-full'>
           <div className='flex-1 shrink self-stretch my-auto min-w-[240px] max-md:max-w-full'>
             {modalContent?.title}
@@ -72,11 +72,8 @@ const CustomModal = () => {
             <Warning2 variant='Bold' size={44} color='#cda125' />
           )}
         </div>
-
         {/* نمایش Progress Bar در صورت وجود autoClose */}
-
         {modalContent?.main}
-
         <button
           type='button'
           className='w-full mt-10 px-4 py-2 bg-[#7747C0] text-white rounded-lg hover:bg-purple-800'

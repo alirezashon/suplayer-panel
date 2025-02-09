@@ -11,6 +11,7 @@ import {
   getCampaignData,
   getPromotiuonData,
   getKPITaskData,
+  getBalance,
 } from '@/actions/setData'
 import Beneficiary from '@/components/Beneficiary'
 import Campaign from '@/components/Campaign'
@@ -36,7 +37,7 @@ import { useEffect, useState } from 'react'
 import CustomModal from '@/components/shared/CustomModal'
 
 const Home = () => {
-  const { modalContent, closeModal } = useStates()
+  const { modalContent } = useStates()
   const { menu, setMenu } = useMenu()
   const [loading, setLoading] = useState<boolean>(true)
   const {
@@ -52,6 +53,7 @@ const Home = () => {
     setCampaignData,
     setPromotionData,
     setKPITaskData,
+    setBalance,
   } = useData()
   const { setProductGroupStates } = useStates()
   useEffect(() => {
@@ -80,6 +82,7 @@ const Home = () => {
         (value) => value && setPromotionData(value)
       )
       await getKPITaskData().then((result) => result && setKPITaskData(result))
+      await getBalance().then((result) => result && setBalance(result))
     }
     fetcher()
     const handleHashChange = () => {
@@ -103,7 +106,23 @@ const Home = () => {
     return () => {
       window.removeEventListener('hashchange', handleHashChange, false)
     }
-  }, [setMenu, setGroupData, setSubGroupData])
+  }, [
+    setMenu,
+    setGroupData,
+    setSubGroupData,
+    setBalance,
+    setBeneficiaryData,
+    setBrandsData,
+    setCampaignData,
+    setKPITaskData,
+    setProductData,
+    setProductGroupData,
+    setProductGroupStates,
+    setPromotionData,
+    setReferrerChartData,
+    setReferrerData,
+    setUserInfo,
+  ])
 
   return (
     <MainLayout>
@@ -136,6 +155,7 @@ const Home = () => {
                 'new-promotion',
                 'edit-promotion',
                 'view-promotion',
+                'promotion-view',
               ].includes(menu) ? (
               <Promotion />
             ) : ['campaign', 'campaign-list', 'view-campaign'].includes(

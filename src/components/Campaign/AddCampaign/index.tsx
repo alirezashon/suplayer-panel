@@ -7,7 +7,7 @@ import { useStates } from '@/Context/States'
 import { CampaignInterface } from '@/interfaces'
 import { CreateCampaign } from '@/services/campaign'
 import { ArrowRight2, CloseSquare, Message } from 'iconsax-react'
-import { FormEvent, useRef, useState } from 'react'
+import { FormEvent, InputHTMLAttributes, useRef, useState } from 'react'
 
 const AddCampaign = ({
   existData,
@@ -32,7 +32,7 @@ const AddCampaign = ({
     loc_uid: existData?.loc_uid || '',
     budget: existData?.budget || 0,
     expected_response: existData?.expected_response || 0,
-    expected_amount: existData?.expected_amunt || 0,
+    expected_amount: existData?.expected_amount || 0,
     desc: existData?.desc || '',
     sgroup_id: existData?.sgroup_id || 0,
     supervisor_id: existData?.supervisor_id || 0,
@@ -50,7 +50,7 @@ const AddCampaign = ({
   })
   const [, setSelectedItems] = useState<Array<string | number>>([])
 
-  const handleInputChange = (e: any) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     refs.current = {
       ...refs.current,

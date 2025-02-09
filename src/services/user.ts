@@ -1,5 +1,5 @@
 import { getCookieByKey, IAccessTokenResponse } from '@/actions/cookieToken'
-import { IUserResponse } from '@/interfaces'
+import { IAccountBalanceResponse, IUserResponse } from '@/interfaces'
 
 export interface IAuthenticatedUser {
   access_token: string
@@ -151,34 +151,6 @@ export const LoginWithOtpAndMobile = async ({
   }
 }
 
-export const DeterminationRole = async ({
-  id,
-  accessToken,
-}: {
-  accessToken: string | undefined
-  id: number
-}) => {
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/role_determination?p_user_role_id=${id}`,
-      {
-        method: 'POST',
-        headers: {
-          authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
-      }
-    )
-
-    if (response.status !== 200) {
-      throw new Error('Failed to SignupUser!')
-    }
-    return await response.json()
-  } catch (error: unknown) {
-    console.log(error)
-  }
-}
-
 export const GetCurrentUser = async ({
   accessToken,
 }: {
@@ -216,54 +188,65 @@ interface IChangePassword {
   otp_code: string
 }
 
-export const UserChangePassword = async ({
+export const GetAccountBalance = async ({
   accessToken,
-  data,
 }: {
-  accessToken: string
-  data: IChangePassword
-}): Promise<IMobileValidatorOtp | undefined> => {
+  accessToken: string | undefined
+}): Promise<IAccountBalanceResponse[] | undefined> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/sbw_forgot_password`,
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/sbw_accountbalance`,
       {
-        method: 'POST',
+        method: 'GET',
         headers: {
-          'Content-Type': 'application/json',
           authorization: `Bearer ${accessToken}`,
         },
-        body: JSON.stringify(data),
+        next: {
+          revalidate: 3600,
+          tags: ['sbw_accountbalance'],
+        },
       }
     )
 
-    if (response.status !== 200) {
-      throw new Error('Failed to UserChangePassword!')
+    if (!response.ok || response.status === 500) {
+      throw new Error('Failed to GetAccountBalance')
     }
 
     return await response.json()
-  } catch (error: unknown) {
+  } catch (error) {
     console.log(error)
   }
 }
-export const callChangePassword = async ({
-  newpassword,
+export interface NoneRemovableBalanceResponse {
+  manager_uid: string
+  amount: string
+}
+export const GetNoneRemovableBalance = async ({
+  accessToken,
 }: {
-  newpassword: string
-}) => {
-  const accessToken = await getCookieByKey('access_token')
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/changepassword_fst`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        authorization: `Bearer ${accessToken}`,
-      },
-      body: JSON.stringify({
-        newpassword,
-      }),
+  accessToken: string | undefined
+}): Promise<NoneRemovableBalanceResponse[] | undefined> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/sbw_Non_removable_balance`,
+      {
+        method: 'GET',
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+        next: {
+          revalidate: 3600,
+          tags: ['sbw_accountbalance'],
+        },
+      }
+    )
+
+    if (!response.ok || response.status === 500) {
+      throw new Error('Failed to GetAccountBalance')
     }
-  )
-  const data = await response.json()
-  return data
+
+    return await response.json()
+  } catch (error) {
+    console.log(error)
+  }
 }

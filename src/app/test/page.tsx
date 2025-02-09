@@ -90,7 +90,7 @@ const OrgChart: React.FC = () => {
   return (
     <div className="flex justify-center items-center bg-gray-100 min-h-screen">
       <svg width="100%" height="100%" viewBox="0 0 1200 800">
-        {tree.map((node, index) => (
+        {tree.map((node) => (
           <TreeNode key={node.id} node={node} x={600} y={100} parentX={null} parentY={null} />
         ))}
       </svg>

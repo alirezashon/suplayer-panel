@@ -1,12 +1,5 @@
 import { useStates } from '@/Context/States'
-import {
-  DocumentUpload,
-  Eye,
-  EyeSlash,
-  ReceiptSquare,
-  TickCircle,
-  Trash,
-} from 'iconsax-react'
+import { DocumentUpload, Eye, EyeSlash, TickCircle, Trash } from 'iconsax-react'
 import Image from 'next/image'
 import React, { useState } from 'react'
 

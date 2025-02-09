@@ -7,12 +7,10 @@ import { CloseSquare, Forbidden2, Trash } from 'iconsax-react'
 const DeleteModal = ({
   isActive = false,
   data,
-  groupId,
   close,
 }: {
   isActive?: boolean
   data: BeneficiaryData
-  groupId: number
   close: (show: boolean) => void
 }) => {
   const { showModal } = useStates()

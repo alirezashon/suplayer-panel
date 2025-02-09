@@ -177,6 +177,9 @@ export interface ProductGroupData {
   group_status: number
   level: number
   lev1_count: number
+  product_count: number
+  personnel_count: number
+  visitor_count: number
 }
 export interface ProductsData {
   sysid: string
@@ -246,4 +249,10 @@ export interface KPIData {
   kpi_time_series: number
   desc: string
   cstatus: number
+}
+export interface IAccountBalanceResponse {
+  manager_uid: string
+  amount: string
+  deposit: string
+  withdrawal: string
 }

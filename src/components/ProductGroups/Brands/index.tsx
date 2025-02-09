@@ -53,16 +53,6 @@ const Brands: React.FC = () => {
                 تعاریف
               </span>
               /
-              <span
-                className='text-[#98A2B3]'
-                onClick={() => {
-                  setMenu('productgroups')
-                  setProductGroupStates('productgroups')
-                  location.hash = 'productgroups'
-                }}>
-                {selectedProductBrandData?.group.group_desc}
-              </span>
-              /
               <span className='text-[#7747C0]'>
                 {selectedProductBrandData?.group.group_desc}
               </span>
@@ -137,7 +127,7 @@ const Brands: React.FC = () => {
                     </p>
                   </div>
                   <div className='flex my-3'>
-                    <HashtagSquare size={24} color='#704CB9' />
+                    <HashtagSquare size={24} color='#704CB9'/>
                     <p className='text-sm  px-2 py-1 rounded'>
                       {brand.lev1_count > 0 ? (
                         <>
@@ -153,8 +143,7 @@ const Brands: React.FC = () => {
                   </div>
                   <button
                     onClick={() => {
-                      // brand.lev1_count > 0
-                      brand.lev1_count === 0
+                      brand.product_count > 0
                         ? changeRoute(brand)
                         : setShowAddProduct(brand)
                     }}
@@ -163,7 +152,7 @@ const Brands: React.FC = () => {
                         ? 'bg-[#7747C0] hover:bg-[#7747C0] text-white'
                         : 'border border-[#7747C0] text-[#7747C0] hover:bg-[#7747C0] hover:text-white'
                     } transition duration-300`}>
-                    {brand.lev1_count > 0 ? 'مشاهده محصولات' : 'تعریف محصول'}
+                    {brand.product_count > 0 ? 'مشاهده محصولات' : 'تعریف محصول'}
                   </button>
                 </div>
               ))}

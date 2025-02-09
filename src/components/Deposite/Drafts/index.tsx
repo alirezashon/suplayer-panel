@@ -33,7 +33,7 @@ const Drafts = () => {
   })
   const { showModal } = useStates()
 
-  const handleInputChange = (e: any) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     refs.current = {
       ...refs.current,
