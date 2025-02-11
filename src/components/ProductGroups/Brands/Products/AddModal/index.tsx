@@ -242,10 +242,9 @@ const AddModal = ({
     <div>
       <div className='absolute bg-slate-600 opacity-50 w-full h-[200vh] z-50 top-0 right-0'></div>
       <div className='fixed overflow-y-auto p-10 z-50 right-0 top-0 max-md:left-[0] max-md:w-[100%] w-[40vw] h-full bg-white border border-gray-300 shadow-lg transition-transform duration-300 ease-in-out right-side-animate'>
-        <form
+              <form
           onSubmit={handleSubmit}
-          className='flex flex-col bg-white max-w-[594px] pb-[852px] max-md:px-5 max-md:pb-24'>
-          <div className='flex justify-between items-center w-full text-xl font-medium text-right text-gray-800 max-md:max-w-full'>
+          className='flex flex-col bg-white  max-md:px-5 max-md:pb-24'>          <div className='flex justify-between items-center w-full text-xl font-medium text-right text-gray-800 max-md:max-w-full'>
             <div className='flex-1 shrink self-stretch my-auto min-w-[240px] max-md:max-w-full'>
               محصول جدید
             </div>

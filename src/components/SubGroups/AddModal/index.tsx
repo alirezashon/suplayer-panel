@@ -1,5 +1,6 @@
 import { getCookieByKey } from '@/actions/cookieToken'
 import { getSubGroupData } from '@/actions/setData'
+import { errorClass } from '@/app/assets/style'
 import RadioTreeSelector from '@/components/shared/RadioTrees'
 import SelectList from '@/components/shared/SelectList'
 import { useData } from '@/Context/Data'
@@ -15,7 +16,7 @@ const AddModal = ({
 }: {
   existName?: string
   groupId: number
-  close: (show: boolean) => void
+  close: () => void
 }) => {
   const { groupData, setSubGroupData } = useData()
   const { showModal } = useStates()
@@ -26,7 +27,7 @@ const AddModal = ({
   const [isConfirmed, setIsConfirmed] = useState(false)
   const [nestedNames, setNestedNames] = useState<string[]>([])
   const [, setSelectedItems] = useState<Array<string | number>>([])
-  const [errors, setErrors] = useState<Record<string, string>>()
+  const [errors, setErrors] = useState<{ index: number; message: string }[]>([])
   const [status, setStatus] = useState<React.ReactElement>()
   const setResult = (state: boolean, text?: string) => {
     if (state) {
@@ -73,7 +74,7 @@ const AddModal = ({
         code: `${existName.split('#$%^@!~')[1]}`,
         name: data.name,
       })
-        .then((value) => {
+        .then(async (value) => {
           showModal({
             type: value.status === 1 ? 'success' : 'error',
             main: <p>{value.message}</p>,
@@ -83,6 +84,9 @@ const AddModal = ({
           value.status === '-1'
             ? setResult(false, value.message)
             : setResult(true)
+          await getSubGroupData().then(
+            (value) => value && setSubGroupData(value)
+          )
         })
         .catch(() =>
           showModal({
@@ -95,8 +99,20 @@ const AddModal = ({
   }
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    const newErrors = []
     if (data.name.length < 1) {
-      setErrors({ name: 'این فیلد اجباریست' })
+      newErrors.push({ index: 0, message: 'این فیلد اجباریست' })
+    }
+
+    nestedNames.forEach((name, i) => {
+      if (name.trim() === '') {
+        newErrors.push({ index: i + 1, message: 'این فیلد نباید خالی باشد' })
+      }
+    })
+
+    if (newErrors.length > 0) {
+      setErrors(newErrors)
       return
     }
     setIsConfirmed(true)
@@ -108,7 +124,8 @@ const AddModal = ({
 
     setTimeout(() => {
       setIsConfirmed(false)
-    }, 3333)
+      close()
+    }, 4444)
   }
   const sampleData = [
     {
@@ -127,6 +144,40 @@ const AddModal = ({
       children: ['دکتر لیلا صادقی', 'دکتر مجید عباسی', 'دکتر پروین امینی'],
     },
   ]
+  const handleAddInput = () => {
+    if (!data.name.trim()) {
+      setErrors((prev) => [...prev, { index: 0, message: 'این فیلد اجباریست' }])
+      return
+    }
+
+    const emptyIndex = nestedNames.findIndex((name) => name.trim() === '')
+    if (emptyIndex !== -1) {
+      setErrors((prev) => [
+        ...prev.filter((err) => err.index !== emptyIndex + 1),
+        {
+          index: emptyIndex + 1,
+          message: 'بعد از پر شدن می‌توان فیلد جدید اضافه کرد',
+        },
+      ])
+      return
+    }
+
+    setNestedNames((prev) => [...prev, ''])
+    setErrors((prev) => [
+      ...prev,
+      { index: nestedNames.length + 1, message: '' },
+    ])
+  }
+
+  const handleInputChange = (index: number, value: string) => {
+    setErrors((prev) => prev.filter((error) => error.index !== index + 1))
+    const updatedNames = [...nestedNames]
+    updatedNames[index] = value
+    setNestedNames(updatedNames)
+
+    setErrors((prev) => prev.filter((error) => error.index !== index + 1))
+  }
+
   return (
     <div>
       <div className='absolute bg-slate-600 opacity-50 w-full h-[200vh] z-50 top-0 right-0'></div>
@@ -136,7 +187,7 @@ const AddModal = ({
      `}>
         <form
           onSubmit={handleSubmit}
-          className='flex flex-col bg-white max-w-[594px] pb-[852px] max-md:px-5 max-md:pb-24'>
+          className='flex flex-col bg-white  max-md:px-5 max-md:pb-24'>
           <div className='flex justify-between items-center w-full text-xl font-medium text-right text-gray-800 max-md:max-w-full'>
             <div className='flex-1 shrink self-stretch my-auto min-w-[240px] max-md:max-w-full'>
               تعریف زیرگروه جدید
@@ -145,7 +196,7 @@ const AddModal = ({
               size={24}
               cursor='pointer'
               color='#50545F'
-              onClick={() => close(false)}
+              onClick={() => close()}
             />
           </div>
           <div className='my-4'>
@@ -174,18 +225,16 @@ const AddModal = ({
               </label>
               <input
                 onChange={(e) => {
-                  if (errors?.name) setErrors({})
-                  setData({ name: e.target.value, groupId: data.groupId })
+                  setData((prev) => ({ ...prev, name: e.target.value }))
+                  setErrors((prev) => prev.filter((error) => error.index !== 0)) // حذف ارور مربوط به این فیلد
                 }}
-                defaultValue={data.name}
-                className={`${
-                  errors?.name &&
-                  'border-red-300 border-2 shadow-red-200 shadow-md error-input-animated'
+                value={data.name}
+                className={`border ${
+                  errors.some((err) => err.index === 0) ? errorClass : ''
                 }`}
-                placeholder='مثال: دکترهای پوست، تهران غرب ...'
               />
-              {errors?.name && (
-                <p className='text-red-500 m-1'>{errors?.name}</p>
+              {errors.some((err) => err.index === 0) && (
+                <p className='text-red-500 text-sm'>این فیلد اجباریست</p>
               )}
             </div>
           </div>
@@ -201,7 +250,12 @@ const AddModal = ({
                 </label>
                 <div className='flex items-center gap-3'>
                   <input
-                    className='w-full'
+                    className={`w-full ${
+                      errors.some((err) => err.index === index + 1)
+                        ? errorClass
+                        : ''
+                    }`}
+                    onChange={(e) => handleInputChange(index, e.target.value)}
                     defaultValue={name}
                     placeholder='نام زیر گروه خود را بنویسید'
                   />
@@ -220,6 +274,11 @@ const AddModal = ({
                     </div>
                   }
                 </div>
+                {errors.some((err) => err.index === index + 1) && (
+                  <p className='text-red-500 text-sm'>
+                    {errors.find((err) => err.index === index + 1)?.message}
+                  </p>
+                )}
               </div>
             </div>
           ))}
@@ -245,7 +304,7 @@ const AddModal = ({
           <div className='flex justify-end my-5'>
             <p
               className='text-[#7747C0] cursor-pointer'
-              onClick={() => setNestedNames((prv) => [...prv, ''])}>
+              onClick={handleAddInput}>
               + زیر گروه جدید
             </p>
           </div>

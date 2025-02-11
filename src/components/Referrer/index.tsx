@@ -36,21 +36,24 @@ const Referrer: React.FC = () => {
   const [initialData, setInitialData] = useState<Partial<ReferrerData>[]>([])
 
   const { setMenu } = useMenu()
-  const { referrerData } = useData()
-
+  const { referrerData, referrerChartData } = useData()
   useEffect(() => {
     setInitialData(
       Array.isArray(referrerData)
-        ? referrerData?.map((referrer) => ({
+        ? referrerData.map((referrer) => ({
             pers_name: referrer.pers_name,
             pers_family: referrer.pers_family,
-            pers_chart_id: referrer.pers_chart_id,
+            pers_chart_id:
+              referrerChartData?.find(
+                (chart) => chart.id === referrer.pers_chart_id
+              )?.chlabel || '',
             pers_status: referrer.pers_status,
             pers_tob: referrer.pers_tob,
           }))
         : []
     )
-  }, [])
+  }, [referrerData, referrerChartData]) 
+
   const handleHeaderCheckboxChange = () => {
     if (selectedItems.length === initialData?.length) {
       setSelectedItems([]) // اگر همه انتخاب شده بودند، پاک کن
@@ -180,7 +183,7 @@ const Referrer: React.FC = () => {
                   placeholder='نام خانوادگی'
                 />
               </div>
-       
+
               <div className='flex flex-col w-full'>
                 <label className='text-base font-medium text-right text-gray-800'>
                   شماره همراه

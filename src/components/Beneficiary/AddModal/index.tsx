@@ -1,5 +1,5 @@
 import { getCookieByKey } from '@/actions/cookieToken'
-import { BeneficiaryData} from '@/interfaces'
+import { BeneficiaryData } from '@/interfaces'
 import { CreateBeneficiary, EditBeneficiary } from '@/services/items'
 import { CloseSquare, Grammerly } from 'iconsax-react'
 import dynamic from 'next/dynamic'
@@ -22,6 +22,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
     35.72249924640049, 51.335191350784214,
   ])
   const [isConfirmed, setIsConfirmed] = useState(false)
+  const [type, setType] = useState<number>(1)
   const [errors, setErrors] = useState<Record<string, string | number>>({
     visitor_name: data?.visitor_family || '',
     visitor_family: '',
@@ -36,7 +37,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
     visitor_full_name: '',
     visitor_name: '',
     visitor_family: '',
-    visitor_status: 0,
+    visitor_status: 1,
     CityUID: '',
     visitor_address: '',
     visitor_specialty: '',
@@ -145,9 +146,10 @@ const AddModal = ({ data, close }: AddModalProps) => {
                     defaultChecked={index === 0}
                     name='beneficiary'
                     value={beneficiary}
-                    onChange={() =>
-                      (refs.current.visitor_tob = index === 0 ? 1 : 2)
-                    }
+                    onChange={() => {
+                      setType(index === 0 ? 1 : 2)
+                      refs.current.visitor_tob = index === 0 ? 1 : 2
+                    }}
                     className='w-5 h-5 cursor-pointer accent-[#7747C0]'
                   />
                   <span className='text-gray-700'>{beneficiary}</span>
@@ -155,7 +157,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
               ))}
             </div>
           </div>
-          {refs.current.visitor_tob === 1 ? (
+          {type === 1 ? (
             <>
               <div className='flex gap-4 my-2'>
                 <div className='flex flex-col w-full'>

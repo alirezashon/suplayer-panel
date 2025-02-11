@@ -76,7 +76,7 @@ const AddModal = ({
         type: value.status === 1 ? 'success' : 'error',
         main: <p>{value.message}</p>,
         title: value.status === 1 ? 'موفق' : 'خطا',
-        autoClose: 3,
+        autoClose: 2,
       })
       if (value.status === 1) {
         setParent({
@@ -289,48 +289,78 @@ const AddModal = ({
           )}
           <div className='mt-10 w-full max-md:max-w-full'>
             <div className='flex items-center gap-4'>
-              <button
-                onClick={() => {
-                  state === 1 ? setState(2) : handleSubmit
-                }}
-                style={{
-                  animation: `${
-                    isConfirmed
-                      ? 'hideSubmitAnimate 1s ease-in-out forwards '
-                      : 'showSubmitAnimate 1s ease-in-out forwards '
-                  }`,
-                }}
-                className={`w-full fill-button px-10 h-10 mt-10 rounded-lg transition-transform duration-200 ease-in-out hover:scale-105`}>
-                {state === 1 ? 'ثبت و ادامه' : 'ادامه'}
-              </button>
-              <button
-                type='button'
-                onClick={() => {
-                  setState(0)
-                }}
-                style={{
-                  animation: `${
-                    isConfirmed
-                      ? 'hideSubmitAnimate 1s ease-in-out forwards '
-                      : 'showSubmitAnimate 1s ease-in-out forwards '
-                  }`,
-                }}
-                className={`w-full border-button px-10 h-10 mt-10 rounded-lg transition-transform duration-200 ease-in-out hover:scale-105`}>
-                {state === 0 ? 'انصراف' : 'ثبت و خروج'}
-              </button>
-              <div
-                className={`absolute ${
-                  !isConfirmed && ' opacity-0 '
-                } transform -translate-x-1/2 text-[#0F973D] flex rounded-lg transition-all duration-1000 ease-in-out`}
-                style={{
-                  animation: `${
-                    isConfirmed
-                      ? 'showSuccessText 1s ease-in-out forwards '
-                      : 'hideSuccessText 1s ease-in-out forwards '
-                  }`,
-                }}>
-                عملیات موفقیت‌آمیز بود! <Grammerly size={24} color='#0F973D' />
-              </div>
+              {state !== 1 ? (
+                <>
+                  <button
+                    onClick={() => {
+                      state === 1 ? setState(2) : handleSubmit
+                    }}
+                    style={{
+                      animation: `${
+                        isConfirmed
+                          ? 'hideSubmitAnimate 1s ease-in-out forwards '
+                          : 'showSubmitAnimate 1s ease-in-out forwards '
+                      }`,
+                    }}
+                    className={`w-full fill-button px-10 h-10 mt-10 rounded-lg transition-transform duration-200 ease-in-out hover:scale-105`}>
+                    ادامه
+                  </button>
+                  <button
+                    onClick={() => {
+                      setState(0)
+                    }}
+                    style={{
+                      animation: `${
+                        isConfirmed
+                          ? 'hideSubmitAnimate 1s ease-in-out forwards '
+                          : 'showSubmitAnimate 1s ease-in-out forwards '
+                      }`,
+                    }}
+                    className={`w-full border-button px-10 h-10 mt-10 rounded-lg transition-transform duration-200 ease-in-out hover:scale-105`}>
+                    {state === 0 ? 'انصراف' : 'ثبت و خروج'}
+                  </button>
+                  <div
+                    className={`absolute ${
+                      !isConfirmed && ' opacity-0 '
+                    } transform -translate-x-1/2 text-[#0F973D] flex rounded-lg transition-all duration-1000 ease-in-out`}
+                    style={{
+                      animation: `${
+                        isConfirmed
+                          ? 'showSuccessText 1s ease-in-out forwards '
+                          : 'hideSuccessText 1s ease-in-out forwards '
+                      }`,
+                    }}>
+                    عملیات موفقیت‌آمیز بود!
+                    <Grammerly size={24} color='#0F973D' />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <button
+                    type='button'
+                    onClick={(e) => {
+                      e.preventDefault()
+
+                      refs.current.chlabel = ''
+                      refs.current.chtitle = ''
+                      setState(2)
+                    }}
+                    className={`w-full fill-button px-10 h-10 mt-10 rounded-lg transition-transform duration-200 ease-in-out hover:scale-105`}>
+                    ثبت و ادامه
+                  </button>
+                  <button
+                    type='button'
+                    onClick={(e) => {
+                      e.preventDefault()       
+                      refs.current.chlabel = ''
+                      refs.current.chtitle = ''
+                      setState(1)
+                    }}
+                    className={`w-full border-button px-10 h-10 mt-10 rounded-lg transition-transform duration-200 ease-in-out hover:scale-105`}>
+                    ثبت و خروج
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </form>

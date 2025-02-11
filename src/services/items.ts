@@ -336,7 +336,7 @@ export const GetBeneficiaryList = async ({
 }): Promise<BeneficiaryData[] | undefined> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_visitors_list?status_id=1`,
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_visitors_list`,
       {
         method: 'GET',
         headers: {

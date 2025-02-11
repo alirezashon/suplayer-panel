@@ -118,9 +118,9 @@ export const data: Items[] = [
   //     },
   //   ],
   // },
-  { name: '۰۲۱-۹۲۳۰۰۸۴۲', link: '/reports/expenses', iconIndex: 15 },
-  {
-    name: 'پاسخگویی تلفنی ۸ صبح الی ۱۲ شب',
-    link: '/reports/expenses',
-  },
+  // { name: '۰۲۱-۹۲۳۰۰۸۴۲', link: '/reports/expenses', iconIndex: 15 },
+  // {
+  //   name: 'پاسخگویی تلفنی ۸ صبح الی ۱۲ شب',
+  //   link: '/reports/expenses',
+  // },
 ]
