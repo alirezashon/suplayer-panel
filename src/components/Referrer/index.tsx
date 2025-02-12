@@ -52,7 +52,7 @@ const Referrer: React.FC = () => {
           }))
         : []
     )
-  }, [referrerData, referrerChartData]) 
+  }, [referrerData, referrerChartData])
 
   const handleHeaderCheckboxChange = () => {
     if (selectedItems.length === initialData?.length) {
@@ -122,8 +122,8 @@ const Referrer: React.FC = () => {
             <span
               className='text-[#98A2B3]'
               onClick={() => {
-                setMenu('groupmanagement')
-                location.hash = 'groupmanagement'
+                setMenu('mygroups')
+                location.hash = 'mygroups'
               }}>
               تعاریف
             </span>
@@ -160,7 +160,6 @@ const Referrer: React.FC = () => {
         </div>
         <div className='p-6 bg-white rounded-lg border border-gray-200'>
           <form
-            // onSubmit={handleSubmit}
             className='flex flex-col bg-[#F6F5FD] my-3 p-3 max-md:px-5 max-md:pb-24 rounded-lg'>
             <div className='flex gap-4 items-center'>
               <div className='flex flex-col w-full'>
@@ -195,40 +194,6 @@ const Referrer: React.FC = () => {
                 />
               </div>
             </div>
-            {/* <div className='flex gap-4 items-center'>
-                     <div className='my-4 w-full'>
-                <label id='status-label'> نوع بازاریاب</label>
-                <select
-                  className={`!w-full outline-none border rounded-lg h-10 px-1 cursor-pointer border-[#C9D0D8]`}>
-                  <option disabled value=''>
-                    مدیر فروش، مدیر منطقه، مدیر شعبه ...
-                  </option>
-                  <option value=''>نام گروه</option>
-                  <option value='0'>ناروه</option>
-                </select>
-              </div>
-           
-              <div className='flex flex-col w-full'>
-                <label className='text-base font-medium text-right text-gray-800'>
-                  تاریخ تولد
-                </label>
-                <Calendar
-                  placeholder='تاریخ تولد'
-                  setDate={(value: string) => value}
-                />
-              </div>
-              <div className='my-4 w-full'>
-                <label id='status-label'> وضعیت</label>
-                <select
-                  className={`!w-full outline-none border rounded-lg h-10 px-1 cursor-pointer border-[#C9D0D8]`}>
-                  <option disabled value=''>
-                    فعال، غیر فعال
-                  </option>
-                  <option value=''>نام گروه</option>
-                  <option value='0'>ناروه</option>
-                </select>
-              </div>
-            </div> */}
             <div className='mt-10 w-full flex justify-end '>
               <button
                 type='submit'
@@ -249,13 +214,13 @@ const Referrer: React.FC = () => {
                 </button>
               </div>
               <table className='my-10 w-full'>
-                <thead>
+                <thead >
                   <tr>
                     {headers.map((head, headIndex) => (
                       <th
-                        className={`bg-[#F3F4F5] border-z h-10 ${
+                        className={`bg-[#F3F4F5] h-10 ${
                           headIndex === 0
-                            ? 'rounded-tr-lg'
+                            ? 'rounded-tr-lg '
                             : headIndex === headers.length - 1 &&
                               'rounded-tl-lg'
                         } `}
@@ -293,7 +258,11 @@ const Referrer: React.FC = () => {
                     <tr key={index} className='border-b'>
                       {[index + 1, ...[...Object.values(personnel)]].map(
                         (detail, detailIndex) => (
-                          <td key={detailIndex} className={`text-center h-10 `}>
+                          <td
+                            key={detailIndex}
+                            className={`text-center h-10 ${
+                              detailIndex === 0 && 'border-r'
+                            }`}>
                             {detailIndex === 0 ? (
                               <div className='flex items-center  justify-center gap-7'>
                                 <input

@@ -11,7 +11,6 @@ import { useStates } from '@/Context/States'
 const Brands: React.FC = () => {
   const { setMenu } = useMenu()
   const {
-    setProductGroupStates,
     setSelectedProductData,
     selectedProductBrandData,
   } = useStates()

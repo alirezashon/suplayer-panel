@@ -77,13 +77,11 @@ const Wallet: React.FC = () => {
   return (
     <div className='bg-gray-100 flex flex-col justify-center items-center p-6 min-h-screen gap-20'>
       <div
-        className='w-full flex flex-col gap-3'
+        className='w-full flex flex-col gap-3 p-4 rounded-lg'
         style={{
           background:
             'linear-gradient(white, white) padding-box, conic-gradient(rgb(246, 230, 255), #ffffff 18%, #644a9e 31% 43%, rgb(228, 228, 255), #ffffff, #7a5fb7, #e7d9d5, #e4e0ed) border-box',
           border: '3px solid transparent',
-          borderRadius: '2vh',
-          padding: '1vh',
         }}>
         <div className='flex font-bold gap-3'>
           <Wallet3 size={24} color='#704CB9' />
@@ -106,7 +104,7 @@ const Wallet: React.FC = () => {
           </div>
           <div className='flex w-full justify-between'>
             <div className='flex gap-2 text-[#00000099]'>
-              <p>قابل برداشت</p>
+              <p>تخصیص داده شده</p>
               <InfoCircle size={16} color='#704CB9' />
             </div>
             <b>
@@ -122,7 +120,7 @@ const Wallet: React.FC = () => {
         <div className='flex gap-10 px-10 my-3'>
           <div className='flex w-full justify-between'>
             <div className='flex gap-2 text-[#00000099]'>
-              <p>تخصیص داده شده</p>
+              <p>مانده اعتبار</p>
               <InfoCircle size={16} color='#704CB9' />
             </div>
             <b>
@@ -136,7 +134,7 @@ const Wallet: React.FC = () => {
           </div>
           <div className='flex w-full justify-between'>
             <div className='flex gap-2 text-[#00000099]'>
-              <p> قابل آزادسازی </p>
+              <p> مانده نقد </p>
               <InfoCircle size={16} color='#704CB9' />
             </div>
             <b>

@@ -107,7 +107,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
         type: value.status === 1 ? 'success' : 'error',
         main: <p>{value.message}</p>,
         title: value.status === 1 ? 'موفق' : 'خطا',
-        autoClose: 3,
+        autoClose: 2,
       })
       if (value.status === 1) {
         await getReferrerData().then(

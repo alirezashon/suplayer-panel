@@ -31,7 +31,7 @@ const DeleteModal = ({
         type: result.status === 1 ? 'success' : 'error',
         main: <p>{result.message}</p>,
         title: result.status === 1 ? 'موفق' : 'خطا',
-        autoClose: 3,
+        autoClose: 2,
       })
       await getProductGroupData().then((value) => {
         if (value) {

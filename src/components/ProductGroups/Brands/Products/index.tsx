@@ -180,5 +180,4 @@ const Product: React.FC = () => {
     </div>
   )
 }
-
 export default Product

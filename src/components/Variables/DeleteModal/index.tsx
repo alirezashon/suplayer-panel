@@ -22,7 +22,7 @@ const DeleteModal = ({ close, data }: { close: () => void; data: KPIData }) => {
       type: response.status === 1 ? 'success' : 'error',
       main: <p>{response.message}</p>,
       title: response.status === 1 ? 'موفق' : 'خطا',
-      autoClose: 3,
+      autoClose: 2,
     })
     close()
   }

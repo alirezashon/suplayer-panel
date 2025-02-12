@@ -83,7 +83,7 @@ const AddPromotion = () => {
           type: result.status === 1 ? 'success' : 'error',
           main: <p>{result.message}</p>,
           title: result.status === 1 ? 'موفق' : 'خطا',
-          autoClose: 3,
+          autoClose: 2,
         })
       })
     }
@@ -98,7 +98,7 @@ const AddPromotion = () => {
         type: 'error',
         main: <p>پسوند فایل قابل قبول نمی باشد</p>,
         title: 'خطا',
-        autoClose: 3,
+        autoClose: 2,
       })
       setUploadStatus('error')
       return
@@ -108,7 +108,7 @@ const AddPromotion = () => {
         type: 'error',
         main: <p>حجم فایل کمتر از حد مجاز است</p>,
         title: 'خطا',
-        autoClose: 3,
+        autoClose: 2,
       })
       setUploadStatus('error')
       return
@@ -118,7 +118,7 @@ const AddPromotion = () => {
         type: 'error',
         main: <p>حجم فایل بیشتر از حد مجاز است</p>,
         title: 'خطا',
-        autoClose: 3,
+        autoClose: 2,
       })
       setUploadStatus('error')
       return
@@ -160,7 +160,7 @@ const AddPromotion = () => {
               type: 'error',
               main: <p>خطا در بارگذاری</p>,
               title: 'خطا',
-              autoClose: 3,
+              autoClose: 2,
             })
             return
           }
@@ -171,7 +171,7 @@ const AddPromotion = () => {
             type: 'error',
             main: <p>خطا در بارگذاری</p>,
             title: 'خطا',
-            autoClose: 3,
+            autoClose: 2,
           })
           return error
         }

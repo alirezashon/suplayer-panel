@@ -33,7 +33,7 @@ const DeleteModal = ({
         type: 'success',
         main: <p>{response.message}</p>,
         title: 'موفق',
-        autoClose: 3,
+        autoClose: 2,
       })
       await getGroupData().then((value) => setGroupData(value))
     } else if (response.status === '-1') {
@@ -41,13 +41,13 @@ const DeleteModal = ({
         type: 'error',
         main: <p>{response.message}</p>,
         title: 'خطا',
-        autoClose: 3,
+        autoClose: 2,
       })
     } else {
       showModal({
         main: <p>{response.message}</p>,
         title: 'خطا',
-        autoClose: 3,
+        autoClose: 2,
       })
     }
     close(null)

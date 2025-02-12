@@ -24,7 +24,7 @@ const UploadPicture = ({
         type: 'error',
         main: <p>پسوند فایل قابل قبول نمی باشد</p>,
         title: 'خطا',
-        autoClose: 3,
+        autoClose: 2,
       })
       setUploadStatus('error')
       return
@@ -34,7 +34,7 @@ const UploadPicture = ({
         type: 'error',
         main: <p>حجم فایل کمتر از حد مجاز است</p>,
         title: 'خطا',
-        autoClose: 3,
+        autoClose: 2,
       })
       setUploadStatus('error')
       return
@@ -44,7 +44,7 @@ const UploadPicture = ({
         type: 'error',
         main: <p>حجم فایل بیشتر از حد مجاز است</p>,
         title: 'خطا',
-        autoClose: 3,
+        autoClose: 2,
       })
       setUploadStatus('error')
       return
@@ -81,7 +81,7 @@ const UploadPicture = ({
             type: 'error',
             main: <p>خطا در بارگذاری</p>,
             title: 'خطا',
-            autoClose: 3,
+            autoClose: 2,
           })
           return error
         }

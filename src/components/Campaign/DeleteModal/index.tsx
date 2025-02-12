@@ -44,13 +44,13 @@ const DeleteModal = ({
               type: 'success',
               main: <p>{value.message}</p>,
               title: 'خطا',
-              autoClose: 3,
+              autoClose: 2,
             })
           : showModal({
               type: 'error',
               main: <p>{value.message}</p>,
               title: 'خطا',
-              autoClose: 3,
+              autoClose: 2,
             })
         close(false)
       })
@@ -59,7 +59,7 @@ const DeleteModal = ({
           type: 'error',
           main: <p>خطایی پیش آمد</p>,
           title: 'خطا',
-          autoClose: 3,
+          autoClose: 2,
         })
       )
   }

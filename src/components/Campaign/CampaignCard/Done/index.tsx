@@ -1,3 +1,4 @@
+import { setComma } from '@/hooks/NumberFormat'
 import { CampaignInterface } from '@/interfaces'
 import { Calendar, Moneys } from 'iconsax-react'
 import React from 'react'
@@ -34,7 +35,7 @@ const Done = ({ campaign }: { campaign: CampaignInterface }) => {
           <Moneys size={24} color='#7747C0' />
           <p className='text-gray-600 mb-2'> بودجه</p>
         </div>
-        <p>{campaign.budget}</p>
+        <p>{setComma(campaign.budget)}</p>
       </div>
     </div>
   )

@@ -34,7 +34,7 @@ import { useState } from 'react'
 //               type: result.status === 1 ? 'success' : 'error',
 //               main: <p>{result.message}</p>,
 //               title: result.status === 1 ? 'موفق' : 'خطا',
-//               autoClose: 3,
+//               autoClose: 2,
 //             })
 //             if (result.status === 1) {
 //               await getProductData().then(
@@ -51,7 +51,7 @@ import { useState } from 'react'
 //               type: result.status === 1 ? 'success' : 'error',
 //               main: <p>{result.message}</p>,
 //               title: result.status === 1 ? 'موفق' : 'خطا',
-//               autoClose: 3,
+//               autoClose: 2,
 //             })
 //             if (result.status === 1) {
 //               await getProductData().then(
@@ -177,8 +177,7 @@ const AddModal = ({
   brand: ProductGroupData
   close: (show: boolean) => void
 }) => {
-  const { setProductData } = useData()
-  const { showModal } = useStates()
+  const { showModal, selectedProductData, setSelectedProductData } = useStates()
   const [names, setNames] = useState<string[]>([editData?.ini_name || ''])
   const [errors, setErrors] = useState<boolean[]>(
     new Array(names.length).fill(false)
@@ -190,61 +189,81 @@ const AddModal = ({
       prev.map((err, i) => (i === index ? value.trim() === '' : err))
     )
   }
+  const callbackData = async () => {
+    const data = await getProductData()
+    if (data) {
+      const filteredData = data.filter(
+        (item) => `${item.group_id}` === `${selectedProductData?.brand?.id}`
+      ) as ProductsData[]
 
+      filteredData.length > 0 &&
+        setSelectedProductData({
+          data: filteredData,
+          brand: selectedProductData?.brand as ProductGroupData,
+          group: selectedProductData?.group as ProductGroupData,
+        })
+    }
+  }
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    const accessToken = (await getCookieByKey('access_token')) || ''
 
     // بررسی اینکه هیچ فیلدی خالی نباشد
     const newErrors = names.map((name) => name.trim() === '')
     setErrors(newErrors)
     if (newErrors.includes(true)) return // اگر خطا وجود داشت، ارسال متوقف شود
 
-    names.map(async (name) => {
-      if (!editData?.ini_name) {
-        await CreateProduct({ accessToken, name, id: brand.id }).then(
-          async (result) => {
-            showModal({
-              type: result.status === 1 ? 'success' : 'error',
-              main: <p>{result.message}</p>,
-              title: result.status === 1 ? 'موفق' : 'خطا',
-              autoClose: 3,
-            })
-            if (result.status === 1) {
-              await getProductData().then(
-                (data) => data && setProductData(data)
-              )
-              close(false)
+    const accessToken = (await getCookieByKey('access_token')) || ''
+
+    // ✅ پردازش همه درخواست‌ها به صورت همزمان
+    await Promise.all(
+      names.map(async (name) => {
+        if (!editData?.ini_name) {
+          await CreateProduct({ accessToken, name, id: brand.id }).then(
+            async (result) => {
+              showModal({
+                type: result?.status === 1 ? 'success' : 'error',
+                main: <p>{result?.message}</p>,
+                title: result?.status === 1 ? 'موفق' : 'خطا',
+                autoClose: 2,
+              })
+              if (result?.status === 1) {
+                callbackData()
+                close(false)
+              }
             }
-          }
-        )
-      } else {
-        await EditProduct({ accessToken, name, id: editData.id }).then(
-          async (result) => {
-            showModal({
-              type: result.status === 1 ? 'success' : 'error',
-              main: <p>{result.message}</p>,
-              title: result.status === 1 ? 'موفق' : 'خطا',
-              autoClose: 3,
-            })
-            if (result.status === 1) {
-              await getProductData().then(
-                (data) => data && setProductData(data)
-              )
+          )
+        } else {
+          await EditProduct({ accessToken, name, id: editData.id }).then(
+            async (result) => {
+              showModal({
+                type: result.status === 1 ? 'success' : 'error',
+                main: <p>{result.message}</p>,
+                title: result.status === 1 ? 'موفق' : 'خطا',
+                autoClose: 2,
+              })
+              if (result.status === 1) {
+                const data = await getProductData()
+                if (data) {
+                  callbackData()
+                  close(false)
+                }
+              }
             }
-          }
-        )
-      }
-    })
+          )
+        }
+      })
+    )
   }
 
   return (
     <div>
       <div className='absolute bg-slate-600 opacity-50 w-full h-[200vh] z-50 top-0 right-0'></div>
       <div className='fixed overflow-y-auto p-10 z-50 right-0 top-0 max-md:left-[0] max-md:w-[100%] w-[40vw] h-full bg-white border border-gray-300 shadow-lg transition-transform duration-300 ease-in-out right-side-animate'>
-              <form
+        <form
           onSubmit={handleSubmit}
-          className='flex flex-col bg-white  max-md:px-5 max-md:pb-24'>          <div className='flex justify-between items-center w-full text-xl font-medium text-right text-gray-800 max-md:max-w-full'>
+          className='flex flex-col bg-white  max-md:px-5 max-md:pb-24'>
+          {' '}
+          <div className='flex justify-between items-center w-full text-xl font-medium text-right text-gray-800 max-md:max-w-full'>
             <div className='flex-1 shrink self-stretch my-auto min-w-[240px] max-md:max-w-full'>
               محصول جدید
             </div>

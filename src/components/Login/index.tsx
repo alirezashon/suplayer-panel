@@ -58,7 +58,7 @@ const Login = () => {
           type: 'error',
           main: <p>لطفا از اتصال به اینترنت اطمینان حاصل فرمایید</p>,
           title: 'خطای ارتباط با سرور ',
-          autoClose: 3,
+          autoClose: 2,
         })
         return
       }
@@ -72,7 +72,7 @@ const Login = () => {
           type: 'success',
           main: <p>هویت شما تایید شد. لطفا برای ورود چند لحظه منتظر بمانید!</p>,
           title: 'ورود موفق ',
-          autoClose: 3,
+          autoClose: 2,
         })
         if (response.user_status === 'INACTIVE') {
           location.href = '/auth/validator'
@@ -86,7 +86,7 @@ const Login = () => {
           showModal({
             main: <p>کاربر فعال نمی باشد</p>,
             title: 'عدم تایید کاربر ',
-            autoClose: 3,
+            autoClose: 2,
           })
           return
         }
@@ -95,7 +95,7 @@ const Login = () => {
           showModal({
             main: <p>کاربر غیر فعال می باشد</p>,
             title: 'ورود غیر مجاز ',
-            autoClose: 3,
+            autoClose: 2,
           })
           return
         }

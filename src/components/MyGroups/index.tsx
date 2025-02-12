@@ -24,8 +24,8 @@ const MyGroups: React.FC = () => {
           <span
             className='text-[#98A2B3]'
             onClick={() => {
-              setMenu('groupmanagement')
-              location.hash = 'groupmanagement'
+              setMenu('mygroups')
+              location.hash = 'mygroups'
             }}>
             تعاریف
           </span>
@@ -65,8 +65,8 @@ const MyGroups: React.FC = () => {
       )}
       <div className='p-6 bg-white rounded-lg border border-gray-200'>
         {groupData && groupData?.length > 0 ? (
-          groupData?.map((group, index) => (
-            <div key={index} className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4'>
+          <div className='grid grid-cols-3 gap-6 mt-6'>
+            {groupData?.map((group, index) => (
               <div
                 key={index}
                 className='flex flex-col justify-between items-start border rounded-lg p-4 shadow-md hover:shadow-lg transition duration-300'>
@@ -144,8 +144,8 @@ const MyGroups: React.FC = () => {
                     : 'تعریف زیر گروه'}
                 </button>
               </div>
-            </div>
-          ))
+            ))}
+          </div>
         ) : (
           <div className='w-full flex flex-col gap-2 justify-center items-center'>
             <h1 className='text-2xl'>گروهی ندارید</h1>

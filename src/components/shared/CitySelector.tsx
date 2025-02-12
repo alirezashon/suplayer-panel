@@ -1,12 +1,15 @@
 import { getCookieByKey } from '@/actions/cookieToken'
+import { errorClass } from '@/app/assets/style'
 import { Cities, County, States } from '@/interfaces'
 import { GetCity, GetCounty, GetStates } from '@/services/general'
 import { useState, useRef, useEffect } from 'react'
 
 const CitySelector = ({
   setResult,
+  showError,
 }: {
   setResult: (value: string) => void
+  showError?: boolean
 }) => {
   const [states, setStates] = useState<States[]>([])
   const [county, setCounty] = useState<County[]>([])
@@ -77,7 +80,9 @@ const CitySelector = ({
         <div className='flex-1'>
           <label> استان </label>
           <select
-            className='w-full border rounded-lg h-10 px-1 outline-none'
+            className={`${
+              showError && errorClass
+            } w-full border rounded-lg h-10 px-1 outline-none`}
             onChange={(e) => {
               getCounty(e.target.value)
               locationRefs.current.state = e.target.value
@@ -93,7 +98,9 @@ const CitySelector = ({
         <div className='flex-1'>
           <label> شهرستان </label>
           <select
-            className='w-full border rounded-lg h-10 px-1 outline-none'
+            className={`${
+              showError && errorClass
+            } w-full border rounded-lg h-10 px-1 outline-none`}
             onChange={(e) => {
               getCity(e.target.value)
               locationRefs.current.county = e.target.value
@@ -111,7 +118,9 @@ const CitySelector = ({
         <div className='flex-1'>
           <label> شهر </label>
           <select
-            className='w-full border rounded-lg h-10 px-1 outline-none'
+            className={`${
+              showError && errorClass
+            } w-full border rounded-lg h-10 px-1 outline-none`}
             onChange={(e) => setResult(e.target.value)}>
             {cities.length > 0 &&
               cities.map((item, index) => (

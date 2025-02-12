@@ -70,7 +70,7 @@ const AddModal = ({ data, close }: { data: KPIData; close: () => void }) => {
         type: response.status === 1 ? 'success' : 'error',
         main: <p>{response.message}</p>,
         title: response.status === 1 ? 'موفق' : 'خطا',
-        autoClose: 3,
+        autoClose: 2,
       })
       if (response.status === 1) {
         setResult(true)

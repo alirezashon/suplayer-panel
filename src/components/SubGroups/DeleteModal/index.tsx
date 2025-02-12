@@ -30,7 +30,7 @@ const DeleteModal = ({
           type: value.status === 1 ? 'success' : 'error',
           main: <p>{value.message}</p>,
           title: value.status === 1 ? 'موفق' : 'خطا',
-          autoClose: 3,
+          autoClose: 2,
         })
       })
       .catch(() =>
@@ -38,7 +38,7 @@ const DeleteModal = ({
           type: 'error',
           main: <p>خطایی پیش آمد</p>,
           title: 'خطا',
-          autoClose: 3,
+          autoClose: 2,
         })
       )
   }

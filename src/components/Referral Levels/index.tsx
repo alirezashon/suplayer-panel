@@ -178,8 +178,8 @@ const ReferralLevels: React.FC = () => {
           <span
             className='text-[#98A2B3]'
             onClick={() => {
-              setMenu('groupmanagement')
-              location.hash = 'groupmanagement'
+              setMenu('mygroups')
+              location.hash = 'mygroups'
             }}>
             تنظیمات
           </span>

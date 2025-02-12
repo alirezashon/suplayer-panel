@@ -115,7 +115,7 @@ const AddModal = ({
                       type: 'error',
                       main: <p>{result.message}</p>,
                       title: 'خطا',
-                      autoClose: 3,
+                      autoClose: 2,
                     })
                     await getProductGroupData().then((value) => {
                       if (value) {
@@ -128,7 +128,7 @@ const AddModal = ({
                       type: 'error',
                       main: <p>{result.message}</p>,
                       title: 'خطا',
-                      autoClose: 3,
+                      autoClose: 2,
                     })
                 })
             )

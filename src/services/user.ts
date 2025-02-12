@@ -1,4 +1,4 @@
-import { getCookieByKey, IAccessTokenResponse } from '@/actions/cookieToken'
+import { IAccessTokenResponse } from '@/actions/cookieToken'
 import { IAccountBalanceResponse, IUserResponse } from '@/interfaces'
 
 export interface IAuthenticatedUser {
@@ -183,10 +183,6 @@ export interface ISignupResponse {
   message: string
 }
 
-interface IChangePassword {
-  newpassword: string
-  otp_code: string
-}
 
 export const GetAccountBalance = async ({
   accessToken,

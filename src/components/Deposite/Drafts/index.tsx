@@ -82,7 +82,7 @@ const Drafts = () => {
           showModal({
             main: <p>{response.message}</p>,
             title: 'واریز',
-            autoClose: 3,
+            autoClose: 2,
           })
           await getDraftsData().then((value) => value && setDraftsData(value))
         } else {
@@ -92,7 +92,7 @@ const Drafts = () => {
       showModal({
         main: <p>خطا در ثبت اطلاعات. لطفاً مجدداً تلاش کنید.</p>,
         title: 'واریز',
-        autoClose: 3,
+        autoClose: 2,
       })
     }
   }

@@ -181,11 +181,11 @@ const Dashboard = () => {
               پروموشن‌های در حال انجام
             </div>
           </div>
-          <div className='flex flex-wrap gap-6 items-center mt-6 w-full max-md:max-w-full'>
+          <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-6 w-full'>
             {promotionData?.map((promotion, index) => (
               <div
                 key={index}
-                className='flex flex-col grow shrink justify-center self-stretch p-6 my-auto rounded-lg border-2 border-[#B09CE9] min-h-[192px] min-w-[240px] w-[286px] max-md:px-5'>
+                className='flex flex-col justify-center p-6 my-auto rounded-lg border-2 border-[#B09CE9] min-h-[192px] w-full'>
                 {/* Title and Time */}
                 <div className='flex justify-between items-center gap-10 w-full'>
                   <div className='gap-2 px-2 py-2.5 text-sm font-bold text-purple-800 bg-purple-200 rounded-lg min-h-[40px]'>
@@ -237,11 +237,11 @@ const Dashboard = () => {
               کمپین‌های در حال انجام
             </div>
           </div>
-          <div className='flex flex-wrap gap-6 items-center mt-6 w-full max-md:max-w-full'>
+          <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-6 w-full'>
             {campaignData?.map((campain, index) => (
               <div
                 key={index}
-                className='flex flex-col grow shrink justify-center self-stretch p-6 my-auto rounded-lg border-2 border-[##B09CE9] min-h-[192px] min-w-[240px] w-[286px] max-md:px-5'>
+                className='flex flex-col justify-center p-6 my-auto rounded-lg border-2 border-[#B09CE9] min-h-[192px] w-full'>
                 <div className='flex justify-between items-center gap-10 w-full'>
                   <div className='gap-2 px-2 py-2.5 text-sm font-bold text-purple-800 bg-purple-200 rounded-lg min-h-[40px]'>
                     {campain.ctitle}

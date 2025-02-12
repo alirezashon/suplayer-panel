@@ -21,9 +21,10 @@ import {
   Setting2,
   Chart,
 } from 'iconsax-react'
+import Image from 'next/image'
 import React from 'react'
 const Header: React.FC = () => {
-  const { menu } = useMenu()
+  const { menu, setMenu } = useMenu()
   const { userInfo } = useData()
   const names: [string, string][] = [
     ['داشبورد', ''],
@@ -31,7 +32,7 @@ const Header: React.FC = () => {
     ['مدیریت پورسانت‌‌ دهی', 'porsant'],
     ['کمپین', 'campaign'],
     ['پروموشن', 'promotion'],
-    ['گروه', 'groupmanagement'],
+    ['گروه', 'mygroups'],
     ['گروه‌های من', 'mygroups'],
     ['زیرگروه', 'subgroups'],
     ['بازاریاب‌های من', 'referrers'],
@@ -75,7 +76,20 @@ const Header: React.FC = () => {
         <Notification color='#50545F' size={24} />
         <Message color='#50545F' size={24} />
         <div className={''}>{userInfo?.full_name}</div>
-        <Profile color='#50545F' size={24} />
+        <div
+          className='flex items-center relative'
+          onClick={() => {
+            setMenu('profile')
+          }}>
+          <Image
+            src={'/icons/logo.png'}
+            alt='پروفایل کاربر'
+            width={48}
+            height={48}
+            className='w-[6vh] h-[6vh] object-cover rounded-full cursor-pointer'
+          />
+          <div className='absolute bottom-[0.5vh] right-[0.5vh] w-[1.5vh] h-[1.5vh] bg-[#0F973D] rounded-full'></div>
+        </div>
       </div>
     </div>
   )

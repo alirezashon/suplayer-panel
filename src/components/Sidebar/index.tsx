@@ -81,7 +81,7 @@ const Sidebar = ({
       <div
         className={`sticky top-0 ${
           isOpen ? 'justify-between' : 'justify-center'
-        } flex items-center mx-3 py-1 border-b border-[#C9D0D8] bg-white`}>
+        } flex items-center px-3 py-1 border-b border-[#C9D0D8] bg-white`}>
         {isOpen && (
           <div className='flex items-center gap-2'>
             <Image
@@ -200,7 +200,7 @@ const Sidebar = ({
           <div className='absolute bottom-[0.5vh] right-[0.5vh] w-[1.5vh] h-[1.5vh] bg-[#0F973D] rounded-full'></div>
         </div>
         {isOpen && <span className='ml-2'>{user.name}</span>}
-        <LogoutCurve color='#50545F' size={24} />
+        <LogoutCurve color='#50545F' size={24} cursor={'pointer'} onClick={()=>location.href = '/auth/login'}/>
       </div>
     </div>
   )

@@ -105,7 +105,7 @@ const AddModal = ({
           type: value.status === 1 ? 'success' : 'error',
           main: <p>{value.message}</p>,
           title: value.status === 1 ? 'موفق' : 'خطا',
-          autoClose: 3,
+          autoClose: 2,
         })
         if (value && value.status === 1) setResult(true)
         else setResult(false, value && value.message)
@@ -120,7 +120,7 @@ const AddModal = ({
           type: value.status === 1 ? 'success' : 'error',
           main: <p>{value.message}</p>,
           title: value.status === 1 ? 'موفق' : 'خطا',
-          autoClose: 3,
+          autoClose: 2,
         })
         if (value && value.status === 1) setResult(true)
         else setResult(false, value && value.message)

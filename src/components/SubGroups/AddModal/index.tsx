@@ -60,7 +60,7 @@ const AddModal = ({
           type: value.status === 1 ? 'success' : 'error',
           main: <p>{value.message}</p>,
           title: value.status === 1 ? 'موفق' : 'خطا',
-          autoClose: 3,
+          autoClose: 2,
         })
 
         value.status === '-1'
@@ -79,7 +79,7 @@ const AddModal = ({
             type: value.status === 1 ? 'success' : 'error',
             main: <p>{value.message}</p>,
             title: value.status === 1 ? 'موفق' : 'خطا',
-            autoClose: 3,
+            autoClose: 2,
           })
           value.status === '-1'
             ? setResult(false, value.message)
@@ -93,7 +93,7 @@ const AddModal = ({
             type: 'error',
             main: <p>خطایی پیش آمد</p>,
             title: 'خطا',
-            autoClose: 3,
+            autoClose: 2,
           })
         )
   }

@@ -131,7 +131,7 @@ const Home = () => {
 
         {loading ? (
           <div className='flex h-screen w-full justify-center items-center'>
-            <Loading size={32} />
+            <Loading size={56} />
           </div>
         ) : menu !== 'profile' ? (
           <div>

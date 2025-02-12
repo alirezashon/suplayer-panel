@@ -1,13 +1,16 @@
 import { getCookieByKey } from '@/actions/cookieToken'
+import { getCampaignData } from '@/actions/setData'
+import { errorClass } from '@/app/assets/style'
 import Calendar from '@/components/shared/Calendar'
 import CitySelector from '@/components/shared/CitySelector'
 import SelectList from '@/components/shared/SelectList'
 import { useData } from '@/Context/Data'
 import { useStates } from '@/Context/States'
+import { setComma } from '@/hooks/NumberFormat'
 import { CampaignInterface } from '@/interfaces'
 import { CreateCampaign } from '@/services/campaign'
 import { ArrowRight2, CloseSquare, Message } from 'iconsax-react'
-import { FormEvent, InputHTMLAttributes, useRef, useState } from 'react'
+import { FormEvent, useRef, useState } from 'react'
 
 const AddCampaign = ({
   existData,
@@ -18,8 +21,14 @@ const AddCampaign = ({
 }) => {
   const [step, setStep] = useState<number>(1)
   const [showDetails, setshowDetails] = useState<boolean>(false)
-  const { groupData, subGroupData, productGroupData, brandsData, productData } =
-    useData()
+  const {
+    groupData,
+    subGroupData,
+    productGroupData,
+    brandsData,
+    productData,
+    setCampaignData,
+  } = useData()
   const { showModal } = useStates()
 
   const refs = useRef({
@@ -40,23 +49,21 @@ const AddCampaign = ({
     chart_id: existData?.chart_id || 0,
     product_uid: existData?.product_uid || '',
   })
-  const [errors, setErrors] = useState<Record<string, string>>({
-    ctitle: '',
-    start_date: '',
-    exp_date: '',
-    budget: '',
-    expected_amount: '',
-    loc_uid: '',
-  })
+  const [errors, setErrors] = useState<Record<string, string | null>>({})
   const [, setSelectedItems] = useState<Array<string | number>>([])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
+    let { name, value } = e.target
+    if (['budget', 'expected_response', 'expected_amount'].includes(name))
+      value = value.replace(/,/g, '')
     refs.current = {
       ...refs.current,
       [name]: value,
     }
-    setErrors({ ...errors, [name]: '' })
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: null,
+    }))
   }
 
   const validateForm = (step: number) => {
@@ -79,29 +86,32 @@ const AddCampaign = ({
     e.preventDefault()
     const accessToken = await getCookieByKey('access_token')
     await CreateCampaign({ ...refs.current, accessToken })
-      .then((result) => {
+      .then(async (result) => {
         result && setshowDetails(true)
         result?.status === '-1'
           ? showModal({
               type: 'success',
-              main: <p>{result.message}</p>,
+              main: <p>{result?.message}</p>,
               title: 'خطا',
-              autoClose: 3,
+              autoClose: 2,
             })
           : showModal({
-              type: 'error',
-              main: <p>{result.message}</p>,
-              title: 'خطا',
-              autoClose: 3,
+              type: 'success',
+              main: <p>{result?.message}</p>,
+              title: 'موفق',
+              autoClose: 2,
             })
-        close(false)
+        await getCampaignData().then(
+          (result) => result && setCampaignData(result)
+        )
+        setStep(4)
       })
       .catch(() =>
         showModal({
           type: 'error',
           main: <p>خطایی پیش آمد</p>,
           title: 'خطا',
-          autoClose: 3,
+          autoClose: 2,
         })
       )
   }
@@ -160,7 +170,7 @@ const AddCampaign = ({
             </div>
             <form
               onSubmit={handleSubmit}
-              className='flex flex-col bg-white max-w-[594px] pb-[852px] max-md:px-5 max-md:pb-24'>
+              className='flex flex-col bg-white  max-md:px-5 max-md:pb-24'>
               {step === 1 ? (
                 <div className='flex w-full flex-col gap-5'>
                   <div className='flex flex-col w-full'>
@@ -168,9 +178,12 @@ const AddCampaign = ({
                       نام
                     </label>
                     <input
+                      name='ctitle'
                       defaultValue={refs.current.ctitle || existData?.ctitle}
-                      onChange={(e) => (refs.current.ctitle = e.target.value)}
-                      type='text'
+                      onChange={handleInputChange}
+                      className={`${
+                        typeof errors.ctitle === 'string' && errorClass
+                      }`}
                       placeholder='نام کمپین خود را بنویسید'
                     />
                     {errors.ctitle && (
@@ -185,6 +198,7 @@ const AddCampaign = ({
                         setDate={(value: string) =>
                           (refs.current.start_date = value)
                         }
+                        hasError={typeof errors?.start_date === 'string'}
                       />
                       {errors.start_date && (
                         <p className='text-red-500 text-sm'>
@@ -199,6 +213,7 @@ const AddCampaign = ({
                         setDate={(value: string) =>
                           (refs.current.exp_date = value)
                         }
+                        hasError={typeof errors.exp_date === 'string'}
                       />
                       {errors.exp_date && (
                         <p className='text-red-500 text-sm'>
@@ -211,16 +226,22 @@ const AddCampaign = ({
                     setResult={(value: string) =>
                       (refs.current.loc_uid = value)
                     }
+                    showError={typeof errors.loc_uid === 'string'}
                   />
-                  {errors.loc_uid && (
-                    <p className='text-red-500 text-sm'>{errors.loc_uid}</p>
-                  )}
+
                   <div>
                     <label className='block mb-2 text-sm'>بودجه</label>
                     <input
                       name='budget'
                       defaultValue={refs.current.budget || existData?.budget}
-                      onChange={handleInputChange}
+                      onChange={(e) =>
+                        e.target.value.replace(/,/g, '') && handleInputChange(e)
+                      }
+                      onInput={(e) => {
+                        e.currentTarget.value = setComma(
+                          e.currentTarget.value.replace(/,/g, '')
+                        )
+                      }}
                       className='w-full p-2 border rounded-md'
                       placeholder='بودجه کمپین را تعریف کنید'
                     />
@@ -235,24 +256,41 @@ const AddCampaign = ({
                       </label>
                       <input
                         name='expected_response'
-                        defaultValue={refs.current.expected_response}
+                        onInput={(e) => {
+                          e.currentTarget.value = setComma(
+                            e.currentTarget.value.replace(/,/g, '')
+                          )
+                        }}
+                        defaultValue={
+                          refs.current.expected_response !== 0
+                            ? refs.current.expected_response
+                            : ''
+                        }
                         onChange={handleInputChange}
                         className='w-full p-2 border rounded-md'
-                        placeholder='   % '
+                        placeholder='% '
                       />
-                      {errors.ctaLink && (
-                        <p className='text-red-500 text-sm'>{errors.ctaLink}</p>
-                      )}
                     </div>
                     <div className='w-full'>
                       <label className='block mb-2 text-sm'>
                         درآمد مورد انتظار
                       </label>
                       <input
+                        onInput={(e) => {
+                          e.currentTarget.value = setComma(
+                            e.currentTarget.value.replace(/,/g, '')
+                          )
+                        }}
                         name='expected_amount'
-                        defaultValue={refs.current.expected_amount}
+                        defaultValue={
+                          refs.current.expected_amount !== 0
+                            ? refs.current.expected_amount
+                            : ''
+                        }
                         onChange={handleInputChange}
-                        className='w-full p-2 border rounded-md'
+                        className={`${
+                          errors.expected_amount && errorClass
+                        } w-full p-2 border rounded-md`}
                         placeholder='ریال'
                       />
                       {errors.expected_amount && (
@@ -371,7 +409,8 @@ const AddCampaign = ({
               )}
               <div className='mt-10 w-full max-md:max-w-full'>
                 <button
-                  onClick={() => (step < 3 ? validateForm(step) : handleSubmit)}
+                  type={step < 4 ? 'button' : 'submit'}
+                  onClick={() => (step < 4 ? validateForm(step) : handleSubmit)}
                   className={`fill-button px-10 h-10 rounded-lg w-full`}>
                   {step < 3 ? 'ادامه' : 'ثبت'}
                 </button>
@@ -383,7 +422,7 @@ const AddCampaign = ({
             <div className='grid grid-cols-2 gap-6 mt-5'>
               <div className='flex flex-col'>
                 <p className='text-[#5F6474]'>نام</p>
-                <p className='text-[#8455D2]'>کمپین پیامک محصول</p>
+                <p className='text-[#8455D2]'> {refs.current.ctitle}</p>
               </div>
               <div className='flex flex-col'>
                 <p className='text-[#5F6474]'>نوع</p>
@@ -391,37 +430,39 @@ const AddCampaign = ({
               </div>
               <div className='flex flex-col'>
                 <p className='text-[#5F6474]'>تاریخ شروع</p>
-                <p className='text-[#8455D2]'>۱۴۰۳/۱۰/۱۰</p>
+                <p className='text-[#8455D2]'>{refs.current.start_date}</p>
               </div>
               <div className='flex flex-col'>
                 <p className='text-[#5F6474]'>تاریخ پایان</p>
-                <p className='text-[#8455D2]'>۱۴۰۳/۱۰/۲۳</p>
+                <p className='text-[#8455D2]'>{refs.current.exp_date}</p>
               </div>
               <div className='flex flex-col'>
                 <p className='text-[#5F6474]'>استان</p>
-                <p className='text-[#8455D2]'>تهران</p>
+                <p className='text-[#8455D2]'></p>
               </div>
               <div className='flex flex-col'>
                 <p className='text-[#5F6474]'>شهرستان</p>
-                <p className='text-[#8455D2]'>تهران</p>
+                <p className='text-[#8455D2]'></p>
               </div>
               <div className='flex flex-col'>
                 <p className='text-[#5F6474]'>شهر</p>
-                <p className='text-[#8455D2]'>شمیرانات</p>
+                <p className='text-[#8455D2]'></p>
               </div>
               <div className='flex flex-col'>
                 <p className='text-[#5F6474]'>بودجه</p>
-                <p className='text-[#8455D2]'>۲۰۰.۰۰۰.۰۰۰.۰۰۰ ریال</p>
+                <p className='text-[#8455D2]'>
+                  {setComma(refs.current.budget)} ریال
+                </p>
               </div>
               <div className='flex flex-col'>
                 <p className='text-[#5F6474]'>پاسخ مورد انتظار</p>
-                <p className='text-[#8455D2]'>۲۰۰.۰۰۰.۰۰۰.۰۰۰ ریال</p>
+                <p className='text-[#8455D2]'>
+                  {setComma(refs.current.expected_response)} ریال
+                </p>
               </div>
               <div className='flex flex-col col-span-2'>
                 <p className='text-[#5F6474]'>شرح</p>
-                <p className='text-[#8455D2]'>
-                  این کمپین برای بهبود رفتاری ذی‌نفعان طراحی شده است
-                </p>
+                <p className='text-[#8455D2]'>{refs.current.desc}</p>
               </div>
             </div>
             <div className='flex flex-col mt-5'>
