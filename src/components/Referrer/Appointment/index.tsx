@@ -5,6 +5,7 @@ import { ArrowDown2, CloseSquare, Profile } from 'iconsax-react'
 import { useState, useRef } from 'react'
 import { useData } from '@/Context/Data'
 import { useStates } from '@/Context/States'
+import SelectList from '@/components/shared/SelectList'
 
 interface AppointmentModalProps {
   data?: ReferrerData
@@ -80,8 +81,8 @@ const AppointmentModal = ({ data, close }: AppointmentModalProps) => {
               <p className='bg-[#DAFEE5] text-[#0F973D] min-w-12 rounded-lg'>
                 {Array.isArray(referrerChartData) &&
                   referrerChartData.find(
-                    (chart) => chart.id === data?.pers_chart_id
-                  )?.chlabel}
+                    (chart) => `${chart.id}` === `${data?.pers_chart_id}`
+                  )?.chtitle}
               </p>
             </div>
           ) : (
@@ -269,7 +270,19 @@ const AppointmentModal = ({ data, close }: AppointmentModalProps) => {
               )}
             </div>
             <div className='flex flex-col w-full'>
-              <label>محصول را انتخاب کنید</label>
+              <SelectList
+                label='محصول را انتخاب کنید'
+                items={
+                  productData?.map((gp) => {
+                    return {
+                      id: gp.id,
+                      label: gp.ini_name,
+                    }
+                  }) || []
+                }
+                setSelectedItems={(result)=>''}
+              />
+
               <select
                 className='w-full border rounded-lg h-10 px-1 outline-none'
                 onChange={(e) => (refs.current.groupId = e.target.value)}>

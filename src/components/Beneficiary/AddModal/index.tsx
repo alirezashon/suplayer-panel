@@ -79,19 +79,20 @@ const AddModal = ({ data, close }: AddModalProps) => {
     if (data?.CityUID) {
       EditBeneficiary({ ...data, accessToken })
         .then((value) => {
-          value?.status === '-1'
-            ? showModal({
-                type: 'success',
-                main: <p>{value.message}</p>,
-                title: 'خطا',
-                autoClose: 2,
-              })
-            : showModal({
-                type: 'error',
-                main: <p>{value.message}</p>,
-                title: 'خطا',
-                autoClose: 2,
-              })
+          if (value?.status === '-1')
+            showModal({
+              type: 'success',
+              main: <p>{value.message}</p>,
+              title: 'خطا',
+              autoClose: 2,
+            })
+          else
+            showModal({
+              type: 'error',
+              main: <p>{value.message}</p>,
+              title: 'خطا',
+              autoClose: 2,
+            })
           close(false)
         })
         .catch(() =>

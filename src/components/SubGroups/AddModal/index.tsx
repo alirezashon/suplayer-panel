@@ -45,13 +45,6 @@ const AddModal = ({
     }
   }
 
-  const items = [
-    { id: 1, label: 'گروه زنان و زایمان' },
-    { id: 2, label: 'گروه پوست و مو' },
-    { id: 3, label: 'گروه پزشکان عمومی' },
-    { id: 4, label: 'گروه قلب و عروق' },
-  ]
-
   const saveData = async (groupID: number, name: string) => {
     const accessToken = (await getCookieByKey('access_token')) || ''
     if (!existName)
@@ -127,23 +120,7 @@ const AddModal = ({
       close()
     }, 4444)
   }
-  const sampleData = [
-    {
-      id: 1,
-      label: 'مدیران فروش',
-      children: ['دکتر صدقه عالی', 'دکتر ناصر احمدی', 'دکتر زهرا کمالی'],
-    },
-    {
-      id: 2,
-      label: 'مدیران منطقه',
-      children: ['دکتر علی مرادی', 'دکتر فاطمه حسینی', 'دکتر کامران شیری'],
-    },
-    {
-      id: 3,
-      label: 'مدیران شعبه',
-      children: ['دکتر لیلا صادقی', 'دکتر مجید عباسی', 'دکتر پروین امینی'],
-    },
-  ]
+
   const handleAddInput = () => {
     if (!data.name.trim()) {
       setErrors((prev) => [...prev, { index: 0, message: 'این فیلد اجباریست' }])
@@ -282,25 +259,7 @@ const AddModal = ({
               </div>
             </div>
           ))}
-          {existName && (
-            <div className='flex flex-col gap-5 my-5'>
-              <div className=''>
-                <label htmlFor=''>انتخاب ذی نفع</label>
-                <SelectList
-                  items={items}
-                  setSelectedItems={setSelectedItems}
-                  label='داروخانه مد نظر خود را انتخاب کنید'
-                />
-              </div>
-              <div className=''>
-                <label htmlFor=''>انتخاب بازاریاب </label>
-                <RadioTreeSelector
-                  trees={sampleData}
-                  onSelect={(value: string) => value}
-                />
-              </div>
-            </div>
-          )}
+       
           <div className='flex justify-end my-5'>
             <p
               className='text-[#7747C0] cursor-pointer'

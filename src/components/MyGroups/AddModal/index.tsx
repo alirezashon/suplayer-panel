@@ -94,9 +94,11 @@ const AddModal = ({
       <div
         className={`fixed p-8 z-50 right-0 top-0 max-md:left-[0] max-md:w-[100%] w-[40vw] h-full bg-white border border-gray-300 shadow-lg transition-transform duration-300 ease-in-out right-side-animate 
      `}>
-              <form
+        <form
           onSubmit={handleSubmit}
-          className='flex flex-col bg-white  max-md:px-5 max-md:pb-24'>          <div className='flex justify-between items-center w-full text-xl font-medium text-right text-gray-800 max-md:max-w-full'>
+          className='flex flex-col bg-white  max-md:px-5 max-md:pb-24'>
+          {' '}
+          <div className='flex justify-between items-center w-full text-xl font-medium text-right text-gray-800 max-md:max-w-full'>
             <div className='flex-1 shrink self-stretch my-auto min-w-[240px] max-md:max-w-full'>
               {existName ? 'ویرایش گروه جدید' : 'تعریف گروه جدید'}
             </div>
@@ -111,7 +113,6 @@ const AddModal = ({
               />
             </div>
           </div>
-
           <div className='mt-10 w-full max-md:max-w-full'>
             <div className='flex flex-col w-full'>
               <label className='text-base font-medium text-right text-gray-800'>
@@ -120,7 +121,7 @@ const AddModal = ({
               <input
                 defaultValue={name}
                 onChange={(e) => {
-                  errors?.name && setErrors({})
+                  if (errors?.name) setErrors({})
                   setName(e.target.value)
                 }}
                 className={`${
@@ -132,7 +133,6 @@ const AddModal = ({
             </div>
             {errors?.name && <p className='text-red-500 m-1'>{errors?.name}</p>}
           </div>
-
           <div className='mt-10 w-full max-md:max-w-full'>
             <div className='flex items-center'>
               <button

@@ -7,22 +7,31 @@ import {
   Trash,
   User,
 } from 'iconsax-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import AddModal from './AddModal'
 import StatCard from './StatCard'
 import BeneficiaryCard from './BeneficiaryCard'
 import { useMenu } from '@/Context/Menu'
 import { useData } from '@/Context/Data'
 import { useStates } from '@/Context/States'
+import { BeneficiaryData } from '@/interfaces'
 
 const PorsantManagement = () => {
   const [showAddModal, setShowAddModal] = useState<boolean | string>(false)
   const [showDeleteState, setShowDeleteState] = useState<boolean>(false)
   const [, setDeleteState] = useState<string[]>([])
+  const [beneficiaryList, setBeneficiaryList] = useState<BeneficiaryData[]>([])
   const { setMenu } = useMenu()
   const { beneficiaryData } = useData()
   const { selectedSubGroupData, selectedGroupData, setSelectedGroupData } =
     useStates()
+  useEffect(() => {
+    const filterResult = beneficiaryData?.filter(
+      (beneficiary) =>
+        beneficiary.supervisor_id === selectedSubGroupData?.supervisor_id
+    )
+    setBeneficiaryList(filterResult as BeneficiaryData[])
+  }, [])
   return (
     <>
       {showAddModal && (
@@ -152,7 +161,7 @@ const PorsantManagement = () => {
         )}
 
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
-          {beneficiaryData?.map((beneficiary, index) => (
+          {beneficiaryList?.map((beneficiary, index) => (
             <BeneficiaryCard
               key={index}
               data={beneficiary}

@@ -5,11 +5,16 @@ import DeleteModal from './DeleteModal'
 import { useMenu } from '@/Context/Menu'
 import { useData } from '@/Context/Data'
 import Image from 'next/image'
+import { BeneficiaryData, SubGroup } from '@/interfaces'
+import AppointmentModal from './Appointment'
 const SubGroups: React.FC = () => {
   const { setMenu } = useMenu()
   const { groupData, subGroupData } = useData()
   const [activeTab, setActiveTab] = useState<number>(0)
   const [showAddModal, setShowAddModal] = useState<boolean | string>(false)
+  const [showAppointmentModal, setShowAppointmenModal] = useState<
+    boolean | { data: SubGroup; type: 0 | 1 }
+  >(false)
   const [showDeleteModal, setShowDeleteModal] = useState<boolean | string>(
     false
   )
@@ -25,6 +30,13 @@ const SubGroups: React.FC = () => {
           groupId={activeTab}
           existName={typeof showAddModal === 'string' ? showAddModal : ''}
           close={() => setShowAddModal(false)}
+        />
+      )}
+      {typeof showAppointmentModal === 'object' && (
+        <AppointmentModal
+          data={showAppointmentModal?.data}
+          type={showAppointmentModal?.type}
+          close={() => setShowAppointmenModal(false)}
         />
       )}
       {showDeleteModal && (
@@ -157,13 +169,23 @@ const SubGroups: React.FC = () => {
                       ) : (
                         <div className='flex w-full gap-3'>
                           <button
-                            onClick={() => setShowAddModal(true)}
+                            onClick={() =>
+                              setShowAppointmenModal({
+                                data: subGroup,
+                                type: 0,
+                              })
+                            }
                             className='h-10 w-full fill-button  rounded-md hover:bg-purple-800'>
                             انتصاب ذی‌نفع
                           </button>
                           <button
-                            onClick={() => setShowAddModal(true)}
-                            className='h-10 w-full border-button  rounded-md hover:bg-purple-800'>
+                            onClick={() =>
+                              setShowAppointmenModal({
+                                data: subGroup,
+                                type: 1,
+                              })
+                            }
+                            className='h-10 w-full border-button  rounded-md hover:bg-purple-100'>
                             انتصاب بازاریاب
                           </button>
                         </div>

@@ -33,6 +33,7 @@ const SelectList: React.FC<SelectListProps> = ({
   }
 
   useEffect(() => {
+    setFilteredItems(items)
     const handleClickOutside = (event: MouseEvent) => {
       if (
         containerRef.current &&
@@ -49,34 +50,34 @@ const SelectList: React.FC<SelectListProps> = ({
     }
   }, [])
   const filterData = (value: string) => {
-    items.filter(()=>)
+    const filterResult = items.filter((item) => item.label.includes(value))
+    setFilteredItems(filterResult)
   }
   return (
     <div ref={containerRef} className='relative w-full '>
       <div
         className='border border-gray-300  rounded-md h-10 py-2 px-4 cursor-pointer flex justify-between items-center'
         onClick={() => setIsOpen((prev) => !prev)}>
-        <span className='text-gray-700'>{label}</span>
+        <span className='text-gray-700'>{selectedItems.length>0 ? selectedItems.join(',') : label}</span>
         <span className='text-gray-400'>&#x25BC;</span>
       </div>
       {isOpen && (
         <div
           style={{ scrollbarWidth: 'none' }}
-          className='absolute max-h-[40vh] overflow-auto w-full border border-gray-300 bg-white  rounded-md mt-2 shadow-md z-10'>
+          className='absolute py-5 max-h-[40vh] overflow-auto w-full border border-gray-300 bg-white   rounded-md mt-2 shadow-md z-10'>
           <div className='sticky top-0  w-full  flex items-center'>
-            <div className='absolute left-[18px] top-[18px] z-20 cursor-pointer text-[#50545F]'>
+            <div className='absolute left-10 mt-4 z-20 cursor-pointer text-[#50545F]'>
               <SearchNormal size={24} color='gray' />
             </div>
             <input
               type='search'
               placeholder='جستجو'
-              // value={search}
-              // onChange={(e) => handleSearchChange(e.target.value)}
-              className='absolute top-[12px] right-[12px] w-[calc(100%-24px)] z-10 border border-gray-300 rounded-md px-4 py-2 text-right outline-none focus:border-red-400'
+              onChange={(e) => filterData(e.target.value)}
+              className='absolute mt-4 right-[12px] w-[calc(100%-24px)] z-10 border border-gray-300 rounded-md px-4 py-2 text-right outline-none focus:shadow-purple-600 focus:shadow-md'
             />
           </div>
-          <div className='mt-12'>
-            {items.map((item) => (
+          <div className='mt-8'>
+            {filteredItems?.map((item) => (
               <div
                 key={item.id}
                 className={`flex items-center gap-2 px-4 py-2 cursor-pointer hover:bg-purple-100 ${

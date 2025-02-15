@@ -75,7 +75,7 @@ const Sidebar = ({
   return (
     <div
       style={{ scrollbarWidth: 'none' }}
-      className={`fixed top-0 right-0 h-full transition-all duration-700 ${
+      className={`fixed top-2 right-2 h-[98vh] rounded-md  transition-all duration-700 ${
         isOpen ? 'min-w-[17%]' : 'w-[5%]'
       } bg-white flex flex-col overflow-y-auto border border-[#C9D0D8]`}>
       <div
@@ -200,7 +200,12 @@ const Sidebar = ({
           <div className='absolute bottom-[0.5vh] right-[0.5vh] w-[1.5vh] h-[1.5vh] bg-[#0F973D] rounded-full'></div>
         </div>
         {isOpen && <span className='ml-2'>{user.name}</span>}
-        <LogoutCurve color='#50545F' size={24} cursor={'pointer'} onClick={()=>location.href = '/auth/login'}/>
+        <LogoutCurve
+          color='#50545F'
+          size={24}
+          cursor={'pointer'}
+          onClick={() => (location.href = '/auth/login')}
+        />
       </div>
     </div>
   )

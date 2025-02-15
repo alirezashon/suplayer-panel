@@ -4,7 +4,6 @@ import { useMenu } from '@/Context/Menu'
 import { useStates } from '@/Context/States'
 import { generateAllocationSignature } from '@/hooks/Signature'
 import { BeneficiaryData } from '@/interfaces'
-import { DefineAllocation } from '@/services/allocation'
 import { Printer, WalletMoney } from 'iconsax-react'
 import { useState } from 'react'
 

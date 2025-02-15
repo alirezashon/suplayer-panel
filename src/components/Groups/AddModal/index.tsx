@@ -15,7 +15,7 @@ const AddModal = ({
 }) => {
   const [name, setName] = useState<string>(existName || '')
   const [isConfirmed, setIsConfirmed] = useState(false)
-  const [errors, setErrors] = useState<Record<string, string>>()
+  const [, setErrors] = useState<Record<string, string>>()
   const { showModal } = useStates()
 
   const handleSubmit = async () => {

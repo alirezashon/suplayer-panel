@@ -53,7 +53,8 @@ const AddCampaign = ({
   const [, setSelectedItems] = useState<Array<string | number>>([])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let { name, value } = e.target
+    const { name } = e.target
+    let { value } = e.target
     if (['budget', 'expected_response', 'expected_amount'].includes(name))
       value = value.replace(/,/g, '')
     refs.current = {
@@ -87,20 +88,21 @@ const AddCampaign = ({
     const accessToken = await getCookieByKey('access_token')
     await CreateCampaign({ ...refs.current, accessToken })
       .then(async (result) => {
-        result && setshowDetails(true)
-        result?.status === '-1'
-          ? showModal({
-              type: 'success',
-              main: <p>{result?.message}</p>,
-              title: 'خطا',
-              autoClose: 2,
-            })
-          : showModal({
-              type: 'success',
-              main: <p>{result?.message}</p>,
-              title: 'موفق',
-              autoClose: 2,
-            })
+        if (result) setshowDetails(true)
+        if (result?.status === '-1')
+          showModal({
+            type: 'success',
+            main: <p>{result?.message}</p>,
+            title: 'خطا',
+            autoClose: 2,
+          })
+        else
+          showModal({
+            type: 'success',
+            main: <p>{result?.message}</p>,
+            title: 'موفق',
+            autoClose: 2,
+          })
         await getCampaignData().then(
           (result) => result && setCampaignData(result)
         )

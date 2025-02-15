@@ -28,7 +28,7 @@ const Login = () => {
   const [errors, setErrors] = useState<{ phone?: string; password?: string }>(
     {}
   )
-  const { showModal, modalContent, closeModal } = useStates()
+  const { showModal, modalContent } = useStates()
 
   const validateInputs = () => {
     const newErrors: { phone?: string; password?: string } = {}

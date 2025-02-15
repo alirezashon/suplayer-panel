@@ -18,22 +18,23 @@ const DeleteModal = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     const accessToken = (await getCookieByKey('access_token')) || ''
-    data &&
+    if (data)
       EditBeneficiary({ ...data, accessToken, visitor_status: 9 })
         .then((value) => {
-          value?.status === '-1'
-            ? showModal({
-                type: 'success',
-                main: <p>{value.message}</p>,
-                title: 'خطا',
-                autoClose: 2,
-              })
-            : showModal({
-                type: 'error',
-                main: <p>{value.message}</p>,
-                title: 'خطا',
-                autoClose: 2,
-              })
+          if (value?.status === '-1')
+            showModal({
+              type: 'success',
+              main: <p>{value.message}</p>,
+              title: 'خطا',
+              autoClose: 2,
+            })
+          else
+            showModal({
+              type: 'error',
+              main: <p>{value.message}</p>,
+              title: 'خطا',
+              autoClose: 2,
+            })
           close(false)
         })
         .catch(() =>

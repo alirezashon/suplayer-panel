@@ -15,11 +15,11 @@ const MainLayout = ({
       <div
         className={`transition-all duration-700 ${
           isSidebarOpen ? 'min-w-[17%]' : 'w-[5%]'
-        } bg-white`}>
+        }`}>
         <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen}/>
       </div>
       <div className='flex flex-col flex-grow'>
-        <div className='bg-white'>
+        <div className='px-8 py-4'>
           <Header />
         </div>
         <div className='p-4 flex-grow'>{children}</div>

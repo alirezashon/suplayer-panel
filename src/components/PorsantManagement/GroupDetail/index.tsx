@@ -18,7 +18,7 @@ const GroupsDetail = () => {
           sub.sup_group_id === parseInt(`${selectedGroupData?.sup_group_id}`)
       ) || []
     )
-  }, [setData])
+  }, [setData,selectedGroupData])
   return (
     <div className='m-4'>
       <div className='flex justify-between items-center mb-7'>

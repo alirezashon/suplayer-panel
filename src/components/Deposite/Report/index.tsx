@@ -3,7 +3,7 @@ import { getDraftsData } from '@/actions/setData'
 import { useData } from '@/Context/Data'
 import { ExportCurve, Receipt1 } from 'iconsax-react'
 import dynamic from 'next/dynamic'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
 const Table = dynamic(() => import('../../Table'), {
   ssr: false,
@@ -47,9 +47,8 @@ const Report = () => {
       // 'cheque_status_date',
       // 'status_description',
     ].reduce((obj, key) => {
-      key === 'cheque_type'
-        ? (obj[key] = item[key] === 1 ? 'چک' : 'سند')
-        : (obj[key] = item[key as keyof typeof item])
+      if (key === 'cheque_type') obj[key] = item[key] === 1 ? 'چک' : 'سند'
+      else obj[key] = item[key as keyof typeof item]
       return obj
     }, {} as Record<string, any>)
   })

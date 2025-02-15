@@ -19,7 +19,7 @@ const BeneficiaryCard: React.FC<{
       </div>
       <p className='flex justify-between'>
         <span className='text-[#8455D2]'>تخصیص کل</span>
-        {data.visitor_name}
+        {data.collectible_credit}
       </p>
       <p className='flex justify-between'>
         <span className='text-[#8455D2]'>آخرین تخصیص</span>
@@ -27,7 +27,7 @@ const BeneficiaryCard: React.FC<{
       </p>
       <p className='flex justify-between'>
         <span className='text-[#8455D2]'>آزادسازی نشده</span>
-        {data.visitor_family}
+        {data.Uncollectible_credit}
       </p>
     </div>
   )

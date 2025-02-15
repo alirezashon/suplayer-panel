@@ -1,13 +1,12 @@
 import { useState } from 'react'
 import { Edit2, Trash } from 'iconsax-react'
-import AddModal from './AddModal'
 import DeleteModal from './DeleteModal'
 import { GroupData } from '@/interfaces'
 import Image from 'next/image'
 import { useMenu } from '@/Context/Menu'
 
 const Groups: React.FC = () => {
-  const [data, setData] = useState<GroupData[]>([])
+  const [data] = useState<GroupData[]>([])
   const [showAddModal, setShowAddModal] = useState<boolean | string>(false)
   const [showDeleteModal, setShowDeleteModal] = useState<boolean | string>(
     false

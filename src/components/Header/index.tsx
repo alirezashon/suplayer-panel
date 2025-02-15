@@ -63,7 +63,9 @@ const Header: React.FC = () => {
 
   return (
     <div
-      className={'flex w-full justify-between items-center mb-4 p-5 bg-white '}>
+      className={
+        'flex w-full justify-between items-center p-4 bg-white rounded-md'
+      }>
       <div className='flex gap-1'>
         {Icons[names.findIndex(([, link]) => link === menu)] &&
           React.createElement(

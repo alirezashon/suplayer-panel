@@ -1,6 +1,5 @@
 import { useRef, useState } from 'react'
 import { MoneySend, ReceiptSquare } from 'iconsax-react'
-
 import { getCookieByKey } from '@/actions/cookieToken'
 import { AddDraftImage, DepositWithDraft } from '@/services/deposit'
 import Calendar from '@/components/shared/Calendar'
@@ -33,7 +32,9 @@ const Drafts = () => {
   })
   const { showModal } = useStates()
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target
     refs.current = {
       ...refs.current,
@@ -80,6 +81,7 @@ const Drafts = () => {
         const response = await DepositWithDraft(chequeData)
         if (response) {
           showModal({
+            type: 'success',
             main: <p>{response.message}</p>,
             title: 'واریز',
             autoClose: 2,
@@ -89,6 +91,7 @@ const Drafts = () => {
         }
       }
     } catch (error) {
+      console.warn(error)
       showModal({
         main: <p>خطا در ثبت اطلاعات. لطفاً مجدداً تلاش کنید.</p>,
         title: 'واریز',

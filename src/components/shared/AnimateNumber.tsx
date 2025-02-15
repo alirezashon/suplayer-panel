@@ -13,12 +13,10 @@ const ShowAnimateNumber = ({
   interval?: number
 }) => {
   const [currentValue, setCurrentValue] = useState(startValue)
-  const [previousValue, setPreviousValue] = useState(startValue)
 
   useEffect(() => {
     if (currentValue !== targetValue) {
       const timer = setInterval(() => {
-        setPreviousValue(currentValue)
         setCurrentValue((prev) => {
           if (prev > targetValue) {
             return Math.max(prev - 10000, targetValue)

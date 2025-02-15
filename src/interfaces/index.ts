@@ -30,7 +30,7 @@ export interface IUserResponse {
   approve_status: number
 }
 export interface IShabaDestinationList {
-  sid: string | any
+  sid: string 
   sdcode: string
   sdtitle: string
   mobile: string
@@ -129,11 +129,22 @@ export interface BeneficiaryData {
   default_weight: number
   latitude: number
   longitude: number
+  visitor_id: number
+  visitor_code: string
+  CityCode: string
+  CityDesc: string
+  CountyCode: string
+  CountyDesc: string
+  StateCode: string
+  StateDesc: string
+  collectible_credit: number
+  Uncollectible_credit: number
 }
 
 export interface ReferrerData {
   personnel_code: string
   pers_chart_id: number | string
+  pers_chart_title:string
   pers_job_id: number
   pers_type: number
   pers_tob: number
@@ -184,21 +195,21 @@ export interface ProductGroupData {
 export interface ProductsData {
   sysid: string
   sys_app: string
-  group: any
+  group: string
   sstid: string
   sstt: string
   mu: string
-  mu_2nd: any
-  type: any
+  mu_2nd: string
+  type: string
   min_price: string
   max_price: string
-  from_date: any
-  from_date_pe: any
-  exp_date: any
-  exp_date_pe: any
-  status: any
+  from_date: string
+  from_date_pe: string
+  exp_date: string
+  exp_date_pe: string
+  status: string
   group_id: string
-  group_desc: any
+  group_desc: string
   ini_code: string
   ini_name: string
   cui: string

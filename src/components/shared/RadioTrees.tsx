@@ -8,11 +8,13 @@ interface TreeItem {
 
 interface RadioTreeSelectorProps {
   trees: TreeItem[]
+  placeholder: string
   onSelect: (selected: string) => void
 }
 
 const RadioTreeSelector: React.FC<RadioTreeSelectorProps> = ({
   trees,
+  placeholder,
   onSelect,
 }) => {
   const [selectedManager, setSelectedManager] = useState<
@@ -26,7 +28,7 @@ const RadioTreeSelector: React.FC<RadioTreeSelectorProps> = ({
       <div
         className='border border-gray-300 rounded-md h-10 py-2 px-4 cursor-pointer flex justify-between items-center'
         onClick={() => setIsOpen((prev) => !prev)}>
-        <span className='text-gray-700'>{'label'}</span>
+        <span className='text-gray-700'>{selectedName || placeholder}</span>
         <span className='text-gray-400'>&#x25BC;</span>
       </div>
       {isOpen && !selectedManager ? (
@@ -64,7 +66,7 @@ const RadioTreeSelector: React.FC<RadioTreeSelectorProps> = ({
                       setSelectedName(child)
                       onSelect(child)
                     }}
-                    className='form-radio appearance-none h-5 w-5 border-2 rounded-full bg-white checked:bg-[#7747C0]'
+                    className='form-radio appearance-none h-5 w-5 border-2 rounded-full bg-white checked:bg-[#7747C0] cursor-pointer'
                   />
                   <span
                     className={`${
