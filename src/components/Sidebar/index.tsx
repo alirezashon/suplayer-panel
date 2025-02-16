@@ -121,13 +121,13 @@ const Sidebar = ({
               className={`flex items-center p-[1vh] rounded-md cursor-pointer ${
                 index === 0 && !menu && 'bg-[#7747C0] text-white'
               } ${
-                menu === item.link
+                item.link.includes(menu)
                   ? 'bg-[#7747C0] text-white'
                   : 'text-[#242424]'
               }`}
               onClick={() => {
-                setMenu(item.link)
-                location.hash = item.link
+                setMenu(item.link[0])
+                location.hash = item.link[0]
                 setOpenIndex(openIndex === index ? null : index)
               }}>
               <p
@@ -136,7 +136,7 @@ const Sidebar = ({
                 }`}>
                 {generateIcon(
                   item.iconIndex,
-                  menu === item.link ? 'white' : '#50545F'
+                  item.link.includes(menu) ? 'white' : '#50545F'
                 )}
               </p>
               {isOpen && (
@@ -145,7 +145,7 @@ const Sidebar = ({
               {item.subItems && isOpen && (
                 <ArrowDown2
                   size={24}
-                  color={menu === item.link ? 'white' : '#50545F'}
+                  color={item.link.includes(menu) ? 'white' : '#50545F'}
                   className={`transition-transform ${
                     openIndex === index ? 'rotate-180' : 'rotate-0'
                   }`}
@@ -160,16 +160,16 @@ const Sidebar = ({
                     key={subIndex}
                     className='flex items-center p-[1vh] cursor-pointer'
                     onClick={() => {
-                      location.hash = subItem.link
-                      setMenu(subItem.link)
+                      location.hash = subItem.link[0]
+                      setMenu(subItem.link[0])
                     }}>
                     {generateIcon(
                       subItem.iconIndex,
-                      menu === subItem.link ? '#7747C0' : '#50545F'
+                      subItem.link.includes(menu) ? '#7747C0' : '#50545F'
                     )}
                     <span
                       className={`mr-1 ${
-                        menu === subItem.link
+                        subItem.link.includes(menu)
                           ? 'text-[#7747C0]'
                           : 'text-[#50545F]'
                       }`}>

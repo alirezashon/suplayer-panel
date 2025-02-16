@@ -5,7 +5,6 @@ import PromotionList from './PromotionList'
 import AddPromotion from './AddPromotion'
 import { useData } from '@/Context/Data'
 import moment from 'moment-jalaali'
-import { Danger } from 'iconsax-react'
 import PromotionView from './View'
 const today = moment().format('jYYYY/jM/jD')
 const Promotion = () => {

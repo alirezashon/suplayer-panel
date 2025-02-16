@@ -48,7 +48,7 @@ const SelectList: React.FC<SelectListProps> = ({
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
-  }, [])
+  }, [items])
   const filterData = (value: string) => {
     const filterResult = items.filter((item) => item.label.includes(value))
     setFilteredItems(filterResult)

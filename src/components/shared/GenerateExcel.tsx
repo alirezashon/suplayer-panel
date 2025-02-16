@@ -1,17 +1,18 @@
 'use client'
-import { Export } from 'iconsax-react'
-import  { useState } from 'react'
+import { ExportCurve } from 'iconsax-react'
+import { useState } from 'react'
 import Loading from './LoadingSpinner'
-import { getCookieByKey } from '@/actions/cookieToken'
-
-const ExcelGenerator = ({ rows }: { rows: Record<string,string>[] }) => {
+const ExcelGenerator = ({
+  rows,
+  header,
+}: {
+  rows: (string | number)[][]
+  header: string[]
+}) => {
   const [loading, setLoading] = useState(false)
-
   const generateExcel = async () => {
     setLoading(true)
-    const role = await getCookieByKey('role')
     const requestData = {
-      role,
       rows,
       font: { name: 'Calibri', size: 12 },
       headerBgColor: '2F27CE',
@@ -19,8 +20,8 @@ const ExcelGenerator = ({ rows }: { rows: Record<string,string>[] }) => {
       headerFontColor: 'FFFFFF',
       cellFontColor: '2F27CE',
       columnWidths: [20, 10, 30],
+      header,
     }
-
     try {
       const response = await fetch('/api/GenerateCustomExcel', {
         method: 'POST',
@@ -48,16 +49,14 @@ const ExcelGenerator = ({ rows }: { rows: Record<string,string>[] }) => {
       setLoading(false)
     }
   }
-
   return (
     <div>
       {loading ? (
-        <Loading />
+        <Loading size={10} />
       ) : (
-        <Export onClick={generateExcel} size='24' color='#2f27ce' />
+        <ExportCurve onClick={generateExcel} size='32' color='#ffffff' />
       )}
     </div>
   )
 }
-
 export default ExcelGenerator

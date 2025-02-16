@@ -12,6 +12,7 @@ import {
   ReferrerChartData,
   ReferrerData,
   SubGroup,
+  TransactionInterface,
 } from '@/interfaces'
 import { createContext, useContext, useState, ReactNode } from 'react'
 
@@ -42,6 +43,8 @@ interface DataContextProps {
   setDraftsData: (SubGroupData: DraftsData[]) => void
   KPITaskData: KPIData[] | undefined
   setKPITaskData: (SubGroupData: KPIData[]) => void
+  transactionsData: TransactionInterface[] | undefined
+  setTransactionsData: (SubGroupData: TransactionInterface[]) => void
   balance:
     | {
         removable: number
@@ -75,6 +78,10 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
     removable: number
     allBalance: number
   }>()
+  const [transactionsData, setTransactionsData] = useState<
+    TransactionInterface[]
+  >([])
+
   return (
     <DataContext.Provider
       value={{
@@ -106,6 +113,8 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
         setKPITaskData,
         balance,
         setBalance,
+        transactionsData,
+        setTransactionsData,
       }}>
       {children}
     </DataContext.Provider>

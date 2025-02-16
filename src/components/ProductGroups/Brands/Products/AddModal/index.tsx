@@ -1,6 +1,5 @@
 import { getCookieByKey } from '@/actions/cookieToken'
 import { getProductData } from '@/actions/setData'
-import { useData } from '@/Context/Data'
 import { useStates } from '@/Context/States'
 import { ProductGroupData, ProductsData } from '@/interfaces'
 import { CreateProduct, EditProduct } from '@/services/products'

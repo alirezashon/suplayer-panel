@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { MoneySend, ReceiptSquare } from 'iconsax-react'
 import { getCookieByKey } from '@/actions/cookieToken'
-import { AddDraftImage, DepositWithDraft } from '@/services/deposit'
+import { AddDraftImage, DepositWithDraft } from '@/services/finance'
 import Calendar from '@/components/shared/Calendar'
 import { generateDepositSignature } from '@/hooks/Signature'
 import UploadPicture from '@/components/shared/UploadPicture'

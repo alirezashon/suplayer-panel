@@ -12,6 +12,7 @@ import {
   getPromotiuonData,
   getKPITaskData,
   getBalance,
+  getTransactionHistory,
 } from '@/actions/setData'
 import Beneficiary from '@/components/Beneficiary'
 import Campaign from '@/components/Campaign'
@@ -35,6 +36,7 @@ import { useStates } from '@/Context/States'
 import MainLayout from '@/layouts/MainLayout'
 import { useEffect, useState } from 'react'
 import CustomModal from '@/components/shared/CustomModal'
+import { GetTransactions } from '@/services/finance'
 
 const Home = () => {
   const { modalContent } = useStates()
@@ -54,6 +56,7 @@ const Home = () => {
     setPromotionData,
     setKPITaskData,
     setBalance,
+    setTransactionsData,
   } = useData()
   const { setProductGroupStates } = useStates()
   useEffect(() => {
@@ -83,6 +86,9 @@ const Home = () => {
       )
       await getKPITaskData().then((result) => result && setKPITaskData(result))
       await getBalance().then((result) => result && setBalance(result))
+      await getTransactionHistory().then(
+        (result) => result && setTransactionsData(result)
+      )
     }
     fetcher()
     const handleHashChange = () => {
@@ -122,6 +128,7 @@ const Home = () => {
     setReferrerChartData,
     setReferrerData,
     setUserInfo,
+    setTransactionsData,
   ])
 
   return (
@@ -168,6 +175,7 @@ const Home = () => {
                 'groupsdetail',
                 'allocation',
                 'release',
+                'reports',
               ].includes(menu) ? (
               <PorsantManagement />
             ) : menu === 'beneficiary' ? (

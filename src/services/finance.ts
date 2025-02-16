@@ -1,4 +1,4 @@
-import { DraftsData } from '@/interfaces'
+import { DraftsData, TransactionInterface } from '@/interfaces'
 
 export const AddDraftImage = async ({
   src,
@@ -157,7 +157,7 @@ export const DepositWithDraft = async ({
     )
 
     if (response.status !== 200) {
-     return
+      return
     }
 
     return await response.json()
@@ -182,7 +182,7 @@ export const GetdDraftsList = async ({
     )
 
     if (!response.ok || response.status === 500) {
-     return
+      return
     }
 
     return await response.json()
@@ -209,6 +209,32 @@ export const GetdDraftImage = async ({
         body: JSON.stringify({
           file_uid,
         }),
+      }
+    )
+
+    if (!response.ok || response.status === 500) {
+      return
+    }
+
+    return await response.json()
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const GetTransactions = async ({
+  accessToken,
+}: {
+  accessToken: string | undefined
+}): Promise<TransactionInterface[] | undefined> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/visitor_totalaccount_detail`,
+      {
+        method: 'GET',
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
       }
     )
 

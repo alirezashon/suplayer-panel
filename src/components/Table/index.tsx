@@ -1,7 +1,7 @@
 'use client'
 
 import { getCookieByKey } from '@/actions/cookieToken'
-import { GetdDraftImage } from '@/services/deposit'
+import { GetdDraftImage } from '@/services/finance'
 import { Import, MoreSquare } from 'iconsax-react'
 
 const Table = ({ data, headers }: { data: object[]; headers: string[] }) => {

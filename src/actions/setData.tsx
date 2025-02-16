@@ -14,7 +14,7 @@ import {
 import { GetReferrerChartList, GetReferrerList } from '@/services/referrer'
 import { GetCampaignList } from '@/services/campaign'
 import { GetPromotionList } from '@/services/promotion'
-import { GetdDraftsList } from '@/services/deposit'
+import { GetdDraftsList, GetTransactions } from '@/services/finance'
 
 export const getGroupData = async () => {
   const accessToken = (await getCookieByKey('access_token')) || ''
@@ -80,4 +80,9 @@ export const getBalance = async () => {
       allBalance: Number(accountBalance[0]?.amount) || 0,
       removable: Number(noneRemovable[0]?.amount) || 0,
     }
+}
+
+export const getTransactionHistory = async () => {
+  const accessToken = (await getCookieByKey('access_token')) || ''
+  return await GetTransactions({ accessToken })
 }

@@ -10,7 +10,7 @@ import Image from 'next/image'
 import { FormEvent, useRef, useState } from 'react'
 
 const AddPromotion = () => {
-  const { groupData, subGroupData, productGroupData, brandsData, productData } =
+  const { groupData, subGroupData, productGroupData,productData } =
     useData()
 
   const [uploadStatus, setUploadStatus] = useState<

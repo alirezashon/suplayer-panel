@@ -1,8 +1,6 @@
 import { getCookieByKey } from '@/actions/cookieToken'
 import { getSubGroupData } from '@/actions/setData'
 import { errorClass } from '@/app/assets/style'
-import RadioTreeSelector from '@/components/shared/RadioTrees'
-import SelectList from '@/components/shared/SelectList'
 import { useData } from '@/Context/Data'
 import { useStates } from '@/Context/States'
 import { CreateSubGroup, EditSubGroup } from '@/services/items'

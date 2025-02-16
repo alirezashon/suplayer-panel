@@ -1,13 +1,13 @@
 export interface SubItem {
   name: string
-  link: string
+  link: string[]
   iconIndex?: number
   subItems?: SubItem[]
 }
 
 export interface Items {
   name: string
-  link: string
+  link: string[]
   iconIndex?: number
   subItems?: SubItem[]
 }
@@ -15,75 +15,89 @@ export interface Items {
 export const data: Items[] = [
   {
     name: 'داشبورد',
-    link: 'dashboard',
+    link: ['dashboard'],
     iconIndex: 0,
   },
   {
     name: 'کیف پول',
-    link: 'wallet',
+    link: ['wallet'],
     iconIndex: 1,
   },
 
   {
     name: ' مدیریت پورسانت‌ دهی',
-    link: 'porsant',
+    link: [
+      'porsant',
+      'porsantmanagement',
+      'groupsdetail',
+      'allocation',
+      'release',
+      'reports',
+    ],
     iconIndex: 2,
   },
   {
     name: ' کمپین',
-    link: 'campaign',
+    link: ['campaign', 'campaign-list', 'view-campaign'],
     iconIndex: 3,
   },
   {
     name: ' پروموشن',
-    link: 'promotion',
+    link: [
+      'promotion',
+      'promotion-list',
+      'new-promotion',
+      'edit-promotion',
+      'view-promotion',
+      'promotion-view',
+    ],
     iconIndex: 4,
   },
   {
     name: ' تعاریف',
-    link: 'mygroups',
+    link: ['mygroups'],
     iconIndex: 5,
     subItems: [
       {
         name: 'گروه‌های من',
-        link: 'mygroups',
+        link: ['mygroups'],
         iconIndex: 6,
       },
       {
         name: 'زیر گروه‌های من',
-        link: 'subgroups',
+        link: ['subgroups'],
         iconIndex: 7,
       },
       {
         name: 'بازاریاب‌های من',
-        link: 'referrers',
+        link: ['referrers'],
         iconIndex: 8,
       },
       {
         name: '  ذی‌نفع‌های من',
-        link: 'beneficiary',
+        link: ['beneficiary'],
         iconIndex: 9,
       },
       {
         name: 'محصولات من',
-        link: 'productgroups',
+        link: ['productgroups', 'product-brands'],
         iconIndex: 10,
       },
     ],
   },
   {
     name: ' تنظیمات',
-    link: 'referral-levels',
+    link: ['referral-levels'],
     iconIndex: 11,
     subItems: [
       {
         name: 'تعریف چارت سازمانی',
-        link: 'referral-levels',
+        link: ['referral-levels'],
         iconIndex: 12,
       },
       {
         name: 'تعریف متغیرها',
-        link: 'variablels',
+        link: ['variablels'],
         iconIndex: 13,
       },
       //      {

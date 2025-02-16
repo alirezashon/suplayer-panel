@@ -1,19 +1,28 @@
 'use client'
 import { getDraftsData } from '@/actions/setData'
+import ExcelGenerator from '@/components/shared/GenerateExcel'
 import { useData } from '@/Context/Data'
-import { ExportCurve, Receipt1 } from 'iconsax-react'
+import { Receipt1 } from 'iconsax-react'
 import dynamic from 'next/dynamic'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 const Table = dynamic(() => import('../../Table'), {
   ssr: false,
 })
 const Report = () => {
   const { draftsData, setDraftsData } = useData()
+  const [rows, setRows] = useState<(string | number)[][]>([])
 
   useEffect(() => {
     const fetchData = async () => {
-      await getDraftsData().then((value) => value && setDraftsData(value))
+      await getDraftsData().then((value) => {
+        if (value) {
+          const rowItems = value.map((row) => [...Object.values(row)])
+          setRows(rowItems)
+          console.log(rowItems)
+          setDraftsData(value)
+        }
+      })
     }
     fetchData()
   }, [setDraftsData])
@@ -50,7 +59,7 @@ const Report = () => {
       if (key === 'cheque_type') obj[key] = item[key] === 1 ? 'چک' : 'سند'
       else obj[key] = item[key as keyof typeof item]
       return obj
-    }, {} as Record<string, any>)
+    }, {} as Record<string, string | number>)
   })
   return (
     <div className='flex flex-col p-4 bg-white shadow-lg m-4 rounded-lg'>
@@ -59,8 +68,8 @@ const Report = () => {
           <Receipt1 size={24} color='#7747C0' />
           <h1> گزارش‌های واریز</h1>
         </div>
-        <div className='h-fit p-2 rounded-lg bg-[#7747C0]'>
-          <ExportCurve size={24} color='#FFF' />
+        <div className='h-fit p-2 rounded-lg bg-[#7747C0] cursor-pointer'>
+          <ExcelGenerator rows={rows} header={headers} />
         </div>
       </div>
       <div className='flex flex-col  rounded-lg p-2'>

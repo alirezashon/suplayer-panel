@@ -2,7 +2,6 @@
 import { useData } from '@/Context/Data'
 import { useMenu } from '@/Context/Menu'
 import {
-  Message,
   Notification,
   Menu,
   MenuBoard,
@@ -74,9 +73,8 @@ const Header: React.FC = () => {
         <h3>{names.find(([, link]) => link === menu)?.[0] || ''}</h3>
       </div>
 
-      <div className={'flex gap-5'}>
+      <div className={'flex gap-5 items-center'}>
         <Notification color='#50545F' size={24} />
-        <Message color='#50545F' size={24} />
         <div className={''}>{userInfo?.full_name}</div>
         <div
           className='flex items-center relative'

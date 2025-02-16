@@ -1,10 +1,5 @@
 import { useEffect, useState } from 'react'
-import {
-  CloseSquare,
-  Warning2,
-  TickSquare,
-  CloseCircle,
-} from 'iconsax-react'
+import { CloseSquare, Warning2, TickSquare, CloseCircle } from 'iconsax-react'
 import { useStates } from '@/Context/States'
 
 const CustomModal = () => {
@@ -35,7 +30,7 @@ const CustomModal = () => {
 
       return () => cancelAnimationFrame(animationFrame)
     }
-  }, [modalContent])
+  }, [modalContent, closeModal])
   return (
     <div
       className='fixed inset-0 flex justify-center items-center '

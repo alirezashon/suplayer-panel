@@ -30,7 +30,7 @@ export interface IUserResponse {
   approve_status: number
 }
 export interface IShabaDestinationList {
-  sid: string 
+  sid: string
   sdcode: string
   sdtitle: string
   mobile: string
@@ -144,7 +144,7 @@ export interface BeneficiaryData {
 export interface ReferrerData {
   personnel_code: string
   pers_chart_id: number | string
-  pers_chart_title:string
+  pers_chart_title: string
   pers_job_id: number
   pers_type: number
   pers_tob: number
@@ -266,4 +266,24 @@ export interface IAccountBalanceResponse {
   amount: string
   deposit: string
   withdrawal: string
+}
+export interface TransactionInterface {
+  pan_name: string
+  withdrawal: number
+  amount: number
+  deposit: number
+  description: string
+  transactionDate_pe: string
+  transactionTime: string
+  settlementDate_pe: string
+  settlementTime: string
+  status: number
+  status_desc: string
+  transaction_code: string
+  transactionType: string
+  transaction_cost: number
+  wage_cost: number
+  ttype: string
+  CHID: string
+  ref_id: string
 }

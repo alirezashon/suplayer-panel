@@ -5,7 +5,7 @@ import DeleteModal from './DeleteModal'
 import { useMenu } from '@/Context/Menu'
 import { useData } from '@/Context/Data'
 import Image from 'next/image'
-import { BeneficiaryData, SubGroup } from '@/interfaces'
+import { SubGroup } from '@/interfaces'
 import AppointmentModal from './Appointment'
 const SubGroups: React.FC = () => {
   const { setMenu } = useMenu()

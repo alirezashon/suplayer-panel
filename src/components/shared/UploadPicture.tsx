@@ -73,7 +73,7 @@ const UploadPicture = ({
               setProgress(progressValue)
             }
           }, 200)
-          let result = uploadImage(formData)
+          const result = uploadImage(formData)
           if (!result) setDraftSrc('')
         } catch (error) {
           setUploadStatus('error')
