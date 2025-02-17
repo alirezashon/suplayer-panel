@@ -117,19 +117,19 @@ const Profile = () => {
                 <label className='text-base font-medium text-right text-gray-800'>
                   نام
                 </label>
-                <input type='text' placeholder='نام ' />
+                <input  placeholder='نام ' />
               </div>
               <div className='flex flex-col w-full'>
                 <label className='text-base font-medium text-right text-gray-800'>
                   نام خانوادگی
                 </label>
-                <input type='text' placeholder='نام خانوادگی ' />
+                <input  placeholder='نام خانوادگی ' />
               </div>
               <div className='flex flex-col w-full'>
                 <label className='text-base font-medium text-right text-gray-800'>
                   شماره موبایل
                 </label>
-                <input type='text' placeholder='شماره موبایل ' />
+                <input  placeholder='شماره موبایل ' />
               </div>
             </div>
           ) : (

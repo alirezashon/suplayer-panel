@@ -1,15 +1,17 @@
 import { useMenu } from '@/Context/Menu'
+import { useStates } from '@/Context/States'
 import { PromotionInterface } from '@/interfaces'
 import { Eye, MouseCircle, Personalcard } from 'iconsax-react'
-import React from 'react'
 
 const Done = ({ promotion }: { promotion: PromotionInterface }) => {
   const { setMenu } = useMenu()
+  const { setSelectedPromotionData } = useStates()
   return (
     <div
       onClick={() => {
         setMenu('promotion-view')
         location.hash = 'promotion-view'
+        setSelectedPromotionData(promotion)
       }}
       className='bg-white rounded-lg shadow border-2 border-[#A1E3CB] p-4 relative cursor-pointer'>
       <div className='flex justify-between items-center'>
@@ -20,7 +22,6 @@ const Done = ({ promotion }: { promotion: PromotionInterface }) => {
           </span>
         </div>
       </div>
-
       <div className='my-4 px-1 flex justify-between '>
         <div className='flex gap-1 '>
           <Personalcard size={24} color='#7747C0' />

@@ -69,7 +69,7 @@ const AddCampaign = ({
 
   const validateForm = (step: number) => {
     const newErrors: Record<string, string> = {}
-    if (step === 1) {
+    if (step < 3) {
       if (!refs.current.ctitle) newErrors.ctitle = 'این فیلد اجباری است'
       if (!refs.current.start_date) newErrors.start_date = 'این فیلد اجباری است'
       if (!refs.current.exp_date) newErrors.exp_date = 'این فیلد اجباری است'
@@ -197,9 +197,13 @@ const AddCampaign = ({
                       <label className=' m-1 text-sm'>تاریخ شروع</label>
                       <Calendar
                         placeholder={refs.current.start_date || 'تاریخ شروع'}
-                        setDate={(value: string) =>
-                          (refs.current.start_date = value)
-                        }
+                        setDate={(value: string) => {
+                          refs.current.start_date = value
+                          setErrors((prevErrors) => ({
+                            ...prevErrors,
+                            ['start_date']: null,
+                          }))
+                        }}
                         hasError={typeof errors?.start_date === 'string'}
                       />
                       {errors.start_date && (
@@ -212,9 +216,13 @@ const AddCampaign = ({
                       <label className=' m-1 text-sm'>تاریخ پایان</label>
                       <Calendar
                         placeholder={refs.current.exp_date || 'تاریخ پایان'}
-                        setDate={(value: string) =>
-                          (refs.current.exp_date = value)
-                        }
+                        setDate={(value: string) => {
+                          refs.current.exp_date = value
+                          setErrors((prevErrors) => ({
+                            ...prevErrors,
+                            ['exp_date']: null,
+                          }))
+                        }}
                         hasError={typeof errors.exp_date === 'string'}
                       />
                       {errors.exp_date && (
@@ -225,9 +233,13 @@ const AddCampaign = ({
                     </div>
                   </div>
                   <CitySelector
-                    setResult={(value: string) =>
-                      (refs.current.loc_uid = value)
-                    }
+                    setResult={(value: string) => {
+                      refs.current.loc_uid = value
+                      setErrors((prevErrors) => ({
+                        ...prevErrors,
+                        ['loc_uid']: null,
+                      }))
+                    }}
                     showError={typeof errors.loc_uid === 'string'}
                   />
 
@@ -244,7 +256,9 @@ const AddCampaign = ({
                           e.currentTarget.value.replace(/,/g, '')
                         )
                       }}
-                      className='w-full p-2 border rounded-md'
+                      className={`${
+                        errors.budget && errorClass
+                      } w-full p-2 border rounded-md`}
                       placeholder='بودجه کمپین را تعریف کنید'
                     />
                     {errors.budget && (

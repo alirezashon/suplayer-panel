@@ -183,66 +183,34 @@ export interface ISignupResponse {
   message: string
 }
 
-
-export const GetAccountBalance = async ({
+export const UserChangePassword = async ({
   accessToken,
+  newpassword,
+  otp_code,
 }: {
-  accessToken: string | undefined
-}): Promise<IAccountBalanceResponse[] | undefined> => {
+  accessToken: string
+  newpassword: string
+  otp_code: string
+}): Promise<IMobileValidatorOtp | undefined> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/sbw_accountbalance`,
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/sbw_forgot_password`,
       {
-        method: 'GET',
+        method: 'POST',
         headers: {
+          'Content-Type': 'application/json',
           authorization: `Bearer ${accessToken}`,
         },
-        next: {
-          revalidate: 3600,
-          tags: ['sbw_accountbalance'],
-        },
+        body: JSON.stringify({ newpassword, otp_code }),
       }
     )
 
-    if (!response.ok || response.status === 500) {
-      throw new Error('Failed to GetAccountBalance')
+    if (response.status !== 200) {
+      throw new Error('Failed to UserChangePassword!')
     }
 
     return await response.json()
-  } catch (error) {
-    console.log(error)
-  }
-}
-export interface NoneRemovableBalanceResponse {
-  manager_uid: string
-  amount: string
-}
-export const GetNoneRemovableBalance = async ({
-  accessToken,
-}: {
-  accessToken: string | undefined
-}): Promise<NoneRemovableBalanceResponse[] | undefined> => {
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/sbw_Non_removable_balance`,
-      {
-        method: 'GET',
-        headers: {
-          authorization: `Bearer ${accessToken}`,
-        },
-        next: {
-          revalidate: 3600,
-          tags: ['sbw_accountbalance'],
-        },
-      }
-    )
-
-    if (!response.ok || response.status === 500) {
-      throw new Error('Failed to GetAccountBalance')
-    }
-
-    return await response.json()
-  } catch (error) {
+  } catch (error: unknown) {
     console.log(error)
   }
 }

@@ -1,4 +1,4 @@
-import { DraftsData, TransactionInterface } from '@/interfaces'
+import { DraftsData, TransactionInterface, WalletDetail } from '@/interfaces'
 
 export const AddDraftImage = async ({
   src,
@@ -243,6 +243,33 @@ export const GetTransactions = async ({
     }
 
     return await response.json()
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const GetWalletDetail = async ({
+  accessToken,
+}: {
+  accessToken: string | undefined
+}): Promise<WalletDetail | undefined> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/visitor_totalaccount_detail`,
+      {
+        method: 'GET',
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+      }
+    )
+
+    if (!response.ok || response.status === 500) {
+      return
+    }
+
+    const result = await response.json()
+    return result[0]
   } catch (error) {
     console.log(error)
   }

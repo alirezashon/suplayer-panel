@@ -1,53 +1,88 @@
+import {
+  AllocationListInterface,
+  DefineAllocationInterface,
+} from '@/interfaces'
+
 export const DefineAllocation = async ({
-  commission_type,
-  allocation_type,
-  source_type,
-  sup_group_code,
-  supervisor_code,
-  visitor_uid,
-  amount,
-  currency_type,
-  Signature,
+  allocations,
   accessToken,
 }: {
-  commission_type: number
-  allocation_type: number
-  source_type: number
-  sup_group_code: string
-  supervisor_code: string
-  visitor_uid: string
-  amount: number
-  currency_type: number
-  Signature: string
-  accessToken: string
+  allocations: DefineAllocationInterface[]
+  accessToken: string | undefined
 }) => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_commission_allocation`,
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/batch_prv_commission_allocation`,
+      {
+        method: 'POST',
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ allocations }),
+      }
+    )
+    if (response.status !== 200) {
+      return
+    }
+    return await response.json()
+  } catch (error: unknown) {
+    console.log(error)
+  }
+}
+export const ReleaseAllocatedList = async ({
+  data,
+  accessToken,
+}: {
+  data: {
+    commission_allocation_uid: string
+    status: number
+    wamount: number
+    allocation_status_id_file: string
+    assignment_otp: string
+    Signature: string
+  }[]
+  accessToken: string | undefined
+}) => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/batch_commission_allocation_status`,
       {
         method: 'POST',
         headers: {
           authorization: `Bearer ${accessToken}`,
         },
-        body: JSON.stringify({
-          commission_type,
-          allocation_type,
-          source_type,
-          sup_group_code,
-          supervisor_code,
-          visitor_uid,
-          amount,
-          currency_type,
-          Signature,
-        }),
+        body: JSON.stringify({ status_updates: data }),
       }
     )
-
     if (response.status !== 200) {
       return
     }
-
     return await response.json()
+  } catch (error: unknown) {
+    console.log(error)
+  }
+}
+export const GetAllocatedList = async ({
+  accessToken,
+}: {
+  accessToken: string
+}): Promise<AllocationListInterface[] | undefined> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/commission_allocation_list`,
+      {
+        method: 'GET',
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+      }
+    )
+    if (response.status !== 200) {
+      return
+    }
+    const result = await response.json()
+    return result.data
   } catch (error: unknown) {
     console.log(error)
   }

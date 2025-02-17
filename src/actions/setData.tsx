@@ -6,15 +6,16 @@ import {
   GetKPITaskList,
   GetSubGroupsList,
 } from '@/services/items'
-import {
-  GetAccountBalance,
-  GetCurrentUser,
-  GetNoneRemovableBalance,
-} from '@/services/user'
+import { GetCurrentUser } from '@/services/user'
 import { GetReferrerChartList, GetReferrerList } from '@/services/referrer'
 import { GetCampaignList } from '@/services/campaign'
 import { GetPromotionList } from '@/services/promotion'
-import { GetdDraftsList, GetTransactions } from '@/services/finance'
+import {
+  GetdDraftsList,
+  GetTransactions,
+  GetWalletDetail,
+} from '@/services/finance'
+import { GetAllocatedList } from '@/services/allocation'
 
 export const getGroupData = async () => {
   const accessToken = (await getCookieByKey('access_token')) || ''
@@ -72,17 +73,15 @@ export const getKPITaskData = async () => {
 }
 export const getBalance = async () => {
   const accessToken = (await getCookieByKey('access_token')) || ''
-  const accountBalance = await GetAccountBalance({ accessToken })
-  const noneRemovable = await GetNoneRemovableBalance({ accessToken })
-
-  if (accountBalance && accountBalance[0] && noneRemovable)
-    return {
-      allBalance: Number(accountBalance[0]?.amount) || 0,
-      removable: Number(noneRemovable[0]?.amount) || 0,
-    }
+  return await GetWalletDetail({ accessToken })
 }
 
 export const getTransactionHistory = async () => {
   const accessToken = (await getCookieByKey('access_token')) || ''
   return await GetTransactions({ accessToken })
+}
+
+export const getAllocatedList = async () => {
+  const accessToken = (await getCookieByKey('access_token')) || ''
+  return await GetAllocatedList({accessToken})
 }

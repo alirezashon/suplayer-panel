@@ -203,7 +203,7 @@ const AddModal = ({
                     name='brands'
                     value={name}
                     onChange={(e) => handleInputChange(e.target.value, index)}
-                    type='text'
+                    
                     placeholder='مثال: فولیکا'
                     className={`${
                       errors?.brands && errors.brands[index] && errorClass

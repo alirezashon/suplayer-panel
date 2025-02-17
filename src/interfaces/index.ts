@@ -287,3 +287,36 @@ export interface TransactionInterface {
   CHID: string
   ref_id: string
 }
+export interface WalletDetail {
+  user_uid: string
+  Releasable: number
+  Credit: number
+  Debit: number
+  SumCredit: number
+  SumDebit: number
+}
+export interface DefineAllocationInterface {
+  commission_type: number
+  allocation_type: number
+  source_type: number
+  sup_group_code: string
+  supervisor_code: string
+  visitor_uid: string
+  amount: number
+  currency_type: number
+  Signature: string
+}
+export interface AllocationListInterface {
+  commission_type: number
+  allocation_type: number
+  source_type: number
+  sup_group_code: string
+  supervisor_code: string
+  visitor_uid: string
+  amount: number
+  currency_type: number
+  commission_allocation_uid: string
+  regdate: string
+  allocation_status_id_file: string
+  wstatus: number
+}

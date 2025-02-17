@@ -86,7 +86,7 @@ export const WithdrawalForm: React.FC = () => {
               <input
                 id='amount'
                 name='amount'
-                type='text'
+                
                 placeholder='مقدار واریزی به ریال'
                 className={`mt-2 p-3 rounded-lg border ${
                   errors.amount ? 'border-red-500' : 'border-gray-300'

@@ -348,8 +348,8 @@ export const GetBeneficiaryList = async ({
     if (!response.ok || response.status === 500) {
       throw new Error('Failed to GetAssistantList')
     }
-
-    return await response.json()
+    const data = await response.json()
+    return data.data
   } catch (error) {
     console.log(error)
   }

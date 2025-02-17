@@ -3,6 +3,7 @@ import {
   GroupData,
   ProductGroupData,
   ProductsData,
+  PromotionInterface,
   SubGroup,
 } from '@/interfaces'
 import { createContext, useContext, useState, ReactNode } from 'react'
@@ -55,6 +56,8 @@ interface StatesContextProps {
       group: ProductGroupData
     } | null
   ) => void
+  selectedPromotionData: PromotionInterface | undefined | null
+  setSelectedPromotionData: (SubGroupData: PromotionInterface | null) => void
 }
 
 const StatesContext = createContext<StatesContextProps | undefined>(undefined)
@@ -83,6 +86,8 @@ export const StatesProvider = ({ children }: { children: ReactNode }) => {
     data: ProductGroupData[]
     group: ProductGroupData
   } | null>()
+  const [selectedPromotionData, setSelectedPromotionData] =
+    useState<PromotionInterface | null>()
 
   const showModal = (content: {
     main: ReactNode
@@ -91,7 +96,6 @@ export const StatesProvider = ({ children }: { children: ReactNode }) => {
     autoClose?: number
   }) => setModalContent(content)
   const closeModal = () => setModalContent(null)
-
   return (
     <StatesContext.Provider
       value={{
@@ -108,12 +112,13 @@ export const StatesProvider = ({ children }: { children: ReactNode }) => {
         modalContent,
         showModal,
         closeModal,
+        selectedPromotionData,
+        setSelectedPromotionData,
       }}>
       {children}
     </StatesContext.Provider>
   )
 }
-
 export const useStates = () => {
   const context = useContext(StatesContext)
   if (!context) {

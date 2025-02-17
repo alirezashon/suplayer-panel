@@ -1,11 +1,15 @@
 import { getCookieByKey } from '@/actions/cookieToken'
+import { walletBoxStyle } from '@/app/assets/style'
+import Loading from '@/components/shared/LoadingSpinner'
 import { useData } from '@/Context/Data'
 import { useMenu } from '@/Context/Menu'
 import { useStates } from '@/Context/States'
+import { setComma } from '@/hooks/NumberFormat'
 import { generateAllocationSignature } from '@/hooks/Signature'
-import { BeneficiaryData } from '@/interfaces'
+import { DefineAllocationInterface } from '@/interfaces'
+import { DefineAllocation } from '@/services/allocation'
 import { Printer, WalletMoney } from 'iconsax-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const headers = [
   'ردیف',
@@ -16,34 +20,89 @@ const headers = [
 ]
 const Allocation = () => {
   const [filterType, setFilterType] = useState<number>(0)
-  const { beneficiaryData, userInfo } = useData()
-  const [editedData, setEditedData] = useState<BeneficiaryData[]>([])
+  const [loading, setLoading] = useState<boolean>()
+  const { beneficiaryData, balance } = useData()
+  const [allocationData, setAllocationData] = useState<
+    DefineAllocationInterface[]
+  >([])
   const { setMenu } = useMenu()
-  const { selectedSubGroupData, selectedGroupData, setSelectedGroupData } =
-    useStates()
-  const walletBoxStyle = {
-    background:
-      'linear-gradient(white, white) padding-box, conic-gradient(rgb(246, 230, 255), #ffffff 18%, #644a9e 31% 43%, rgb(228, 228, 255), #ffffff, #7a5fb7, #e7d9d5, #e4e0ed) border-box',
-    border: '3px solid transparent',
-    borderRadius: '1vh',
-    padding: '1.5rem',
-  }
-  const handleCreditChange = (index: number, value: string) => {
-    // const updatedData = [...data]
-    // updatedData[index].assignableCredit = value
-    // setData(updatedData)
-    // setEditedData(updatedData)
-  }
-  const handleSubmit = async () => {
-    const accessToken = (await getCookieByKey('access_token')) || ''
-    const Signature = generateAllocationSignature({
-      amount: '',
-      customerMobile: `${userInfo?.mobile}`,
-      sup_group_code: '',
-      supervisor_code: '',
-      visitor_uid: '',
+  const {
+    selectedSubGroupData,
+    selectedGroupData,
+    setSelectedGroupData,
+    showModal,
+  } = useStates()
+
+  useEffect(() => {
+    if (!selectedGroupData) {
+      location.hash = 'porsant'
+      setMenu('porsant')
+    }
+  }, [])
+  const handleCreditChange = async (id: string, value: string) => {
+    setAllocationData((prev) => {
+      const existingIndex = prev.findIndex((item) => item.visitor_uid === id)
+      if (value === '') {
+        return prev.filter((item) => item.visitor_uid !== id)
+      }
+      if (existingIndex !== -1) {
+        return prev.map((item, index) =>
+          index === existingIndex ? { ...item, amount: Number(value) } : item
+        )
+      }
+      const newItem: DefineAllocationInterface = {
+        commission_type: 0,
+        allocation_type: 0,
+        source_type: 1,
+        sup_group_code: selectedGroupData?.sup_group_code as string,
+        supervisor_code: selectedSubGroupData?.supervisor_code as string,
+        visitor_uid: id,
+        amount: Number(value),
+        currency_type: 241,
+        Signature: generateAllocationSignature({
+          amount: value,
+          customerMobile: id,
+          sup_group_code: selectedGroupData?.sup_group_code as string,
+          supervisor_code: selectedSubGroupData?.supervisor_code as string,
+          visitor_uid: id,
+        }),
+      }
+      return [...prev, newItem]
     })
-    // await DefineAllocation({ accessToken, Signature, })
+  }
+
+  const allocateData = async () => {
+    if (allocationData?.length < 1) {
+      showModal({
+        title: '',
+        main: <p>لیست مبالغ خالی است</p>,
+        type: 'error',
+        autoClose: 1,
+      })
+      return
+    }
+    setLoading(true)
+    const accessToken = (await getCookieByKey('access_token')) || ''
+    await DefineAllocation({ accessToken, allocations: allocationData }).then(
+      (result) => {
+        setLoading(false)
+        if (result?.status === 1) {
+          setAllocationData([])
+          showModal({
+            title: 'موفق',
+            type: 'success',
+            main: <p>درخواست شما ثبت شد.</p>,
+            autoClose: 1,
+          })
+        } else
+          showModal({
+            title: 'ناموفق',
+            type: 'error',
+            main: <p>{result?.message || 'خطایی رخ داد.'}</p>,
+            autoClose: 1,
+          })
+      }
+    )
   }
   return (
     <div className='m-4'>
@@ -72,7 +131,7 @@ const Allocation = () => {
               setMenu('porsantmanagement')
               location.hash = 'porsantmanagement'
             }}>
-            {selectedGroupData?.sup_group_name}/
+            {selectedSubGroupData?.supervisor_name}/
           </span>
           <span className='text-[#7747C0]'> تخصیص گروهی </span>
         </p>
@@ -91,7 +150,7 @@ const Allocation = () => {
             <p className='flex justify-between text-gray-500'>
               اعتبار قابل تخصیص <br />
               <span className='text-gray-800 font-semibold text-lg'>
-                ۴۰۰۰۰۰ میلیون ریال
+                {balance?.Releasable || 0} ریال
               </span>
             </p>
           </div>
@@ -145,12 +204,16 @@ const Allocation = () => {
                     <td className='text-center px-4 py-2'>{row.visitor_tel}</td>
                     <td className='text-center px-4 py-2'>
                       <input
-                        type='text'
                         inputMode='numeric'
-                        placeholder='مبلغ اعتبار را وارد کنید'
-                        onChange={(e) =>
-                          handleCreditChange(index, e.target.value)
+                        value={
+                          allocationData.find(
+                            (item) => item.visitor_uid === row.visitor_uid
+                          )?.amount || ''
                         }
+                        placeholder='مبلغ اعتبار را وارد کنید'
+                        onChange={(e) => {
+                          handleCreditChange(row.visitor_uid, e.target.value)
+                        }}
                         className=' border-none rounded px-2 py-1 w-full text-center'
                       />
                     </td>
@@ -167,14 +230,14 @@ const Allocation = () => {
               </div>
               <div className='flex mt-4 gap-10 justify-end'>
                 <button
-                  type='submit'
-                  className={`fill-button px-10 h-10 rounded-lg  w-56`}>
-                  ثبت نهایی
-                </button>
-                <button
-                  type='submit'
-                  className={`border-button px-10 h-10 rounded-lg  w-56`}>
-                  ذخیره تخصیص
+                  onClick={allocateData}
+                  disabled={loading}
+                  className={`fill-button h-10 rounded-lg  w-56 flex justify-center items-center`}>
+                  {loading ? (
+                    <Loading size={5} color='#ffffff' />
+                  ) : (
+                    '  ثبت نهایی'
+                  )}
                 </button>
               </div>
             </div>

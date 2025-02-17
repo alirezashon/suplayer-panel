@@ -1,9 +1,11 @@
+import { useStates } from '@/Context/States'
 import { Chart } from 'chart.js'
 import moment from 'moment-jalaali'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 
 const PromotionView = () => {
+  const { selectedPromotionData } = useStates()
   const [data, setData] = useState<number[]>([])
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
@@ -11,17 +13,6 @@ const PromotionView = () => {
     minutes: 0,
     seconds: 0,
   })
-  const promotion = {
-    id: 2,
-    cstatus: 1,
-    start_date: '۱۴۰۳-۱۱-۲۱',
-    // exp_date: '3027-09-15',
-    exp_date: '1403-12-29', // تاریخ شمسی
-    ctitle: 'کیفیت برتر',
-    cta_link: 'https://test.com',
-    distype: 0,
-    file_uid: 'che181_04e653edd5f1549aece8.jpg',
-  }
 
   const generateRandomData = () => {
     const data: number[] = []
@@ -111,11 +102,16 @@ const PromotionView = () => {
   }, [])
   useEffect(() => {
     const updateTimer = () => {
-      const expireDate = moment(promotion.exp_date, 'jYYYY-jMM-jDD').toDate()
-      
+      const expireDate = moment(
+        selectedPromotionData?.exp_date.replace(/[۰-۹]/g, (d) =>
+          String.fromCharCode(d.charCodeAt(0) - 1728)
+        ),
+        'jYYYY-jMM-jDD'
+      ).toDate()
+
       // expireDate.setHours(0, 0, 0, 0)
       const now = new Date() // زمان فعلی
-      // const expireDate = new Date(promotion.exp_date) // تاریخ انقضا
+      // const expireDate = new Date(selectedPromotionData.exp_date) // تاریخ انقضا
 
       // تنظیم زمان به ۰۰:۰۰ (نیمه شب)
       expireDate.setHours(0, 0, 0, 0)
@@ -141,11 +137,13 @@ const PromotionView = () => {
     const interval = setInterval(updateTimer, 1000) // بروزرسانی هر ثانیه
 
     return () => clearInterval(interval) // پاک کردن تایمر هنگام خروج
-  }, [promotion.exp_date])
+  }, [selectedPromotionData?.exp_date])
   return (
     <div>
       <div className='border mb-4 bg-white'>
-        <h1 className='text-2xl m-4'>پروموشن محصولات فولیکا</h1>
+        <h1 className='text-2xl m-4'>
+          پروموشن {selectedPromotionData?.ctitle}
+        </h1>
         <div className='flex justify-around'>
           <div className='flex flex-col gap-5 my-3'>
             <p>وضعیت پروموشن</p>
@@ -153,15 +151,17 @@ const PromotionView = () => {
           </div>
           <div className='flex flex-col gap-5 my-3'>
             <p>بودجه</p>
-            <p className='font-bold'></p>
+            <p className='font-bold'>
+              {/* {selectedPromotionData?.budget} */}در انتظار داده از بک
+            </p>
           </div>
           <div className='flex flex-col gap-5 my-3'>
             <p> تاریخ شروع</p>
-            <p className='font-bold'></p>
+            <p className='font-bold'>{selectedPromotionData?.start_date}</p>
           </div>
           <div className='flex flex-col gap-5 my-3'>
             <p>تاریخ پایان</p>
-            <p className='font-bold'></p>
+            <p className='font-bold'>{selectedPromotionData?.exp_date}</p>
           </div>
           <div className='flex flex-col gap-5 my-3'>
             <p>زمان باقی مانده</p>

@@ -7,7 +7,6 @@ import Image from 'next/image'
 import { useData } from '@/Context/Data'
 import SelectList from '../shared/SelectList'
 import { BeneficiaryData } from '@/interfaces'
-
 const Beneficiary: React.FC = () => {
   const { setMenu } = useMenu()
   const { beneficiaryData } = useData()
@@ -71,17 +70,6 @@ const Beneficiary: React.FC = () => {
           </p>
           {beneficiaryData && beneficiaryData.length > 0 && (
             <div className='flex gap-5'>
-              <label className='flex justify-center items-center gap-1 h-10 min-w-40 border-button rounded-lg bg-white hover:bg-purple-100 cursor-pointer'>
-                <FolderAdd size={20} color='#7747C0' />
-                <span>بارگذاری اکسل</span>
-                <input
-                  type='file'
-                  accept='.xlsx, .xls'
-                  className='hidden'
-                  onChange={(e) => e}
-                />
-              </label>
-
               <button
                 onClick={() => setShowAddModal(true)}
                 className='h-10 min-w-40 fill-button  rounded-lg hover:bg-purple-800'>

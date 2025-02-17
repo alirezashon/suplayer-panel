@@ -121,7 +121,7 @@ import { useState } from 'react'
 //                         )
 //                       )
 //                     }
-//                     type='text'
+//                     
 //                     placeholder='نام  محصول'
 //                   />
 //                   {index > 0 && (
@@ -302,7 +302,7 @@ const AddModal = ({
                     }`}
                     value={name}
                     onChange={(e) => handleInputChange(index, e.target.value)}
-                    type='text'
+                    
                     placeholder='نام محصول'
                   />
                   {index > 0 && (

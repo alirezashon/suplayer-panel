@@ -1,6 +1,10 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { UserLoginAPI } from '@/services/user'
+import {
+  GetOtpWithMobile,
+  LoginWithOtpAndMobile,
+  UserLoginAPI,
+} from '@/services/user'
 import { IAccessTokenResponse, setTokenIntoCookie } from '@/actions/cookieToken'
 import { ArrowRight2 } from 'iconsax-react'
 import Loading from '../shared/LoadingSpinner'
@@ -12,6 +16,8 @@ import LoginShadow from '../../../public/images/login-bg.svg'
 import { useStates } from '@/Context/States'
 import CustomModal from '../shared/CustomModal'
 import { errorClass } from '@/app/assets/style'
+import OTPInput from '../shared/OTPinput'
+import Captcha from '../shared/Captcha'
 
 const Login = () => {
   const [inputState, setInputState] = useState<
@@ -23,21 +29,28 @@ const Login = () => {
     | 'googleauthenticate'
   >('mobile')
   const [mobile, setMobile] = useState<string>('')
+  const [otp, setOtp] = useState<string>('')
+  const [captchaPass, setCaptchaPass] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
   const [password, setPassword] = useState<string>('')
-  const [errors, setErrors] = useState<{ phone?: string; password?: string }>(
-    {}
-  )
+  const [errors, setErrors] = useState<{
+    phone?: string
+    password?: string
+    captcha?: string
+  }>({})
   const { showModal, modalContent } = useStates()
 
   const validateInputs = () => {
-    const newErrors: { phone?: string; password?: string } = {}
+    const newErrors: { phone?: string; password?: string; captcha?: string } =
+      {}
     if (!mobile || mobile.length !== 11 || !/^09\d{9}$/.test(mobile)) {
       newErrors.phone = 'شماره موبایل باید 11 رقم و معتبر باشد.'
     }
     if (inputState === 'password' && (!password || password.length < 6)) {
       newErrors.password = 'رمز عبور باید حداقل 6 کاراکتر باشد.'
     }
+    if (!captchaPass) newErrors.captcha = 'کد امنیتی را وارد کنید'
+
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
@@ -47,10 +60,13 @@ const Login = () => {
 
     try {
       setLoading(true)
-      const response: IAccessTokenResponse | undefined = await UserLoginAPI({
-        username: mobile,
-        password,
-      })
+      const response =
+        inputState === 'password'
+          ? await UserLoginAPI({
+              username: mobile,
+              password,
+            })
+          : await LoginWithOtpAndMobile({ mobile, otp })
 
       if (!response) {
         setLoading(false)
@@ -160,6 +176,19 @@ const Login = () => {
                     {errors.phone && (
                       <p className='text-red-700'>{errors.phone}</p>
                     )}
+                    <div className='my-10'>
+                      <Captcha
+                        setResult={(value: boolean) => {
+                          if (value === true) {
+                            setCaptchaPass(value)
+                            setErrors(({ captcha, ...rest }) => rest)
+                          }
+                        }}
+                      />
+                      {errors.captcha && (
+                        <p className='text-red-700'>{errors.captcha}</p>
+                      )}
+                    </div>
                   </>
                 )}
 
@@ -186,6 +215,7 @@ const Login = () => {
                     )}
                   </>
                 )}
+                {inputState === 'otp' && <OTPInput setResult={setOtp} />}
                 <div className='flex flex-col gap-4 mt-6'>
                   {inputState === 'mobile' ? (
                     <button
@@ -196,7 +226,16 @@ const Login = () => {
                       ادامه
                     </button>
                   ) : (
-                    <div className='flex gap-4'>
+                    <div className='flex gap-4 mt-5'>
+                      <button
+                        type='button'
+                        onClick={async () => {
+                          setInputState('otp')
+                          await GetOtpWithMobile({ mobile })
+                        }}
+                        className='w-full rounded-lg border-button'>
+                        ورود با کد یکبار مصرف
+                      </button>
                       <button
                         type='button'
                         onClick={handleLogin}

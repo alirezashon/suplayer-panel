@@ -61,7 +61,7 @@ const AddModal = ({
                   <input
                     value={name}
                     onChange={(e) => handleInputChange(e.target.value, index)}
-                    type='text'
+                    
                     placeholder='نام زیر گروه محصول'
                     className='flex-1 border border-gray-300 rounded-lg px-4 py-2'
                   />

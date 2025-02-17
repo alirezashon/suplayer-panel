@@ -1,11 +1,9 @@
 import Calendar from '@/components/shared/Calendar'
 import { useData } from '@/Context/Data'
-import { TransactionInterface } from '@/interfaces'
+import { AllocationListInterface } from '@/interfaces'
 import {
   ExportCurve,
   ImportCurve,
-  ImportSquare,
-  Receipt,
   Receipt1,
   ReceiveSquare,
   TransmitSquare,
@@ -20,31 +18,30 @@ const headers = [
   'فایل محاسبه',
 ]
 const Reports = () => {
-  const [selectedItems, setSelectedItems] = useState<number[]>([])
   const [initialData, setInitialData] = useState<
-    Partial<TransactionInterface>[]
+    Partial<AllocationListInterface>[]
   >([])
-  const { transactionsData } = useData()
+  const { allocationList } = useData()
   useEffect(() => {
     setInitialData(
-      Array.isArray(transactionsData)
-        ? transactionsData.map((transaction) => ({
-            pan_name: transaction.pan_name,
-            ttype: transaction.ttype,
+      Array.isArray(allocationList)
+        ? allocationList.map((transaction) => ({
+            visitor_uid: transaction.visitor_uid,
+            wstatus: transaction.wstatus,
             amount: transaction.amount,
-            pers_tob: transaction.transactionDate_pe,
-            file_uid: transaction.ref_id,
+            regdate: transaction.regdate,
+            file_uid: transaction.allocation_status_id_file,
           }))
         : []
     )
-  }, [transactionsData])
+  }, [allocationList])
 
   const filterPersonnel = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target
-    const filteredData = transactionsData?.filter((person) => {
-      const fieldValue = person?.[name as keyof TransactionInterface]
+    const filteredData = allocationList?.filter((person) => {
+      const fieldValue = person?.[name as keyof AllocationListInterface]
       if (typeof fieldValue === 'string') {
         return !value || fieldValue.includes(value)
       }
@@ -53,14 +50,14 @@ const Reports = () => {
 
     // فقط فیلدهای خاص را ذخیره می‌کنیم
     const filteredFieldsData = filteredData?.map((transaction) => ({
-      pan_name: transaction.pan_name,
-      ttype: transaction.ttype,
+      visitor_uid: transaction.visitor_uid,
+      wstatus: transaction.wstatus,
       amount: transaction.amount,
-      pers_tob: transaction.transactionDate_pe,
-      file_uid: transaction.ref_id,
+      regdate: transaction.regdate,
+      file_uid: transaction.allocation_status_id_file,
     }))
 
-    setInitialData(filteredFieldsData as Partial<TransactionInterface>[])
+    setInitialData(filteredFieldsData as Partial<AllocationListInterface>[])
   }
 
   return (

@@ -46,7 +46,7 @@ const OnlinePayment = () => {
               ref={amountInputRef}
               defaultValue={refs.current.amount}
               onChange={(e) => (refs.current.amount = e.target.value)}
-              type='text'
+              
               placeholder='مبلغ خود را به ریال وارد نمایید'
               className='w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400'
             />
@@ -81,7 +81,7 @@ const OnlinePayment = () => {
               ref={phoneInputRef}
               defaultValue={refs.current.phone}
               onChange={(e) => (refs.current.phone = e.target.value)}
-              type='text'
+              
               placeholder='شماره موبایل خود را وارد کنید'
               className='w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400'
             />

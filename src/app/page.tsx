@@ -13,6 +13,7 @@ import {
   getKPITaskData,
   getBalance,
   getTransactionHistory,
+  getAllocatedList,
 } from '@/actions/setData'
 import Beneficiary from '@/components/Beneficiary'
 import Campaign from '@/components/Campaign'
@@ -57,6 +58,7 @@ const Home = () => {
     setKPITaskData,
     setBalance,
     setTransactionsData,
+    setAllocationList,
   } = useData()
   const { setProductGroupStates } = useStates()
   useEffect(() => {
@@ -88,6 +90,9 @@ const Home = () => {
       await getBalance().then((result) => result && setBalance(result))
       await getTransactionHistory().then(
         (result) => result && setTransactionsData(result)
+      )
+      await getAllocatedList().then(
+        (result) => result && setAllocationList(result)
       )
     }
     fetcher()

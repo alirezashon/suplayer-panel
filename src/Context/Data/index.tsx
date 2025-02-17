@@ -1,5 +1,6 @@
 'use client'
 import {
+  AllocationListInterface,
   BeneficiaryData,
   CampaignInterface,
   DraftsData,
@@ -13,47 +14,44 @@ import {
   ReferrerData,
   SubGroup,
   TransactionInterface,
+  WalletDetail,
 } from '@/interfaces'
 import { createContext, useContext, useState, ReactNode } from 'react'
 
 interface DataContextProps {
   productData: ProductsData[] | undefined
-  setProductData: (ProductData: ProductsData[]) => void
+  setProductData: (value: ProductsData[]) => void
   productGroupData: ProductGroupData[] | undefined
-  setProductGroupData: (ProductData: ProductGroupData[]) => void
+  setProductGroupData: (value: ProductGroupData[]) => void
   brandsData: ProductGroupData[] | undefined
-  setBrandsData: (ProductData: ProductGroupData[]) => void
+  setBrandsData: (value: ProductGroupData[]) => void
   groupData: GroupData[] | undefined
-  setGroupData: (GroupData: GroupData[]) => void
+  setGroupData: (value: GroupData[]) => void
   subGroupData: SubGroup[] | undefined
-  setSubGroupData: (SubGroupData: SubGroup[]) => void
+  setSubGroupData: (value: SubGroup[]) => void
   beneficiaryData: BeneficiaryData[] | undefined
-  setBeneficiaryData: (SubGroupData: BeneficiaryData[]) => void
+  setBeneficiaryData: (value: BeneficiaryData[]) => void
   userInfo: IUserResponse | undefined
-  setUserInfo: (SubGroupData: IUserResponse) => void
+  setUserInfo: (value: IUserResponse) => void
   referrerData: ReferrerData[] | undefined
-  setReferrerData: (SubGroupData: ReferrerData[]) => void
+  setReferrerData: (value: ReferrerData[]) => void
   referrerChartData: ReferrerChartData[] | undefined
-  setReferrerChartData: (SubGroupData: ReferrerChartData[]) => void
+  setReferrerChartData: (value: ReferrerChartData[]) => void
   campaignData: CampaignInterface[] | undefined
-  setCampaignData: (SubGroupData: CampaignInterface[]) => void
+  setCampaignData: (value: CampaignInterface[]) => void
   promotionData: PromotionInterface[] | undefined
-  setPromotionData: (SubGroupData: PromotionInterface[]) => void
+  setPromotionData: (value: PromotionInterface[]) => void
   draftsData: DraftsData[] | undefined
-  setDraftsData: (SubGroupData: DraftsData[]) => void
+  setDraftsData: (value: DraftsData[]) => void
   KPITaskData: KPIData[] | undefined
-  setKPITaskData: (SubGroupData: KPIData[]) => void
+  setKPITaskData: (value: KPIData[]) => void
   transactionsData: TransactionInterface[] | undefined
-  setTransactionsData: (SubGroupData: TransactionInterface[]) => void
-  balance:
-    | {
-        removable: number
-        allBalance: number
-      }
-    | undefined
-  setBalance: (SubGroupData: { removable: number; allBalance: number }) => void
+  setTransactionsData: (value: TransactionInterface[]) => void
+  balance: WalletDetail | undefined
+  setBalance: (value: WalletDetail) => void
+  allocationList: AllocationListInterface[] | undefined
+  setAllocationList: (value: AllocationListInterface[]) => void
 }
-
 const DataContext = createContext<DataContextProps | undefined>(undefined)
 
 export const DataProvider = ({ children }: { children: ReactNode }) => {
@@ -74,10 +72,10 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
   const [promotionData, setPromotionData] = useState<PromotionInterface[]>([])
   const [draftsData, setDraftsData] = useState<DraftsData[]>([])
   const [KPITaskData, setKPITaskData] = useState<KPIData[]>([])
-  const [balance, setBalance] = useState<{
-    removable: number
-    allBalance: number
-  }>()
+  const [allocationList, setAllocationList] = useState<
+    AllocationListInterface[]
+  >([])
+  const [balance, setBalance] = useState<WalletDetail>()
   const [transactionsData, setTransactionsData] = useState<
     TransactionInterface[]
   >([])
@@ -115,6 +113,8 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
         setBalance,
         transactionsData,
         setTransactionsData,
+        allocationList,
+        setAllocationList,
       }}>
       {children}
     </DataContext.Provider>

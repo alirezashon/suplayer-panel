@@ -188,7 +188,7 @@ const AddModal = ({
                   <input
                     value={editName}
                     onChange={(e) => setEditName(e.target.value)}
-                    type='text'
+                    
                     placeholder='مثال: فولیکا'
                     className={`flex-1 border border-gray-300 rounded-lg px-4 py-2 ${
                       errors?.brands && errorClass
@@ -210,7 +210,7 @@ const AddModal = ({
                     <input
                       value={name}
                       onChange={(e) => handleInputChange(e.target.value, index)}
-                      type='text'
+                      
                       placeholder='مثال: فولیکا'
                       className={`flex-1 border border-gray-300 rounded-lg px-4 py-2 ${
                         errors?.brands && errorClass

@@ -92,7 +92,7 @@ const AddModal = ({
                   // errors?.name && setErrors({})
                   setName(e.target.value)
                 }}
-                type='text'
+                
                 placeholder='مثال: دکترهای پوست، تهران غرب ...'
               />
             </div>

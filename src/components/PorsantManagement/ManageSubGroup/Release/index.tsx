@@ -91,7 +91,7 @@ const Release = () => {
                     <td className='text-center px-4 py-2'>10,000,000 ریال</td>
                     <td className='text-center px-4 py-2'>
                       <input
-                        type='text'
+                        
                         placeholder='مبلغ آزادسازی را وارد کنید'
                         className=' rounded px-2 py-1 w-full text-center'
                       />

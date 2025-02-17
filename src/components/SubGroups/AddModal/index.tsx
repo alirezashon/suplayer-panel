@@ -1,6 +1,7 @@
 import { getCookieByKey } from '@/actions/cookieToken'
 import { getSubGroupData } from '@/actions/setData'
 import { errorClass } from '@/app/assets/style'
+import RadioTreeSelector from '@/components/shared/RadioTrees'
 import { useData } from '@/Context/Data'
 import { useStates } from '@/Context/States'
 import { CreateSubGroup, EditSubGroup } from '@/services/items'
@@ -192,7 +193,9 @@ const AddModal = ({
               ))}
             </select>
           </div>
-
+<div className="my-4">
+  <RadioTreeSelector />
+</div>
           <div className='mt-10 w-full max-md:max-w-full add-new-input-animated'>
             <div className='flex flex-col w-full'>
               <label className='text-base font-medium text-right text-gray-800'>

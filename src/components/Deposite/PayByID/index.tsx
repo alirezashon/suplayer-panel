@@ -128,7 +128,7 @@ const PayByID = () => {
               ref={amountInputRef}
               defaultValue={refs.current.amount}
               onChange={(e) => (refs.current.amount = e.target.value)}
-              type='text'
+              
               placeholder='مبلغ چک را به ریال وارد نمایید'
               className='w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400'
             />
@@ -145,7 +145,7 @@ const PayByID = () => {
               ref={shebaInputRef}
               defaultValue={refs.current.sheba}
               onChange={(e) => (refs.current.sheba = e.target.value)}
-              type='text'
+              
               placeholder='شماره شبا را وارد کنید'
               className='w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400'
             />
@@ -162,7 +162,7 @@ const PayByID = () => {
                 ref={shebaInputRef}
                 defaultValue={refs.current.sheba}
                 onChange={(e) => (refs.current.sheba = e.target.value)}
-                type='text'
+                
                 placeholder='شناسه واریز را وارد کنید'
                 className='w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400'
               />
@@ -178,7 +178,7 @@ const PayByID = () => {
                 ref={shebaInputRef}
                 defaultValue={refs.current.sheba}
                 onChange={(e) => (refs.current.sheba = e.target.value)}
-                type='text'
+                
                 placeholder='کدرهگیری را وارد کنید'
                 className='w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400'
               />

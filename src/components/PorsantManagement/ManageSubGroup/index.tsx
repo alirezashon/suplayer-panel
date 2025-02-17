@@ -30,6 +30,10 @@ const PorsantManagement = () => {
   const { selectedSubGroupData, selectedGroupData, setSelectedGroupData } =
     useStates()
   useEffect(() => {
+    if (!selectedGroupData) {
+      location.hash = 'porsant'
+      setMenu('porsant')
+    }
     const filterResult = beneficiaryData?.filter(
       (beneficiary) =>
         beneficiary.supervisor_id === selectedSubGroupData?.supervisor_id

@@ -56,7 +56,7 @@ const OTPInput: React.FC<Props> = ({ setResult }) => {
         <input
           autoFocus={index === 0}
           key={index}
-          type='text'
+          
           maxLength={1}
           value={otp[index]}
           onChange={(e) => handleChange(e, index)}
