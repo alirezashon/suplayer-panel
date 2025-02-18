@@ -10,7 +10,7 @@ import { useMenu } from '@/Context/Menu'
 import AddModal from './AddModal'
 import DeleteModal from './DeleteModal'
 import { useData } from '@/Context/Data'
-import { ReferrerChartData } from '@/interfaces'
+import { TreeChartInterface } from '@/interfaces'
 import { getCookieByKey } from '@/actions/cookieToken'
 import { EditReferrerChart } from '@/services/referrer'
 import { getReferrerChart } from '@/actions/setData'
@@ -25,12 +25,12 @@ const ReferralLevels: React.FC = () => {
   const { setMenu } = useMenu()
   const [addModal, setAddModal] = useState<{
     show: boolean
-    data?: ReferrerChartData
+    data?: TreeChartInterface
   }>()
   const [showDeleteModal, setShowDeleteModal] = useState<boolean | string[]>()
   const [openTrees, setOpenTrees] = useState<number[]>([])
-  const { referrerChartData, setReferrerChartData } = useData()
-  const [editableRow, setEditableRow] = useState<ReferrerChartData | null>()
+  const { TreeChartInterface, setTreeChartInterface } = useData()
+  const [editableRow, setEditableRow] = useState<TreeChartInterface | null>()
   const colors = [
     'text-purple-800',
     'text-blue-800',
@@ -46,11 +46,11 @@ const ReferralLevels: React.FC = () => {
     'bg-red-200',
   ]
   const renderTree = (parentId: number, level = 0) => {
-    const nodes = referrerChartData?.filter((node) => node.chpid === parentId)
+    const nodes = TreeChartInterface?.filter((node) => node.chpid === parentId)
     const EditChart = async () => {
       const accessToken = await getCookieByKey('access_token')
       const { chpid, chtitle, chstatus, chlabel } =
-        editableRow as ReferrerChartData
+        editableRow as TreeChartInterface
       await EditReferrerChart({
         accessToken,
         chid: parseInt(`${editableRow?.id}`),
@@ -61,7 +61,7 @@ const ReferralLevels: React.FC = () => {
       }).then(async (result) => {
         result &&
           (await getReferrerChart().then((value) => {
-            if (value) setReferrerChartData(value)
+            if (value) setTreeChartInterface(value)
             setEditableRow(null)
           }))
       })

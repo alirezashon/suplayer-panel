@@ -1,4 +1,8 @@
-import { ProductGroupData, ProductsData } from '@/interfaces'
+import {
+  ProductGroupData,
+  ProductsData,
+  TreeChartInterface,
+} from '@/interfaces'
 
 export const CreateProductGroup = async ({
   name,
@@ -212,6 +216,56 @@ export const GetProductList = async ({
     }
     const result = await response.json()
     return result.data
+  } catch (error) {
+    console.log(error)
+  }
+}
+export const GetProductSystemTypesList = async ({
+  accessToken,
+}: {
+  accessToken: string | undefined
+}): Promise<TreeChartInterface[] | undefined> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_sys_product_chart_list`,
+      {
+        method: 'GET',
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+      }
+    )
+
+    if (!response.ok || response.status === 500) {
+      throw new Error('Failed to GetAssistantList')
+    }
+    const result = await response.json()
+    return result
+  } catch (error) {
+    console.log(error)
+  }
+}
+export const GetGroupSystemTypesList = async ({
+  accessToken,
+}: {
+  accessToken: string | undefined
+}): Promise<TreeChartInterface[] | undefined> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_sys_visitor_chart_list`,
+      {
+        method: 'GET',
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+      }
+    )
+
+    if (!response.ok || response.status === 500) {
+      throw new Error('Failed to GetAssistantList')
+    }
+    const result = await response.json()
+    return result
   } catch (error) {
     console.log(error)
   }

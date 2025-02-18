@@ -10,7 +10,7 @@ import {
   ProductGroupData,
   ProductsData,
   PromotionInterface,
-  ReferrerChartData,
+  TreeChartInterface,
   ReferrerData,
   SubGroup,
   TransactionInterface,
@@ -35,8 +35,8 @@ interface DataContextProps {
   setUserInfo: (value: IUserResponse) => void
   referrerData: ReferrerData[] | undefined
   setReferrerData: (value: ReferrerData[]) => void
-  referrerChartData: ReferrerChartData[] | undefined
-  setReferrerChartData: (value: ReferrerChartData[]) => void
+  TreeChartInterface: TreeChartInterface[] | undefined
+  setTreeChartInterface: (value: TreeChartInterface[]) => void
   campaignData: CampaignInterface[] | undefined
   setCampaignData: (value: CampaignInterface[]) => void
   promotionData: PromotionInterface[] | undefined
@@ -51,6 +51,16 @@ interface DataContextProps {
   setBalance: (value: WalletDetail) => void
   allocationList: AllocationListInterface[] | undefined
   setAllocationList: (value: AllocationListInterface[]) => void
+  systemTypes:
+    | {
+        productTypes: TreeChartInterface[]
+        groupTypes: TreeChartInterface[]
+      }
+    | undefined
+  setSystemTypes: (value: {
+    productTypes: TreeChartInterface[]
+    groupTypes: TreeChartInterface[]
+  }) => void
 }
 const DataContext = createContext<DataContextProps | undefined>(undefined)
 
@@ -66,8 +76,8 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
   const [userInfo, setUserInfo] = useState<IUserResponse>()
   const [referrerData, setReferrerData] = useState<ReferrerData[]>([])
   const [campaignData, setCampaignData] = useState<CampaignInterface[]>([])
-  const [referrerChartData, setReferrerChartData] = useState<
-    ReferrerChartData[]
+  const [TreeChartInterface, setTreeChartInterface] = useState<
+    TreeChartInterface[]
   >([])
   const [promotionData, setPromotionData] = useState<PromotionInterface[]>([])
   const [draftsData, setDraftsData] = useState<DraftsData[]>([])
@@ -79,6 +89,10 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
   const [transactionsData, setTransactionsData] = useState<
     TransactionInterface[]
   >([])
+  const [systemTypes, setSystemTypes] = useState<{
+    productTypes: TreeChartInterface[]
+    groupTypes: TreeChartInterface[]
+  }>({ productTypes: [], groupTypes: [] })
 
   return (
     <DataContext.Provider
@@ -99,8 +113,8 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
         setReferrerData,
         brandsData,
         setBrandsData,
-        referrerChartData,
-        setReferrerChartData,
+        TreeChartInterface,
+        setTreeChartInterface,
         campaignData,
         setCampaignData,
         promotionData,
@@ -115,6 +129,8 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
         setTransactionsData,
         allocationList,
         setAllocationList,
+        systemTypes,
+        setSystemTypes,
       }}>
       {children}
     </DataContext.Provider>

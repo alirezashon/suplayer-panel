@@ -38,7 +38,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
     'bg-green-200',
     'bg-red-200',
   ]
-  const { referrerChartData, setReferrerData } = useData()
+  const { TreeChartInterface, setReferrerData } = useData()
   const { setMenu } = useMenu()
   const { showModal } = useStates()
   const refererTypes = ['شخص', 'کسب و کار']
@@ -179,10 +179,10 @@ const AddModal = ({ data, close }: AddModalProps) => {
               <span className='text-red-500'>{errors.pers_chart_id}</span>
             )}
             <p className='text-[#7747C0]'>انتخاب سطح بازاریاب</p>
-            {referrerChartData && referrerChartData.length > 0 ? (
+            {TreeChartInterface && TreeChartInterface.length > 0 ? (
               <div className='w-full'>
                 <div className='grid grid-cols-2  gap-5 mt-4 px-5'>
-                  {referrerChartData?.map((chart, index) => (
+                  {TreeChartInterface?.map((chart, index) => (
                     <label
                       key={index}
                       className='flex items-center gap-3 cursor-pointer mx-2'>

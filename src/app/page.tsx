@@ -14,6 +14,7 @@ import {
   getBalance,
   getTransactionHistory,
   getAllocatedList,
+  getSystemTypes,
 } from '@/actions/setData'
 import Beneficiary from '@/components/Beneficiary'
 import Campaign from '@/components/Campaign'
@@ -38,6 +39,7 @@ import MainLayout from '@/layouts/MainLayout'
 import { useEffect, useState } from 'react'
 import CustomModal from '@/components/shared/CustomModal'
 import { GetTransactions } from '@/services/finance'
+import { TreeChartInterface } from '@/interfaces'
 
 const Home = () => {
   const { modalContent } = useStates()
@@ -52,26 +54,27 @@ const Home = () => {
     setUserInfo,
     setReferrerData,
     setBrandsData,
-    setReferrerChartData,
+    setTreeChartInterface,
     setCampaignData,
     setPromotionData,
     setKPITaskData,
     setBalance,
     setTransactionsData,
     setAllocationList,
+    setSystemTypes,
   } = useData()
   const { setProductGroupStates } = useStates()
   useEffect(() => {
     const fetcher = async () => {
       await getUserInfo().then((value) => value && setUserInfo(value))
-      const groups = await getGroupData()
-      if (groups) setGroupData(groups)
-      const subGroups = await getSubGroupData()
-      if (subGroups) setSubGroupData(subGroups)
-      const products = await getProductData()
-      if (products) setProductData(products)
-      const beneficiaries = await getBeneficiaryData()
-      if (beneficiaries) setBeneficiaryData(beneficiaries)
+      await getGroupData().then((result) => result && setGroupData(result))
+      await getSubGroupData().then(
+        (result) => result && setSubGroupData(result)
+      )
+      await getProductData().then((result) => result && setProductData(result))
+      await getBeneficiaryData().then(
+        (result) => result && setBeneficiaryData(result)
+      )
       await getReferrerData().then((value) => value && setReferrerData(value))
       await getProductGroupData().then((value) => {
         if (value) {
@@ -80,7 +83,7 @@ const Home = () => {
         }
       })
       await getReferrerChart().then(
-        (value) => value && setReferrerChartData(value)
+        (value) => value && setTreeChartInterface(value)
       )
       await getCampaignData().then((value) => value && setCampaignData(value))
       await getPromotiuonData().then(
@@ -94,8 +97,12 @@ const Home = () => {
       await getAllocatedList().then(
         (result) => result && setAllocationList(result)
       )
+      await getSystemTypes().then((result) => {
+        result.productTypes && setSystemTypes(result)
+      })
     }
     fetcher()
+
     const handleHashChange = () => {
       const tag = location.hash.substring(1)
       setMenu(tag)
@@ -130,10 +137,11 @@ const Home = () => {
     setProductGroupData,
     setProductGroupStates,
     setPromotionData,
-    setReferrerChartData,
+    setTreeChartInterface,
     setReferrerData,
     setUserInfo,
     setTransactionsData,
+    setSystemTypes,
   ])
 
   return (

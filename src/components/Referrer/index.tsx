@@ -36,7 +36,7 @@ const Referrer: React.FC = () => {
   const [initialData, setInitialData] = useState<Partial<ReferrerData>[]>([])
 
   const { setMenu } = useMenu()
-  const { referrerData, referrerChartData } = useData()
+  const { referrerData, TreeChartInterface } = useData()
   useEffect(() => {
     setInitialData(
       Array.isArray(referrerData)
@@ -44,7 +44,7 @@ const Referrer: React.FC = () => {
             pers_name: referrer.pers_name,
             pers_family: referrer.pers_family,
             pers_chart_id:
-              referrerChartData?.find(
+              TreeChartInterface?.find(
                 (chart) => chart.id === referrer.pers_chart_id
               )?.chlabel || '',
             pers_status: referrer.pers_status,
@@ -52,7 +52,7 @@ const Referrer: React.FC = () => {
           }))
         : []
     )
-  }, [referrerData, referrerChartData])
+  }, [referrerData, TreeChartInterface])
 
   const handleHeaderCheckboxChange = () => {
     if (selectedItems.length === initialData?.length) {
@@ -139,16 +139,6 @@ const Referrer: React.FC = () => {
           </p>
           {initialData && initialData?.length > 0 && (
             <div className='flex gap-5'>
-              <label className='flex justify-center items-center gap-1 h-10 min-w-40 border-button rounded-lg bg-white hover:bg-purple-100 cursor-pointer'>
-                <FolderAdd size={20} color='#7747C0' />
-                <span>بارگذاری اکسل</span>
-                <input
-                  type='file'
-                  accept='.xlsx, .xls'
-                  className='hidden'
-                  onChange={(e) => e}
-                />
-              </label>
               <button
                 type='submit'
                 onClick={() => setShowAddModal(true)}
@@ -159,8 +149,7 @@ const Referrer: React.FC = () => {
           )}
         </div>
         <div className='p-6 bg-white rounded-lg border border-gray-200'>
-          <form
-            className='flex flex-col bg-[#F6F5FD] my-3 p-3 max-md:px-5 max-md:pb-24 rounded-lg'>
+          <form className='flex flex-col bg-[#F6F5FD] my-3 p-3 max-md:px-5 max-md:pb-24 rounded-lg'>
             <div className='flex gap-4 items-center'>
               <div className='flex flex-col w-full'>
                 <label className='text-base font-medium text-right text-gray-800'>
@@ -214,7 +203,7 @@ const Referrer: React.FC = () => {
                 </button>
               </div>
               <table className='my-10 w-full'>
-                <thead >
+                <thead>
                   <tr>
                     {headers.map((head, headIndex) => (
                       <th

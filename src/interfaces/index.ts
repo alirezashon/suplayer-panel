@@ -172,14 +172,14 @@ export interface ReferrerData {
   StateCode: string
   StateDesc: string
 }
-export interface ReferrerChartData {
+export interface TreeChartInterface {
   id: number
   chpid: number
   chtitle: string
   chstatus: number
   chlevel: number
   lev1_count: number
-  chlabel: string | null
+  chlabel?: string | null
 }
 export interface ProductGroupData {
   id: number

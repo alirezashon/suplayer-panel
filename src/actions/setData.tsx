@@ -1,4 +1,9 @@
-import { GetProductGroupsList, GetProductList } from '@/services/products'
+import {
+  GetGroupSystemTypesList,
+  GetProductGroupsList,
+  GetProductList,
+  GetProductSystemTypesList,
+} from '@/services/products'
 import { getCookieByKey } from './cookieToken'
 import {
   GetBeneficiaryList,
@@ -83,5 +88,12 @@ export const getTransactionHistory = async () => {
 
 export const getAllocatedList = async () => {
   const accessToken = (await getCookieByKey('access_token')) || ''
-  return await GetAllocatedList({accessToken})
+  return await GetAllocatedList({ accessToken })
+}
+
+export const getSystemTypes = async () => {
+  const accessToken = (await getCookieByKey('access_token')) || ''
+  const productTypes = await GetProductSystemTypesList({ accessToken }) || []
+  const groupTypes = await GetGroupSystemTypesList({ accessToken }) || []
+  return { productTypes, groupTypes }
 }

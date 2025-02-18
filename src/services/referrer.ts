@@ -1,4 +1,4 @@
-import { ReferrerChartData, ReferrerData } from '@/interfaces'
+import { TreeChartInterface, ReferrerData } from '@/interfaces'
 
 export const CreateReferrer = async ({
   accessToken,
@@ -336,7 +336,7 @@ export const GetReferrerChartList = async ({
   accessToken,
 }: {
   accessToken: string | undefined
-}): Promise<ReferrerChartData[] | undefined> => {
+}): Promise<TreeChartInterface[] | undefined> => {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_personnel_chart_list`,

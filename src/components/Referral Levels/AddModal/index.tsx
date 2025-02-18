@@ -10,7 +10,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useData } from '@/Context/Data'
 import { CreateReferrerChart } from '@/services/referrer'
 
-import { ReferrerChartData } from '@/interfaces'
+import { TreeChartInterface } from '@/interfaces'
 import { getReferrerChart } from '@/actions/setData'
 import { useStates } from '@/Context/States'
 import { errorClass } from '@/app/assets/style'
@@ -20,7 +20,7 @@ const AddModal = ({
   data,
 }: {
   close: () => void
-  data?: ReferrerChartData
+  data?: TreeChartInterface
 }) => {
   const [isConfirmed, setIsConfirmed] = useState(false)
   const [state, setState] = useState<number>(0)
@@ -37,7 +37,7 @@ const AddModal = ({
     chtitle: '',
     chlabel: '',
   })
-  const { setReferrerChartData } = useData()
+  const { setTreeChartInterface } = useData()
   const { showModal } = useStates()
   const refs = useRef({ chtitle: '', chlabel: '' })
   useEffect(() => {
@@ -86,7 +86,7 @@ const AddModal = ({
         })
         setState(1)
         await getReferrerChart().then(
-          (value) => value && setReferrerChartData(value)
+          (value) => value && setTreeChartInterface(value)
         )
       }
     })

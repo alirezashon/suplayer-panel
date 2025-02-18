@@ -23,7 +23,7 @@ const AppointmentModal = ({ data, close }: AppointmentModalProps) => {
     productGroupData,
     brandsData,
     productData,
-    referrerChartData,
+    TreeChartInterface,
   } = useData()
   const refs = useRef({
     groupId: '',
@@ -79,8 +79,8 @@ const AppointmentModal = ({ data, close }: AppointmentModalProps) => {
               <Profile size={24} color='#000000' />
               <p>{`${data?.pers_name} ${data?.pers_family}`}</p>
               <p className='bg-[#DAFEE5] text-[#0F973D] min-w-12 rounded-lg'>
-                {Array.isArray(referrerChartData) &&
-                  referrerChartData.find(
+                {Array.isArray(TreeChartInterface) &&
+                  TreeChartInterface.find(
                     (chart) => `${chart.id}` === `${data?.pers_chart_id}`
                   )?.chtitle}
               </p>

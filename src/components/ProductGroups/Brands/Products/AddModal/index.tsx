@@ -1,10 +1,12 @@
 import { getCookieByKey } from '@/actions/cookieToken'
 import { getProductData } from '@/actions/setData'
+import RadioTreeSelector from '@/components/shared/RadioTrees'
+import { useData } from '@/Context/Data'
 import { useStates } from '@/Context/States'
 import { ProductGroupData, ProductsData } from '@/interfaces'
 import { CreateProduct, EditProduct } from '@/services/products'
 import { CloseSquare, Message, Trash } from 'iconsax-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 // const AddModal = ({
 //   editData,
@@ -121,7 +123,7 @@ import { useState } from 'react'
 //                         )
 //                       )
 //                     }
-//                     
+//
 //                     placeholder='نام  محصول'
 //                   />
 //                   {index > 0 && (
@@ -177,10 +179,47 @@ const AddModal = ({
   close: (show: boolean) => void
 }) => {
   const { showModal, selectedProductData, setSelectedProductData } = useStates()
+  const { systemTypes } = useData()
   const [names, setNames] = useState<string[]>([editData?.ini_name || ''])
   const [errors, setErrors] = useState<boolean[]>(
     new Array(names.length).fill(false)
   )
+  const [systemTypesData, setSystemTypesData] = useState<
+    {
+      id: number | string
+      label: string
+      children: { id: number | string; label: string }[]
+    }[]
+  >([])
+  useEffect(() => {
+    if (systemTypes?.productTypes && systemTypesData.length < 1) {
+      const acc: Record<
+        number | string,
+        { id: number | string; label: string; children: any[] }
+      > = {}
+
+      // ابتدا والدها را اضافه کن
+      systemTypes.productTypes.forEach((item) => {
+        if (item.chpid === 0) {
+          acc[item.id] = { id: item.id, label: item.chtitle, children: [] }
+        }
+      })
+
+      // سپس فرزندان را اضافه کن
+      systemTypes.productTypes.forEach((item) => {
+        if (item.chpid !== 0 && acc[item.chpid]) {
+          acc[item.chpid].children.push({
+            id: item.id,
+            label: item.chtitle,
+            children: [],
+          })
+        }
+      })
+
+      setSystemTypesData(Object.values(acc))
+      console.log(acc)
+    }
+  }, [systemTypes])
 
   const handleInputChange = (index: number, value: string) => {
     setNames((prev) => prev.map((item, i) => (i === index ? value : item)))
@@ -261,14 +300,11 @@ const AddModal = ({
         <form
           onSubmit={handleSubmit}
           className='flex flex-col bg-white  max-md:px-5 max-md:pb-24'>
-          {' '}
           <div className='flex justify-between items-center w-full text-xl font-medium text-right text-gray-800 max-md:max-w-full'>
             <div className='flex-1 shrink self-stretch my-auto min-w-[240px] max-md:max-w-full'>
               محصول جدید
             </div>
-            <div
-              className='
-           '>
+            <div className=' '>
               <CloseSquare
                 size={24}
                 cursor='pointer'
@@ -289,6 +325,15 @@ const AddModal = ({
             <Message color='#1D91CC' size={22} />
             <p>محصولات مرتبط به این گروه را در قسمت زیر اضافه کنید.</p>
           </div>
+          <div className='mt-10'>
+            {systemTypes?.groupTypes && (
+              <RadioTreeSelector
+                trees={systemTypesData}
+                placeholder='انتخاب دسته بندی سیستمی'
+                onSelect={(selected: string) => ''}
+              />
+            )}
+          </div>
           {names.map((name, index) => (
             <div className='mt-7 w-full flex gap-5' key={index}>
               <div className='flex flex-col w-full'>
@@ -302,7 +347,6 @@ const AddModal = ({
                     }`}
                     value={name}
                     onChange={(e) => handleInputChange(index, e.target.value)}
-                    
                     placeholder='نام محصول'
                   />
                   {index > 0 && (
@@ -325,6 +369,15 @@ const AddModal = ({
               </div>
             </div>
           ))}
+          {!editData?.ini_name && (
+            <div className='flex justify-end my-5'>
+              <p
+                className='text-[#7747C0] cursor-pointer'
+                onClick={() => setNames((prv) => [...prv, ''])}>
+                + محصول جدید
+              </p>
+            </div>
+          )}
           <button
             type='submit'
             className='fill-button px-10 h-10 rounded-lg w-full mt-10'>
