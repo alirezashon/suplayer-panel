@@ -40,7 +40,7 @@ export const WithdrawalForm: React.FC = () => {
     }
   }
 
-  const beneficiaries: any[] = [
+  const beneficiaries: { name: string; iban: string }[] = [
     { name: 'سعدی اسدی', iban: 'IR۳۵۰۱۹۰۰۰۰۰۰۰۰۰۰۰۲۳۴۵۹۲۳۱' },
     { name: 'محمد باقری', iban: 'IR۳۵۰۱۹۰۰۰۰۰۰۰۰۰۰۰۲۳۴۵۹۲۳۱' },
     { name: 'محسن تنابنده', iban: 'IR۳۵۰۱۹۰۰۰۰۰۰۰۰۰۰۰۲۳۴۵۹۲۳۱' },
@@ -48,7 +48,7 @@ export const WithdrawalForm: React.FC = () => {
 
   return (
     <>
-    {showConfirmModal&&<ConfirmModal />}
+      {showConfirmModal && <ConfirmModal />}
       {!showIbanPage ? (
         <div className='flex px-3 gap-3'>
           <form
@@ -86,7 +86,6 @@ export const WithdrawalForm: React.FC = () => {
               <input
                 id='amount'
                 name='amount'
-                
                 placeholder='مقدار واریزی به ریال'
                 className={`mt-2 p-3 rounded-lg border ${
                   errors.amount ? 'border-red-500' : 'border-gray-300'

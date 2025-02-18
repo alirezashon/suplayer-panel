@@ -1,5 +1,5 @@
 import { IAccessTokenResponse } from '@/actions/cookieToken'
-import { IAccountBalanceResponse, IUserResponse } from '@/interfaces'
+import { IUserResponse } from '@/interfaces'
 
 export interface IAuthenticatedUser {
   access_token: string

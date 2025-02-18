@@ -1,7 +1,6 @@
 import { getCookieByKey } from '@/actions/cookieToken'
 import { SubGroup } from '@/interfaces'
-import { DefineAppointmentTask } from '@/services/referrer'
-import { ArrowDown2, CloseSquare, Profile } from 'iconsax-react'
+import { CloseSquare } from 'iconsax-react'
 import { useState, useRef, useEffect } from 'react'
 import { useData } from '@/Context/Data'
 import { useStates } from '@/Context/States'
@@ -127,7 +126,7 @@ const AppointmentModal = ({ data, close, type }: AppointmentModalProps) => {
               <div className=''>
                 <label htmlFor=''>انتخاب بازاریاب </label>
                 <RadioTreeSelector
-                placeholder='بازاریاب مورد نظر را از داخل سطح مربوطه انتخاب کنید'
+                  placeholder='بازاریاب مورد نظر را از داخل سطح مربوطه انتخاب کنید'
                   trees={referrers}
                   onSelect={(value: string) => value}
                 />

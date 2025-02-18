@@ -320,3 +320,8 @@ export interface AllocationListInterface {
   allocation_status_id_file: string
   wstatus: number
 }
+export interface ShowSystemTypeUI {
+  id: number | string
+  label: string
+  children: { id: number | string; label: string }[]
+}

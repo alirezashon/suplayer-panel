@@ -108,10 +108,12 @@ export const GetProductGroupsList = async ({
 export const CreateProduct = async ({
   name,
   id,
+  prd_chart_id,
   accessToken,
 }: {
   name: string
   id: number
+  prd_chart_id: number
   accessToken: string | undefined
 }) => {
   try {
@@ -135,6 +137,7 @@ export const CreateProduct = async ({
           cui: 0,
           nw: 0,
           vra: 0,
+          prd_chart_id,
         }),
       }
     )

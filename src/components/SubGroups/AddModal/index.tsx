@@ -17,7 +17,7 @@ const AddModal = ({
   groupId: number
   close: () => void
 }) => {
-  const { groupData, setSubGroupData } = useData()
+  const { groupData, setSubGroupData, systemTypes } = useData()
   const { showModal } = useStates()
   const [data, setData] = useState<{ name: string; groupId: number }>({
     name: existName?.split('#$%^@!~')[0] || '',
@@ -25,7 +25,7 @@ const AddModal = ({
   })
   const [isConfirmed, setIsConfirmed] = useState(false)
   const [nestedNames, setNestedNames] = useState<string[]>([])
-  const [, setSelectedItems] = useState<Array<string | number>>([])
+  const [selectedType, setSelectedType] = useState<number>(0)
   const [errors, setErrors] = useState<{ index: number; message: string }[]>([])
   const [status, setStatus] = useState<React.ReactElement>()
   const setResult = (state: boolean, text?: string) => {
@@ -47,7 +47,12 @@ const AddModal = ({
   const saveData = async (groupID: number, name: string) => {
     const accessToken = (await getCookieByKey('access_token')) || ''
     if (!existName)
-      CreateSubGroup({ accessToken, groupID, name }).then((value) => {
+      CreateSubGroup({
+        accessToken,
+        groupID,
+        name,
+        syschart_id: selectedType,
+      }).then((value) => {
         showModal({
           type: value.status === 1 ? 'success' : 'error',
           main: <p>{value.message}</p>,
@@ -193,9 +198,15 @@ const AddModal = ({
               ))}
             </select>
           </div>
-<div className="my-4">
-  <RadioTreeSelector />
-</div>
+          {systemTypes?.groupTypes && (
+            <div className='mt-10'>
+              <RadioTreeSelector
+                trees={systemTypes?.groupTypes}
+                placeholder='دسته بندی سیستمی خود را انتخاب کنید'
+                onSelect={(value: string) => setSelectedType(parseInt(value))}
+              />
+            </div>
+          )}
           <div className='mt-10 w-full max-md:max-w-full add-new-input-animated'>
             <div className='flex flex-col w-full'>
               <label className='text-base font-medium text-right text-gray-800'>
@@ -260,7 +271,6 @@ const AddModal = ({
               </div>
             </div>
           ))}
-       
           <div className='flex justify-end my-5'>
             <p
               className='text-[#7747C0] cursor-pointer'
@@ -281,7 +291,6 @@ const AddModal = ({
               className={`w-full fill-button px-10 h-10 mt-10 rounded-lg transition-transform duration-200 ease-in-out hover:scale-105`}>
               ثبت
             </button>
-
             <div
               className={`absolute ${
                 !isConfirmed && ' opacity-0 '
@@ -301,5 +310,4 @@ const AddModal = ({
     </div>
   )
 }
-
 export default AddModal

@@ -189,3 +189,32 @@ export const EditReferrerProduct = async ({
     console.log(error)
   }
 }
+
+export const AddDocFile = async ({
+  src,
+  accessToken,
+}: {
+  src: FormData
+  accessToken: string
+}): Promise<{ status: string; rec_id_file: string } | undefined> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/uploaddocfile`,
+      {
+        method: 'POST',
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+        body: src,
+      }
+    )
+
+    if (response.status !== 200) {
+      return
+    }
+
+    return await response.json()
+  } catch (error: unknown) {
+    console.log(error)
+  }
+}

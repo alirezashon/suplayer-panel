@@ -15,6 +15,7 @@ import {
   SubGroup,
   TransactionInterface,
   WalletDetail,
+  ShowSystemTypeUI,
 } from '@/interfaces'
 import { createContext, useContext, useState, ReactNode } from 'react'
 
@@ -53,13 +54,13 @@ interface DataContextProps {
   setAllocationList: (value: AllocationListInterface[]) => void
   systemTypes:
     | {
-        productTypes: TreeChartInterface[]
-        groupTypes: TreeChartInterface[]
+        productTypes: ShowSystemTypeUI[]
+        groupTypes: ShowSystemTypeUI[]
       }
     | undefined
   setSystemTypes: (value: {
-    productTypes: TreeChartInterface[]
-    groupTypes: TreeChartInterface[]
+    productTypes: ShowSystemTypeUI[]
+    groupTypes: ShowSystemTypeUI[]
   }) => void
 }
 const DataContext = createContext<DataContextProps | undefined>(undefined)
@@ -90,8 +91,8 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
     TransactionInterface[]
   >([])
   const [systemTypes, setSystemTypes] = useState<{
-    productTypes: TreeChartInterface[]
-    groupTypes: TreeChartInterface[]
+    productTypes: ShowSystemTypeUI[]
+    groupTypes: ShowSystemTypeUI[]
   }>({ productTypes: [], groupTypes: [] })
 
   return (

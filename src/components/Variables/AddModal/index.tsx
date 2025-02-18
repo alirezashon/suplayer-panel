@@ -9,7 +9,7 @@ import { CloseSquare, Grammerly } from 'iconsax-react'
 import { useRef, useState } from 'react'
 
 const AddModal = ({ data, close }: { data: KPIData; close: () => void }) => {
-  const [name, setName] = useState<string>(data?.kpi_title || '')
+  const [name, ] = useState<string>(data?.kpi_title || '')
   const [isConfirmed, setIsConfirmed] = useState(false)
   const [status, setStatus] = useState<React.ReactElement | null>()
   const [errors, setErrors] = useState<Record<string, string | number>>({

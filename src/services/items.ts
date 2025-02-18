@@ -96,10 +96,12 @@ export const CreateSubGroup = async ({
   name,
   accessToken,
   groupID,
+  syschart_id,
 }: {
   name: string
   groupID: number
   accessToken: string | undefined
+  syschart_id: number
 }) => {
   try {
     const response = await fetch(
@@ -116,6 +118,7 @@ export const CreateSubGroup = async ({
           sup_type: 2,
           supervisor_uid: '',
           sup_group_id: groupID,
+          syschart_id,
         }),
       }
     )

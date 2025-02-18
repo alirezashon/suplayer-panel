@@ -181,46 +181,10 @@ const AddModal = ({
   const { showModal, selectedProductData, setSelectedProductData } = useStates()
   const { systemTypes } = useData()
   const [names, setNames] = useState<string[]>([editData?.ini_name || ''])
+  const [selectedType, setSelectedType] = useState<number>(0)
   const [errors, setErrors] = useState<boolean[]>(
     new Array(names.length).fill(false)
   )
-  const [systemTypesData, setSystemTypesData] = useState<
-    {
-      id: number | string
-      label: string
-      children: { id: number | string; label: string }[]
-    }[]
-  >([])
-  useEffect(() => {
-    if (systemTypes?.productTypes && systemTypesData.length < 1) {
-      const acc: Record<
-        number | string,
-        { id: number | string; label: string; children: any[] }
-      > = {}
-
-      // ابتدا والدها را اضافه کن
-      systemTypes.productTypes.forEach((item) => {
-        if (item.chpid === 0) {
-          acc[item.id] = { id: item.id, label: item.chtitle, children: [] }
-        }
-      })
-
-      // سپس فرزندان را اضافه کن
-      systemTypes.productTypes.forEach((item) => {
-        if (item.chpid !== 0 && acc[item.chpid]) {
-          acc[item.chpid].children.push({
-            id: item.id,
-            label: item.chtitle,
-            children: [],
-          })
-        }
-      })
-
-      setSystemTypesData(Object.values(acc))
-      console.log(acc)
-    }
-  }, [systemTypes])
-
   const handleInputChange = (index: number, value: string) => {
     setNames((prev) => prev.map((item, i) => (i === index ? value : item)))
     setErrors((prev) =>
@@ -244,7 +208,6 @@ const AddModal = ({
   }
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-
     // بررسی اینکه هیچ فیلدی خالی نباشد
     const newErrors = names.map((name) => name.trim() === '')
     setErrors(newErrors)
@@ -256,20 +219,23 @@ const AddModal = ({
     await Promise.all(
       names.map(async (name) => {
         if (!editData?.ini_name) {
-          await CreateProduct({ accessToken, name, id: brand.id }).then(
-            async (result) => {
-              showModal({
-                type: result?.status === 1 ? 'success' : 'error',
-                main: <p>{result?.message}</p>,
-                title: result?.status === 1 ? 'موفق' : 'خطا',
-                autoClose: 2,
-              })
-              if (result?.status === 1) {
-                callbackData()
-                close(false)
-              }
+          await CreateProduct({
+            accessToken,
+            name,
+            id: brand.id,
+            prd_chart_id: selectedType,
+          }).then(async (result) => {
+            showModal({
+              type: result?.status === 1 ? 'success' : 'error',
+              main: <p>{result?.message}</p>,
+              title: result?.status === 1 ? 'موفق' : 'خطا',
+              autoClose: 2,
+            })
+            if (result?.status === 1) {
+              callbackData()
+              close(false)
             }
-          )
+          })
         } else {
           await EditProduct({ accessToken, name, id: editData.id }).then(
             async (result) => {
@@ -328,9 +294,11 @@ const AddModal = ({
           <div className='mt-10'>
             {systemTypes?.groupTypes && (
               <RadioTreeSelector
-                trees={systemTypesData}
+                trees={systemTypes?.productTypes}
                 placeholder='انتخاب دسته بندی سیستمی'
-                onSelect={(selected: string) => ''}
+                onSelect={(value: string) =>
+                  setSelectedType(parseInt(`${value}`))
+                }
               />
             )}
           </div>

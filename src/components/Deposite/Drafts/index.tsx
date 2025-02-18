@@ -114,7 +114,7 @@ const Drafts = () => {
       console.error('Upload failed:', error)
       return false
     }
-  }
+  } 
   return (
     <div className='min-h-screen flex justify-center p-4'>
       <div className='w-full flex bg-white rounded-lg shadow-lg p-6 gap-8'>

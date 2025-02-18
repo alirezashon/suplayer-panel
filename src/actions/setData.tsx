@@ -21,6 +21,7 @@ import {
   GetWalletDetail,
 } from '@/services/finance'
 import { GetAllocatedList } from '@/services/allocation'
+import { TreeChartInterface } from '@/interfaces'
 
 export const getGroupData = async () => {
   const accessToken = (await getCookieByKey('access_token')) || ''
@@ -93,7 +94,44 @@ export const getAllocatedList = async () => {
 
 export const getSystemTypes = async () => {
   const accessToken = (await getCookieByKey('access_token')) || ''
-  const productTypes = await GetProductSystemTypesList({ accessToken }) || []
-  const groupTypes = await GetGroupSystemTypesList({ accessToken }) || []
+  const productTypesResult =
+    (await GetProductSystemTypesList({ accessToken })) || []
+  const groupTypesResult =
+    (await GetGroupSystemTypesList({ accessToken })) || []
+
+  // تابعی برای پردازش داده‌ها و ایجاد ساختار درختی
+  const processTypes = (types: TreeChartInterface[]) => {
+    const acc: Record<
+      number | string,
+      {
+        id: number | string
+        label: string
+        children: { id: number | string; label: string }[]
+      }
+    > = {}
+
+    // ابتدا والدها را اضافه کن
+    types.forEach((item) => {
+      if (item.chpid === 0) {
+        acc[item.id] = { id: item.id, label: item.chtitle, children: [] }
+      }
+    })
+
+    // سپس فرزندان را اضافه کن
+    types.forEach((item) => {
+      if (item.chpid !== 0 && acc[item.chpid]) {
+        acc[item.chpid].children.push({
+          id: item.id,
+          label: item.chtitle,
+        })
+      }
+    })
+
+    return Object.values(acc)
+  }
+
+  const productTypes = processTypes(productTypesResult)
+  const groupTypes = processTypes(groupTypesResult)
+
   return { productTypes, groupTypes }
 }
