@@ -1,6 +1,7 @@
 import { getCookieByKey } from '@/actions/cookieToken'
 import { errorClass } from '@/app/assets/style'
 import Calendar from '@/components/shared/Calendar'
+import MultiLevelSelect from '@/components/shared/MultiLevelSelect'
 import SelectList from '@/components/shared/SelectList'
 import { useData } from '@/Context/Data'
 import { useStates } from '@/Context/States'
@@ -577,6 +578,7 @@ const AddPromotion = () => {
             </div>
           </div>
         </div>
+     <MultiLevelSelect data={testData} onSelectionChange={ () => 'void'}/>
         <div className='w-full flex justify-end'>
           <button
             type='submit'
@@ -590,3 +592,47 @@ const AddPromotion = () => {
 }
 
 export default AddPromotion
+interface Option {
+  id: number
+  label: string
+  children?: Option[]
+}
+
+const testData: Option[] = [
+  {
+    id: 1,
+    label: 'Bio Formula Nutrition',
+    children: [
+      {
+        id: 11,
+        label: 'Respiratory',
+        children: [
+          { id: 111, label: 'Oxygen Booster' },
+          { id: 112, label: 'Air Purifier' },
+        ],
+      },
+      {
+        id: 12,
+        label: 'Next Supplement',
+        children: [
+          { id: 121, label: 'Vitamin D' },
+          { id: 122, label: 'Omega 3' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 2,
+    label: 'Intrapharm Laboratories USA',
+    children: [
+      {
+        id: 21,
+        label: 'Energy Boosters',
+        children: [
+          { id: 211, label: 'Caffeine Tablets' },
+          { id: 212, label: 'Ginseng Extract' },
+        ],
+      },
+    ],
+  },
+]

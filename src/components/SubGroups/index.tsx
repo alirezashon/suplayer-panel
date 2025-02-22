@@ -133,12 +133,12 @@ const SubGroups: React.FC = () => {
                       <div className='flex'>
                         <ProfileCircle size={24} color='#704CB9' />
                         <p className='text-sm  px-2 py-1 rounded'>
-                          {subGroup.sup_group_id > 0 ? (
+                          {subGroup.personnel_count > 0 ? (
                             <>
                               <span className='text-[#757575]'>
                                 تعداد بازاریاب:
                               </span>
-                              {subGroup.sup_group_id}
+                              {subGroup.personnel_count}
                             </>
                           ) : (
                             'بازاریابی تعریف نشده است'
@@ -160,7 +160,8 @@ const SubGroups: React.FC = () => {
                           )}
                         </p>
                       </div>
-                      {subGroup.visitor_count > 0 ? (
+                      {subGroup.visitor_count > 1 &&
+                      subGroup.personnel_count > 1 ? (
                         <button
                           onClick={() => setShowAddModal(true)}
                           className='h-10 w-full border-button  rounded-md hover:bg-purple-800'>
@@ -168,31 +169,35 @@ const SubGroups: React.FC = () => {
                         </button>
                       ) : (
                         <div className='flex w-full gap-3'>
-                          <button
-                            onClick={() =>
-                              setShowAppointmenModal({
-                                data: subGroup,
-                                type: 0,
-                              })
-                            }
-                            className='h-10 w-full fill-button  rounded-md hover:bg-purple-800'>
-                            انتصاب ذی‌نفع
-                          </button>
-                          <button
-                            onClick={() =>
-                              setShowAppointmenModal({
-                                data: subGroup,
-                                type: 1,
-                              })
-                            }
-                            className='h-10 w-full border-button  rounded-md hover:bg-purple-100'>
-                            انتصاب بازاریاب
-                          </button>
+                          {subGroup?.visitor_count < 1 && (
+                            <button
+                              onClick={() =>
+                                setShowAppointmenModal({
+                                  data: subGroup,
+                                  type: 0,
+                                })
+                              }
+                              className='h-10 w-full fill-button  rounded-md hover:bg-purple-800'>
+                              انتصاب ذی‌نفع
+                            </button>
+                          )}
+                          {subGroup.personnel_count < 1 && (
+                            <button
+                              onClick={() =>
+                                setShowAppointmenModal({
+                                  data: subGroup,
+                                  type: 1,
+                                })
+                              }
+                              className='h-10 w-full border-button  rounded-md hover:bg-purple-100'>
+                              انتصاب بازاریاب
+                            </button>
+                          )}
                         </div>
                       )}
                     </div>
                   )
-              )}{' '}
+              )}
             </div>
           ) : (
             <div className='w-full flex flex-col gap-2 justify-center items-center'>

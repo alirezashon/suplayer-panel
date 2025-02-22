@@ -1,42 +1,38 @@
 import { getCookieByKey } from '@/actions/cookieToken'
-import { SubGroup } from '@/interfaces'
+import { BeneficiaryData, SubGroup } from '@/interfaces'
 import { CloseSquare } from 'iconsax-react'
 import { useState, useRef, useEffect } from 'react'
 import { useData } from '@/Context/Data'
 import { useStates } from '@/Context/States'
 import SelectList from '@/components/shared/SelectList'
 import RadioTreeSelector from '@/components/shared/RadioTrees'
+import { EditBeneficiary } from '@/services/items'
+import MultiSelectTrees from '@/components/shared/MultiSelectTrees'
+import { DefineAppointmentTaskList } from '@/services/referrer'
 
 interface AppointmentModalProps {
   data?: SubGroup
   type: 0 | 1
-  close: (show: boolean) => void
+  close: () => void
 }
-
 const AppointmentModal = ({ data, close, type }: AppointmentModalProps) => {
-  const { showModal } = useStates()
+  const { showModal, selectedSubGroupData } = useStates()
   const [errors, setErrors] = useState<Record<string, string>>({})
+  const [selectedBeneficiary, setSelectedBeneficiary] = useState<
+    BeneficiaryData[]
+  >([])
+  const [selectedReferrers, setSelectedReferrers] = useState<string[]>([])
   const [referrers, setRefererers] = useState<
     {
       id: number | string
       label: string
-      children: string[]
+      children: { id: number | string; label: string }[]
     }[]
   >([])
   const { beneficiaryData, referrerData } = useData()
-  const refs = useRef({
-    groupId: '',
-    subGroupId: '',
-    productGroupId: 0,
-    personnel_uid: '',
-    visitor_uid: [] as Array<string | number>,
-    brandId: 1,
-    productId: 0,
-  })
 
   useEffect(() => {
     if (!referrerData) return
-
     const convertedReferrer = Object.values(
       referrerData.reduce((acc, curr) => {
         if (!acc[curr.pers_chart_id]) {
@@ -46,35 +42,89 @@ const AppointmentModal = ({ data, close, type }: AppointmentModalProps) => {
             children: [],
           }
         }
-        acc[curr.pers_chart_id].children.push(curr.pers_full_name)
+        acc[curr.pers_chart_id].children.push({
+          label: curr.pers_full_name,
+          id: curr.personnel_uid,
+        })
         return acc
-      }, {} as Record<string, { id: number | string; label: string; children: string[] }>)
+      }, {} as Record<string, { id: number | string; label: string; children: { id: number | string; label: string }[] }>)
     )
 
     setRefererers(convertedReferrer)
   }, [referrerData])
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-
+  const handleSubmit = async () => {
     setErrors({})
-
     const accessToken = (await getCookieByKey('access_token')) || ''
-    // await DefineAppointmentTask({
-    //   accessToken,
-    //   personnel_uid: data?.pers_uid || '',
-    //   supervisor_code: refs.current.subGroupId || '',
-    //   sup_group_code: refs.current.groupId || '',
-    //   visitor_uid: '',
-    //   task_kpi_uid: '',
-    // }).then((result) => {
-    //   showModal({
-    //     type: result.status === 1 ? 'success' : 'error',
-    //     main: <p>{result.message}</p>,
-    //     title: result.status === 1 ? 'موفق' : 'خطا',
-    //     autoClose: 2,
-    //   })
-    // })
+    if (type === 0) {
+      if (selectedBeneficiary.length < 1) {
+        showModal({
+          type: 'error',
+          main: <p>لطفا ذی نفع های خود را انتخاب کنید</p>,
+          title: 'خطا',
+          autoClose: 1,
+        })
+        return
+      }
+      await Promise.all(
+        selectedBeneficiary?.map(async (beneficiary) => {
+          const result = await EditBeneficiary({
+            accessToken,
+            ...beneficiary,
+            supervisor_id: selectedSubGroupData?.supervisor_id as number,
+          })
+          if (result.status === 1) {
+            showModal({
+              type: 'success',
+              title: 'موفق',
+              main: <p>{result.message}</p>,
+              autoClose: 0.9,
+            })
+          } else {
+            showModal({
+              type: 'error',
+              title: 'ناموفق',
+              main: <p>{result.message}</p>,
+              autoClose: 0.9,
+            })
+            close()
+          }
+        })
+      )
+    } else {
+      if (selectedReferrers.length < 1) {
+        showModal({
+          type: 'error',
+          main: <p>لطفا بازاریاب های خود را انتخاب کنید</p>,
+          title: 'خطا',
+          autoClose: 1,
+        })
+        return
+      }
+      const newSelected = selectedReferrers?.map((value) => ({
+        personnel_uid: value,
+        supervisor_code: '',
+        sup_group_code: '',
+        visitor_uid: '',
+        task_kpi_uid: '',
+        pgroup_id: 0,
+        chart_id: 0,
+        product_uid: '',
+      }))
+
+      const result = await DefineAppointmentTaskList({
+        accessToken,
+        tasks: newSelected,
+      })
+
+      showModal({
+        type: result.status === 1 ? 'success' : 'error',
+        main: <p>{result.message}</p>,
+        title: result.status === 1 ? 'موفق' : 'خطا',
+        autoClose: 2,
+      })
+      close()
+    }
   }
 
   return (
@@ -91,7 +141,7 @@ const AppointmentModal = ({ data, close, type }: AppointmentModalProps) => {
             size={24}
             cursor='pointer'
             color='#50545F'
-            onClick={() => close(false)}
+            onClick={() => close()}
           />
         </div>
         <div className='flex justify-between mt-5'>
@@ -109,31 +159,39 @@ const AppointmentModal = ({ data, close, type }: AppointmentModalProps) => {
                 <label htmlFor=''>انتخاب ذی نفع</label>
                 <SelectList
                   items={
-                    beneficiaryData?.map((ben) => {
-                      return {
-                        id: ben?.visitor_id,
-                        label: ben?.visitor_full_name,
-                      }
-                    }) || []
+                    beneficiaryData?.map((bn) => ({
+                      id: bn.visitor_name,
+                      label: bn.visitor_full_name,
+                    })) || []
                   }
-                  setSelectedItems={(result: Array<string | number>) =>
-                    (refs.current.visitor_uid = result)
+                  setSelectedItems={(selectedIds) =>
+                    setSelectedBeneficiary(
+                      () =>
+                        beneficiaryData?.filter((data) =>
+                          selectedIds.includes(data.visitor_name)
+                        ) || []
+                    )
                   }
-                  label='داروخانه مد نظر خود را انتخاب کنید'
+                  label='نام گروه'
                 />
               </div>
             ) : (
               <div className=''>
                 <label htmlFor=''>انتخاب بازاریاب </label>
-                <RadioTreeSelector
+                <MultiSelectTrees
                   placeholder='بازاریاب مورد نظر را از داخل سطح مربوطه انتخاب کنید'
                   trees={referrers}
-                  onSelect={(value: string) => value}
+                  onSelect={setSelectedReferrers}
                 />
               </div>
             )}
           </div>
         </div>
+        <button
+          className='fill-button w-full my-40 rounded-md h-10'
+          onClick={handleSubmit}>
+          ثبت
+        </button>
       </div>
     </div>
   )

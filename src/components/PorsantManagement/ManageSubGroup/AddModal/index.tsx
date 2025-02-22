@@ -1,7 +1,9 @@
 import { getCookieByKey } from '@/actions/cookieToken'
 import SelectList from '@/components/shared/SelectList'
 import { useData } from '@/Context/Data'
+import { useStates } from '@/Context/States'
 import { BeneficiaryData } from '@/interfaces'
+import { EditBeneficiary } from '@/services/items'
 import { CloseSquare } from 'iconsax-react'
 import { useState } from 'react'
 const AddModal = ({
@@ -11,13 +13,31 @@ const AddModal = ({
   groupName?: string
   close: (show: boolean) => void
 }) => {
-  const [names, ] = useState<(string | number)[]>([''])
-  const [, setSelected] = useState<BeneficiaryData[]>([])
+  const [names] = useState<(string | number)[]>([''])
+  const [selected, setSelected] = useState<BeneficiaryData[]>([])
   const { beneficiaryData } = useData()
-  const handleSubmit = async(e: React.FormEvent) => {
+  const { selectedSubGroupData, showModal } = useStates()
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     const accessToken = await getCookieByKey('access_token')
-    
+    Promise.all(
+      selected.map(async (beneficiary) => {
+        await EditBeneficiary({
+          accessToken,
+          ...beneficiary,
+          supervisor_id: selectedSubGroupData?.supervisor_id as number,
+        }).then(
+          (result) =>
+            result.status === 1 &&
+            showModal({
+              type: result.status === 1 ? 'success' : 'error',
+              title: `${result.status === 1 ? 'موفق' : 'ناموفق'}`,
+              main: <p>{result.message}</p>,
+              autoClose: 0.9,
+            })
+        )
+      })
+    )
   }
   return (
     <div>
@@ -67,13 +87,13 @@ const AddModal = ({
                         label: bn.visitor_full_name,
                       })) || []
                     }
-                    setSelectedItems={(value: (string | number)[]) =>
-                      setSelected((prv) => [
-                        ...prv,
-                        ...(beneficiaryData?.filter(
-                          (data) => data.visitor_name === `${value}`
-                        ) || []),
-                      ])
+                    setSelectedItems={(selectedIds) =>
+                      setSelected(
+                        () =>
+                          beneficiaryData?.filter((data) =>
+                            selectedIds.includes(data.visitor_name)
+                          ) || []
+                      )
                     }
                     label='نام گروه'
                   />
@@ -81,7 +101,9 @@ const AddModal = ({
               </div>
             ))}
           </div>
-          <button type='submit' className='fill-button px-10 h-10 rounded-lg mt-80'>
+          <button
+            type='submit'
+            className='fill-button px-10 h-10 rounded-lg mt-80'>
             ثبت
           </button>
         </form>
