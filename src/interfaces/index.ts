@@ -325,3 +325,9 @@ export interface ShowSystemTypeUI {
   label: string
   children: { id: number | string; label: string }[]
 }
+
+export interface OptionTrees {
+  id: string
+  label: string
+  children?: OptionTrees[]
+}

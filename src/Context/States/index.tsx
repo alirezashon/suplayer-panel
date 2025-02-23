@@ -1,6 +1,7 @@
 'use client'
 import {
   GroupData,
+  OptionTrees,
   ProductGroupData,
   ProductsData,
   PromotionInterface,
@@ -58,6 +59,10 @@ interface StatesContextProps {
   ) => void
   selectedPromotionData: PromotionInterface | undefined | null
   setSelectedPromotionData: (SubGroupData: PromotionInterface | null) => void
+  groupSelectorData: OptionTrees[] | undefined | null
+  setGroupSelectorData: (data: OptionTrees[] | null) => void
+  productGroupSelectorData: OptionTrees[] | undefined | null
+  setProductGroupSelectorData: (data: OptionTrees[] | null) => void
 }
 
 const StatesContext = createContext<StatesContextProps | undefined>(undefined)
@@ -88,6 +93,12 @@ export const StatesProvider = ({ children }: { children: ReactNode }) => {
   } | null>()
   const [selectedPromotionData, setSelectedPromotionData] =
     useState<PromotionInterface | null>()
+  const [groupSelectorData, setGroupSelectorData] = useState<
+    OptionTrees[] | null
+  >()
+  const [productGroupSelectorData, setProductGroupSelectorData] = useState<
+    OptionTrees[] | null
+  >()
 
   const showModal = (content: {
     main: ReactNode
@@ -114,6 +125,10 @@ export const StatesProvider = ({ children }: { children: ReactNode }) => {
         closeModal,
         selectedPromotionData,
         setSelectedPromotionData,
+        groupSelectorData,
+        setGroupSelectorData,
+        productGroupSelectorData,
+        setProductGroupSelectorData,
       }}>
       {children}
     </StatesContext.Provider>

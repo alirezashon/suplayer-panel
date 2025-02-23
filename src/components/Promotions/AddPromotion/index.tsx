@@ -2,24 +2,21 @@ import { getCookieByKey } from '@/actions/cookieToken'
 import { errorClass } from '@/app/assets/style'
 import Calendar from '@/components/shared/Calendar'
 import MultiLevelSelect from '@/components/shared/MultiLevelSelect'
-import SelectList from '@/components/shared/SelectList'
-import { useData } from '@/Context/Data'
 import { useStates } from '@/Context/States'
+import { OptionTrees } from '@/interfaces'
 import { AddPromotionImage, CreatePromotion } from '@/services/promotion'
 import { DocumentCloud, Eye, EyeSlash, TickCircle, Trash } from 'iconsax-react'
 import Image from 'next/image'
 import { FormEvent, useRef, useState } from 'react'
 
 const AddPromotion = () => {
-  const { groupData, subGroupData, productGroupData,productData } =
-    useData()
-
   const [uploadStatus, setUploadStatus] = useState<
     'idle' | 'uploading' | 'success' | 'error' | 'showImage'
   >('idle')
   const [progress, setProgress] = useState<number>(0)
   const [draftSrc, setDraftSrc] = useState<string>()
-  const { showModal } = useStates()
+  const { showModal, productGroupSelectorData, groupSelectorData } = useStates()
+  const [step, setStep] = useState<number>(2)
 
   const refs = useRef({
     cstatus: 1,
@@ -61,17 +58,19 @@ const AddPromotion = () => {
     }
     setErrors({ ...errors, [name]: '' })
   }
-  const validateForm = () => {
+  const validateForm = (step?: number) => {
     const newErrors: Record<string, string> = {}
-
-    if (!refs.current.ctitle) newErrors.ctitle = 'این فیلد اجباری است'
-    if (!refs.current.start_date) newErrors.start_date = 'این فیلد اجباری است'
-    if (!refs.current.exp_date) newErrors.exp_date = 'این فیلد اجباری است'
-    if (!refs.current.budget) newErrors.budget = 'این فیلد اجباری است'
-    if (!refs.current.file_uid) newErrors.file_uid = 'این فیلد اجباری است'
-    if (!refs.current.cta_link) newErrors.cta_link = 'این فیلد اجباری است'
-
+    if (!step || step < 3) {
+      if (!refs.current.ctitle) newErrors.ctitle = 'این فیلد اجباری است'
+      if (!refs.current.start_date) newErrors.start_date = 'این فیلد اجباری است'
+      if (!refs.current.exp_date) newErrors.exp_date = 'این فیلد اجباری است'
+      if (!refs.current.budget) newErrors.budget = 'این فیلد اجباری است'
+      if (!refs.current.file_uid) newErrors.file_uid = 'این فیلد اجباری است'
+      if (!refs.current.cta_link) newErrors.cta_link = 'این فیلد اجباری است'
+    }
     setErrors(newErrors)
+    if (step && !Object.keys(newErrors).length) setStep(step + 1)
+    else setStep(1)
     return Object.keys(newErrors).length === 0
   }
 
@@ -247,343 +246,293 @@ const AddPromotion = () => {
         <h2 className='text-center text-xl font-bold mb-6 text-[#704CB9]'>
           پروموشن خود را بسازید
         </h2>
-        <div className='flex  gap-3'>
-          <div className='flex w-full flex-col gap-3'>
-            <p className='text-lg font-bold'>مخاطبین خود را انتخاب کنید</p>
-            <div className=''>
-              <label className='mb-2'> گروه خود را انتخاب کنید </label>
-              <SelectList
-                items={
-                  groupData?.map((gp) => {
-                    return {
-                      id: gp.sup_group_id,
-                      label: gp.sup_group_name,
-                    }
-                  }) || []
-                }
-                setSelectedItems={(value: any) =>
-                  (refs.current.sgroup_id = value)
-                }
-                label='نام گروه'
-              />
-            </div>
-            <div className=''>
-              <label className='mb-2'> زیرگروه خود را انتخاب کنید </label>
-              <SelectList
-                items={
-                  Array.isArray(subGroupData)
-                    ? subGroupData.map((gp) => ({
-                        id: gp.supervisor_id,
-                        label: gp.supervisor_name,
-                      }))
-                    : []
-                }
-                setSelectedItems={(value: any) =>
-                  (refs.current.supervisor_id = value)
-                }
-                label={'گروه پزشکان من خود را انتخاب کنید'}
-              />
-            </div>
-            <p className='text-lg font-bold'>محصولات خود را انتخاب کنید</p>
-            <div>
-              <label className='block mb-2 text-sm'>
-                گروه محصول را انتخاب کنید
-              </label>
-              <SelectList
-                items={
-                  productData?.map((pgp) => {
-                    return {
-                      id: pgp.id,
-                      label: pgp.group_desc,
-                    }
-                  }) || []
-                }
-                setSelectedItems={(value: any) =>
-                  (refs.current.pgroup_id = value)
-                }
-                label={' گروه محصول'}
-              />
-              {errors.pgroup_id && (
-                <p className='text-red-500 text-sm'>{errors.pgroup_id}</p>
-              )}
-            </div>
-            <div>
-              <label className='block mb-2 text-sm'>
-                برند محصول را انتخاب کنید
-              </label>
-              <SelectList
-                items={
-                  productGroupData?.map((brand) => {
-                    return {
-                      id: brand.id,
-                      label: brand.group_desc,
-                    }
-                  }) || []
-                }
-                setSelectedItems={(value: any) =>
-                  (refs.current.chart_id = value)
-                }
-                label={' برند محصول'}
-              />
-              {errors.ctaLink && (
-                <p className='text-red-500 text-sm'>{errors.ctaLink}</p>
-              )}
-            </div>
-            <div>
-              <label className='block mb-2 text-sm'>محصول را انتخاب کنید</label>
-              <SelectList
-                items={
-                  productData?.map((product) => {
-                    return {
-                      id: product.id,
-                      label: product.ini_name,
-                    }
-                  }) || []
-                }
-                setSelectedItems={(value: any) =>
-                  (refs.current.product_uid = value)
-                }
-                label={'  محصول'}
-              />
-              {errors.ctaLink && (
-                <p className='text-red-500 text-sm'>{errors.ctaLink}</p>
-              )}
-            </div>
-            <div className='col-span-2'>
-              <p className='text-lg font-bold'>نوع تخفیف خود را انتخاب کنید</p>
-              <div className='flex gap-40 my-5'>
-                <label className='flex items-center'>
-                  <input
-                    type='radio'
-                    name='discountType'
-                    value='cash'
-                    onChange={handleInputChange}
-                    className='w-5 h-5 cursor-pointer accent-[#7747C0]'
-                  />
-                  تخفیف نقدی
-                </label>
-                <label className='flex items-center'>
-                  <input
-                    type='radio'
-                    name='discountType'
-                    value='product'
-                    onChange={handleInputChange}
-                    className='w-5 h-5 cursor-pointer accent-[#7747C0]'
-                  />
-                  تخفیف جنسی
-                </label>
-              </div>
-              {errors.discountType && (
-                <p className='text-red-500 text-sm'>{errors.discountType}</p>
-              )}
-              <input
-                name='expected_amount'
-                value={refs.current.expected_amount || ''}
-                onChange={handleInputChange}
-                className=' p-2 border rounded-md'
-                placeholder=' درصد تخفیف'
-              />
-            </div>
+        <div className='w-full flex justify-around items-center mb-6 '>
+          <div className='w-[50%] absolute flex'>
+            <div className='border w-full border-[#7747C0]'></div>
+            <div
+              className={`border w-full ${
+                step > 1 ? 'border-[#7747C0]' : 'border-[#C9D0D8]'
+              }`}></div>
           </div>
-          <div className='flex flex-col w-full gap-3'>
-            <p className='text-lg font-bold'> اطلاعات ثبت پروموشن </p>
-            <div>
-              <label className='block mb-1 text-sm'>
-                شعار یا جمله برند پروموشن را بنویسید
-              </label>
-              <input
-                name='ctitle'
-                value={refs.current.ctitle}
-                onChange={handleInputChange}
-                className={`w-full p-2 border rounded-md ${
-                  errors.ctitle && errorClass
-                }`}
-                placeholder='شعار / جمله'
-              />
-              {errors.ctitle && (
-                <p className='text-red-500 text-sm'>{errors.ctitle}</p>
-              )}
-            </div>
-            <div className='flex gap-5'>
-              <div className='w-full '>
-                <label className='block mb-1 text-sm'>تاریخ شروع پروموشن</label>
-                <Calendar
-                  placeholder='تاریخ شروع'
-                  hasError={errors.start_date ? true : false}
-                  setDate={(value: string) => (refs.current.start_date = value)}
-                />
-                {errors.start_date && (
-                  <p className='text-red-500 text-sm'>{errors.start_date}</p>
-                )}
+          {['اطلاعات پروموشن', 'گروه هدف', 'محصول'].map((section, index) => (
+            <div className='flex flex-col items-center' key={index}>
+              <div
+                onClick={() => validateForm(index)}
+                className={`w-10 h-10 z-30 p-6 flex items-center justify-center rounded-full border-4  border-white mt-5 cursor-pointer text-white ${
+                  step >= index + 1
+                    ? ' bg-[#7747C0] '
+                    : 'bg-[#C9D0D8] text-[#50545F]'
+                }`}>
+                {index + 1}
               </div>
-              <div className='w-full '>
-                <label className='block mb-1 text-sm'>
-                  تاریخ پایان پروموشن
-                </label>
-                <Calendar
-                  placeholder='تاریخ پایان'
-                  hasError={errors.exp_date ? true : false}
-                  setDate={(value: string) => (refs.current.exp_date = value)}
-                />
-                {errors.exp_date && (
-                  <p className='text-red-500 text-sm'>{errors.exp_date}</p>
-                )}
-              </div>
+              <p className=' text-[#7747C0]'>{section}</p>
             </div>
-            <p className='text-lg font-bold'>
-              لینک CTA پروموشن خود را وارد کنید.
-            </p>
+          ))}
+        </div>
 
-            <div>
-              <label className='block mb-2 text-sm'>لینک CTA پروموشن</label>
-              <input
-                type='url'
-                name='cta_link'
-                value={refs.current.cta_link}
-                onChange={handleInputChange}
-                className={`w-full p-2 border rounded-md ${
-                  errors.cta_link && errorClass
-                }`}
-                placeholder='لینک CTA پروموشن'
-              />
-              {errors.cta_link && (
-                <p className='text-red-500 text-sm'>{errors.cta_link}</p>
-              )}
-            </div>
-            <div>
-              <label className='block mb-2 text-sm'>بودجه</label>
-              <input
-                name='budget'
-                defaultValue={refs.current.budget}
-                onChange={handleInputChange}
-                className={`w-full p-2 border rounded-md ${
-                  errors.budget && errorClass
-                }`}
-                placeholder='بودجه کمپین را تعریف کنید'
-              />
-              {errors.budget && (
-                <p className='text-red-500 text-sm'>{errors.budget}</p>
-              )}
-            </div>
-            <div>
-              <p className='text-lg font-bold'>عکس پروموشن</p>
+        {step === 1 ? (
+          <div className='flex justify-center'>
+            <div className='flex flex-col w-[67%]  gap-3'>
+              <div>
+                <label className='block mb-1 text-sm font-bold'>
+                  شعار یا جمله برند پروموشن را بنویسید
+                </label>
+                <input
+                  name='ctitle'
+                  value={refs.current.ctitle}
+                  onChange={handleInputChange}
+                  className={`w-full p-2 border rounded-md  ${
+                    errors.ctitle && errorClass
+                  }`}
+                  placeholder='شعار / جمله'
+                />
+                {errors.ctitle && (
+                  <p className='text-red-500 text-sm'>{errors.ctitle}</p>
+                )}
+              </div>
               <div className='flex gap-5'>
-                {draftSrc ? (
-                  <div
-                    className={`gap-5 w-full p-5 rounded-lg flex flex-col justify-center items-center border 
+                <div className='w-full '>
+                  <label className='block mb-1 text-sm font-bold'>
+                    تاریخ شروع پروموشن
+                  </label>
+                  <Calendar
+                    placeholder='تاریخ شروع'
+                    hasError={errors.start_date ? true : false}
+                    setDate={(value: string) =>
+                      (refs.current.start_date = value)
+                    }
+                  />
+                  {errors.start_date && (
+                    <p className='text-red-500 text-sm'>{errors.start_date}</p>
+                  )}
+                </div>
+                <div className='w-full '>
+                  <label className='block mb-1 text-sm font-bold'>
+                    تاریخ پایان پروموشن
+                  </label>
+                  <Calendar
+                    placeholder='تاریخ پایان'
+                    hasError={errors.exp_date ? true : false}
+                    setDate={(value: string) => (refs.current.exp_date = value)}
+                  />
+                  {errors.exp_date && (
+                    <p className='text-red-500 text-sm'>{errors.exp_date}</p>
+                  )}
+                </div>
+              </div>
+              <div>
+                <label className='block mb-2 text-sm font-bold'>
+                  لینک CTA پروموشن خود را وارد کنید.
+                </label>
+                <input
+                  type='url'
+                  name='cta_link'
+                  value={refs.current.cta_link}
+                  onChange={handleInputChange}
+                  className={`w-full p-2 border rounded-md ${
+                    errors.cta_link && errorClass
+                  }`}
+                  placeholder='لینک CTA پروموشن'
+                />
+                {errors.cta_link && (
+                  <p className='text-red-500 text-sm'>{errors.cta_link}</p>
+                )}
+              </div>
+              <div>
+                <label className='block mb-2 text-sm font-bold'>بودجه</label>
+                <input
+                  name='budget'
+                  defaultValue={refs.current.budget}
+                  onChange={handleInputChange}
+                  className={`w-full p-2 border rounded-md ${
+                    errors.budget && errorClass
+                  }`}
+                  placeholder='بودجه کمپین را تعریف کنید'
+                />
+                {errors.budget && (
+                  <p className='text-red-500 text-sm'>{errors.budget}</p>
+                )}
+              </div>
+              <div>
+                <div className='flex gap-5 my-2'>
+                  {draftSrc ? (
+                    <div
+                      className={`gap-5 w-full p-5 rounded-lg flex flex-col justify-center items-center border 
                       border-[#C9D0D8] border-dashed
                       text-[#50545F] cursor-pointer my-2`}>
-                    {uploadStatus === 'showImage' && (
-                      <div
-                        className={`gap-5 w-full p-5 rounded-lg flex justify-center items-center cursor-pointer my-2`}>
-                        <Image
-                          src={draftSrc}
-                          width={77}
-                          height={77}
-                          className='w-full max-w-96'
-                          alt='Uploaded file preview'
-                        />
-                      </div>
-                    )}
-                    <div className='flex justify-between w-full items-center'>
-                      <div className='flex gap-3'>
-                        <TickCircle
-                          size={24}
-                          className='bg-[#0F973D] text-white rounded-full'
-                        />
-                        <p className='text-green-500 mt-2 text-sm'>
-                          بارگذاری با موفقیت انجام شد
-                        </p>
-                      </div>
-
-                      <div className='flex gap-3'>
-                        {uploadStatus === 'success' ? (
-                          <Eye
-                            onClick={() => setUploadStatus('showImage')}
-                            color='#2F27CE'
-                            size={24}
+                      {uploadStatus === 'showImage' && (
+                        <div
+                          className={`gap-5 w-full p-5 rounded-lg flex justify-center items-center cursor-pointer my-2`}>
+                          <Image
+                            src={draftSrc}
+                            width={77}
+                            height={77}
+                            className='w-full max-w-96'
+                            alt='Uploaded file preview'
                           />
-                        ) : (
-                          <EyeSlash
-                            onClick={() => setUploadStatus('success')}
-                            color='#2F27CE'
-                            size={24}
-                          />
-                        )}
-                        <Trash
-                          size={24}
-                          color='#BB1F1A'
-                          onClick={() => {
-                            setDraftSrc(undefined)
-                            setUploadStatus('idle')
-                          }}
-                        />
-
-                        {uploadStatus === 'error' && (
-                          <p className='text-red-500 mt-2 text-sm'>
-                            خطا در بارگذاری فایل
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  <label
-                    className={`gap-5 w-full p-5 rounded-lg flex justify-between items-center border ${
-                      uploadStatus === 'uploading'
-                        ? 'bg-gradient-to-r from-[#EFFEF3] to-[#D7FCEB]'
-                        : 'border-[#C9D0D8] border-dashed'
-                    } text-[#50545F] cursor-pointer my-2 ${
-                      errors.ctitle && errorClass
-                    }`}
-                    htmlFor='avatarUpload'>
-                    <DocumentCloud size={32} color='#50545F' />
-                    <div className='flex w-full'>
-                      {uploadStatus === 'uploading' ? (
-                        <>
-                          <p>در حال بارگذاری فایل...</p>
-                          <progress
-                            value={progress}
-                            max='100'
-                            className='w-full rounded-full mt-2'></progress>
-                          <p className='text-[#B2BBC7] mt-2'>{progress}%</p>
-                        </>
-                      ) : (
-                        <>
-                          <div className='flex justify-between'>
-                            <p>بارگذاری کنید</p>
-                            <p className='text-[#B2BBC7]'>
-                              PNG, JPG (max. 2mb)
-                            </p>
-                          </div>
-                        </>
+                        </div>
                       )}
+                      <div className='flex justify-between w-full items-center'>
+                        <div className='flex gap-3'>
+                          <TickCircle
+                            size={24}
+                            className='bg-[#0F973D] text-white rounded-full'
+                          />
+                          <p className='text-green-500 mt-2 text-sm'>
+                            بارگذاری با موفقیت انجام شد
+                          </p>
+                        </div>
+
+                        <div className='flex gap-3'>
+                          {uploadStatus === 'success' ? (
+                            <Eye
+                              onClick={() => setUploadStatus('showImage')}
+                              color='#2F27CE'
+                              size={24}
+                            />
+                          ) : (
+                            <EyeSlash
+                              onClick={() => setUploadStatus('success')}
+                              color='#2F27CE'
+                              size={24}
+                            />
+                          )}
+                          <Trash
+                            size={24}
+                            color='#BB1F1A'
+                            onClick={() => {
+                              setDraftSrc(undefined)
+                              setUploadStatus('idle')
+                            }}
+                          />
+
+                          {uploadStatus === 'error' && (
+                            <p className='text-red-500 mt-2 text-sm'>
+                              خطا در بارگذاری فایل
+                            </p>
+                          )}
+                        </div>
+                      </div>
                     </div>
-                    <div className='px-4 bg-[#7747C0] text-white py-2 rounded-md'>
-                      بارگذاری
-                    </div>
-                  </label>
+                  ) : (
+                    <label
+                      className={`gap-5 w-full p-5 rounded-lg flex justify-between items-center border ${
+                        uploadStatus === 'uploading'
+                          ? 'bg-gradient-to-r from-[#EFFEF3] to-[#D7FCEB]'
+                          : 'border-[#C9D0D8] border-dashed'
+                      } text-[#50545F] cursor-pointer my-2 ${
+                        errors.ctitle && errorClass
+                      }`}
+                      htmlFor='avatarUpload'>
+                      <DocumentCloud size={32} color='#50545F' />
+                      <div className='flex w-full'>
+                        {uploadStatus === 'uploading' ? (
+                          <>
+                            <p>در حال بارگذاری فایل...</p>
+                            <progress
+                              value={progress}
+                              max='100'
+                              className='w-full rounded-full mt-2'></progress>
+                            <p className='text-[#B2BBC7] mt-2'>{progress}%</p>
+                          </>
+                        ) : (
+                          <>
+                            <div className='flex justify-between'>
+                              <p>عکس مربوط به پروموشن را بارگذاری نمایید</p>
+                              <p className='text-[#B2BBC7]'>
+                                PNG, JPG (max. 2mb)
+                              </p>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                      <div className='px-4 bg-[#7747C0] text-white py-2 rounded-md'>
+                        بارگذاری
+                      </div>
+                    </label>
+                  )}
+                  <input
+                    id='avatarUpload'
+                    type='file'
+                    accept='image/*'
+                    className='hidden'
+                    onChange={handleImageUpload}
+                  />
+                </div>
+                {errors.file_uid && (
+                  <p className='text-red-500 text-sm'>{errors.file_uid}</p>
                 )}
-                <input
-                  id='avatarUpload'
-                  type='file'
-                  accept='image/*'
-                  className='hidden'
-                  onChange={handleImageUpload}
-                />
+                <div className='flex w-full flex-col gap-3'>
+                  <div className='col-span-2'>
+                    <p className='text-lg font-bold'>
+                      نوع تخفیف خود را انتخاب کنید
+                    </p>
+                    <div className='flex gap-40 my-5'>
+                      <label className='flex items-center'>
+                        <input
+                          type='radio'
+                          name='discountType'
+                          value='cash'
+                          onChange={handleInputChange}
+                          className='w-5 h-5 cursor-pointer accent-[#7747C0]'
+                        />
+                        تخفیف نقدی
+                      </label>
+                      <label className='flex items-center'>
+                        <input
+                          type='radio'
+                          name='discountType'
+                          value='product'
+                          onChange={handleInputChange}
+                          className='w-5 h-5 cursor-pointer accent-[#7747C0]'
+                        />
+                        تخفیف جنسی
+                      </label>
+                    </div>
+                    {errors.discountType && (
+                      <p className='text-red-500 text-sm'>
+                        {errors.discountType}
+                      </p>
+                    )}
+                    <input
+                      name='expected_amount'
+                      value={refs.current.expected_amount || ''}
+                      onChange={handleInputChange}
+                      className=' p-2 border rounded-md'
+                      placeholder=' درصد تخفیف'
+                    />
+                  </div>
+                </div>
               </div>
-              {errors.file_uid && (
-                <p className='text-red-500 text-sm'>{errors.file_uid}</p>
-              )}
             </div>
           </div>
-        </div>
-     <MultiLevelSelect data={testData} onSelectionChange={ () => 'void'}/>
-        <div className='w-full flex justify-end'>
+        ) : step === 2 ? (
+          <MultiLevelSelect
+            data={groupSelectorData as OptionTrees[]}
+            onSelectionChange={() => 'void'}
+          />
+        ) : (
+          step === 3 && (
+            <MultiLevelSelect
+              data={productGroupSelectorData as OptionTrees[]}
+              onSelectionChange={() => 'void'}
+            />
+          )
+        )}
+        <div className='w-full flex justify-end gap-3'>
+          {step > 1 && (
+            <button
+              type='button'
+              onClick={() => setStep(step - 1)}
+              className='mt-6 px-12 bg-[#7747C0] text-white py-2 rounded-md'>
+              مرحله قبل
+            </button>
+          )}
           <button
-            type='submit'
+            type={step < 3 ? 'button' : 'submit'}
+            onClick={() => step < 3 && validateForm(step)}
             className='mt-6 px-12 bg-[#7747C0] text-white py-2 rounded-md'>
-            ثبت پروموشن
+            {step < 3 ? 'مرحله بعد' : ' ثبت پروموشن'}
           </button>
         </div>
       </form>
@@ -592,47 +541,3 @@ const AddPromotion = () => {
 }
 
 export default AddPromotion
-interface Option {
-  id: number
-  label: string
-  children?: Option[]
-}
-
-const testData: Option[] = [
-  {
-    id: 1,
-    label: 'Bio Formula Nutrition',
-    children: [
-      {
-        id: 11,
-        label: 'Respiratory',
-        children: [
-          { id: 111, label: 'Oxygen Booster' },
-          { id: 112, label: 'Air Purifier' },
-        ],
-      },
-      {
-        id: 12,
-        label: 'Next Supplement',
-        children: [
-          { id: 121, label: 'Vitamin D' },
-          { id: 122, label: 'Omega 3' },
-        ],
-      },
-    ],
-  },
-  {
-    id: 2,
-    label: 'Intrapharm Laboratories USA',
-    children: [
-      {
-        id: 21,
-        label: 'Energy Boosters',
-        children: [
-          { id: 211, label: 'Caffeine Tablets' },
-          { id: 212, label: 'Ginseng Extract' },
-        ],
-      },
-    ],
-  },
-]

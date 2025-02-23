@@ -28,6 +28,31 @@ button {
   }
 }
 
+::-webkit-scrollbar {
+  width: 1.2vh;
+  height: 4px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px rgb(187, 111, 250);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #fff2f2;
+  border: ridge 0.1vh #b476fb;
+  box-shadow: 0px 0px 1px 1px #5914f8 inset, 1px 1px 2px 1px #faf9fb;
+  border-radius: 7px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  cursor: pointer;
+  background: #7747c0;
+  box-shadow: 0px 0px 1px 1px #d6b9f7, 1px 1px 1px 1px #f9f9fb inset;
+}
+
 input {
   background: white;
   outline: none;
@@ -208,5 +233,5 @@ input:focus {
   }
 }
 .error-input-animated {
-  animation: error-input-animated 1s ease-in-out forwards ;
+  animation: error-input-animated 1s ease-in-out forwards;
 }

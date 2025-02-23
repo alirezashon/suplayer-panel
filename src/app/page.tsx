@@ -1,21 +1,4 @@
 'use client'
-import {
-  getGroupData,
-  getSubGroupData,
-  getProductData,
-  getProductGroupData,
-  getBeneficiaryData,
-  getUserInfo,
-  getReferrerData,
-  getReferrerChart,
-  getCampaignData,
-  getPromotiuonData,
-  getKPITaskData,
-  getBalance,
-  getTransactionHistory,
-  getAllocatedList,
-  getSystemTypes,
-} from '@/actions/setData'
 import Beneficiary from '@/components/Beneficiary'
 import Campaign from '@/components/Campaign'
 import Dashboard from '@/components/Dashboard'
@@ -32,77 +15,19 @@ import Loading from '@/components/shared/LoadingSpinner'
 import SubGroups from '@/components/SubGroups'
 import Variables from '@/components/Variables'
 import Wallet from '@/components/Wallet'
-import { useData } from '@/Context/Data'
 import { useMenu } from '@/Context/Menu'
 import { useStates } from '@/Context/States'
 import MainLayout from '@/layouts/MainLayout'
 import { useEffect, useState } from 'react'
 import CustomModal from '@/components/shared/CustomModal'
-import { GetTransactions } from '@/services/finance'
-import { TreeChartInterface } from '@/interfaces'
 
 const Home = () => {
   const { modalContent } = useStates()
   const { menu, setMenu } = useMenu()
   const [loading, setLoading] = useState<boolean>(true)
-  const {
-    setGroupData,
-    setSubGroupData,
-    setProductData,
-    setProductGroupData,
-    setBeneficiaryData,
-    setUserInfo,
-    setReferrerData,
-    setBrandsData,
-    setTreeChartInterface,
-    setCampaignData,
-    setPromotionData,
-    setKPITaskData,
-    setBalance,
-    setTransactionsData,
-    setAllocationList,
-    setSystemTypes,
-  } = useData()
+
   const { setProductGroupStates } = useStates()
   useEffect(() => {
-    const fetcher = async () => {
-      await getUserInfo().then((value) => value && setUserInfo(value))
-      await getGroupData().then((result) => result && setGroupData(result))
-      await getSubGroupData().then(
-        (result) => result && setSubGroupData(result)
-      )
-      await getProductData().then((result) => result && setProductData(result))
-      await getBeneficiaryData().then(
-        (result) => result && setBeneficiaryData(result)
-      )
-      await getReferrerData().then((value) => value && setReferrerData(value))
-      await getProductGroupData().then((value) => {
-        if (value) {
-          setProductGroupData(value.productGroups)
-          setBrandsData(value.brands)
-        }
-      })
-      await getReferrerChart().then(
-        (value) => value && setTreeChartInterface(value)
-      )
-      await getCampaignData().then((value) => value && setCampaignData(value))
-      await getPromotiuonData().then(
-        (value) => value && setPromotionData(value)
-      )
-      await getKPITaskData().then((result) => result && setKPITaskData(result))
-      await getBalance().then((result) => result && setBalance(result))
-      await getTransactionHistory().then(
-        (result) => result && setTransactionsData(result)
-      )
-      await getAllocatedList().then(
-        (result) => result && setAllocationList(result)
-      )
-      await getSystemTypes().then((result) => {
-        result.productTypes && setSystemTypes(result)
-      })
-    }
-    fetcher()
-
     const handleHashChange = () => {
       const tag = location.hash.substring(1)
       setMenu(tag)
@@ -126,22 +51,6 @@ const Home = () => {
     }
   }, [
     setMenu,
-    setGroupData,
-    setSubGroupData,
-    setBalance,
-    setBeneficiaryData,
-    setBrandsData,
-    setCampaignData,
-    setKPITaskData,
-    setProductData,
-    setProductGroupData,
-    setProductGroupStates,
-    setPromotionData,
-    setTreeChartInterface,
-    setReferrerData,
-    setUserInfo,
-    setTransactionsData,
-    setSystemTypes,
   ])
 
   return (
