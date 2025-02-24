@@ -1,10 +1,13 @@
 import Report from './Report'
 import Drafts from './Drafts'
+import { useState } from 'react'
+import OnlinePayment from './OnlinePayment'
 
 const Deposite = () => {
+  const [tab, setTab] = useState<number>(0)
   return (
     <div className=''>
-      {/* <div className='flex border-b'>
+      <div className='flex border-b'>
         <div
           className={`transition-all duration-500 px-5 border-b ${
             tab === 0 && 'bg-[#E6DBFB80] border-b-[#704CB9]'
@@ -24,7 +27,7 @@ const Deposite = () => {
             </div>
           </button>
         </div>
-        <div
+        {/* <div
           className={`transition-all duration-500 px-5 border-b ${
             tab === 1 && 'bg-[#E6DBFB80] border-b-[#704CB9]'
           }`}>
@@ -61,7 +64,7 @@ const Deposite = () => {
               لینک پرداخت
             </div>
           </button>
-        </div>
+        </div> */}
         <div
           className={`transition-all duration-500 px-5 border-b ${
             tab === 3 && 'bg-[#E6DBFB80] border-b-[#704CB9]'
@@ -81,16 +84,17 @@ const Deposite = () => {
             </div>
           </button>
         </div>
-      </div> */}
-      {/* {tab === 0 ? (
+      </div>
+      {tab === 0 ? (
         <OnlinePayment />
-      ) : tab === 1 ? (
-        <PayByID />
-      ) : tab === 2 ? (
-        <PaymentLink />
       ) : (
+        // : tab === 1 ? (
+        //   <PayByID />
+        // ) : tab === 2 ? (
+        //   <PaymentLink />
+        // )
         tab === 3 && <Drafts />
-      )} */}
+      )}
       <Drafts />
       <Report />
     </div>

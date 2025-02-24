@@ -1,23 +1,11 @@
-import { OptionTrees } from '@/interfaces'
-
-interface LevelData {
-  data: Record<string, any>[]
-  idKey: string
-  labelKey: string
-  parentKey?: string
-}
-
 export const generateMultiSelectData = ({
   level1,
   level2,
   level3,
-}: {
-  level1: LevelData
-  level2?: LevelData
-  level3?: LevelData
-}): OptionTrees[] => {
-  const mapData = (level?: LevelData) =>
-    level?.data.reduce<Record<string, OptionTrees>>((acc, curr) => {
+}) => {
+  if (!level1.idKey) return []
+  const mapData = (level) =>
+    level?.data?.reduce((acc, curr) => {
       acc[curr[level.idKey]] = {
         id: curr[level.idKey],
         label: curr[level.labelKey],
@@ -32,7 +20,7 @@ export const generateMultiSelectData = ({
 
   Object.values(level3Map).forEach((item) => {
     const parentId = level3?.data.find((d) => d.id === item.id)?.[
-      level3.parentKey!
+      level3.parentKey
     ]
     if (parentId && level2Map[parentId])
       level2Map[parentId].children?.push(item)
@@ -40,7 +28,7 @@ export const generateMultiSelectData = ({
 
   Object.values(level2Map).forEach((item) => {
     const parentId = level2?.data.find((d) => d.id === item.id)?.[
-      level2.parentKey!
+      level2.parentKey
     ]
     if (parentId && level1Map[parentId])
       level1Map[parentId].children?.push(item)

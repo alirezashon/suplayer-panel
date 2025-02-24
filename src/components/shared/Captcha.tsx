@@ -34,13 +34,15 @@ const Captcha = ({ setResult }: { setResult: (status: boolean) => void }) => {
           value={inputValue}
           onChange={(e) => {
             setInputValue(e.target.value)
-            setResult((e.target.value.trim() === answer))
+            setResult(e.target.value.trim() === answer)
           }}
           placeholder='کد امنیتی را وارد کنید'
         />
         <div className='flex min-w-40 w-fit h-10 font-[fantasy] gap-10 px-2  border rounded items-center'>
           <p className='text-2xl'>{challenge}</p>
           <Refresh
+            size={28}
+            color='#7f0fe0'
             className='cursor-pointer hover:scale-110 hover:text-primary hover:rotate-90'
             onClick={generateChallenge}
           />

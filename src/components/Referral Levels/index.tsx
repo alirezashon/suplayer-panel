@@ -8,7 +8,6 @@ import {
 } from 'iconsax-react'
 import { useMenu } from '@/Context/Menu'
 import AddModal from './AddModal'
-import DeleteModal from './DeleteModal'
 import { useData } from '@/Context/Data'
 import { TreeChartInterface } from '@/interfaces'
 import { getCookieByKey } from '@/actions/cookieToken'
@@ -27,7 +26,6 @@ const ReferralLevels: React.FC = () => {
     show: boolean
     data?: TreeChartInterface
   }>()
-  const [showDeleteModal, setShowDeleteModal] = useState<boolean | string[]>()
   const [openTrees, setOpenTrees] = useState<number[]>([])
   const { TreeChartInterface, setTreeChartInterface } = useData()
   const [editableRow, setEditableRow] = useState<TreeChartInterface | null>()
@@ -59,11 +57,13 @@ const ReferralLevels: React.FC = () => {
         chlabel: chlabel || '',
         chstatus,
       }).then(async (result) => {
-        result &&
-          (await getReferrerChart().then((value) => {
-            if (value) setTreeChartInterface(value)
-            setEditableRow(null)
-          }))
+        if (result)
+          await getReferrerChart().then((value) => {
+            if (value) {
+              setTreeChartInterface(value)
+              setEditableRow(null)
+            }
+          })
       })
     }
     return (

@@ -11,7 +11,7 @@ const headers = ['ردیف', 'گروه محصول', 'برند محصول', 'نا
 const Product: React.FC = () => {
   const { selectedProductData } = useStates()
   const { setMenu } = useMenu()
-  const [data, setData] = useState<ProductsData[]>()
+  const [, setData] = useState<ProductsData[]>()
   const [showAddModal, setShowAddModal] = useState<boolean | ProductsData>(
     false
   )
@@ -35,18 +35,13 @@ const Product: React.FC = () => {
           <span
             className='text-[#98A2B3] cursor-pointer'
             onClick={() => {
-              location.hash = 'productgroups'
-              setMenu('productgroups')
+              location.hash = 'product-brands'
+              setMenu('product-brands')
             }}>
             {selectedProductData?.group?.group_desc}
           </span>
           /
-          <span
-            className='text-[#7747C0]'
-            onClick={() => {
-              location.hash = 'product-brands'
-              setMenu('product-brands')
-            }}>
+          <span className='text-[#7747C0]'>
             {selectedProductData?.brand.group_desc}
           </span>
         </p>

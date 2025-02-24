@@ -19,6 +19,8 @@ import {
   Box,
   Setting2,
   Chart,
+  Receipt1,
+  ReceiptMinus,
 } from 'iconsax-react'
 import Image from 'next/image'
 import React from 'react'
@@ -31,6 +33,8 @@ const Header: React.FC = () => {
     ['مدیریت پورسانت‌‌ دهی', 'porsant'],
     ['کمپین', 'campaign'],
     ['پروموشن', 'promotion'],
+    ['گزارش مالی', 'finance-report'],
+    ['گزارش تراکنش‌ها', 'transactions-reports'],
     ['گروه', 'mygroups'],
     ['گروه‌های من', 'mygroups'],
     ['زیرگروه', 'subgroups'],
@@ -47,6 +51,8 @@ const Header: React.FC = () => {
     Money4,
     StatusUp,
     PresentionChart,
+    Receipt1,
+    ReceiptMinus,
     MenuBoard,
     People,
     Profile2User,

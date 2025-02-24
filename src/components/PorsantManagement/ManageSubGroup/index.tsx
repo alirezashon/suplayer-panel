@@ -39,7 +39,7 @@ const PorsantManagement = () => {
         beneficiary.supervisor_id === selectedSubGroupData?.supervisor_id
     )
     setBeneficiaryList(filterResult as BeneficiaryData[])
-  }, [beneficiaryData])
+  }, [beneficiaryData, selectedSubGroupData, selectedGroupData, setMenu])
   const filterBeneficiary = (value: string) => {
     const result = beneficiaryData?.filter(
       (beneficiary) =>

@@ -4,7 +4,6 @@ import Loading from '@/components/shared/LoadingSpinner'
 import { useData } from '@/Context/Data'
 import { useMenu } from '@/Context/Menu'
 import { useStates } from '@/Context/States'
-import { setComma } from '@/hooks/NumberFormat'
 import { generateAllocationSignature } from '@/hooks/Signature'
 import { DefineAllocationInterface } from '@/interfaces'
 import { DefineAllocation } from '@/services/allocation'
@@ -38,7 +37,7 @@ const Allocation = () => {
       location.hash = 'porsant'
       setMenu('porsant')
     }
-  }, [])
+  }, [setMenu,selectedGroupData])
   const handleCreditChange = async (id: string, value: string) => {
     setAllocationData((prev) => {
       const existingIndex = prev.findIndex((item) => item.visitor_uid === id)

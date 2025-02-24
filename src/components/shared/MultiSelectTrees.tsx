@@ -22,7 +22,7 @@ const MultiSelectTrees: React.FC<RadioTreeSelectorProps> = ({
   const [selectedItems, setSelectedItemsState] = useState<(string | number)[]>(
     []
   )
-  const handleCheckboxChange = (id: string | number, label: string) => {
+  const handleCheckboxChange = (id: string | number) => {
     const updated = selectedItems.includes(id)
       ? selectedItems.filter((item) => item !== id)
       : [...selectedItems, id]
@@ -84,9 +84,7 @@ const MultiSelectTrees: React.FC<RadioTreeSelectorProps> = ({
                     <input
                       type='checkbox'
                       checked={selectedItems.includes(child.id)}
-                      onChange={() =>
-                        handleCheckboxChange(child.id, child.label)
-                      }
+                      onChange={() => handleCheckboxChange(child.id)}
                       className='form-checkbox h-5 w-5 border-2 rounded cursor-pointer accent-[#7747C0]'
                     />
                     <span

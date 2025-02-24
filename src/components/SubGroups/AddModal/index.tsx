@@ -60,9 +60,8 @@ const AddModal = ({
           autoClose: 2,
         })
 
-        value.status === '-1'
-          ? setResult(false, value.message)
-          : setResult(true)
+        if (value.status === '-1') setResult(false, value.message)
+        else setResult(true)
       })
     else
       EditSubGroup({
@@ -78,9 +77,8 @@ const AddModal = ({
             title: value.status === 1 ? 'موفق' : 'خطا',
             autoClose: 2,
           })
-          value.status === '-1'
-            ? setResult(false, value.message)
-            : setResult(true)
+          if (value.status === '-1') setResult(false, value.message)
+          else setResult(true)
           await getSubGroupData().then(
             (value) => value && setSubGroupData(value)
           )

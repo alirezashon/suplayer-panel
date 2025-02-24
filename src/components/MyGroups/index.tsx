@@ -33,8 +33,8 @@ const MyGroups: React.FC = () => {
           <span
             className='text-[#7747C0]'
             onClick={() => {
-              setMenu('groupgroups')
-              location.hash = 'groupgroups'
+              setMenu('mygroups')
+              location.hash = 'mygroups'
             }}>
             گروه‌های من
           </span>

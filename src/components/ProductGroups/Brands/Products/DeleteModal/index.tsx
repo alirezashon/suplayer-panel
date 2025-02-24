@@ -2,7 +2,7 @@ import { getCookieByKey } from '@/actions/cookieToken'
 import { useStates } from '@/Context/States'
 import { ProductsData } from '@/interfaces'
 import { EditProduct } from '@/services/products'
-import { CloseSquare, Forbidden2, Trash } from 'iconsax-react'
+import { CloseSquare, Trash } from 'iconsax-react'
 
 const DeleteModal = ({
   data,
@@ -11,9 +11,9 @@ const DeleteModal = ({
   data: ProductsData
   close: (show: boolean) => void
 }) => {
+  const { showModal } = useStates()
   const handleSubmit = async () => {
     const accessToken = (await getCookieByKey('access_token')) || ''
-    const { showModal } = useStates()
 
     {
       await EditProduct({

@@ -28,19 +28,20 @@ const AddModal = ({
       const accessToken = (await getCookieByKey('access_token')) || ''
       await CreateGroup({ accessToken, name })
         .then((value) => {
-          value?.status === 1
-            ? showModal({
-                type: 'success',
-                main: <p>{value.message}</p>,
-                title: 'خطا',
-                autoClose: 2,
-              })
-            : showModal({
-                type: 'error',
-                main: <p>{value.message}</p>,
-                title: 'خطا',
-                autoClose: 2,
-              })
+          if (value?.status === 1)
+            showModal({
+              type: 'success',
+              main: <p>{value.message}</p>,
+              title: 'خطا',
+              autoClose: 2,
+            })
+          else
+            showModal({
+              type: 'error',
+              main: <p>{value.message}</p>,
+              title: 'خطا',
+              autoClose: 2,
+            })
           close(false)
         })
         .catch(() =>
@@ -63,9 +64,11 @@ const AddModal = ({
       <div
         className={`fixed p-10 z-50 right-0 top-0 max-md:left-[0] max-md:w-[100%] w-[40vw] h-full bg-white border border-gray-300 shadow-lg transition-transform duration-300 ease-in-out right-side-animate 
      `}>
-              <form
+        <form
           onSubmit={handleSubmit}
-          className='flex flex-col bg-white  max-md:px-5 max-md:pb-24'>          <div className='flex justify-between items-center w-full text-xl font-medium text-right text-gray-800 max-md:max-w-full'>
+          className='flex flex-col bg-white  max-md:px-5 max-md:pb-24'>
+          {' '}
+          <div className='flex justify-between items-center w-full text-xl font-medium text-right text-gray-800 max-md:max-w-full'>
             <div className='flex-1 shrink self-stretch my-auto min-w-[240px] max-md:max-w-full'>
               تعریف گروه جدید
             </div>
@@ -80,7 +83,6 @@ const AddModal = ({
               />
             </div>
           </div>
-
           <div className='mt-10 w-full max-md:max-w-full'>
             <div className='flex flex-col w-full'>
               <label className='text-base font-medium text-right text-gray-800'>
@@ -92,12 +94,10 @@ const AddModal = ({
                   // errors?.name && setErrors({})
                   setName(e.target.value)
                 }}
-                
                 placeholder='مثال: دکترهای پوست، تهران غرب ...'
               />
             </div>
           </div>
-
           <div className='flex items-center'>
             <button
               type='submit'

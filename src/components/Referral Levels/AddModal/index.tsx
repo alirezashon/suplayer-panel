@@ -293,7 +293,8 @@ const AddModal = ({
                 <>
                   <button
                     onClick={() => {
-                      state === 1 ? setState(2) : handleSubmit
+                      if (state === 1) setState(2)
+                      else handleSubmit
                     }}
                     style={{
                       animation: `${
@@ -351,7 +352,7 @@ const AddModal = ({
                   <button
                     type='button'
                     onClick={(e) => {
-                      e.preventDefault()       
+                      e.preventDefault()
                       refs.current.chlabel = ''
                       refs.current.chtitle = ''
                       setState(1)

@@ -3,10 +3,16 @@ import Image from 'next/image'
 import { useRef, useState } from 'react'
 import { CheckMark } from '../shared/IconGenerator'
 import { useMenu } from '@/Context/Menu'
+import OTPInput from '../shared/OTPinput'
+import { useStates } from '@/Context/States'
+import { getCookieByKey } from '@/actions/cookieToken'
+import { UserChangePassword } from '@/services/user'
 
 const Profile = () => {
   const { setMenu } = useMenu()
+  const { showModal } = useStates()
   const [tab, setTab] = useState<number>(0)
+  const [otp, setOtp] = useState<null | string>()
   const [validate, setValidate] = useState<{
     words: boolean
     number: boolean
@@ -58,6 +64,51 @@ const Profile = () => {
         number: prv.number,
         length: false,
       }))
+    }
+  }
+  const changePassword = async () => {
+    try {
+      if (!otp || otp.length < 6) {
+        showModal({
+          title: 'خطا',
+          main: 'کد صحیح نمی باشد',
+          type: 'error',
+          autoClose: 1,
+        })
+        return
+      }
+      const accessToken = (await getCookieByKey('access_token')) || ''
+      const response = await UserChangePassword({
+        accessToken,
+        newpassword: firstInputRef.current?.value || '',
+        otp_code: otp || '',
+      })
+
+      if (!response) {
+        showModal({
+          title: 'خطا',
+          main: 'خطای پیش آمد! دوباره تلاش کنید.',
+          type: 'error',
+          autoClose: 1,
+        })
+        return
+      }
+      if (response.status === '-1')
+        showModal({
+          title: 'خطا',
+          main: response.message,
+          type: 'error',
+          autoClose: 1,
+        })
+      if (response.status === '1')
+        showModal({
+          title: 'موفق',
+          main: response.message,
+          type: 'success',
+          autoClose: 1,
+        })
+    } catch (err: unknown) {
+      return err
     }
   }
   return (
@@ -117,22 +168,22 @@ const Profile = () => {
                 <label className='text-base font-medium text-right text-gray-800'>
                   نام
                 </label>
-                <input  placeholder='نام ' />
+                <input placeholder='نام ' />
               </div>
               <div className='flex flex-col w-full'>
                 <label className='text-base font-medium text-right text-gray-800'>
                   نام خانوادگی
                 </label>
-                <input  placeholder='نام خانوادگی ' />
+                <input placeholder='نام خانوادگی ' />
               </div>
               <div className='flex flex-col w-full'>
                 <label className='text-base font-medium text-right text-gray-800'>
                   شماره موبایل
                 </label>
-                <input  placeholder='شماره موبایل ' />
+                <input placeholder='شماره موبایل ' />
               </div>
             </div>
-          ) : (
+          ) : typeof otp !== 'string' ? (
             <>
               <div className=' flex gap-10 mt-10 w-full'>
                 <div className='flex flex-col w-full'>
@@ -142,7 +193,7 @@ const Profile = () => {
                   <input
                     ref={firstInputRef}
                     onChange={() => validator()}
-                    type='password   '
+                    type='password'
                     placeholder=' رمز عبور '
                   />
                 </div>
@@ -152,7 +203,7 @@ const Profile = () => {
                   </label>
                   <input
                     ref={secondInputRef}
-                    type='password   '
+                    type='password'
                     placeholder='تکرار رمز عبور  '
                   />
                 </div>
@@ -178,13 +229,22 @@ const Profile = () => {
                 </div>
               </div>
             </>
+          ) : (
+            <OTPInput setResult={setOtp} />
           )}
 
           <div className='mt-10 flex justify-end'>
             <button
-              type='submit'
+              type='button'
+              onClick={() =>
+                tab === 0
+                  ? ''
+                  : typeof otp !== 'string'
+                  ? setOtp('')
+                  : changePassword()
+              }
               className={`fill-button px-10 h-10 rounded-lg  `}>
-              ذخیره تغییرات
+              {tab === 0 ? ' ذخیره تغییرات ' : 'ذخیره رمز جدید'}
             </button>
           </div>
         </form>

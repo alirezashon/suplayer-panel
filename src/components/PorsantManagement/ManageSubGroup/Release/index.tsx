@@ -267,6 +267,7 @@
 
 import { getCookieByKey } from '@/actions/cookieToken'
 import { useData } from '@/Context/Data'
+import { useMenu } from '@/Context/Menu'
 import { useStates } from '@/Context/States'
 import { AddDocFile } from '@/services/allocation'
 import { Printer, SearchNormal } from 'iconsax-react'
@@ -284,7 +285,13 @@ const headers = [
 
 const Release = () => {
   const { beneficiaryData } = useData()
-  const { showModal } = useStates()
+  const {
+    showModal,
+    selectedSubGroupData,
+    selectedGroupData,
+    setSelectedGroupData,
+  } = useStates()
+  const { setMenu } = useMenu()
   const [uploadStatuses, setUploadStatuses] = useState<
     Record<
       string,
@@ -292,7 +299,7 @@ const Release = () => {
     >
   >({})
 
-  const [convertedata, setConvertedData] = useState<
+  const [, setConvertedData] = useState<
     {
       visitor_tel: string
       visitor_name: string
@@ -388,6 +395,7 @@ const Release = () => {
         [visitorTel]: { status: 'error', progress: 0 },
       }))
       showErrorModal('خطا در بارگذاری فایل')
+      return error
     }
   }
 
@@ -419,10 +427,32 @@ const Release = () => {
     <div className='m-4'>
       <div className='flex justify-between items-center mb-7'>
         <p>
-          <span className='text-[#98A2B3]'>مدیریت پورسانت‌دهی </span> /
-          <span className='text-[#7747C0]'>
-            گروه مو / منطقه ۵ / آزادسازی گروهی
+          <span
+            className='text-[#98A2B3] cursor-pointer'
+            onClick={() => {
+              setMenu('porsant')
+              location.hash = 'porsant'
+              setSelectedGroupData(null)
+            }}>
+            مدیریت پورسانت‌دهی/
           </span>
+          <span
+            className='text-[#98A2B3] cursor-pointer'
+            onClick={() => {
+              setMenu('porsant')
+              location.hash = 'porsant'
+            }}>
+            {selectedGroupData?.sup_group_name}/
+          </span>
+          <span
+            className='text-[#98A2B3] cursor-pointer'
+            onClick={() => {
+              setMenu('porsantmanagement')
+              location.hash = 'porsantmanagement'
+            }}>
+            {selectedSubGroupData?.supervisor_name}/
+          </span>
+          <span className='text-[#7747C0]'> آزادسازی گروهی </span>
         </p>
       </div>
       <div className='flex flex-col bg-white p-3'>

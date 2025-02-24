@@ -68,7 +68,7 @@ const AddModal = ({
   const rerenderData = async () => {
     await getProductGroupData().then((value) => {
       if (value) {
-        setBrandsData(value.brands)
+        setBrandsData(value.brands as ProductGroupData[])
       }
     })
   }
@@ -93,7 +93,7 @@ const AddModal = ({
         name: editName,
         group_id: data.id,
         group_pid: parent.id,
-      }).then((value: Record<string, any> | undefined) => {
+      }).then((value) => {
         if (value && value.status === 1) setResult(true)
         else setResult(false, value && value.message)
         setNames([])
@@ -119,8 +119,10 @@ const AddModal = ({
                     })
                     await getProductGroupData().then((value) => {
                       if (value) {
-                        setProductGroupData(value.productGroups)
-                        setBrandsData(value.brands)
+                        setProductGroupData(
+                          value.productGroups as ProductGroupData[]
+                        )
+                        setBrandsData(value.brands as ProductGroupData[])
                       }
                     })
                   } else
@@ -188,7 +190,6 @@ const AddModal = ({
                   <input
                     value={editName}
                     onChange={(e) => setEditName(e.target.value)}
-                    
                     placeholder='مثال: فولیکا'
                     className={`flex-1 border border-gray-300 rounded-lg px-4 py-2 ${
                       errors?.brands && errorClass
@@ -210,7 +211,6 @@ const AddModal = ({
                     <input
                       value={name}
                       onChange={(e) => handleInputChange(e.target.value, index)}
-                      
                       placeholder='مثال: فولیکا'
                       className={`flex-1 border border-gray-300 rounded-lg px-4 py-2 ${
                         errors?.brands && errorClass

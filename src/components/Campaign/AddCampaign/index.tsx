@@ -80,7 +80,7 @@ const AddCampaign = ({
     }
 
     setErrors(newErrors)
-    Object.keys(newErrors).length === 0 && setStep(step + 1)
+    if (Object.keys(newErrors).length === 0) setStep(step + 1)
   }
 
   const handleSubmit = async (e: FormEvent) => {
@@ -244,7 +244,7 @@ const AddCampaign = ({
                   />
 
                   <div>
-                    <label className='block mb-2 text-sm'>بودجه</label>
+                    <label className='block mb-2 text-sm'>بودجه (ریال)</label>
                     <input
                       name='budget'
                       defaultValue={refs.current.budget || existData?.budget}
@@ -268,7 +268,7 @@ const AddCampaign = ({
                   <div className='flex gap-4'>
                     <div className='w-full'>
                       <label className='block mb-2 text-sm'>
-                        پاسخ مورد انتظار
+                        پاسخ مورد انتظار (ریال)
                       </label>
                       <input
                         name='expected_response'
@@ -289,7 +289,7 @@ const AddCampaign = ({
                     </div>
                     <div className='w-full'>
                       <label className='block mb-2 text-sm'>
-                        درآمد مورد انتظار
+                        درآمد مورد انتظار (ریال)
                       </label>
                       <input
                         onInput={(e) => {

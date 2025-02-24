@@ -25,9 +25,7 @@ const Kanban = ({
   const [showAddModal, setShowAddModal] = useState<boolean | CampaignInterface>(
     false
   )
-  const [showDeleteModal, setShowDeleteModal] = useState<
-    boolean | CampaignInterface
-  >(false)
+  const [, setShowDeleteModal] = useState<boolean | CampaignInterface>(false)
 
   return (
     <>

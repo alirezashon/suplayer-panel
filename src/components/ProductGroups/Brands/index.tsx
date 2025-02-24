@@ -10,10 +10,7 @@ import { ProductGroupData, ProductsData } from '@/interfaces'
 import { useStates } from '@/Context/States'
 const Brands: React.FC = () => {
   const { setMenu } = useMenu()
-  const {
-    setSelectedProductData,
-    selectedProductBrandData,
-  } = useStates()
+  const { setSelectedProductData, selectedProductBrandData } = useStates()
   const { productData } = useData()
   const [showAddModal, setShowAddModal] = useState<boolean | ProductGroupData>(
     false
@@ -50,6 +47,15 @@ const Brands: React.FC = () => {
                   location.hash = 'productgroups'
                 }}>
                 تعاریف
+              </span>
+              /
+              <span
+                className='text-[#98A2B3]'
+                onClick={() => {
+                  setMenu('productgroups')
+                  location.hash = 'productgroups'
+                }}>
+                محصولات من
               </span>
               /
               <span className='text-[#7747C0]'>
@@ -126,7 +132,7 @@ const Brands: React.FC = () => {
                     </p>
                   </div>
                   <div className='flex my-3'>
-                    <HashtagSquare size={24} color='#704CB9'/>
+                    <HashtagSquare size={24} color='#704CB9' />
                     <p className='text-sm  px-2 py-1 rounded'>
                       {brand.lev1_count > 0 ? (
                         <>
@@ -142,9 +148,8 @@ const Brands: React.FC = () => {
                   </div>
                   <button
                     onClick={() => {
-                      brand.product_count > 0
-                        ? changeRoute(brand)
-                        : setShowAddProduct(brand)
+                      if (brand.product_count > 0) changeRoute(brand)
+                      else setShowAddProduct(brand)
                     }}
                     className={`w-full py-2  font-semibold rounded ${
                       brand.group_desc === 'add'

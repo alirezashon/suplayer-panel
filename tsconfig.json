@@ -22,6 +22,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "public/icons/logo.jsx", "src/components/Address/handler/index.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "public/icons/logo.jsx", "src/components/Address/handler/index.ts", "src/hooks/convertDataTree.js"],
   "exclude": ["node_modules"]
 }

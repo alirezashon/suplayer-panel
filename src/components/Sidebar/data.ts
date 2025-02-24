@@ -20,7 +20,7 @@ export const data: Items[] = [
   },
   {
     name: 'کیف پول',
-    link: ['wallet'],
+    link: ['wallet','deposite'],
     iconIndex: 1,
   },
 
@@ -54,8 +54,32 @@ export const data: Items[] = [
     iconIndex: 4,
   },
   {
+    name: 'گزارشات',
+    link: ['finance-report', 'transactions-reports'],
+    iconIndex: 14,
+    subItems: [
+      {
+        name: 'گزارش مالی',
+        link: ['finance-report'],
+        iconIndex: 15,
+      },
+      {
+        name: 'گزارش تراکنش ها',
+        link: ['transactions-reports'],
+        iconIndex: 16,
+      },
+    ],
+  },
+  {
     name: ' تعاریف',
-    link: ['mygroups'],
+    link: [
+      'mygroups',
+      'subgroups',
+      'referrers',
+      'beneficiary',
+      'productgroups',
+      'product-brands',
+    ],
     iconIndex: 5,
     subItems: [
       {
@@ -87,7 +111,7 @@ export const data: Items[] = [
   },
   {
     name: ' تنظیمات',
-    link: ['referral-levels'],
+    link: ['referral-levels', 'variablels'],
     iconIndex: 11,
     subItems: [
       {

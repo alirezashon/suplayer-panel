@@ -66,9 +66,9 @@ const ShowGroups: React.FC = () => {
                     </div>
                     <button
                       onClick={() => {
-                        group.supervisors_count > 0
-                          ? setSelectedGroupData(group)
-                          : setAddSubGroup(group.sup_group_id)
+                        if (group.supervisors_count > 0)
+                          setSelectedGroupData(group)
+                        else setAddSubGroup(group.sup_group_id)
                       }}
                       className={`w-full h-10  font-semibold rounded ${
                         group.supervisors_count === 0

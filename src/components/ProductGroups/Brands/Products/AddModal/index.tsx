@@ -6,7 +6,7 @@ import { useStates } from '@/Context/States'
 import { ProductGroupData, ProductsData } from '@/interfaces'
 import { CreateProduct, EditProduct } from '@/services/products'
 import { CloseSquare, Message, Trash } from 'iconsax-react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 // const AddModal = ({
 //   editData,
@@ -198,7 +198,7 @@ const AddModal = ({
         (item) => `${item.group_id}` === `${selectedProductData?.brand?.id}`
       ) as ProductsData[]
 
-      filteredData.length > 0 &&
+      if (filteredData.length > 0)
         setSelectedProductData({
           data: filteredData,
           brand: selectedProductData?.brand as ProductGroupData,
@@ -214,8 +214,6 @@ const AddModal = ({
     if (newErrors.includes(true)) return // اگر خطا وجود داشت، ارسال متوقف شود
 
     const accessToken = (await getCookieByKey('access_token')) || ''
-
-    // ✅ پردازش همه درخواست‌ها به صورت همزمان
     await Promise.all(
       names.map(async (name) => {
         if (!editData?.ini_name) {

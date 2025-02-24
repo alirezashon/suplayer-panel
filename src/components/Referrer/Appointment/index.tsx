@@ -46,6 +46,9 @@ const AppointmentModal = ({ data, close }: AppointmentModalProps) => {
       sup_group_code: refs.current.groupId || '',
       visitor_uid: '',
       task_kpi_uid: '',
+      pgroup_id: NaN,
+      chart_id: NaN,
+      product_uid: '',
     }).then((result) => {
       showModal({
         type: result.status === 1 ? 'success' : 'error',
@@ -280,7 +283,7 @@ const AppointmentModal = ({ data, close }: AppointmentModalProps) => {
                     }
                   }) || []
                 }
-                setSelectedItems={(result)=>''}
+                setSelectedItems={(result) => result}
               />
 
               <select

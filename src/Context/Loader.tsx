@@ -20,7 +20,12 @@ import { useStates } from './States'
 import { useData } from './Data'
 import { useEffect } from 'react'
 import { generateMultiSelectData } from '@/hooks/convertDataTree'
-import { GroupData, ProductGroupData, ProductsData, SubGroup } from '@/interfaces'
+import {
+  GroupData,
+  ProductGroupData,
+  ProductsData,
+  SubGroup,
+} from '@/interfaces'
 
 const ContextLoader = () => {
   const {
@@ -70,7 +75,7 @@ const ContextLoader = () => {
         (result) => result && setAllocationList(result)
       )
       await getSystemTypes().then((result) => {
-        result.productTypes && setSystemTypes(result)
+        if (result) setSystemTypes(result)
       })
 
       const [groupData, subGroupsData, productData, productGroupsData] =
@@ -85,25 +90,30 @@ const ContextLoader = () => {
       if (subGroupsData) setSubGroupData(subGroupsData)
       if (productData) setProductData(productData)
       if (productGroupsData) {
-        setProductGroupData(productGroupsData.productGroups)
-        setBrandsData(productGroupsData.brands)
+        setProductGroupData(
+          productGroupsData.productGroups as ProductGroupData[]
+        )
+        setBrandsData(productGroupsData.brands as ProductGroupData[])
       }
-      
+
       const groupOptionTreesData = {
-        data: groupData as any[],
+        data: groupData as GroupData[],
         idKey: 'sup_group_id',
         labelKey: 'sup_group_name',
       }
       const subGroupOptionTreesData = {
-        data: subGroupsData as any[],
+        data: subGroupsData as SubGroup[],
         idKey: 'supervisor_id',
         labelKey: 'supervisor_name',
         parrentKey: 'sup_group_id',
       }
-      const groupMultiSelectorData = generateMultiSelectData({
-        level1: groupOptionTreesData,
-        level2: subGroupOptionTreesData,
-      })
+      const groupMultiSelectorData =
+        groupData &&
+        generateMultiSelectData({
+          level1: groupOptionTreesData,
+          level2: subGroupOptionTreesData,
+          level3: null,
+        })
       if (groupMultiSelectorData) setGroupSelectorData(groupMultiSelectorData)
 
       const productGroupOptionTreesData = {
@@ -123,11 +133,13 @@ const ContextLoader = () => {
         labelKey: 'ini_name',
         parrentKey: 'group_id',
       }
-      const productGroupMultiSelectorData = generateMultiSelectData({
-        level1: productGroupOptionTreesData,
-        level2: brandOptionTreesData,
-        level3: productOptionTreesData,
-      })
+      const productGroupMultiSelectorData =
+        productGroupsData?.productGroups &&
+        generateMultiSelectData({
+          level1: productGroupOptionTreesData,
+          level2: brandOptionTreesData,
+          level3: productOptionTreesData,
+        })
       if (productGroupMultiSelectorData)
         setProductGroupSelectorData(productGroupMultiSelectorData)
     }
@@ -149,6 +161,9 @@ const ContextLoader = () => {
     setUserInfo,
     setTransactionsData,
     setSystemTypes,
+    setAllocationList,
+    setGroupSelectorData,
+    setProductGroupSelectorData,
   ])
   return <div></div>
 }

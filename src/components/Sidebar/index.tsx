@@ -22,6 +22,9 @@ import {
   Chart,
   Setting2,
   Blend,
+  TransactionMinus,
+  ReceiptMinus,
+  Receipt1,
 } from 'iconsax-react'
 import Image from 'next/image'
 import { useMenu } from '@/Context/Menu'
@@ -56,6 +59,9 @@ const Sidebar = ({
     Setting2,
     Chart,
     Blend,
+    TransactionMinus,
+    Receipt1,
+    ReceiptMinus,
     Ticket,
     MessageNotif,
     Call,

@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 
 const PromotionView = () => {
   const { selectedPromotionData } = useStates()
-  const [data, setData] = useState<number[]>([])
+  const [, setData] = useState<number[]>([])
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,

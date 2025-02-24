@@ -90,7 +90,8 @@ const SignUp = () => {
     inputRefs.current[key] = value as never
   }
   const handleLogin = async () => {
-    inputState === 'otp' ? setInputState('result') : setInputState('otp')
+    if (inputState === 'otp') setInputState('result')
+    else setInputState('otp')
     if (!validateInputs()) return
 
     try {
@@ -150,6 +151,7 @@ const SignUp = () => {
 
   return (
     <>
+    {otpCode}
       {loading ? (
         <div className='flex justify-center items-center w-full h-screen'>
           <Loading size={40} />
@@ -206,7 +208,8 @@ const SignUp = () => {
                         id='email'
                         value={inputRefs.current.email}
                         onChange={(e) =>
-                          (inputRefs.current.email = e.target.value)
+                          handleInputChange
+                          // (inputRefs.current.email = e.target.value)
                         }
                         placeholder='example@'
                         className='block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7747C0]'
@@ -378,9 +381,7 @@ const SignUp = () => {
                 ) : (
                   inputState === 'result' && (
                     <div className='flex bg-[#DAFEE5] gap-2 text-[#0CAD41] p-2 rounded-lg'>
-                      <CheckMark
-                        color={`#0CAD41`}
-                      />
+                      <CheckMark color={`#0CAD41`} />
                       <p>ثبت نام شما با موفقیت انجام شد</p>
                     </div>
                   )

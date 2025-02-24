@@ -3,7 +3,7 @@ import { getProductGroupData } from '@/actions/setData'
 import { useData } from '@/Context/Data'
 import { CreateProductGroup, EditProductGroup } from '@/services/products'
 import { CloseSquare, Grammerly, Trash } from 'iconsax-react'
-import { FormEvent, useRef, useState } from 'react'
+import { FormEvent, useState } from 'react'
 import { ProductGroupData } from '@/interfaces'
 import { errorClass } from '@/app/assets/style'
 import { useStates } from '@/Context/States'
@@ -77,8 +77,8 @@ const AddModal = ({
   const rerenderData = async () => {
     await getProductGroupData().then((value) => {
       if (value) {
-        setProductGroupData(value.productGroups)
-        setBrandsData(value.brands)
+        setProductGroupData(value.productGroups as ProductGroupData[])
+        setBrandsData(value.brands as ProductGroupData[])
       }
     })
   }
@@ -125,8 +125,8 @@ const AddModal = ({
         if (value && value.status === 1) setResult(true)
         else setResult(false, value && value.message)
         if (value && value?.data?.regid)
-          brands?.length > 0 &&
-            (await Promise.all(
+          if (brands?.length > 0)
+            await Promise.all(
               brands.map(async (name) => {
                 if (name.length > 0) {
                   const response = await CreateProductGroup({
@@ -139,7 +139,7 @@ const AddModal = ({
                   else setResult(false, response && response.message)
                 }
               })
-            ))
+            )
         setBrands([])
         await rerenderData()
       })
@@ -203,7 +203,6 @@ const AddModal = ({
                     name='brands'
                     value={name}
                     onChange={(e) => handleInputChange(e.target.value, index)}
-                    
                     placeholder='مثال: فولیکا'
                     className={`${
                       errors?.brands && errors.brands[index] && errorClass

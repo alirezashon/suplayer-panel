@@ -50,7 +50,7 @@ const AddPromotion = () => {
     description: '',
   })
 
-  const handleInputChange = (e: any) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     refs.current = {
       ...refs.current,

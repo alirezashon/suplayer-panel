@@ -58,15 +58,7 @@ const Beneficiary: React.FC = () => {
               }}>
               تعاریف
             </span>
-            /
-            <span
-              className='text-[#7747C0]'
-              onClick={() => {
-                setMenu('subgroups')
-                location.hash = 'subgroups'
-              }}>
-              ذی‌نفع‌های من
-            </span>
+            /<span className='text-[#7747C0]'>ذی‌نفع‌های من</span>
           </p>
           {beneficiaryData && beneficiaryData.length > 0 && (
             <div className='flex gap-5'>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Trash, Edit2, FolderAdd, MoreSquare, Message } from 'iconsax-react'
+import { Trash, Edit2, MoreSquare, Message } from 'iconsax-react'
 import AddModal from './AddModal'
 import DeleteModal from './DeleteModal'
 import Image from 'next/image'
@@ -58,7 +58,7 @@ const Referrer: React.FC = () => {
     if (selectedItems.length === initialData?.length) {
       setSelectedItems([]) // اگر همه انتخاب شده بودند، پاک کن
     } else {
-      initialData && setSelectedItems(initialData?.map((_, index) => index)) // همه را انتخاب کن
+      if (initialData) setSelectedItems(initialData?.map((_, index) => index)) // همه را انتخاب کن
     }
   }
 

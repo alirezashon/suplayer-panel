@@ -20,6 +20,9 @@ import { useStates } from '@/Context/States'
 import MainLayout from '@/layouts/MainLayout'
 import { useEffect, useState } from 'react'
 import CustomModal from '@/components/shared/CustomModal'
+import Reports from '@/components/Reports'
+import FinanceReports from '@/components/Reports/Finance'
+import TransactionReports from '@/components/Reports/transactions'
 
 const Home = () => {
   const { modalContent } = useStates()
@@ -49,9 +52,7 @@ const Home = () => {
     return () => {
       window.removeEventListener('hashchange', handleHashChange, false)
     }
-  }, [
-    setMenu,
-  ])
+  }, [setMenu, setProductGroupStates])
 
   return (
     <MainLayout>
@@ -87,6 +88,10 @@ const Home = () => {
                 'promotion-view',
               ].includes(menu) ? (
               <Promotion />
+            ) : menu === 'finance-report' ? (
+              <FinanceReports />
+            ) : menu === 'transactions-reports' ? (
+              <TransactionReports />
             ) : ['campaign', 'campaign-list', 'view-campaign'].includes(
                 menu
               ) ? (
