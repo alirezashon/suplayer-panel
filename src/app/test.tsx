@@ -39,46 +39,46 @@ const Carousel: React.FC = () => {
   )
 }
 
-export default Carousel
+export default Carousel 
 
-// import { useState, useEffect } from "react";
-// import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 
-// type CarouselProps = {
-//   images: string[];
-// };
+type CarouselProps = {
+  images: string[];
+};
 
-// const Carousel: React.FC<CarouselProps> = ({ images }) => {
-//   const [index, setIndex] = useState(0);
+const Carousel: React.FC<CarouselProps> = ({ images }) => {
+  const [index, setIndex] = useState(0);
 
-//   useEffect(() => {
-//     const interval = setInterval(() => {
-//       setIndex((prevIndex) => (prevIndex + 1) % images.length);
-//     }, 2000);
-//     return () => clearInterval(interval);
-//   }, [images.length]);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((prevIndex) => (prevIndex + 1) % images.length);
+    }, 2000);
+    return () => clearInterval(interval);
+  }, [images.length]);
 
-//   return (
-//     <div className="relative w-full overflow-hidden">
-//       <div className="flex w-full">
-//         {images.map((img, i) => (
-//           <motion.div
-//             key={i}
-//             className="absolute w-full h-full"
-//             initial={{ x: "100%" }}
-//             animate={{ x: `${-100 * index}%` }}
-//             transition={{ duration: 1.5, ease: "easeInOut" }}
-//           >
-//             <img
-//               src={img}
-//               alt={`slide-${i}`}
-//               className="w-full h-auto object-cover"
-//             />
-//           </motion.div>
-//         ))}
-//       </div>
-//     </div>
-//   );
-// };
+  return (
+    <div className="relative w-full overflow-hidden">
+      <div className="flex w-full">
+        {images.map((img, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-full h-full"
+            initial={{ x: "100%" }}
+            animate={{ x: `${-100 * index}%` }}
+            transition={{ duration: 1.5, ease: "easeInOut" }}
+          >
+            <img
+              src={img}
+              alt={`slide-${i}`}
+              className="w-full h-auto object-cover"
+            />
+          </motion.div>
+        ))}
+      </div>
+    </div>
+  );
+};
 
-// export default Carousel;
+export default Carousel;
