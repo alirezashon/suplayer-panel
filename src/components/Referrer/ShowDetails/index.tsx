@@ -1,5 +1,9 @@
-import { ReferrerData } from '@/interfaces'
+'use client'
+import { getCookieByKey } from '@/actions/cookieToken'
+import { AppointmentTaskInterface, ReferrerData } from '@/interfaces'
+import { GetAppointmentTaskList } from '@/services/referrer'
 import { CloseSquare } from 'iconsax-react'
+import { useEffect, useState } from 'react'
 
 interface ShowDetailsProps {
   data: ReferrerData
@@ -7,6 +11,18 @@ interface ShowDetailsProps {
 }
 
 const ShowDetails = ({ data, close }: ShowDetailsProps) => {
+  const [taskList, setTaskList] = useState<AppointmentTaskInterface[]>([])
+  useEffect(() => {
+    const getData = async () => {
+      const accessToken = await getCookieByKey('access_token')
+      await GetAppointmentTaskList({
+        accessToken,
+        uid: data.personnel_uid,
+      }).then((result) => {
+        if (result) setTaskList(result)
+      })
+    }
+  }, [])
   return (
     <div>
       <div className='absolute bg-slate-600 opacity-50 w-full h-[200vh] z-50 top-0 right-0'></div>
@@ -82,11 +98,22 @@ const ShowDetails = ({ data, close }: ShowDetailsProps) => {
           <div className='flex flex-col mt-5'>
             <p className='text-[#5F6474]'> گروه‌ و زیرگروه‌های عضو شده</p>
             <div className='flex gap-3'>
-              {
-                <p className='text-[#3B5A4F] bg-[#A1E3CB] px-5 py-1 rounded-full w-fit'>
-                  {'نیاز به اضافه شدن در بک'}
-                </p>
-              }
+              {taskList.map(
+                (task) =>
+                  task.sup_group_name.length > 0 && (
+                    <p className='text-[#3B5A4F] bg-[#A1E3CB] px-5 py-1 rounded-full w-fit'>
+                      {task.sup_group_name}
+                    </p>
+                  )
+              )}
+              {taskList.map(
+                (task) =>
+                  task.supervisor_name.length > 0 && (
+                    <p className='text-[#3B5A4F] bg-[#A1E3CB] px-5 py-1 rounded-full w-fit'>
+                      {task.supervisor_name}
+                    </p>
+                  )
+              )}
             </div>
           </div>
           <div className='flex flex-col mt-5'>

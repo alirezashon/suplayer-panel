@@ -1,4 +1,8 @@
-import { TreeChartInterface, ReferrerData } from '@/interfaces'
+import {
+  TreeChartInterface,
+  ReferrerData,
+  AppointmentTaskInterface,
+} from '@/interfaces'
 
 export const CreateReferrer = async ({
   accessToken,
@@ -267,6 +271,34 @@ export const EditAppointmentTask = async ({
     console.log(error)
   }
 }
+export const GetAppointmentTaskList = async ({
+  accessToken,
+  uid,
+}: {
+  accessToken: string | undefined
+  uid?: string
+}): Promise<AppointmentTaskInterface[] | undefined> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_task_list?personnel_uid=${uid}`,
+      {
+        method: 'GET',
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+      }
+    )
+
+    if (!response.ok || response.status === 500) {
+      throw new Error('Failed to GetAssistantList')
+    }
+    const result = await response.json()
+    return result.data
+  } catch (error) {
+    error
+  }
+}
+
 export const DefineAppointmentTaskList = async ({
   accessToken,
   tasks,

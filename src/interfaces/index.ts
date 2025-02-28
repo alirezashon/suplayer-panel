@@ -331,3 +331,17 @@ export interface OptionTrees {
   label: string
   children?: OptionTrees[]
 }
+export interface AppointmentTaskInterface {
+  id: number
+  task_uid: string
+  personnel_uid: string
+  pers_full_name: string
+  supervisor_code: string
+  supervisor_name: string
+  sup_group_code: string
+  sup_group_name: string
+  visitor_uid: string
+  visitor_full_name: string
+  task_kpi_uid: string
+  cstatus: number
+}
