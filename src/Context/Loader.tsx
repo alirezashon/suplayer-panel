@@ -54,30 +54,8 @@ const ContextLoader = () => {
   useEffect(() => {
     const fetcher = async () => {
       await getUserInfo().then((value) => value && setUserInfo(value))
-      await getBeneficiaryData().then(
-        (result) => result && setBeneficiaryData(result)
-      )
+
       await getReferrerData().then((value) => value && setReferrerData(value))
-
-      await getReferrerChart().then(
-        (value) => value && setTreeChartInterface(value)
-      )
-      await getCampaignData().then((value) => value && setCampaignData(value))
-      await getPromotiuonData().then(
-        (value) => value && setPromotionData(value)
-      )
-      await getKPITaskData().then((result) => result && setKPITaskData(result))
-      await getBalance().then((result) => result && setBalance(result))
-      await getTransactionHistory().then(
-        (result) => result && setTransactionsData(result)
-      )
-      await getAllocatedList().then(
-        (result) => result && setAllocationList(result)
-      )
-      await getSystemTypes().then((result) => {
-        if (result) setSystemTypes(result)
-      })
-
       const [groupData, subGroupsData, productData, productGroupsData] =
         await Promise.all([
           getGroupData(),
@@ -140,8 +118,30 @@ const ContextLoader = () => {
           level2: brandOptionTreesData,
           level3: productOptionTreesData,
         })
+      await getBeneficiaryData().then(
+        (result) => result && setBeneficiaryData(result)
+      )
       if (productGroupMultiSelectorData)
         setProductGroupSelectorData(productGroupMultiSelectorData)
+
+      await getReferrerChart().then(
+        (value) => value && setTreeChartInterface(value)
+      )
+      await getCampaignData().then((value) => value && setCampaignData(value))
+      await getPromotiuonData().then(
+        (value) => value && setPromotionData(value)
+      )
+      await getKPITaskData().then((result) => result && setKPITaskData(result))
+      await getBalance().then((result) => result && setBalance(result))
+      await getTransactionHistory().then(
+        (result) => result && setTransactionsData(result)
+      )
+      await getSystemTypes().then((result) => {
+        if (result) setSystemTypes(result)
+      })
+      await getAllocatedList().then(
+        (result) => result && setAllocationList(result)
+      )
     }
     fetcher()
   }, [

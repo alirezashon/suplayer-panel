@@ -1,4 +1,9 @@
-import { DraftsData, TransactionInterface, WalletDetail } from '@/interfaces'
+import {
+  DraftsData,
+  IDepositForm,
+  TransactionInterface,
+  WalletDetail,
+} from '@/interfaces'
 
 export const AddDraftImage = async ({
   src,
@@ -24,8 +29,8 @@ export const AddDraftImage = async ({
     }
 
     return await response.json()
-  } catch (error: unknown) {
-    console.log(error)
+  }catch (error) {
+    error
   }
 }
 export const CheckDraftImage = async ({
@@ -54,8 +59,8 @@ export const CheckDraftImage = async ({
     }
 
     return await response.json()
-  } catch (error: unknown) {
-    console.log(error)
+  }catch (error) {
+    error
   }
 }
 export const ChangeDraftStatus = async ({
@@ -99,8 +104,8 @@ export const ChangeDraftStatus = async ({
     }
 
     return await response.json()
-  } catch (error: unknown) {
-    console.log(error)
+  }catch (error) {
+    error
   }
 }
 export const DepositWithDraft = async ({
@@ -161,8 +166,8 @@ export const DepositWithDraft = async ({
     }
 
     return await response.json()
-  } catch (error: unknown) {
-    console.log(error)
+  }catch (error) {
+    error
   }
 }
 export const GetdDraftsList = async ({
@@ -187,7 +192,7 @@ export const GetdDraftsList = async ({
 
     return await response.json()
   } catch (error) {
-    console.log(error)
+    error
   }
 }
 
@@ -218,7 +223,7 @@ export const GetdDraftImage = async ({
 
     return await response.json()
   } catch (error) {
-    console.log(error)
+    error
   }
 }
 
@@ -244,7 +249,7 @@ export const GetTransactions = async ({
 
     return await response.json()
   } catch (error) {
-    console.log(error)
+    error
   }
 }
 
@@ -271,6 +276,50 @@ export const GetWalletDetail = async ({
     const result = await response.json()
     return result[0]
   } catch (error) {
-    console.log(error)
+    error
+  }
+}
+
+export const CreateNewIPG = async ({
+  data,
+  accessToken,
+}: {
+  data: IDepositForm
+  accessToken: string
+}) => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/sbw_createipg`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify(data),
+      }
+    )
+    return await response.json()
+  }catch (error) {
+    error
+  }
+}
+
+export const SendPaymentLink = async ({ order_id }: { order_id: string }) => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/sbw_sendipg`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ order_id }),
+      }
+    )
+    const datali = await response.json()
+    return datali
+  } catch (error) {
+    error
   }
 }

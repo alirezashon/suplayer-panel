@@ -16,6 +16,7 @@ import {
   TransactionInterface,
   WalletDetail,
   ShowSystemTypeUI,
+  AllocatedListInterface,
 } from '@/interfaces'
 import { createContext, useContext, useState, ReactNode } from 'react'
 
@@ -50,8 +51,8 @@ interface DataContextProps {
   setTransactionsData: (value: TransactionInterface[]) => void
   balance: WalletDetail | undefined
   setBalance: (value: WalletDetail) => void
-  allocationList: AllocationListInterface[] | undefined
-  setAllocationList: (value: AllocationListInterface[]) => void
+  allocationList: AllocatedListInterface[] | undefined
+  setAllocationList: (value: AllocatedListInterface[]) => void
   systemTypes:
     | {
         productTypes: ShowSystemTypeUI[]
@@ -84,7 +85,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
   const [draftsData, setDraftsData] = useState<DraftsData[]>([])
   const [KPITaskData, setKPITaskData] = useState<KPIData[]>([])
   const [allocationList, setAllocationList] = useState<
-    AllocationListInterface[]
+    AllocatedListInterface[]
   >([])
   const [balance, setBalance] = useState<WalletDetail>()
   const [transactionsData, setTransactionsData] = useState<

@@ -6,10 +6,12 @@ import { useMenu } from '@/Context/Menu'
 import OTPInput from '../shared/OTPinput'
 import { useStates } from '@/Context/States'
 import { getCookieByKey } from '@/actions/cookieToken'
-import { UserChangePassword } from '@/services/user'
+import { UpdateProfile, UserChangePassword } from '@/services/user'
+import { useData } from '@/Context/Data'
 
 const Profile = () => {
   const { setMenu } = useMenu()
+  const { userInfo } = useData()
   const { showModal } = useStates()
   const [tab, setTab] = useState<number>(0)
   const [otp, setOtp] = useState<null | string>()
@@ -20,10 +22,48 @@ const Profile = () => {
   }>({ words: false, number: false, length: false })
   const firstInputRef = useRef<HTMLInputElement>(null)
   const secondInputRef = useRef<HTMLInputElement>(null)
-  const user = {
-    name: 'محدثه عالمی',
-    src: '/icons/logo.png',
-    mobile: '0912121212',
+  const informationsRefs = useRef({
+    name: '',
+    family: '',
+    componyName: '',
+    componyCode: '',
+    email: '',
+  })
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    informationsRefs.current = {
+      ...informationsRefs.current,
+      [name]: value,
+    }
+  }
+
+  const updateProfile = async () => {
+    const accessToken = (await getCookieByKey('access_token')) || ''
+    console.log('vodiiiii')
+    await UpdateProfile({
+      accessToken,
+      Mobile: userInfo?.mobile || '',
+      FirstName: informationsRefs.current.name,
+      LastName: informationsRefs.current.family,
+      CompanyName: informationsRefs.current.componyName,
+      CompanyCode: informationsRefs.current.componyCode,
+      Email: informationsRefs.current.email,
+    }).then((result) => {
+      if (result && result.status == 1)
+        showModal({
+          type: 'success',
+          main: result?.message,
+          title: 'موفق',
+          autoClose: 1,
+        })
+      else
+        showModal({
+          type: 'error',
+          main: `${result?.message}`,
+          title: 'ناموفق',
+          autoClose: 1,
+        })
+    })
   }
   const validator = () => {
     if (firstInputRef.current?.value.match(/(?=.*[a-z])(?=.*[A-Z])/)) {
@@ -122,15 +162,15 @@ const Profile = () => {
       <div className='flex flex-col bg-white border rounded-lg p-4 m-2'>
         <div className='flex gap-4 m-4'>
           <Image
-            src={user.src}
+            src={'/icons/logo.png'}
             alt='پروفایل کاربر'
             width={104}
             height={104}
             className='rounded-full w-[12vh] h-[12vh] object-cover'
           />
           <div className='flex gap-3 flex-col'>
-            <span className='ml-2'>نام کاربر: {user.name}</span>
-            <span className='ml-2'>{user.mobile}</span>
+            <span className='ml-2'>نام کاربر: {userInfo?.full_name}</span>
+            <span className='ml-2'>{userInfo?.mobile}</span>
           </div>
         </div>
         <div className='flex items-start self-center w-full text-base text-center max-md:max-w-full my-5'>
@@ -159,35 +199,72 @@ const Profile = () => {
             رمز عبور
           </button>
         </div>
-        <form
-          // onSubmit={handleSubmit}
-          className='w-full'>
+        <form className='w-full'>
           {tab === 0 ? (
-            <div className=' flex gap-10 mt-10 w-full'>
-              <div className='flex flex-col w-full'>
-                <label className='text-base font-medium text-right text-gray-800'>
-                  نام
-                </label>
-                <input placeholder='نام ' />
+            <div className='flex flex-col'>
+              <div className=' flex gap-10 mt-10 w-full'>
+                <div className='flex flex-col w-full'>
+                  <label className='text-base font-medium text-right mr-2'>
+                    نام
+                  </label>
+                  <input
+                    onChange={handleChange}
+                    name='name'
+                    placeholder='نام '
+                  />
+                </div>
+                <div className='flex flex-col w-full'>
+                  <label className='text-base font-medium text-right mr-2'>
+                    نام خانوادگی
+                  </label>
+                  <input
+                    onChange={handleChange}
+                    name='family'
+                    placeholder='نام خانوادگی '
+                  />
+                </div>
               </div>
-              <div className='flex flex-col w-full'>
-                <label className='text-base font-medium text-right text-gray-800'>
-                  نام خانوادگی
-                </label>
-                <input placeholder='نام خانوادگی ' />
+              <div className=' flex gap-10 mt-10 w-full'>
+                <div className='flex flex-col w-full'>
+                  <label className='text-base font-medium text-right mr-2'>
+                    نام شرکت
+                  </label>
+                  <input
+                    onChange={handleChange}
+                    name='componyName'
+                    placeholder='نام شرکت'
+                  />
+                </div>
+                <div className='flex flex-col w-full'>
+                  <label className='text-base font-medium text-right mr-2'>
+                    شناسه شرکت
+                  </label>
+                  <input
+                    onChange={handleChange}
+                    name='componyCode'
+                    placeholder='شناسه شرکت'
+                  />
+                </div>
               </div>
-              <div className='flex flex-col w-full'>
-                <label className='text-base font-medium text-right text-gray-800'>
-                  شماره موبایل
-                </label>
-                <input placeholder='شماره موبایل ' />
+              <div className=' flex gap-10 mt-10 w-full'>
+                <div className='flex flex-col w-full'>
+                  <label className='text-base font-medium text-right mr-2'>
+                    ایمیل
+                  </label>
+                  <input
+                    onChange={handleChange}
+                    name='email'
+                    placeholder='ایمیل '
+                    type='email'
+                  />
+                </div>
               </div>
             </div>
           ) : typeof otp !== 'string' ? (
             <>
               <div className=' flex gap-10 mt-10 w-full'>
                 <div className='flex flex-col w-full'>
-                  <label className='text-base font-medium text-right text-gray-800'>
+                  <label className='text-base font-medium text-right'>
                     رمز عبور
                   </label>
                   <input
@@ -198,7 +275,7 @@ const Profile = () => {
                   />
                 </div>
                 <div className='flex flex-col w-full'>
-                  <label className='text-base font-medium text-right text-gray-800'>
+                  <label className='text-base font-medium text-right'>
                     تکرار رمز عبور
                   </label>
                   <input
@@ -236,13 +313,11 @@ const Profile = () => {
           <div className='mt-10 flex justify-end'>
             <button
               type='button'
-              onClick={() =>
-                tab === 0
-                  ? ''
-                  : typeof otp !== 'string'
-                  ? setOtp('')
-                  : changePassword()
-              }
+              onClick={() => {
+                if (tab === 0) updateProfile()
+                else if (tab !== 0 && typeof otp !== 'string') setOtp('')
+                else changePassword()
+              }}
               className={`fill-button px-10 h-10 rounded-lg  `}>
               {tab === 0 ? ' ذخیره تغییرات ' : 'ذخیره رمز جدید'}
             </button>

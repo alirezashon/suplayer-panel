@@ -1,12 +1,17 @@
 import { getCookieByKey } from '@/actions/cookieToken'
 import { walletBoxStyle } from '@/app/assets/style'
 import Loading from '@/components/shared/LoadingSpinner'
+import OTPInput from '@/components/shared/OTPinput'
 import { useData } from '@/Context/Data'
 import { useMenu } from '@/Context/Menu'
 import { useStates } from '@/Context/States'
+import { setComma } from '@/hooks/NumberFormat'
 import { generateAllocationSignature } from '@/hooks/Signature'
-import { DefineAllocationInterface } from '@/interfaces'
-import { DefineAllocation } from '@/services/allocation'
+import {
+  DefineAllocationInterface,
+  SaveAllocatedDataInterface,
+} from '@/interfaces'
+import { ChangeAllocationStatus, DefineAllocation } from '@/services/allocation'
 import { Printer, WalletMoney } from 'iconsax-react'
 import { useEffect, useState } from 'react'
 
@@ -20,10 +25,18 @@ const headers = [
 const Allocation = () => {
   const [filterType, setFilterType] = useState<number>(0)
   const [loading, setLoading] = useState<boolean>()
-  const { beneficiaryData, balance } = useData()
+  const { beneficiaryData, balance, allocationList } = useData()
+  const [allocatedData, setAllocatedData] = useState<
+    SaveAllocatedDataInterface[]
+  >([])
+  const [uneditableIds, setUneditableIds] = useState<string[]>([])
   const [allocationData, setAllocationData] = useState<
     DefineAllocationInterface[]
   >([])
+  const [commaAmount, setCommaAmount] = useState<
+    { id: string; value: string }[]
+  >([])
+  const [otp, setOtp] = useState<string>()
   const { setMenu } = useMenu()
   const {
     selectedSubGroupData,
@@ -37,18 +50,66 @@ const Allocation = () => {
       location.hash = 'porsant'
       setMenu('porsant')
     }
-  }, [setMenu,selectedGroupData])
-  const handleCreditChange = async (id: string, value: string) => {
+    if (!allocationList) return
+
+    // ست کردن allocatedData
+    const allocated: SaveAllocatedDataInterface[] = allocationList.map(
+      (allocate) => ({
+        commission_allocation_uid: allocate.commission_allocation_uid,
+        status: 1,
+        wamount: allocate.amount,
+        allocation_status_id_file: allocate.allocation_status_id_file,
+        assignment_otp: '',
+        Signature: '',
+      })
+    )
+    setAllocatedData(allocated)
+
+    const newAllocationData: DefineAllocationInterface[] = []
+    const uneditableIds: string[] = []
+    const newCommaAmount: { id: string; value: string }[] = []
+
+    allocationList.forEach((allocate) => {
+      newAllocationData.push({
+        ...allocate,
+        amount: allocate.amount, // مقدار پیش‌فرض جدول
+        Signature: '', // مقدار `Signature` را اضافه کردیم
+      })
+      uneditableIds.push(allocate.visitor_uid)
+      newCommaAmount.push({
+        id: allocate.visitor_uid,
+        value: setComma(allocate.amount.toString()), // مقدار اولیه `commaAmount`
+      })
+    })
+
+    setAllocationData(newAllocationData)
+    setUneditableIds(uneditableIds)
+    setCommaAmount(newCommaAmount) // مقداردهی مقدار اولیه `commaAmount`
+  }, [setMenu, selectedGroupData, allocationList])
+
+  const handleCreditChange = (id: string, value: string) => {
+    // حذف کاماهای اضافی
+    const cleanValue = value.replace(/,/g, '')
+
+    // بررسی مقدار جدید که فقط عدد باشد
+    if (!/^\d*$/.test(cleanValue)) return
+
+    // به‌روزرسانی مقدار `allocationData`
     setAllocationData((prev) => {
       const existingIndex = prev.findIndex((item) => item.visitor_uid === id)
-      if (value === '') {
+
+      if (cleanValue === '') {
         return prev.filter((item) => item.visitor_uid !== id)
       }
+
       if (existingIndex !== -1) {
         return prev.map((item, index) =>
-          index === existingIndex ? { ...item, amount: Number(value) } : item
+          index === existingIndex
+            ? { ...item, amount: parseInt(cleanValue, 10) }
+            : item
         )
       }
+
       const newItem: DefineAllocationInterface = {
         commission_type: 0,
         allocation_type: 0,
@@ -56,10 +117,10 @@ const Allocation = () => {
         sup_group_code: selectedGroupData?.sup_group_code as string,
         supervisor_code: selectedSubGroupData?.supervisor_code as string,
         visitor_uid: id,
-        amount: Number(value),
+        amount: parseInt(cleanValue, 10), // مقدار `amount` را به `number` تبدیل کنید
         currency_type: 241,
         Signature: generateAllocationSignature({
-          amount: value,
+          amount: cleanValue,
           customerMobile: id,
           sup_group_code: selectedGroupData?.sup_group_code as string,
           supervisor_code: selectedSubGroupData?.supervisor_code as string,
@@ -67,6 +128,19 @@ const Allocation = () => {
         }),
       }
       return [...prev, newItem]
+    })
+
+    // به‌روزرسانی مقدار `commaAmount`
+    setCommaAmount((prev) => {
+      const existingIndex = prev.findIndex((item) => item.id === id)
+      const formattedValue = setComma(cleanValue)
+
+      if (existingIndex !== -1) {
+        return prev.map((item, index) =>
+          index === existingIndex ? { ...item, value: formattedValue } : item
+        )
+      }
+      return [...prev, { id, value: formattedValue }]
     })
   }
 
@@ -102,6 +176,15 @@ const Allocation = () => {
           })
       }
     )
+  }
+  const changeAllocateStatus = async () => {
+    showModal({
+      type: 'info',
+      main: <OTPInput setResult={setOtp} />,
+      title: 'کد ارسال شده را وارد کنید',
+    })
+    // const accessToken = (await getCookieByKey('access_token')) || ''
+    // await ChangeAllocationStatus({ accessToken, status_updates: allocatedData })
   }
   return (
     <div className='m-4'>
@@ -204,16 +287,22 @@ const Allocation = () => {
                     <td className='text-center px-4 py-2'>
                       <input
                         inputMode='numeric'
+                        maxLength={21}
                         value={
-                          allocationData.find(
-                            (item) => item.visitor_uid === row.visitor_uid
-                          )?.amount || ''
+                          commaAmount.find(
+                            (item) => item.id === row.visitor_uid
+                          )?.value || ''
                         }
                         placeholder='مبلغ اعتبار را وارد کنید'
                         onChange={(e) => {
                           handleCreditChange(row.visitor_uid, e.target.value)
                         }}
-                        className=' border-none rounded px-2 py-1 w-full text-center'
+                        disabled={uneditableIds.includes(row.visitor_uid)}
+                        className={`border-none rounded px-2 py-1 w-full text-center ${
+                          uneditableIds.includes(row.visitor_uid)
+                            ? 'bg-gray-100 cursor-not-allowed'
+                            : ''
+                        }`}
                       />
                     </td>
                   </tr>
@@ -231,12 +320,18 @@ const Allocation = () => {
                 <button
                   onClick={allocateData}
                   disabled={loading}
-                  className={`fill-button h-10 rounded-lg  w-56 flex justify-center items-center`}>
+                  className={`border-button h-10 rounded-lg  w-56 flex justify-center items-center`}>
                   {loading ? (
                     <Loading size={5} color='#ffffff' />
                   ) : (
-                    '  ثبت نهایی'
+                    'ذخیره پیش نویس تخصیص'
                   )}
+                </button>
+                <button
+                  onClick={changeAllocateStatus}
+                  disabled={loading}
+                  className={`fill-button h-10 rounded-lg  w-56 flex justify-center items-center`}>
+                  {loading ? <Loading size={5} color='#ffffff' /> : 'ثبت نهایی'}
                 </button>
               </div>
             </div>

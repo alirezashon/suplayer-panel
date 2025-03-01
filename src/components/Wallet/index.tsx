@@ -146,8 +146,8 @@ const Wallet: React.FC = () => {
             <button
               className=' min-w-[26%] justify-center flex rounded-lg  px-3 h-10 items-center  bg-[#0F973D] text-white hover:bg-[#0f973ce1]'
               onClick={() => {
-                location.hash = 'deposite'
-                setMenu('deposite')
+                location.hash = 'deposite-draft'
+                setMenu('deposite-draft')
               }}>
               <Add size={22} color='#ffffff' />
               <p> افزایش اعتبار</p>

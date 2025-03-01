@@ -72,8 +72,8 @@ export const CreateCampaign = async ({
     }
 
     return await response.json()
-  } catch (error: unknown) {
-    console.log(error)
+  }catch (error) {
+    error
   }
 }
 export const EditProductCampaign = async ({
@@ -151,8 +151,8 @@ export const EditProductCampaign = async ({
     }
 
     return await response.json()
-  } catch (error: unknown) {
-    console.log(error)
+  }catch (error) {
+    error
   }
 }
 export const GetCampaignList = async ({
@@ -177,6 +177,6 @@ export const GetCampaignList = async ({
 
     return await response.json()
   } catch (error) {
-    console.log(error)
+    error
   }
 }

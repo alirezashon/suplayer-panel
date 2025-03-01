@@ -22,6 +22,7 @@ const ShowDetails = ({ data, close }: ShowDetailsProps) => {
         if (result) setTaskList(result)
       })
     }
+    getData()
   }, [])
   return (
     <div>
@@ -98,18 +99,22 @@ const ShowDetails = ({ data, close }: ShowDetailsProps) => {
           <div className='flex flex-col mt-5'>
             <p className='text-[#5F6474]'> گروه‌ و زیرگروه‌های عضو شده</p>
             <div className='flex gap-3'>
-              {taskList.map(
-                (task) =>
-                  task.sup_group_name.length > 0 && (
-                    <p className='text-[#3B5A4F] bg-[#A1E3CB] px-5 py-1 rounded-full w-fit'>
+              {taskList?.map(
+                (task, index) =>
+                  task?.sup_group_name?.length > 0 && (
+                    <p
+                      key={index}
+                      className='text-[#3B5A4F] bg-[#A1E3CB] px-5 py-1 rounded-full w-fit'>
                       {task.sup_group_name}
                     </p>
                   )
               )}
-              {taskList.map(
-                (task) =>
-                  task.supervisor_name.length > 0 && (
-                    <p className='text-[#3B5A4F] bg-[#A1E3CB] px-5 py-1 rounded-full w-fit'>
+              {taskList?.map(
+                (task, index) =>
+                  task?.supervisor_name?.length > 0 && (
+                    <p
+                      key={index}
+                      className='text-[#3B5A4F] bg-[#A1E3CB] px-5 py-1 rounded-full w-fit'>
                       {task.supervisor_name}
                     </p>
                   )

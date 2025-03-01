@@ -40,11 +40,9 @@ const ExcelGenerator = ({
         document.body.appendChild(a)
         a.click()
         document.body.removeChild(a)
-      } else {
-        console.error('Failed to generate Excel')
       }
     } catch (error) {
-      console.error('Error:', error)
+      error
     } finally {
       setLoading(false)
     }

@@ -96,7 +96,7 @@ const SignUp = () => {
 
     try {
     } catch (err: unknown) {
-      console.log(err)
+      err)
       setLoading(false)
     }
   }

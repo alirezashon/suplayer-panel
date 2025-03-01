@@ -20,7 +20,6 @@ import { useStates } from '@/Context/States'
 import MainLayout from '@/layouts/MainLayout'
 import { useEffect, useState } from 'react'
 import CustomModal from '@/components/shared/CustomModal'
-import Reports from '@/components/Reports'
 import FinanceReports from '@/components/Reports/Finance'
 import TransactionReports from '@/components/Reports/transactions'
 
@@ -77,7 +76,7 @@ const Home = () => {
               <ProductGroupsPage />
             ) : menu === 'products' ? (
               <Product />
-            ) : menu === 'deposite' ? (
+            ) : ['deposite', 'deposite-draft'].includes(menu) ? (
               <Deposite />
             ) : [
                 'promotion',

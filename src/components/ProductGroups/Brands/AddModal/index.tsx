@@ -78,11 +78,6 @@ const AddModal = ({
     const emptyBrands = names.filter((brand) => !brand.trim())
     if (emptyBrands.length > 0)
       newErrors.brands = ['تمام فیلدهای برند اجباریست']
-    // console.table(errors)
-    // if (Object.keys(newErrors).length > 0) {
-    //   setErrors(newErrors)
-    //   return
-    // }
 
     setIsConfirmed(true)
 

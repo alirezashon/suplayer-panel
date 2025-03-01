@@ -20,7 +20,7 @@ export const data: Items[] = [
   },
   {
     name: 'کیف پول',
-    link: ['wallet','deposite'],
+    link: ['wallet','deposite','deposite-draft'],
     iconIndex: 1,
   },
 

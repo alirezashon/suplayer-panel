@@ -19,7 +19,6 @@ const Report = () => {
         if (value) {
           const rowItems = value.map((row) => [...Object.values(row)])
           setRows(rowItems)
-          console.log(rowItems)
           setDraftsData(value)
         }
       })

@@ -35,8 +35,8 @@ export const CreateProductGroup = async ({
     }
 
     return await response.json()
-  } catch (error: unknown) {
-    console.log(error)
+  }catch (error) {
+    error
   }
 }
 export const EditProductGroup = async ({
@@ -75,8 +75,8 @@ export const EditProductGroup = async ({
     }
 
     return await response.json()
-  } catch (error: unknown) {
-    console.log(error)
+  }catch (error) {
+    error
   }
 }
 export const GetProductGroupsList = async ({
@@ -101,7 +101,7 @@ export const GetProductGroupsList = async ({
 
     return await response.json()
   } catch (error) {
-    console.log(error)
+    error
   }
 }
 
@@ -147,8 +147,8 @@ export const CreateProduct = async ({
     }
 
     return await response.json()
-  } catch (error: unknown) {
-    console.log(error)
+  }catch (error) {
+    error
   }
 }
 export const EditProduct = async ({
@@ -193,8 +193,8 @@ export const EditProduct = async ({
     }
 
     return await response.json()
-  } catch (error: unknown) {
-    console.log(error)
+  }catch (error) {
+    error
   }
 }
 export const GetProductList = async ({
@@ -220,7 +220,7 @@ export const GetProductList = async ({
     const result = await response.json()
     return result.data
   } catch (error) {
-    console.log(error)
+    error
   }
 }
 export const GetProductSystemTypesList = async ({
@@ -245,7 +245,7 @@ export const GetProductSystemTypesList = async ({
     const result = await response.json()
     return result
   } catch (error) {
-    console.log(error)
+    error
   }
 }
 export const GetGroupSystemTypesList = async ({
@@ -270,6 +270,6 @@ export const GetGroupSystemTypesList = async ({
     const result = await response.json()
     return result
   } catch (error) {
-    console.log(error)
+    error
   }
 }

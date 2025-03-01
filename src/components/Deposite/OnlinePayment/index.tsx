@@ -1,31 +1,51 @@
-import  { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { WalletMoney, CloseCircle, TickCircle, MoneySend } from 'iconsax-react'
+import { setComma } from '@/hooks/NumberFormat'
+import { errorClass, walletBoxStyle } from '@/app/assets/style'
+import { getCookieByKey } from '@/actions/cookieToken'
+import { CreateNewIPG, SendPaymentLink } from '@/services/finance'
 
 const OnlinePayment = () => {
-  const refs = useRef({
+  const [formData, setFormData] = useState({
     amount: '',
     phone: '',
     description: '',
   })
-  const amountInputRef = useRef<HTMLInputElement>(null) // Ref for amount input
-  const phoneInputRef = useRef<HTMLInputElement>(null) // Ref for phone input
-  const descriptionInputRef = useRef<HTMLTextAreaElement>(null) // Ref for description textarea
-
-  const updateAmount = (value: string) => {
-    refs.current.amount = value
-    if (amountInputRef.current) {
-      amountInputRef.current.value = value // Update input DOM value
+  const [error, setError] = useState<string>()
+  const handleChange = (field: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }))
+  }
+  const handleSubmit = async () => {
+    if (formData.amount.length < 1) {
+      setError('لطفا مبلغ را وارد کنید')
+      return
     }
-  }
+    const accessToken = (await getCookieByKey('access_token')) || ''
+    const mobile = (await getCookieByKey('mobile')) || ''
 
-  const walletBoxStyle = {
-    background:
-      'linear-gradient(white, white) padding-box, conic-gradient(rgb(246, 230, 255), #ffffff 18%, #644a9e 31% 43%, rgb(228, 228, 255), #ffffff, #7a5fb7, #e7d9d5, #e4e0ed) border-box',
-    border: '3px solid transparent',
-    borderRadius: '1vh',
-    padding: '1.5rem',
+    await CreateNewIPG({
+      accessToken,
+      data: {
+        mobile,
+        cust_name: '',
+        amount: parseInt(formData?.amount.replace(/,/g, '')),
+        order_id: 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) =>
+          (
+            (c === 'x'
+              ? Math.random() * 16
+              : ((Math.random() * 16) & 0x3) | 0x8) | 0
+          ).toString(16)
+        ),
+        description: formData?.description,
+        ref_order_id: '',
+      },
+    }).then(async (result) => {
+      if (result)
+        await SendPaymentLink({ order_id: result.token }).then((hasLink) => {
+          if (hasLink.url) open(hasLink.url)
+        })
+    })
   }
-
   return (
     <div className='min-h-screen flex justify-center p-4'>
       <div className='w-full flex bg-white rounded-lg shadow-lg p-6 gap-8'>
@@ -42,32 +62,31 @@ const OnlinePayment = () => {
               مبلغ به ریال
             </label>
             <input
-              id='amount'
-              ref={amountInputRef}
-              defaultValue={refs.current.amount}
-              onChange={(e) => (refs.current.amount = e.target.value)}
-              
+              inputMode='numeric'
+              value={formData.amount}
+              onChange={(e) =>
+                handleChange(
+                  'amount',
+                  setComma(e.target.value.replace(/,/g, ''))
+                )
+              }
               placeholder='مبلغ خود را به ریال وارد نمایید'
-              className='w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400'
+              className={`w-full p-3 border rounded-lg ${
+                error && errorClass
+              } focus:outline-none focus:ring-2 focus:ring-purple-400`}
             />
+            {error && <p className='text-red-400'>{error}</p>}
           </div>
 
           <div className='flex justify-between'>
-            <button
-              onClick={() => updateAmount('100000000')}
-              className='px-4 py-2 rounded-md border hover:bg-gray-100 text-[#7747C0]'>
-              ۱۰۰ میلیون ریال
-            </button>
-            <button
-              onClick={() => updateAmount('200000000')}
-              className='px-4 py-2 rounded-md border hover:bg-gray-100 text-[#7747C0]'>
-              ۲۰۰ میلیون ریال
-            </button>
-            <button
-              onClick={() => updateAmount('300000000')}
-              className='px-4 py-2 rounded-md border hover:bg-gray-100 text-[#7747C0]'>
-              ۳۰۰ میلیون ریال
-            </button>
+            {['100000000', '200000000', '300000000'].map((amount) => (
+              <button
+                key={amount}
+                onClick={() => handleChange('amount', amount)}
+                className='px-4 py-2 rounded-md border hover:bg-gray-100 text-[#7747C0]'>
+                {amount.toLocaleString()} ریال
+              </button>
+            ))}
           </div>
 
           <div>
@@ -78,10 +97,8 @@ const OnlinePayment = () => {
             </label>
             <input
               id='phone'
-              ref={phoneInputRef}
-              defaultValue={refs.current.phone}
-              onChange={(e) => (refs.current.phone = e.target.value)}
-              
+              value={formData.phone}
+              onChange={(e) => handleChange('phone', e.target.value)}
               placeholder='شماره موبایل خود را وارد کنید'
               className='w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400'
             />
@@ -95,9 +112,8 @@ const OnlinePayment = () => {
             </label>
             <textarea
               id='description'
-              ref={descriptionInputRef}
-              defaultValue={refs.current.description}
-              onChange={(e) => (refs.current.description = e.target.value)}
+              value={formData.description}
+              onChange={(e) => handleChange('description', e.target.value)}
               placeholder='شرح واریز'
               className='w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400'
               rows={3}
@@ -105,7 +121,9 @@ const OnlinePayment = () => {
           </div>
 
           <div className='flex gap-10'>
-            <button className='flex items-center gap-2 w-full justify-center h-10 rounded-lg bg-[#7747C0] hover:bg-[#7747C0] text-white font-bold'>
+            <button
+              onClick={handleSubmit}
+              className='flex items-center gap-2 w-full justify-center h-10 rounded-lg bg-[#7747C0] hover:bg-[#7747C0] text-white font-bold'>
               <TickCircle size='20' color='#ffffff' variant='Bold' />
               پرداخت
             </button>

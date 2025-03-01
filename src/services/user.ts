@@ -35,7 +35,7 @@ export const UserLoginAPI = async ({
     const data = await response.json()
     return data
   } catch (error) {
-    console.log(error)
+    error
   }
 }
 
@@ -53,8 +53,8 @@ export const GetOtpWithMobile = async ({ mobile }: { mobile: string }) => {
     }
 
     return await response.json()
-  } catch (error: unknown) {
-    console.log(error)
+  } catch (error) {
+    error
   }
 }
 
@@ -85,8 +85,8 @@ export const MobileValidatorOtp = async ({
       document.cookie = 'user_status=ACTIVE; path=/auth'
 
     return await response.json()
-  } catch (error: unknown) {
-    console.log(error)
+  } catch (error) {
+    error
   }
 }
 
@@ -174,7 +174,7 @@ export const GetCurrentUser = async ({
 
     return await response.json()
   } catch (error) {
-    console.log(error)
+    error
   }
 }
 
@@ -210,7 +210,54 @@ export const UserChangePassword = async ({
     }
 
     return await response.json()
-  } catch (error: unknown) {
-    console.log(error)
+  } catch (error) {
+    error
+  }
+}
+
+export const UpdateProfile = async ({
+  accessToken,
+  Mobile,
+  FirstName,
+  LastName,
+  CompanyName,
+  CompanyCode,
+  Email,
+}: {
+  accessToken: string
+  Mobile: string
+  FirstName?: string
+  LastName?: string
+  CompanyName?: string
+  CompanyCode?: string
+  Email?: string
+}) => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/update_profile`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          Mobile,
+          FirstName,
+          LastName,
+          CompanyName,
+          CompanyCode,
+          Email,
+        }),
+      }
+    )
+
+    if (response.status !== 200) {
+      throw new Error('Failed to UserChangePassword!')
+    }
+
+    return await response.json()
+  } catch (error) {
+    error
   }
 }

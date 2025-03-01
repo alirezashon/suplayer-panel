@@ -121,7 +121,7 @@ const Login = () => {
         }
       }
     } catch (err: unknown) {
-      console.log(err)
+      err
       setLoading(false)
     }
   }

@@ -7,7 +7,6 @@ import { Import, MoreSquare } from 'iconsax-react'
 const Table = ({ data, headers }: { data: object[]; headers: string[] }) => {
   const downloadDraftImage = async (id: string) => {
     const accessToken = (await getCookieByKey('access_token')) || ''
-    console.log(id)
     await GetdDraftImage({ accessToken, file_uid: id }).then((response) => {
       const blob = new Blob([response], { type: 'image/jpeg' })
       const url = URL.createObjectURL(blob)

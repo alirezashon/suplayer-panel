@@ -30,8 +30,8 @@ export const CreateGroup = async ({
     )
 
     return await response.json()
-  } catch (error: unknown) {
-    console.log(error)
+  }catch (error) {
+    error
   }
 }
 export const EditGroup = async ({
@@ -63,8 +63,8 @@ export const EditGroup = async ({
     )
 
     return await response.json()
-  } catch (error: unknown) {
-    console.log(error)
+  }catch (error) {
+    error
   }
 }
 export const GetGroupsList = async ({
@@ -89,7 +89,7 @@ export const GetGroupsList = async ({
 
     return await response.json()
   } catch (error) {
-    console.log(error)
+    error
   }
 }
 export const CreateSubGroup = async ({
@@ -124,8 +124,8 @@ export const CreateSubGroup = async ({
     )
 
     return await response.json()
-  } catch (error: unknown) {
-    console.log(error)
+  }catch (error) {
+    error
   }
 }
 export const EditSubGroup = async ({
@@ -162,8 +162,8 @@ export const EditSubGroup = async ({
     )
 
     return await response.json()
-  } catch (error: unknown) {
-    console.log(error)
+  }catch (error) {
+    error
   }
 }
 export const GetSubGroupsList = async ({
@@ -188,7 +188,7 @@ export const GetSubGroupsList = async ({
 
     return await response.json()
   } catch (error) {
-    console.log(error)
+    error
   }
 }
 export const CreateBeneficiary = async ({
@@ -256,8 +256,8 @@ export const CreateBeneficiary = async ({
     )
 
     return await response.json()
-  } catch (error: unknown) {
-    console.log(error)
+  }catch (error) {
+    error
   }
 }
 export const EditBeneficiary = async ({
@@ -328,8 +328,8 @@ export const EditBeneficiary = async ({
     )
 
     return await response.json()
-  } catch (error: unknown) {
-    console.log(error)
+  }catch (error) {
+    error
   }
 }
 export const GetBeneficiaryList = async ({
@@ -354,7 +354,7 @@ export const GetBeneficiaryList = async ({
     const data = await response.json()
     return data.data
   } catch (error) {
-    console.log(error)
+    error
   }
 }
 
@@ -399,8 +399,8 @@ export const CreateFormula = async ({
     )
 
     return await response.json()
-  } catch (error: unknown) {
-    console.log(error)
+  }catch (error) {
+    error
   }
 }
 export const EditFormula = async ({
@@ -444,8 +444,8 @@ export const EditFormula = async ({
     )
 
     return await response.json()
-  } catch (error: unknown) {
-    console.log(error)
+  }catch (error) {
+    error
   }
 }
 export const GetFormulassList = async ({
@@ -470,7 +470,7 @@ export const GetFormulassList = async ({
 
     return await response.json()
   } catch (error) {
-    console.log(error)
+    error
   }
 }
 
@@ -509,8 +509,8 @@ export const CreateKPITask = async ({
     )
 
     return await response.json()
-  } catch (error: unknown) {
-    console.log(error)
+  }catch (error) {
+    error
   }
 }
 export const EditKPITask = async ({
@@ -551,8 +551,8 @@ export const EditKPITask = async ({
     )
 
     return await response.json()
-  } catch (error: unknown) {
-    console.log(error)
+  }catch (error) {
+    error
   }
 }
 export const GetKPITaskList = async ({
@@ -578,6 +578,6 @@ export const GetKPITaskList = async ({
     const result = await response.json()
     return result.data
   } catch (error) {
-    console.log(error)
+    error
   }
 }

@@ -2,9 +2,11 @@ import Report from './Report'
 import Drafts from './Drafts'
 import { useState } from 'react'
 import OnlinePayment from './OnlinePayment'
+import { useMenu } from '@/Context/Menu'
 
 const Deposite = () => {
-  const [tab, setTab] = useState<number>(0)
+  const { menu } = useMenu()
+  const [tab, setTab] = useState<number>(menu === 'deposite-draft' ? 3 : 0)
   return (
     <div className=''>
       <div className='flex border-b'>

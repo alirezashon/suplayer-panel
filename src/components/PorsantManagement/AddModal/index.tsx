@@ -23,7 +23,6 @@ const AddModal = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('Submitted Names:', names)
   }
 
   return (

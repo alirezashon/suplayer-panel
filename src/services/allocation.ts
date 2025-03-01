@@ -1,6 +1,9 @@
 import {
+  AllocatedListInterface,
   AllocationListInterface,
   DefineAllocationInterface,
+  ReleaseAllocatedInterface,
+  SaveAllocatedDataInterface,
 } from '@/interfaces'
 
 export const DefineAllocation = async ({
@@ -26,22 +29,15 @@ export const DefineAllocation = async ({
       return
     }
     return await response.json()
-  } catch (error: unknown) {
-    console.log(error)
+  } catch (error) {
+    error
   }
 }
-export const ReleaseAllocatedList = async ({
-  data,
+export const ChangeAllocationStatus = async ({
+  status_updates,
   accessToken,
 }: {
-  data: {
-    commission_allocation_uid: string
-    status: number
-    wamount: number
-    allocation_status_id_file: string
-    assignment_otp: string
-    Signature: string
-  }[]
+  status_updates: SaveAllocatedDataInterface[]
   accessToken: string | undefined
 }) => {
   try {
@@ -51,23 +47,51 @@ export const ReleaseAllocatedList = async ({
         method: 'POST',
         headers: {
           authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ status_updates: data }),
+        body: JSON.stringify({ status_updates }),
       }
     )
     if (response.status !== 200) {
       return
     }
     return await response.json()
-  } catch (error: unknown) {
-    console.log(error)
+  } catch (error) {
+    error
   }
 }
+export const ReleaseAllocatedList = async ({
+  data,
+  accessToken,
+}: {
+  data: ReleaseAllocatedInterface[]
+  accessToken: string | undefined
+}) => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/batch_prv_commission_release`,
+      {
+        method: 'POST',
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ releases: data }),
+      }
+    )
+    if (response.status !== 200) {
+      return
+    }
+    return await response.json()
+  } catch (error) {
+    error
+  }
+}
+
 export const GetAllocatedList = async ({
   accessToken,
 }: {
   accessToken: string
-}): Promise<AllocationListInterface[] | undefined> => {
+}): Promise<AllocatedListInterface[] | undefined> => {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/commission_allocation_list`,
@@ -83,8 +107,8 @@ export const GetAllocatedList = async ({
     }
     const result = await response.json()
     return result.data
-  } catch (error: unknown) {
-    console.log(error)
+  } catch (error) {
+    error
   }
 }
 
@@ -108,8 +132,8 @@ export const GetReferrerProductList = async ({
     }
 
     return await response.json()
-  } catch (error: unknown) {
-    console.log(error)
+  } catch (error) {
+    error
   }
 }
 
@@ -145,8 +169,8 @@ export const DefineProductoReferrer = async ({
     }
 
     return await response.json()
-  } catch (error: unknown) {
-    console.log(error)
+  } catch (error) {
+    error
   }
 }
 
@@ -185,8 +209,8 @@ export const EditReferrerProduct = async ({
     }
 
     return await response.json()
-  } catch (error: unknown) {
-    console.log(error)
+  } catch (error) {
+    error
   }
 }
 
@@ -214,7 +238,7 @@ export const AddDocFile = async ({
     }
 
     return await response.json()
-  } catch (error: unknown) {
-    console.log(error)
+  } catch (error) {
+    error
   }
 }

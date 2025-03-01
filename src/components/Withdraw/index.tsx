@@ -35,7 +35,6 @@ export const WithdrawalForm: React.FC = () => {
     setErrors(newErrors)
 
     if (Object.keys(newErrors).length === 0) {
-      console.log('Form Submitted:', formValues)
       setShowConfirmModal(true)
     }
   }

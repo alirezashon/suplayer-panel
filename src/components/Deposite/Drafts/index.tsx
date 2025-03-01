@@ -51,7 +51,6 @@ const Drafts = () => {
     if (!refs.current.cheque_date) newErrors.cheque_date = 'این فیلد اجباریست'
 
     setErrors(newErrors)
-    console.table(newErrors)
     return Object.keys(newErrors).length === 0
   }
   const handleSubmit = async () => {
@@ -91,7 +90,6 @@ const Drafts = () => {
         }
       }
     } catch (error) {
-      console.warn(error)
       showModal({
         main: <p>خطا در ثبت اطلاعات. لطفاً مجدداً تلاش کنید.</p>,
         title: 'واریز',
@@ -111,10 +109,10 @@ const Drafts = () => {
         return true
       } else return false
     } catch (error) {
-      console.error('Upload failed:', error)
+      error
       return false
     }
-  } 
+  }
   return (
     <div className='min-h-screen flex justify-center p-4'>
       <div className='w-full flex bg-white rounded-lg shadow-lg p-6 gap-8'>

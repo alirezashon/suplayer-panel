@@ -23,7 +23,7 @@ export const GetStates = async ({
     const result = await response.json()
     return result.data
   } catch (error) {
-    console.log(error)
+    error
   }
 }
 
@@ -51,7 +51,7 @@ export const GetCounty = async ({
     const result = await response.json()
     return result.data
   } catch (error) {
-    console.log(error)
+    error
   }
 }
 
@@ -82,7 +82,7 @@ export const GetCity = async ({
     const result = await response.json()
     return result.data
   } catch (error) {
-    console.log(error)
+    error
   }
 }
 export const GetMajor = async ({
@@ -106,7 +106,7 @@ export const GetMajor = async ({
     const result = await response.json()
     return result.data
   } catch (error) {
-    console.log(error)
+    error
   }
 }
 
@@ -131,6 +131,6 @@ export const GetEducationalDegree = async ({
     const result = await response.json()
     return result.data
   } catch (error) {
-    console.log(error)
+    error
   }
 }

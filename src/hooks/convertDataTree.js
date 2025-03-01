@@ -35,6 +35,5 @@ export const generateMultiSelectData = ({
   })
 
   const result = Object.values(level1Map)
-  console.log(result)
   return result
 }

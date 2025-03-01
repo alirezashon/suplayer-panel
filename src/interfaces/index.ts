@@ -320,6 +320,34 @@ export interface AllocationListInterface {
   allocation_status_id_file: string
   wstatus: number
 }
+export interface AllocatedListInterface {
+  serial_uid: string
+  commission_type: number
+  allocation_type: number
+  source_type: number
+  sup_group_code: string
+  sup_group_name: string
+  supervisor_code: string
+  supervisor_name: string
+  visitor_uid: string
+  visitor_full_name: string
+  amount: number
+  currency_type: number
+  commission_allocation_uid: string
+  allocation_status_id_file: string
+  wstatus: number
+  source_uid: string
+  regdate_pe: string
+  reg_time: string
+}
+export interface SaveAllocatedDataInterface {
+  commission_allocation_uid: string
+  status: number
+  wamount: number
+  allocation_status_id_file: string
+  assignment_otp: string
+  Signature: string
+}
 export interface ShowSystemTypeUI {
   id: number | string
   label: string
@@ -344,4 +372,32 @@ export interface AppointmentTaskInterface {
   visitor_full_name: string
   task_kpi_uid: string
   cstatus: number
+}
+export interface ReleaseAllocatedInterface {
+  ref_allocation_uid: string
+  commission_type: number
+  allocation_type: number
+  source_type: number
+  sup_group_code: string
+  supervisor_code: string
+  visitor_uid: string
+  amount: number
+  currency_type: number
+  Signature: string
+}
+export interface ChangeReleasedStatus {
+  commission_allocation_uid: string
+  status: number
+  wamount: number
+  allocation_status_id_file: string
+  assignment_otp: string
+  Signature: string
+}
+export interface IDepositForm {
+  mobile: string
+  cust_name: string
+  amount: number
+  order_id: string
+  description?: string
+  ref_order_id?: string
 }
