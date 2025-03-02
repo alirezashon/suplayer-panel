@@ -292,9 +292,9 @@ const AddModal = ({
               {state !== 1 ? (
                 <>
                   <button
+                    type={state === 1 ? 'button' : 'submit'}
                     onClick={() => {
                       if (state === 1) setState(2)
-                      else handleSubmit
                     }}
                     style={{
                       animation: `${

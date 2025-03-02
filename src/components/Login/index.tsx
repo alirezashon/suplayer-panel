@@ -120,8 +120,8 @@ const Login = () => {
           location.href = '/'
         }
       }
-    } catch (err: unknown) {
-      err
+    } catch (err) {
+      console.log(err)
       setLoading(false)
     }
   }

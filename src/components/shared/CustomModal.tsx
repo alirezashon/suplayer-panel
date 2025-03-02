@@ -38,7 +38,7 @@ const CustomModal = () => {
       {/* بک‌دراپ */}
       <div className='absolute bg-slate-600 opacity-50 w-full h-full z-40 top-0 right-0'></div>
       {/* جعبه مودال */}
-      <div className='p-10 rounded-lg max-md:w-[100%] w-[40vw] z-50 bg-white border border-gray-300 shadow-lg transition-transform duration-300 ease-in-out'>
+      <div className='p-10 rounded-lg max-md:w-[100%] w-[40vw] z-50 right-side-animate bg-white border border-gray-300 shadow-lg transition-transform duration-700 ease-in-out'>
         {modalContent?.autoClose && (
           <div className='w-full bg-gray-200 h-1 mb-10 overflow-hidden'>
             <div

@@ -30,7 +30,7 @@ export const AddDraftImage = async ({
 
     return await response.json()
   } catch (error) {
-    error
+    console.log(error)
   }
 }
 export const CheckDraftImage = async ({
@@ -60,7 +60,7 @@ export const CheckDraftImage = async ({
 
     return await response.json()
   } catch (error) {
-    error
+    console.log(error)
   }
 }
 export const ChangeDraftStatus = async ({
@@ -105,7 +105,7 @@ export const ChangeDraftStatus = async ({
 
     return await response.json()
   } catch (error) {
-    error
+    console.log(error)
   }
 }
 export const DepositWithDraft = async ({
@@ -167,7 +167,7 @@ export const DepositWithDraft = async ({
 
     return await response.json()
   } catch (error) {
-    error
+    console.log(error)
   }
 }
 export const GetdDraftsList = async ({
@@ -192,7 +192,7 @@ export const GetdDraftsList = async ({
 
     return await response.json()
   } catch (error) {
-    error
+    console.log(error)
   }
 }
 
@@ -223,7 +223,7 @@ export const GetdDraftImage = async ({
 
     return await response.json()
   } catch (error) {
-    error
+    console.log(error)
   }
 }
 
@@ -249,7 +249,7 @@ export const GetTransactions = async ({
 
     return await response.json()
   } catch (error) {
-    error
+    console.log(error)
   }
 }
 export const GetWalletDetail = async ({
@@ -275,7 +275,7 @@ export const GetWalletDetail = async ({
     const result = await response.json()
     return result[0]
   } catch (error) {
-    error
+    console.log(error)
   }
 }
 
@@ -300,7 +300,7 @@ export const CreateNewIPG = async ({
     )
     return await response.json()
   } catch (error) {
-    error
+    console.log(error)
   }
 }
 
@@ -319,6 +319,6 @@ export const SendPaymentLink = async ({ order_id }: { order_id: string }) => {
     const datali = await response.json()
     return datali
   } catch (error) {
-    error
+    console.log(error)
   }
 }

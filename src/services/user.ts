@@ -35,7 +35,7 @@ export const UserLoginAPI = async ({
     const data = await response.json()
     return data
   } catch (error) {
-    error
+    console.log(error)
   }
 }
 
@@ -54,7 +54,7 @@ export const GetOtpWithMobile = async ({ mobile }: { mobile: string }) => {
 
     return await response.json()
   } catch (error) {
-    error
+    console.log(error)
   }
 }
 
@@ -86,7 +86,7 @@ export const MobileValidatorOtp = async ({
 
     return await response.json()
   } catch (error) {
-    error
+    console.log(error)
   }
 }
 
@@ -174,7 +174,7 @@ export const GetCurrentUser = async ({
 
     return await response.json()
   } catch (error) {
-    error
+    console.log(error)
   }
 }
 
@@ -211,7 +211,7 @@ export const UserChangePassword = async ({
 
     return await response.json()
   } catch (error) {
-    error
+    console.log(error)
   }
 }
 
@@ -258,6 +258,6 @@ export const UpdateProfile = async ({
 
     return await response.json()
   } catch (error) {
-    error
+    console.log(error)
   }
 }

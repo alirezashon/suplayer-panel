@@ -16,7 +16,6 @@ import {
   WalletDetail,
   ShowSystemTypeUI,
   AllocatedListInterface,
-  ReleaseAllocatedInterface,
   ReleasedListInterface,
 } from '@/interfaces'
 import { createContext, useContext, useState, ReactNode } from 'react'

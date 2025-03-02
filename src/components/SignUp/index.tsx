@@ -95,8 +95,8 @@ const SignUp = () => {
     if (!validateInputs()) return
 
     try {
-    } catch (err: unknown) {
-      err)
+    } catch (err) {
+      console.log(err)
       setLoading(false)
     }
   }
@@ -207,7 +207,7 @@ const SignUp = () => {
                       <input
                         id='email'
                         value={inputRefs.current.email}
-                        onChange={(e) =>
+                        onChange={() =>
                           handleInputChange
                           // (inputRefs.current.email = e.target.value)
                         }
@@ -258,7 +258,7 @@ const SignUp = () => {
                             className='block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7747C0]'
                             autoComplete='off'
                             ref={passwordInputRef}
-                            onChange={(e) => {
+                            onChange={() => {
                               validator()
                             }}
                             aria-autocomplete='none'

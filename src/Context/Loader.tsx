@@ -169,6 +169,7 @@ const ContextLoader = () => {
     setAllocationList,
     setGroupSelectorData,
     setProductGroupSelectorData,
+    setReleasedList
   ])
   return <div></div>
 }

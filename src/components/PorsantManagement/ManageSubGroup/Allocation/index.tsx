@@ -101,7 +101,7 @@ const Allocation = () => {
     setAllocationData(newAllocationData)
     setUneditableIds(uneditableIds)
     setCommaAmount(newCommaAmount) // مقداردهی مقدار اولیه `commaAmount`
-  }, [setMenu, selectedGroupData, allocationList])
+  }, [setMenu, selectedGroupData, allocationList, selectedSubGroupData])
 
   console.table(allocationData)
   const handleCreditChange = (id: string, value: string) => {

@@ -76,7 +76,7 @@ export const CreateReferrer = async ({
 
     return await response.json()
   }catch (error) {
-    error
+    console.log(error)
   }
 }
 export const EditReferrer = async ({
@@ -153,7 +153,7 @@ export const EditReferrer = async ({
     )
     return await response.json()
   }catch (error) {
-    error
+    console.log(error)
   }
 }
 export const GetReferrerList = async ({
@@ -179,7 +179,7 @@ export const GetReferrerList = async ({
 
     return await response.json()
   } catch (error) {
-    error
+    console.log(error)
   }
 }
 export const DefineAppointmentTask = async ({
@@ -227,7 +227,7 @@ export const DefineAppointmentTask = async ({
 
     return await response.json()
   }catch (error) {
-    error
+    console.log(error)
   }
 }
 export const EditAppointmentTask = async ({
@@ -268,7 +268,7 @@ export const EditAppointmentTask = async ({
 
     return await response.json()
   }catch (error) {
-    error
+    console.log(error)
   }
 }
 export const GetAppointmentTaskList = async ({
@@ -295,7 +295,7 @@ export const GetAppointmentTaskList = async ({
     const result = await response.json()
     return result.data
   } catch (error) {
-    error
+    console.log(error)
   }
 }
 
@@ -332,7 +332,7 @@ export const DefineAppointmentTaskList = async ({
 
     return await response.json()
   }catch (error) {
-    error
+    console.log(error)
   }
 }
 export const EditAppointmentTaskList = async ({
@@ -370,7 +370,7 @@ export const EditAppointmentTaskList = async ({
 
     return await response.json()
   }catch (error) {
-    error
+    console.log(error)
   }
 }
 export const CreateReferrerChart = async ({
@@ -406,7 +406,7 @@ export const CreateReferrerChart = async ({
 
     return await response.json()
   }catch (error) {
-    error
+    console.log(error)
   }
 }
 export const EditReferrerChart = async ({
@@ -444,7 +444,7 @@ export const EditReferrerChart = async ({
     )
     return await response.json()
   }catch (error) {
-    error
+    console.log(error)
   }
 }
 export const GetReferrerChartList = async ({
@@ -469,6 +469,6 @@ export const GetReferrerChartList = async ({
 
     return await response.json()
   } catch (error) {
-    error
+    console.log(error)
   }
 }

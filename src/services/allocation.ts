@@ -31,7 +31,7 @@ export const DefineAllocation = async ({
     }
     return await response.json()
   } catch (error) {
-    error
+    console.log(error)
   }
 }
 export const ChangeAllocationStatus = async ({
@@ -58,7 +58,7 @@ export const ChangeAllocationStatus = async ({
     }
     return await response.json()
   } catch (error) {
-    error
+    console.log(error)
   }
 }
 export const ReleaseAllocatedList = async ({
@@ -84,7 +84,7 @@ export const ReleaseAllocatedList = async ({
     }
     return await response.json()
   } catch (error) {
-    error
+    console.log(error)
   }
 }
 export const ChangeReleaseStatus = async ({
@@ -111,7 +111,7 @@ export const ChangeReleaseStatus = async ({
     }
     return await response.json()
   } catch (error) {
-    error
+    console.log(error)
   }
 }
 export const GetAllocatedList = async ({
@@ -135,7 +135,7 @@ export const GetAllocatedList = async ({
     const result = await response.json()
     return result.data
   } catch (error) {
-    error
+    console.log(error)
   }
 }
 export const GetReleasedList = async ({
@@ -159,7 +159,7 @@ export const GetReleasedList = async ({
     const result = await response.json()
     return result.data
   } catch (error) {
-    error
+    console.log(error)
   }
 }
 export const GetReferrerProductList = async ({
@@ -183,7 +183,7 @@ export const GetReferrerProductList = async ({
 
     return await response.json()
   } catch (error) {
-    error
+    console.log(error)
   }
 }
 
@@ -220,7 +220,7 @@ export const DefineProductoReferrer = async ({
 
     return await response.json()
   } catch (error) {
-    error
+    console.log(error)
   }
 }
 
@@ -260,7 +260,7 @@ export const EditReferrerProduct = async ({
 
     return await response.json()
   } catch (error) {
-    error
+    console.log(error)
   }
 }
 
@@ -289,6 +289,6 @@ export const AddDocFile = async ({
 
     return await response.json()
   } catch (error) {
-    error
+    console.log(error)
   }
 }

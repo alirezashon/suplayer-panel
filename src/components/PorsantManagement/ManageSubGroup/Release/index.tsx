@@ -104,7 +104,15 @@ const Release = () => {
           : false,
       }))
     setData(allocated)
-  }, [setMenu, selectedGroupData, allocationList])
+  }, [
+    setMenu,
+    selectedGroupData,
+    selectedSubGroupData,
+    allocationList,
+    beneficiaryData,
+    releaseData,
+    releasedList,
+  ])
 
   const handleDeleteFile = (visitorTel: string) => {
     setData((prev) =>

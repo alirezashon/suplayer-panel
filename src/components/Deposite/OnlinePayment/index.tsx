@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { WalletMoney, CloseCircle, TickCircle, MoneySend } from 'iconsax-react'
 import { setComma } from '@/hooks/NumberFormat'
 import { errorClass, walletBoxStyle } from '@/app/assets/style'

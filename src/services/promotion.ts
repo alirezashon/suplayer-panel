@@ -63,7 +63,7 @@ export const CreatePromotion = async ({
 
     return await response.json()
   }catch (error) {
-    error
+    console.log(error)
   }
 }
 export const EditProductPromotion = async ({
@@ -133,7 +133,7 @@ export const EditProductPromotion = async ({
 
     return await response.json()
   }catch (error) {
-    error
+    console.log(error)
   }
 }
 export const GetPromotionList = async ({
@@ -158,7 +158,7 @@ export const GetPromotionList = async ({
 
     return await response.json()
   } catch (error) {
-    error
+    console.log(error)
   }
 }
 
@@ -187,7 +187,7 @@ export const AddPromotionImage = async ({
 
     return await response.json()
   }catch (error) {
-    error
+    console.log(error)
   }
 }
 
@@ -218,6 +218,6 @@ export const CheckPromotionImage = async ({
 
     return await response.json()
   }catch (error) {
-    error
+    console.log(error)
   }
 }

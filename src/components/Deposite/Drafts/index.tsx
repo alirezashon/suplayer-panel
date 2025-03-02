@@ -90,6 +90,7 @@ const Drafts = () => {
         }
       }
     } catch (error) {
+      console.log(error)
       showModal({
         main: <p>خطا در ثبت اطلاعات. لطفاً مجدداً تلاش کنید.</p>,
         title: 'واریز',
@@ -109,7 +110,7 @@ const Drafts = () => {
         return true
       } else return false
     } catch (error) {
-      error
+      console.log(error)
       return false
     }
   }

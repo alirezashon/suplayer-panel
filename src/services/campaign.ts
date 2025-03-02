@@ -73,7 +73,7 @@ export const CreateCampaign = async ({
 
     return await response.json()
   }catch (error) {
-    error
+    console.log(error)
   }
 }
 export const EditProductCampaign = async ({
@@ -152,7 +152,7 @@ export const EditProductCampaign = async ({
 
     return await response.json()
   }catch (error) {
-    error
+    console.log(error)
   }
 }
 export const GetCampaignList = async ({
@@ -177,6 +177,6 @@ export const GetCampaignList = async ({
 
     return await response.json()
   } catch (error) {
-    error
+    console.log(error)
   }
 }

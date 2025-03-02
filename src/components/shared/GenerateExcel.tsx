@@ -42,7 +42,7 @@ const ExcelGenerator = ({
         document.body.removeChild(a)
       }
     } catch (error) {
-      error
+      console.log(error)
     } finally {
       setLoading(false)
     }

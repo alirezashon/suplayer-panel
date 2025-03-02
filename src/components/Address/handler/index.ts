@@ -6,7 +6,7 @@ export interface SearchAddress {
 
 export const searchAddress = async (
   value: string,
-  setAddresses: (value: any[]) => void
+  setAddresses: (value: unknown[]) => void
 ) => {
   try {
     const response = await fetch(
