@@ -1,8 +1,9 @@
 import {
   AllocatedListInterface,
-  AllocationListInterface,
   DefineAllocationInterface,
+  FinalReleaseInterface,
   ReleaseAllocatedInterface,
+  ReleasedListInterface,
   SaveAllocatedDataInterface,
 } from '@/interfaces'
 
@@ -86,7 +87,33 @@ export const ReleaseAllocatedList = async ({
     error
   }
 }
-
+export const ChangeReleaseStatus = async ({
+  status_updates,
+  accessToken,
+}: {
+  status_updates: FinalReleaseInterface[]
+  accessToken: string | undefined
+}) => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/batch_commission_allocation_status`,
+      {
+        method: 'POST',
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ status_updates }),
+      }
+    )
+    if (response.status !== 200) {
+      return
+    }
+    return await response.json()
+  } catch (error) {
+    error
+  }
+}
 export const GetAllocatedList = async ({
   accessToken,
 }: {
@@ -111,7 +138,30 @@ export const GetAllocatedList = async ({
     error
   }
 }
-
+export const GetReleasedList = async ({
+  accessToken,
+}: {
+  accessToken: string
+}): Promise<ReleasedListInterface[] | undefined> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/commission__release_list`,
+      {
+        method: 'GET',
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+      }
+    )
+    if (response.status !== 200) {
+      return
+    }
+    const result = await response.json()
+    return result.data
+  } catch (error) {
+    error
+  }
+}
 export const GetReferrerProductList = async ({
   accessToken,
 }: {

@@ -1,6 +1,5 @@
 'use client'
 import {
-  AllocationListInterface,
   BeneficiaryData,
   CampaignInterface,
   DraftsData,
@@ -17,6 +16,8 @@ import {
   WalletDetail,
   ShowSystemTypeUI,
   AllocatedListInterface,
+  ReleaseAllocatedInterface,
+  ReleasedListInterface,
 } from '@/interfaces'
 import { createContext, useContext, useState, ReactNode } from 'react'
 
@@ -53,6 +54,8 @@ interface DataContextProps {
   setBalance: (value: WalletDetail) => void
   allocationList: AllocatedListInterface[] | undefined
   setAllocationList: (value: AllocatedListInterface[]) => void
+  releasedList: ReleasedListInterface[] | undefined
+  setReleasedList: (value: ReleasedListInterface[]) => void
   systemTypes:
     | {
         productTypes: ShowSystemTypeUI[]
@@ -87,6 +90,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
   const [allocationList, setAllocationList] = useState<
     AllocatedListInterface[]
   >([])
+  const [releasedList, setReleasedList] = useState<ReleasedListInterface[]>([])
   const [balance, setBalance] = useState<WalletDetail>()
   const [transactionsData, setTransactionsData] = useState<
     TransactionInterface[]
@@ -133,6 +137,8 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
         setAllocationList,
         systemTypes,
         setSystemTypes,
+        releasedList,
+        setReleasedList,
       }}>
       {children}
     </DataContext.Provider>

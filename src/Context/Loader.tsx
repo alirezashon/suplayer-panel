@@ -15,6 +15,7 @@ import {
   getTransactionHistory,
   getAllocatedList,
   getSystemTypes,
+  getReleasedList,
 } from '@/actions/setData'
 import { useStates } from './States'
 import { useData } from './Data'
@@ -45,6 +46,7 @@ const ContextLoader = () => {
     setTransactionsData,
     setAllocationList,
     setSystemTypes,
+    setReleasedList,
   } = useData()
   const {
     setProductGroupStates,
@@ -142,6 +144,9 @@ const ContextLoader = () => {
       await getAllocatedList().then(
         (result) => result && setAllocationList(result)
       )
+      await getReleasedList().then(
+        (result) => result && setReleasedList(result)
+      )
     }
     fetcher()
   }, [
@@ -167,5 +172,4 @@ const ContextLoader = () => {
   ])
   return <div></div>
 }
-
 export default ContextLoader

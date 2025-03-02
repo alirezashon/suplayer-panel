@@ -11,7 +11,7 @@ import {
   DefineAllocationInterface,
   SaveAllocatedDataInterface,
 } from '@/interfaces'
-import { ChangeAllocationStatus, DefineAllocation } from '@/services/allocation'
+import { DefineAllocation } from '@/services/allocation'
 import { Printer, WalletMoney } from 'iconsax-react'
 import { useEffect, useState } from 'react'
 
@@ -43,6 +43,7 @@ const Allocation = () => {
     selectedGroupData,
     setSelectedGroupData,
     showModal,
+    closeModal,
   } = useStates()
 
   useEffect(() => {
@@ -53,40 +54,56 @@ const Allocation = () => {
     if (!allocationList) return
 
     // ست کردن allocatedData
-    const allocated: SaveAllocatedDataInterface[] = allocationList.map(
-      (allocate) => ({
+    const allocated = allocationList
+      .filter((allocate) => allocate.wstatus === 0)
+      .map((allocate) => ({
         commission_allocation_uid: allocate.commission_allocation_uid,
         status: 1,
         wamount: allocate.amount,
         allocation_status_id_file: allocate.allocation_status_id_file,
         assignment_otp: '',
         Signature: '',
-      })
-    )
-    setAllocatedData(allocated)
+      }))
+
+    setAllocatedData(allocated as SaveAllocatedDataInterface[])
 
     const newAllocationData: DefineAllocationInterface[] = []
     const uneditableIds: string[] = []
     const newCommaAmount: { id: string; value: string }[] = []
 
-    allocationList.forEach((allocate) => {
-      newAllocationData.push({
-        ...allocate,
-        amount: allocate.amount, // مقدار پیش‌فرض جدول
-        Signature: '', // مقدار `Signature` را اضافه کردیم
+    allocationList
+      .filter((allocate) => allocate.wstatus === 1)
+      .forEach((allocate) => {
+        newAllocationData.push({
+          commission_type: 0,
+          allocation_type: 0,
+          source_type: 1,
+          sup_group_code: selectedGroupData?.sup_group_code as string,
+          supervisor_code: selectedSubGroupData?.supervisor_code as string,
+          visitor_uid: allocate.visitor_uid,
+          amount: allocate.amount,
+          currency_type: 241,
+          Signature: generateAllocationSignature({
+            amount: `${allocate.amount}`,
+            customerMobile: allocate?.visitor_uid,
+            sup_group_code: selectedGroupData?.sup_group_code as string,
+            supervisor_code: selectedSubGroupData?.supervisor_code as string,
+            visitor_uid: allocate?.visitor_uid,
+          }),
+        })
+        uneditableIds.push(allocate.visitor_uid)
+        newCommaAmount.push({
+          id: allocate.visitor_uid,
+          value: setComma(allocate.allocated_amount.toString()), // مقدار اولیه `commaAmount`
+        })
       })
-      uneditableIds.push(allocate.visitor_uid)
-      newCommaAmount.push({
-        id: allocate.visitor_uid,
-        value: setComma(allocate.amount.toString()), // مقدار اولیه `commaAmount`
-      })
-    })
 
     setAllocationData(newAllocationData)
     setUneditableIds(uneditableIds)
     setCommaAmount(newCommaAmount) // مقداردهی مقدار اولیه `commaAmount`
   }, [setMenu, selectedGroupData, allocationList])
 
+  console.table(allocationData)
   const handleCreditChange = (id: string, value: string) => {
     // حذف کاماهای اضافی
     const cleanValue = value.replace(/,/g, '')
@@ -180,7 +197,17 @@ const Allocation = () => {
   const changeAllocateStatus = async () => {
     showModal({
       type: 'info',
-      main: <OTPInput setResult={setOtp} />,
+      main: (
+        <>
+          <button onClick={() => closeModal()}></button>
+          <OTPInput
+            setResult={(value: string) => {
+              if (value?.length > 5) closeModal()
+              setOtp(value)
+            }}
+          />
+        </>
+      ),
       title: 'کد ارسال شده را وارد کنید',
     })
     // const accessToken = (await getCookieByKey('access_token')) || ''

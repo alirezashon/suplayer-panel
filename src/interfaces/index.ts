@@ -313,14 +313,13 @@ export interface AllocationListInterface {
   sup_group_code: string
   supervisor_code: string
   visitor_uid: string
-  amount: number
   currency_type: number
   commission_allocation_uid: string
   regdate: string
   allocation_status_id_file: string
   wstatus: number
 }
-export interface AllocatedListInterface {
+interface BaseAllocatedReleasedInterface {
   serial_uid: string
   commission_type: number
   allocation_type: number
@@ -333,13 +332,25 @@ export interface AllocatedListInterface {
   visitor_full_name: string
   amount: number
   currency_type: number
-  commission_allocation_uid: string
   allocation_status_id_file: string
   wstatus: number
   source_uid: string
   regdate_pe: string
   reg_time: string
 }
+
+export interface AllocatedListInterface extends BaseAllocatedReleasedInterface {
+  commission_allocation_uid: string
+  allocated_amount: number
+  released_amount: number
+  remain_amount: number
+  id: number
+}
+export interface ReleasedListInterface extends BaseAllocatedReleasedInterface {
+  commission_release_uid: string
+  amount: number
+}
+
 export interface SaveAllocatedDataInterface {
   commission_allocation_uid: string
   status: number
@@ -400,4 +411,12 @@ export interface IDepositForm {
   order_id: string
   description?: string
   ref_order_id?: string
+}
+export interface FinalReleaseInterface {
+  commission_allocation_uid: string
+  status: number
+  wamount: number
+  allocation_status_id_file: string
+  assignment_otp: string
+  Signature: string
 }

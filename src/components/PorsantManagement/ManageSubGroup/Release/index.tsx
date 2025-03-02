@@ -4,10 +4,14 @@ import { useMenu } from '@/Context/Menu'
 import { useStates } from '@/Context/States'
 import { setComma } from '@/hooks/NumberFormat'
 import { generateAllocationSignature } from '@/hooks/Signature'
-import { ReleaseAllocatedInterface } from '@/interfaces'
+import {
+  BeneficiaryData,
+  FinalReleaseInterface,
+  ReleaseAllocatedInterface,
+} from '@/interfaces'
 import { AddDocFile } from '@/services/allocation'
 import { Printer, SearchNormal, TickCircle, Trash } from 'iconsax-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const headers = [
   'ردیف',
@@ -19,8 +23,15 @@ const headers = [
   'بارگذاری فایل محاسبه',
 ]
 
+type TableDataType = Partial<BeneficiaryData> & {
+  allocatedAmount: string
+  releasedAmount: string
+  newReleaseAmount: string
+  fileId: string
+  disable?: boolean
+}
 const Release = () => {
-  const { beneficiaryData } = useData()
+  const { beneficiaryData, allocationList, releasedList } = useData()
   const {
     showModal,
     selectedSubGroupData,
@@ -37,22 +48,68 @@ const Release = () => {
   const [releaseData, setReleaseData] = useState<ReleaseAllocatedInterface[]>(
     []
   )
-  const [commaAmount, setCommaAmount] = useState<
-    { id: string; value: string }[]
+  const [finalReleaseData, setFinalReleaseData] = useState<
+    FinalReleaseInterface[]
   >([])
-  const [, setConvertedData] = useState<
-    {
-      visitor_tel: string
-      visitor_name: string
-      visitor_family: string
-      source: string
-    }[]
-  >([])
+  const [data, setData] = useState<TableDataType[]>([])
+
+  useEffect(() => {
+    if (!selectedGroupData) {
+      location.hash = 'porsant'
+      setMenu('porsant')
+    }
+    if (!releaseData) return
+
+    const released = releasedList
+      ?.filter((release) => release.wstatus === 1)
+      .map((row) => ({
+        commission_allocation_uid: row.commission_release_uid,
+        status: 1,
+        wamount: row.amount,
+        allocation_status_id_file: row.allocation_status_id_file,
+        assignment_otp: '',
+        Signature: generateAllocationSignature({
+          amount: `${row.amount}`,
+          customerMobile: row.visitor_uid,
+          sup_group_code: selectedGroupData?.sup_group_code as string,
+          supervisor_code: selectedSubGroupData?.supervisor_code as string,
+          visitor_uid: row.visitor_uid,
+        }),
+      }))
+    setFinalReleaseData(released as FinalReleaseInterface[])
+
+    if (!allocationList) return
+    const allocated = allocationList
+      .filter((allocate) => allocate.wstatus === 1)
+      .map((allocate) => ({
+        visitor_name: beneficiaryData?.find(
+          (beneficiary) => beneficiary.visitor_uid === allocate?.visitor_uid
+        )?.visitor_name,
+        visitor_family: beneficiaryData?.find(
+          (beneficiary) => beneficiary.visitor_uid === allocate?.visitor_uid
+        )?.visitor_family,
+        visitor_tel: allocate.visitor_uid,
+        allocatedAmount: setComma(`${allocate.allocated_amount}`),
+        releasedAmount: setComma(`${allocate.released_amount}`),
+        newReleaseAmount:
+          releasedList
+            ?.filter((release) => release.wstatus === 1)
+            ?.find((final) => final?.visitor_uid === allocate?.visitor_uid)
+            ?.amount.toString() || '',
+        fileId: '',
+        disable: releasedList
+          ?.filter((release) => release.wstatus === 1)
+          ?.find((final) => final?.visitor_uid === allocate?.visitor_uid)
+          ? true
+          : false,
+      }))
+    setData(allocated)
+  }, [setMenu, selectedGroupData, allocationList])
 
   const handleDeleteFile = (visitorTel: string) => {
-    setConvertedData((prev) =>
+    setData((prev) =>
       prev.map((item) =>
-        item.visitor_tel === visitorTel ? { ...item, source: '' } : item
+        item.visitor_tel === visitorTel ? { ...item, fileId: '' } : item
       )
     )
     setUploadStatuses((prev) => ({
@@ -110,6 +167,24 @@ const Release = () => {
       [visitorTel]: { status: 'uploading', progress: 0 },
     }))
 
+    // مقداردهی اولیه
+    let progress = 0
+
+    // ایجاد یک اینتروال برای افزایش مقدار progress
+    const interval = setInterval(() => {
+      setUploadStatuses((prev) => {
+        const newProgress = Math.min(prev[visitorTel].progress + 10, 100) // افزایش ۱۰٪ در هر ۳۰۰ms
+        return {
+          ...prev,
+          [visitorTel]: { status: 'uploading', progress: newProgress },
+        }
+      })
+      progress += 10
+      if (progress >= 100) {
+        clearInterval(interval)
+      }
+    }, 300)
+
     try {
       const formData = new FormData()
       formData.append('file', file)
@@ -117,13 +192,16 @@ const Release = () => {
       const accessToken = (await getCookieByKey('access_token')) || ''
       await AddDocFile({ src: formData, accessToken }).then((result) => {
         if (result && result.status !== '-1') {
-          setConvertedData((prev) =>
-            prev.map((item) =>
-              item.visitor_tel === visitorTel
-                ? { ...item, source: result?.rec_id_file }
-                : item
+          setData((prev) =>
+            prev.map((last) =>
+              last.visitor_tel === visitorTel
+                ? { ...last, fileId: result?.rec_id_file }
+                : last
             )
           )
+
+          clearInterval(interval) // متوقف کردن اینتروال وقتی آپلود کامل شد
+
           setUploadStatuses((prev) => ({
             ...prev,
             [visitorTel]: { status: 'success', progress: 100 },
@@ -131,6 +209,8 @@ const Release = () => {
         }
       })
     } catch (error) {
+      clearInterval(interval) // در صورت بروز خطا اینتروال را متوقف کن
+
       setUploadStatuses((prev) => ({
         ...prev,
         [visitorTel]: { status: 'error', progress: 0 },
@@ -155,8 +235,13 @@ const Release = () => {
 
     // بررسی مقدار جدید که فقط عدد باشد
     if (!/^\d*$/.test(cleanValue)) return
-
-    // به‌روزرسانی مقدار `releaseData`
+    setData((prev) =>
+      prev.map((last) =>
+        last.visitor_tel === id
+          ? { ...last, newReleaseAmount: setComma(cleanValue) }
+          : last
+      )
+    )
     setReleaseData((prev) => {
       const existingIndex = prev.findIndex((item) => item.visitor_uid === id)
 
@@ -178,7 +263,7 @@ const Release = () => {
         sup_group_code: selectedGroupData?.sup_group_code as string,
         supervisor_code: selectedSubGroupData?.supervisor_code as string,
         visitor_uid: id,
-        amount: parseInt(cleanValue, 10), // مقدار `amount` را به `number` تبدیل کنید
+        amount: parseInt(cleanValue),
         currency_type: 241,
         ref_allocation_uid: '',
         allocation_type: NaN,
@@ -191,19 +276,6 @@ const Release = () => {
         }),
       }
       return [...prev, newItem]
-    })
-
-    // به‌روزرسانی مقدار `commaAmount`
-    setCommaAmount((prev) => {
-      const existingIndex = prev.findIndex((item) => item.id === id)
-      const formattedValue = setComma(cleanValue)
-
-      if (existingIndex !== -1) {
-        return prev.map((item, index) =>
-          index === existingIndex ? { ...item, value: formattedValue } : item
-        )
-      }
-      return [...prev, { id, value: formattedValue }]
     })
   }
 
@@ -287,7 +359,7 @@ const Release = () => {
                 </tr>
               </thead>
               <tbody>
-                {beneficiaryData?.map((row, index) => (
+                {data?.map((row, index) => (
                   <tr key={row.visitor_tel} className='border-b'>
                     <td className='text-center px-4 py-2 border-r'>
                       {index + 1}
@@ -298,38 +370,60 @@ const Release = () => {
                     <td className='text-center px-4 py-2'>
                       {row.visitor_family}
                     </td>
-                    <td className='text-center px-4 py-2'>{row.visitor_tel}</td>
-                    <td className='text-center px-4 py-2'>10,000,000 ریال</td>
+                    <td className='text-center px-4 py-2'>
+                      {row?.allocatedAmount} ریال
+                    </td>
+                    <td className='text-center px-4 py-2'>
+                      {row?.releasedAmount} ریال
+                    </td>
                     <td className='text-center px-4 py-2'>
                       <input
+                        inputMode='numeric'
+                        maxLength={21}
+                        value={row?.newReleaseAmount}
+                        onChange={(e) => {
+                          handleCreditChange(
+                            `${row.visitor_tel}`,
+                            e.target.value
+                          )
+                        }}
+                        disabled={row?.disable}
+                        className={`border-none rounded px-2 py-1 w-full text-center
+                           ${
+                             ''
+                             // uneditableIds.includes(row.visitor_uid)
+                             //   ? 'bg-gray-100 cursor-not-allowed'
+                             //   : ''
+                           }
+                        `}
                         placeholder='مبلغ آزادسازی را وارد کنید'
-                        className='rounded px-2 py-1 w-full text-center'
                       />
                     </td>
                     <td className='text-center px-4 py-2'>
-                      {row.visitor_family ? (
+                      {row.fileId.length < 1 ? (
                         <label className='flex flex-col items-center gap-2 cursor-pointer w-full'>
                           <input
                             type='file'
                             onChange={(e) =>
-                              handleUploadFile(e, row.visitor_tel)
+                              handleUploadFile(e, `${row.visitor_tel}`)
                             }
                             className='hidden'
                           />
                           <div className='w-full flex items-center justify-center border border-[#7747C0] text-[#7747C0] rounded-md px-4 py-2 text-sm hover:bg-[#7747C0] hover:text-white'>
-                            {uploadStatuses[row.visitor_tel]?.status ===
+                            {uploadStatuses[`${row.visitor_tel}`]?.status ===
                             'uploading'
                               ? 'در حال بارگذاری...'
                               : 'بارگذاری فایل'}
                           </div>
-                          {uploadStatuses[row.visitor_tel]?.status ===
+                          {uploadStatuses[`${row.visitor_tel}`]?.status ===
                             'uploading' && (
                             <div className='w-full bg-gray-200 rounded-full h-2 mt-2'>
                               <div
                                 className='bg-[#7747C0] h-2 rounded-full transition-all duration-500'
                                 style={{
                                   width: `${
-                                    uploadStatuses[row.visitor_tel]?.progress
+                                    uploadStatuses[`${row.visitor_tel}`]
+                                      ?.progress
                                   }%`,
                                 }}></div>
                             </div>
@@ -341,7 +435,9 @@ const Release = () => {
                           بارگذاری انجام شد
                           <Trash
                             size={24}
-                            onClick={() => handleDeleteFile(row.visitor_tel)}
+                            onClick={() =>
+                              handleDeleteFile(`${row.visitor_tel}`)
+                            }
                             color='#B2BBC7'
                             className='cursor-pointer'
                           />
@@ -361,13 +457,13 @@ const Release = () => {
               <div className='flex mt-4 gap-10 justify-end'>
                 <button
                   type='submit'
-                  className='fill-button px-10 h-10 rounded-lg w-56'>
-                  ثبت نهایی
+                  className='border-button px-10 h-10 rounded-lg '>
+                  ذخیره پیش نویس آزادسازی
                 </button>
                 <button
                   type='submit'
-                  className='border-button px-10 h-10 rounded-lg w-56'>
-                  ذخیره آزادسازی
+                  className='fill-button px-10 h-10 rounded-lg w-56'>
+                  ثبت نهایی
                 </button>
               </div>
             </div>

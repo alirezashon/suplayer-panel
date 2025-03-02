@@ -29,7 +29,7 @@ export const AddDraftImage = async ({
     }
 
     return await response.json()
-  }catch (error) {
+  } catch (error) {
     error
   }
 }
@@ -59,7 +59,7 @@ export const CheckDraftImage = async ({
     }
 
     return await response.json()
-  }catch (error) {
+  } catch (error) {
     error
   }
 }
@@ -104,7 +104,7 @@ export const ChangeDraftStatus = async ({
     }
 
     return await response.json()
-  }catch (error) {
+  } catch (error) {
     error
   }
 }
@@ -166,7 +166,7 @@ export const DepositWithDraft = async ({
     }
 
     return await response.json()
-  }catch (error) {
+  } catch (error) {
     error
   }
 }
@@ -234,7 +234,7 @@ export const GetTransactions = async ({
 }): Promise<TransactionInterface[] | undefined> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/visitor_totalaccount_detail`,
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/customers_totalaccount_detail`,
       {
         method: 'GET',
         headers: {
@@ -252,7 +252,6 @@ export const GetTransactions = async ({
     error
   }
 }
-
 export const GetWalletDetail = async ({
   accessToken,
 }: {
@@ -300,7 +299,7 @@ export const CreateNewIPG = async ({
       }
     )
     return await response.json()
-  }catch (error) {
+  } catch (error) {
     error
   }
 }
