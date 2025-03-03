@@ -29,7 +29,7 @@ const Reports = () => {
             visitor_uid: transaction.visitor_uid,
             wstatus: transaction.wstatus,
             amount: transaction.amount,
-            regdate: transaction.regdate,
+            regdate: transaction.regdate_pe,
             file_uid: transaction.allocation_status_id_file,
           }))
         : []
@@ -40,7 +40,7 @@ const Reports = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target
-    const filteredData = allocationList?.filter((person) => {
+    const filteredData = allocationList?.filter((person:Partial<AllocationListInterface>) => {
       const fieldValue = person?.[name as keyof AllocationListInterface]
       if (typeof fieldValue === 'string') {
         return !value || fieldValue.includes(value)
@@ -53,7 +53,7 @@ const Reports = () => {
       visitor_uid: transaction.visitor_uid,
       wstatus: transaction.wstatus,
       amount: transaction.amount,
-      regdate: transaction.regdate,
+      regdate: transaction.regdate_pe,
       file_uid: transaction.allocation_status_id_file,
     }))
 

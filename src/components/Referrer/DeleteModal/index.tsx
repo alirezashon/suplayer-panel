@@ -37,7 +37,7 @@ const DeleteModal = ({
     await EditReferrer({
       accessToken,
       personnel_code,
-      pers_chart_id,
+      pers_chart_id: parseInt(`${pers_chart_id}`),
       pers_job_id,
       pers_type,
       pers_tob,

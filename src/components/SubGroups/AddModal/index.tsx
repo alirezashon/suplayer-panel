@@ -3,6 +3,7 @@ import { getSubGroupData } from '@/actions/setData'
 import { errorClass } from '@/app/assets/style'
 import RadioTreeSelector from '@/components/shared/RadioTrees'
 import { useData } from '@/Context/Data'
+import { useMenu } from '@/Context/Menu'
 import { useStates } from '@/Context/States'
 import { CreateSubGroup, EditSubGroup } from '@/services/items'
 import { CloseSquare, Grammerly, Trash } from 'iconsax-react'
@@ -18,7 +19,8 @@ const AddModal = ({
   close: () => void
 }) => {
   const { groupData, setSubGroupData, systemTypes } = useData()
-  const { showModal } = useStates()
+  const { showModal, closeModal } = useStates()
+  const { setMenu } = useMenu()
   const [data, setData] = useState<{ name: string; groupId: number }>({
     name: existName?.split('#$%^@!~')[0] || '',
     groupId,
@@ -105,6 +107,24 @@ const AddModal = ({
         newErrors.push({ index: i + 1, message: 'این فیلد نباید خالی باشد' })
       }
     })
+    if (!groupData || !groupData[0]) {
+      showModal({
+        type: 'error',
+        main: (
+          <button
+            className='border-button h-10 rounded-md px-10 hover:bg-purple-200'
+            onClick={() => {
+              setMenu('mygroups')
+              location.hash = 'mygroups'
+              closeModal()
+            }}>
+            تعریف گروه جدید
+          </button>
+        ),
+        title: 'گروهی تعریف نشده است',
+      })
+      return
+    }
 
     if (newErrors.length > 0) {
       setErrors(newErrors)
@@ -189,11 +209,12 @@ const AddModal = ({
               }
               defaultValue={groupId}
               className={`!w-full outline-none border rounded-lg h-10 px-1 cursor-pointer border-[#C9D0D8]`}>
-              {groupData?.map((gp) => (
-                <option key={gp.sup_group_code} value={gp.sup_group_code}>
-                  {gp.sup_group_name}
-                </option>
-              ))}
+              {Array.isArray(groupData) &&
+                groupData?.map((gp) => (
+                  <option key={gp.sup_group_code} value={gp.sup_group_code}>
+                    {gp.sup_group_name}
+                  </option>
+                ))}
             </select>
           </div>
           {systemTypes?.groupTypes && (

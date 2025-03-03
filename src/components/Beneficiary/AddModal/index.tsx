@@ -27,28 +27,28 @@ const AddModal = ({ data, close }: AddModalProps) => {
   const [search, setSearch] = useState<string>('')
   const [showDropdown, setShowDropdown] = useState<boolean>(false)
   const [errors, setErrors] = useState<Record<string, string | number>>({
-    visitor_name: data?.visitor_family || '',
+    visitor_name: '',
     visitor_family: '',
     visitor_tel: '',
   })
   const [foundAddresses, setFoundAddresses] = useState<SearchAddress[]>([])
 
   const refs = useRef({
-    supervisor_id: 0,
-    visitor_type: 0,
-    visitor_tob: 0,
-    visitor_uid: '',
-    visitor_tel: '',
-    visitor_full_name: '',
-    visitor_name: '',
-    visitor_family: '',
-    visitor_status: 1,
-    CityUID: '',
-    visitor_address: '',
-    visitor_specialty: '',
-    default_weight: 0,
-    latitude: 0,
-    longitude: 0,
+    supervisor_id: data?.supervisor_id || 0,
+    visitor_type: data?.visitor_type || 0,
+    visitor_tob: data?.visitor_tob || 1,
+    visitor_uid: data?.visitor_uid || '',
+    visitor_tel: data?.visitor_uid || '',
+    visitor_full_name: data?.visitor_full_name || '',
+    visitor_name: data?.visitor_name || '',
+    visitor_family: data?.visitor_family || '',
+    visitor_status: data?.visitor_status || 1,
+    CityUID: data?.CityUID || '',
+    visitor_address: data?.visitor_address || '',
+    visitor_specialty: data?.visitor_specialty || '',
+    default_weight: data?.default_weight || 0,
+    latitude: data?.latitude || 0,
+    longitude: data?.longitude || 0,
   })
   const { setBeneficiaryData } = useData()
   const { showModal } = useStates()
@@ -76,8 +76,8 @@ const AddModal = ({ data, close }: AddModalProps) => {
     }
     const accessToken = await getCookieByKey('access_token')
 
-    if (data?.CityUID) {
-      EditBeneficiary({ ...data, accessToken })
+    if (data && data?.visitor_uid) {
+      EditBeneficiary({ ...refs.current, accessToken })
         .then((value) => {
           if (value?.status === '-1')
             showModal({

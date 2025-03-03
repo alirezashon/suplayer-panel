@@ -269,9 +269,7 @@ export interface IAccountBalanceResponse {
 }
 export interface TransactionInterface {
   pan_name: string
-  withdrawal: number
   amount: number
-  deposit: number
   description: string
   transactionDate_pe: string
   transactionTime: string
@@ -286,6 +284,9 @@ export interface TransactionInterface {
   ttype: string
   CHID: string
   ref_id: string
+  Debit: number
+  Credit: number
+  auto_code_id: number
 }
 export interface WalletDetail {
   user_uid: string

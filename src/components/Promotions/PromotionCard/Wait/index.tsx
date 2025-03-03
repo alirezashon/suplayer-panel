@@ -19,7 +19,7 @@ const Wait = ({ promotion }: { promotion: PromotionInterface }) => {
         <div className='flex gap-2'>
           <span
             className={`text-xs px-2 py-1 rounded bg-[#E6DBFB80] text-[#704CB9]`}>
-            {promotion.selectedDoctorGroup}
+            {promotion.pgroup_id}
           </span>
         </div>
         <div className='flex gap-2'>
@@ -50,21 +50,21 @@ const Wait = ({ promotion }: { promotion: PromotionInterface }) => {
           <Calendar size={24} color='#7747C0' />
           <p className='text-gray-600 mb-2'> تاریخ شروع </p>
         </div>
-        <p>{promotion.startDate}</p>
+        <p>{promotion.start_date}</p>
       </div>
       <div className='my-4 px-1 flex justify-between '>
         <div className='flex gap-1 '>
           <Calendar size={24} color='#7747C0' />
           <p className='text-gray-600 mb-2'> تاریخ پایان </p>
         </div>
-        <p>{promotion.endDate}</p>
+        <p>{promotion.exp_date}</p>
       </div>
       <div className='my-4 px-1 flex justify-between '>
         <div className='flex gap-1 '>
           <Personalcard size={24} color='#7747C0' />
           <p className='text-gray-600 mb-2'> شعار</p>
         </div>
-        <p>{promotion.brandSlogan}</p>
+        <p>{promotion.ctitle}</p>
       </div>
 
       <button className='bg-[#7747C0] text-white w-full h-10 rounded-lg'>

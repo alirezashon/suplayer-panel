@@ -35,7 +35,7 @@ const DeleteModal = ({
         title: 'موفق',
         autoClose: 2,
       })
-      await getGroupData().then((value) => setGroupData(value))
+      await getGroupData().then((value) => value && setGroupData(value))
     } else if (response.status === '-1') {
       showModal({
         type: 'error',

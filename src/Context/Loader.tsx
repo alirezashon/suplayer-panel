@@ -54,6 +54,15 @@ const ContextLoader = () => {
     setProductGroupSelectorData,
   } = useStates()
   useEffect(() => {
+    const accessToken = document.cookie
+      .split('; ')
+      .find((row) => row.startsWith('access_token='))
+      ?.split('=')[1]
+
+    if (!accessToken && location.pathname !== '/auth/login') {
+      location.href = '/auth/login'
+      return
+    }
     const fetcher = async () => {
       await getUserInfo().then((value) => value && setUserInfo(value))
 
@@ -169,7 +178,7 @@ const ContextLoader = () => {
     setAllocationList,
     setGroupSelectorData,
     setProductGroupSelectorData,
-    setReleasedList
+    setReleasedList,
   ])
   return <div></div>
 }

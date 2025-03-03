@@ -78,18 +78,19 @@ const SubGroups: React.FC = () => {
           <div
             className=' flex border-b overflow-x-auto'
             style={{ scrollbarWidth: 'none' }}>
-            {groupData?.map((tab, index) => (
-              <button
-                key={index}
-                className={`px-5 py-3 transition-all duration-500 text-nowrap ${
-                  activeTab === tab.sup_group_id
-                    ? 'bg-[#E6DBFB80] border-b-2 border-[#704CB9] text-[#704CB9]'
-                    : 'text-[#344054]'
-                }`}
-                onClick={() => setActiveTab(tab.sup_group_id)}>
-                {tab.sup_group_name}
-              </button>
-            ))}
+            {Array.isArray(groupData) &&
+              groupData?.map((tab, index) => (
+                <button
+                  key={index}
+                  className={`px-5 py-3 transition-all duration-500 text-nowrap ${
+                    activeTab === tab.sup_group_id
+                      ? 'bg-[#E6DBFB80] border-b-2 border-[#704CB9] text-[#704CB9]'
+                      : 'text-[#344054]'
+                  }`}
+                  onClick={() => setActiveTab(tab.sup_group_id)}>
+                  {tab.sup_group_name}
+                </button>
+              ))}
           </div>
           {Array.isArray(subGroupData) && subGroupData.length > 0 ? (
             <div className='grid grid-cols-3 gap-6 mt-6'>

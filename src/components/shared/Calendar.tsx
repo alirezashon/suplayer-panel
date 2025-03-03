@@ -16,7 +16,11 @@ const Calendar: React.FC<Props> = ({ setDate, placeholder, hasError }) => {
 
   const handleChange = (date: DateObject) => {
     setSelectedDate(date)
-    setDate(date.format('YYYY-MM-DD')) // Format to your desired output
+    setDate(
+      date
+        .format('YYYY-MM-DD')
+        .replace(/[۰-۹]/g, (d) => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d).toString()) // تبدیل عدد به رشته
+    )
   }
 
   return (

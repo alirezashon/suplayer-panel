@@ -34,10 +34,9 @@ const DeleteModal = ({
         autoClose: 2,
       })
       await getProductGroupData().then((value) => {
-        if (value) {
+        if (value && value.productGroups)
           setProductGroupData(value.productGroups)
-          setBrandsData(value.brands)
-        }
+        if (value && value.brands) setBrandsData(value.brands)
       })
       close(false)
     })

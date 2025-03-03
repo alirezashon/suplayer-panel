@@ -14,19 +14,25 @@ const Campaign = () => {
       {menu === 'campaign' ? (
         <Kanban
           done={
-            campaignData?.filter((promo) =>
-              moment(promo.start_date, 'jYYYY/jM/jD').isBefore(today)
-            ) || []
+            (Array.isArray(campaignData) &&
+              campaignData?.filter((promo) =>
+                moment(promo.start_date, 'jYYYY/jM/jD').isBefore(today)
+              )) ||
+            []
           }
           toDo={
-            campaignData?.filter((promo) =>
-              moment(promo.start_date, 'jYYYY/jM/jD').isAfter(today)
-            ) || []
+            (Array.isArray(campaignData) &&
+              campaignData?.filter((promo) =>
+                moment(promo.start_date, 'jYYYY/jM/jD').isAfter(today)
+              )) ||
+            []
           }
           progress={
-            campaignData?.filter((promo) =>
-              moment(promo.start_date, 'jYYYY/jM/jD').isSame(today)
-            ) || []
+            (Array.isArray(campaignData) &&
+              campaignData?.filter((promo) =>
+                moment(promo.start_date, 'jYYYY/jM/jD').isSame(today)
+              )) ||
+            []
           }
           length={campaignData?.length || 0}
           setListStatus={setListStatus}
@@ -36,16 +42,22 @@ const Campaign = () => {
           status={listStatus}
           campaigns={
             listStatus === '3'
-              ? campaignData?.filter((promo) =>
-                  moment(promo.start_date, 'jYYYY/jM/jD').isBefore(today)
-                ) || []
+              ? (Array.isArray(campaignData) &&
+                  campaignData?.filter((promo) =>
+                    moment(promo.start_date, 'jYYYY/jM/jD').isBefore(today)
+                  )) ||
+                []
               : listStatus === '2'
-              ? campaignData?.filter((promo) =>
-                  moment(promo.start_date, 'jYYYY/jM/jD').isSame(today)
-                ) || []
-              : campaignData?.filter((promo) =>
-                  moment(promo.start_date, 'jYYYY/jM/jD').isAfter(today)
-                ) || []
+              ? (Array.isArray(campaignData) &&
+                  campaignData?.filter((promo) =>
+                    moment(promo.start_date, 'jYYYY/jM/jD').isSame(today)
+                  )) ||
+                []
+              : (Array.isArray(campaignData) &&
+                  campaignData?.filter((promo) =>
+                    moment(promo.start_date, 'jYYYY/jM/jD').isAfter(today)
+                  )) ||
+                []
           }
         />
       ) : (

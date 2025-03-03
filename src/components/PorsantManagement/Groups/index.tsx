@@ -25,8 +25,8 @@ const ShowGroups: React.FC = () => {
           )}
           <div className='p-6 bg-white rounded-lg border border-gray-200'>
             <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4'>
-              {groupData &&
-                groupData.map((group, index) => (
+              {Array.isArray(groupData) &&
+                groupData?.map((group, index) => (
                   <div
                     key={index}
                     className='flex flex-col justify-between items-start border rounded-lg p-4 shadow-md hover:shadow-lg transition duration-300'>

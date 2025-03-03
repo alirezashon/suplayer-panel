@@ -42,8 +42,10 @@ export const getProductGroupData = async () => {
     const response = await GetProductGroupsList({ accessToken })
     if (Array.isArray(response)) {
     }
-    const productGroups = response?.filter((res) => res.group_pid === 0)
-    const brands = response?.filter((res) => res.group_pid !== 0)
+    const productGroups =
+      Array.isArray(response) && response?.filter((res) => res.group_pid === 0)
+    const brands =
+      Array.isArray(response) && response?.filter((res) => res.group_pid !== 0)
     return { brands, productGroups }
   }
 }

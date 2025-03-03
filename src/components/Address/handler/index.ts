@@ -3,10 +3,22 @@ export interface SearchAddress {
   x: number
   y: number
 }
+interface AddressItem {
+  title: string
+  address: string
+  category: string
+  type: string
+  region: string
+  location: {
+    x: number
+    y: number
+    z: string
+  }
+}
 
 export const searchAddress = async (
   value: string,
-  setAddresses: (value: unknown[]) => void
+  setAddresses: (value: SearchAddress[]) => void
 ) => {
   try {
     const response = await fetch(
@@ -20,14 +32,13 @@ export const searchAddress = async (
     )
     const data = await response.json()
     if (response.status === 200 && data.items) {
-      const converted: Record<
-        string,
-        string | number | Record<string, string | number>
-      >[] = data.items.map((item: any) => ({
-        title: item.title,
-        x: item.location.x,
-        y: item.location.y,
-      }))
+      const converted: SearchAddress[] = data.items.map(
+        (item: AddressItem) => ({
+          title: item.title,
+          x: item.location.x,
+          y: item.location.y,
+        })
+      )
       setAddresses(converted)
     }
   } catch (error) {

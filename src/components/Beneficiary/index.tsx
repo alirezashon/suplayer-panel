@@ -137,7 +137,7 @@ const Beneficiary: React.FC = () => {
                 {beneficiaryData
                   ?.filter(
                     (account) =>
-                      activeTab === 0 || account.visitor_tob === activeTab
+                      activeTab === 0 || account.visitor_tob == activeTab
                   )
                   .map((account, index) => (
                     <tr key={index} className='border-b '>
@@ -201,13 +201,6 @@ const Beneficiary: React.FC = () => {
               <div className='border min-w-[40%] my-5'></div>
               <h1 className='text-2xl'>ایجاد ذی‌نفع جدید</h1>
               <div className='flex gap-4'>
-                <button
-                  type='submit'
-                  onClick={() => setShowAddModal(true)}
-                  className='flex justify-center items-center h-10 min-w-40 text-[#7747C0] border border-[#7747C0] rounded-lg hover:bg-purple-100'>
-                  <FolderAdd size={20} color='#7747C0' />
-                  <p>بارگذاری اکسل</p>
-                </button>
                 <button
                   type='submit'
                   onClick={() => setShowAddModal(true)}

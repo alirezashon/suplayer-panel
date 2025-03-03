@@ -16,8 +16,8 @@ const Report = () => {
   useEffect(() => {
     const fetchData = async () => {
       await getDraftsData().then((value) => {
-        if (value) {
-          const rowItems = value.map((row) => [...Object.values(row)])
+        if (Array.isArray(value)) {
+          const rowItems = value?.map((row) => [...Object.values(row)])
           setRows(rowItems)
           setDraftsData(value)
         }

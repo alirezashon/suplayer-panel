@@ -50,7 +50,7 @@ const AddModal = ({
       const response = await CreateGroup({ accessToken, name })
       if (response.status === 1) {
         setResult(true)
-        await getGroupData().then((value) => setGroupData(value))
+        await getGroupData().then((value) => value && setGroupData(value))
       } else if (response.status === '-1') {
         setResult(false, response.message)
       } else {
@@ -65,7 +65,7 @@ const AddModal = ({
           title: 'موفق',
           autoClose: 2,
         })
-        await getGroupData().then((value) => setGroupData(value))
+        await getGroupData().then((value) => value && setGroupData(value))
       } else if (response.status === '-1') {
         setResult(false, response.message)
         showModal({

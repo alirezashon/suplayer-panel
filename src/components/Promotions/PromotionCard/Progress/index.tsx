@@ -14,13 +14,13 @@ const Progress = ({ promotion }: { promotion: PromotionInterface }) => {
         <div className='flex gap-2'>
           <span
             className={`text-xs px-2 py-1 rounded bg-[#E6DBFB80] text-[#704CB9]`}>
-            {promotion.selectedDoctorGroup}
+            {promotion.pgroup_id}
           </span>
         </div>
         <div className='flex gap-2'>
           <div className='flex items-center gap-1'>
             <span className='text-sm font-medium text-zinc-950'>
-              {promotion.endDate}
+              {promotion.exp_date}
             </span>
             <Timer size={22} color='#704CB9' />
           </div>
@@ -32,7 +32,7 @@ const Progress = ({ promotion }: { promotion: PromotionInterface }) => {
           <Personalcard size={24} color='#7747C0' />
           <p className='text-gray-600 mb-2'> شعار</p>
         </div>
-        <p>{promotion.brandSlogan}</p>
+        <p>{promotion.product_uid}</p>
       </div>
 
       <div className='my-4 px-1 flex justify-between '>
@@ -40,14 +40,14 @@ const Progress = ({ promotion }: { promotion: PromotionInterface }) => {
           <Eye size={24} color='#7747C0' />
           <p className='text-gray-600 mb-2'> تعداد بازدید</p>
         </div>
-        <p>{promotion.viewCount}</p>
+        <p>{promotion.ctitle}</p>
       </div>
       <div className='my-4 px-1 flex justify-between '>
         <div className='flex gap-1 '>
           <MouseCircle size={24} color='#7747C0' />
           <p className='text-gray-600 mb-2'> تعداد کلیک</p>
         </div>
-        <p>{promotion.clickedCount}</p>
+        <p>{promotion.ctitle}</p>
       </div>
     </div>
   )

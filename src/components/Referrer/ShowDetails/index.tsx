@@ -29,9 +29,9 @@ const ShowDetails = ({ data, close }: ShowDetailsProps) => {
       <div className='absolute bg-slate-600 opacity-50 w-full h-[200vh] z-50 top-0 right-0'></div>
       <div
         style={{ scrollbarWidth: 'none' }}
-        className={`fixed overflow-auto  z-50 right-0 top-0 max-md:left-[0] max-md:w-[100%] w-[40vw] h-full bg-white border border-gray-300 shadow-lg transition-transform duration-300 ease-in-out right-side-animate`}>
-        <div className='sticky top-0 p-3 bg-white flex justify-between items-center w-[97%] text-xl font-medium text-right text-gray-800'>
-          <div className=' flex-1 shrink my-auto min-w-[240px]'>
+        className={`fixed overflow-auto  z-50 right-0 top-0 max-md:left-[0] max-md:w-[100%] w-[40vw] h-full bg-white border border-gray-300 shadow-lg transition-transform duration-300 ease-in-out right-side-animate px-7 `}>
+        <div className='sticky top-0  flex justify-between items-center w-[97%] text-xl font-medium text-right text-gray-800'>
+          <div className=' flex-1 shrink py-2 bg-white min-w-[240px]'>
             جزئیات بازاریاب
           </div>
           <CloseSquare
@@ -101,11 +101,11 @@ const ShowDetails = ({ data, close }: ShowDetailsProps) => {
             <div className='flex gap-3'>
               {taskList?.map(
                 (task, index) =>
-                  task?.sup_group_name?.length > 0 && (
+               (
                     <p
                       key={index}
                       className='text-[#3B5A4F] bg-[#A1E3CB] px-5 py-1 rounded-full w-fit'>
-                      {task.sup_group_name}
+                      {task.personnel_uid}
                     </p>
                   )
               )}

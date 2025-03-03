@@ -39,7 +39,12 @@ const CampaignList = ({
         <div className='grid grid-cols-[repeat(auto-fit,minmax(25%,1fr))] gap-6 p-6 bg-white rounded-lg border border-gray-200'>
           {campaigns.map((campaign, index) =>
             status === '1' ? (
-              <Wait key={index} campaign={campaign}/>
+              <Wait
+                key={index}
+                campaign={campaign}
+                enableEdit={(campaign) => campaign}
+                deleteIt={(campaign) => campaign}
+              />
             ) : status === '2' ? (
               <Progress key={index} campaign={campaign} />
             ) : (

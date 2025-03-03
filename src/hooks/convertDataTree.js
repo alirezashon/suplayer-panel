@@ -5,7 +5,7 @@ export const generateMultiSelectData = ({
 }) => {
   if (!level1.idKey) return []
   const mapData = (level) =>
-    level?.data?.reduce((acc, curr) => {
+    Array.isArray(level?.data) && level?.data?.reduce((acc, curr) => {
       acc[curr[level.idKey]] = {
         id: curr[level.idKey],
         label: curr[level.labelKey],

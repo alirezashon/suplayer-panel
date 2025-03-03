@@ -35,9 +35,8 @@ const DeleteModal = ({
           title: result.status === 1 ? 'موفق' : 'خطا',
           autoClose: 2,
         })
-        if (value) {
+        if (value && value.productGroups)
           setProductGroupData(value.productGroups)
-        }
       })
       close(false)
     })
