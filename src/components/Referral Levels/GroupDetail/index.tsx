@@ -10,7 +10,7 @@ interface RegionData {
 const subGroups: RegionData[] = [
   {
     region: 'منطقه ۸',
-    allocatedBudget: '۳۰.۰۰۰ میلیون ریال',
+    allocatedBudget: '۳۰.۰۰۰  ریال',
     marketersCount: '۳۰',
   },
   {
@@ -20,7 +20,7 @@ const subGroups: RegionData[] = [
   },
   {
     region: 'منطقه ۵',
-    allocatedBudget: '۳۰.۰۰۰ میلیون ریال',
+    allocatedBudget: '۳۰.۰۰۰  ریال',
     marketersCount: '۳۰',
   },
 ]

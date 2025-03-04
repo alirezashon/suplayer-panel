@@ -328,7 +328,7 @@ const PayByID = () => {
             <p className='flex justify-between text-gray-500'>
               اعتبار قابل تخصیص <br />
               <span className='text-gray-800 font-semibold text-lg'>
-                ۴۰۰۰۰۰ میلیون ریال
+                ۴۰۰۰۰۰  ریال
               </span>
             </p>
           </div>

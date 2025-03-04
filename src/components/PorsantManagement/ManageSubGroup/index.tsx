@@ -193,7 +193,7 @@ const PorsantManagement = () => {
             />
             <StatCard
               title='مبلغ تخصیص داده شده'
-              value={`${selectedSubGroupData?.assignment_amount} میلیون ریال`}
+              value={`${selectedSubGroupData?.assignment_amount}  ریال`}
               Icon={Moneys}
               backgroundImage='/images/red-theme-card.svg'
             />
@@ -205,7 +205,7 @@ const PorsantManagement = () => {
             />
             <StatCard
               title='مبلغ قابل آزادسازی'
-              value={`${selectedSubGroupData?.withdrawable_amount} میلیون ریال`}
+              value={`${selectedSubGroupData?.withdrawable_amount}  ریال`}
               Icon={MoneyTick}
               backgroundImage='/images/green-theme-card.svg'
             />

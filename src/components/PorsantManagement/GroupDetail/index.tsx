@@ -64,7 +64,7 @@ const GroupsDetail = () => {
                 <ProfileCircle size={24} color='#704CB9' />
                 <p className='text-sm  px-2 py-1 rounded'>
                   <span className='text-[#757575]'>بازاریاب :</span>
-                  {product.sup_group_id}
+                  {product.personnel_count}
                 </p>
               </div>
               <div className='flex mb-5 mt-1'>

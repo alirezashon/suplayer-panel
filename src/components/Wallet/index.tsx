@@ -97,7 +97,7 @@ const Wallet: React.FC = () => {
                   targetValue={balance?.Releasable || 0}
                   incrementValue={balance?.Releasable || 0}
                 />
-                میلیون ریال
+                 ریال
               </b>
             </div>
             <div className='flex w-full justify-between'>
@@ -111,7 +111,7 @@ const Wallet: React.FC = () => {
                   targetValue={balance?.Debit || 0}
                   incrementValue={balance?.Debit || 0}
                 />
-                میلیون ریال
+                 ریال
               </b>
             </div>
 
@@ -125,7 +125,7 @@ const Wallet: React.FC = () => {
                   targetValue={balance?.SumCredit || 0}
                   incrementValue={balance?.SumCredit || 0}
                 />
-                میلیون ریال
+                 ریال
               </b>
             </div>
             <div className='flex w-full justify-between'>
@@ -138,7 +138,7 @@ const Wallet: React.FC = () => {
                   targetValue={balance?.Credit || 0}
                   incrementValue={balance?.Credit || 0}
                 />
-                میلیون ریال
+                 ریال
               </b>
             </div>
           </div>

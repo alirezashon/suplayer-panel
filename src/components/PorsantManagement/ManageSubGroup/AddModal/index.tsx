@@ -1,4 +1,5 @@
 import { getCookieByKey } from '@/actions/cookieToken'
+import { getBeneficiaryData } from '@/actions/setData'
 import SelectList from '@/components/shared/SelectList'
 import { useData } from '@/Context/Data'
 import { useStates } from '@/Context/States'
@@ -15,7 +16,7 @@ const AddModal = ({
 }) => {
   const [names] = useState<(string | number)[]>([''])
   const [selected, setSelected] = useState<BeneficiaryData[]>([])
-  const { beneficiaryData } = useData()
+  const { beneficiaryData, setBeneficiaryData } = useData()
   const { selectedSubGroupData, showModal } = useStates()
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -26,16 +27,17 @@ const AddModal = ({
           accessToken,
           ...beneficiary,
           supervisor_id: selectedSubGroupData?.supervisor_id as number,
-        }).then(
-          (result) =>
-            result.status === 1 &&
+        }).then(async (result) => {
+          if (result.status) {
+            await getBeneficiaryData()
             showModal({
               type: result.status === 1 ? 'success' : 'error',
               title: `${result.status === 1 ? 'موفق' : 'ناموفق'}`,
               main: <p>{result.message}</p>,
               autoClose: 0.9,
             })
-        )
+          }
+        })
       })
     )
   }
@@ -79,13 +81,18 @@ const AddModal = ({
                   انتخاب ذی‌نفع‌های من
                 </label>
                 <div className=''>
-                  <label className='my-2'> گروه خود را انتخاب کنید </label>
+                  <label className='my-2'>
+                    {' '}
+                    ذی‌نفع‌های خود را انتخاب کنید{' '}
+                  </label>
                   <SelectList
                     items={
-                      beneficiaryData?.map((bn) => ({
-                        id: bn.visitor_name,
-                        label: bn.visitor_full_name,
-                      })) || []
+                      beneficiaryData
+                        ?.filter((row) => row.supervisor_id === 0)
+                        ?.map((bn) => ({
+                          id: bn.visitor_name,
+                          label: bn.visitor_full_name,
+                        })) || []
                     }
                     setSelectedItems={(selectedIds) =>
                       setSelected(
@@ -95,7 +102,7 @@ const AddModal = ({
                           ) || []
                       )
                     }
-                    label='نام گروه'
+                    label='نام ذی‌نفع‌ها '
                   />
                 </div>
               </div>

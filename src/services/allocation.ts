@@ -162,6 +162,30 @@ export const GetReleasedList = async ({
     console.log(error)
   }
 }
+export const SendAssignmentOtp = async ({
+  accessToken,
+}: {
+  accessToken: string
+}) => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/assignment_otp`,
+      {
+        method: 'GET',
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+      }
+    )
+    if (response.status !== 200) {
+      return
+    }
+    const result = await response.json()
+    return result.data
+  } catch (error) {
+    console.log(error)
+  }
+}
 export const GetReferrerProductList = async ({
   accessToken,
 }: {

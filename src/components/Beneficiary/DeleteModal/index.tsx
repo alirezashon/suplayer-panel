@@ -1,4 +1,6 @@
 import { getCookieByKey } from '@/actions/cookieToken'
+import { getBeneficiaryData } from '@/actions/setData'
+import { useData } from '@/Context/Data'
 import { useStates } from '@/Context/States'
 import { BeneficiaryData } from '@/interfaces'
 import { EditBeneficiary } from '@/services/items'
@@ -14,21 +16,28 @@ const DeleteModal = ({
   close: (show: boolean) => void
 }) => {
   const { showModal } = useStates()
-
+  const { setBeneficiaryData } = useData()
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     const accessToken = (await getCookieByKey('access_token')) || ''
     if (data)
       EditBeneficiary({ ...data, accessToken, visitor_status: 9 })
-        .then((value) => {
-          if (value?.status === '-1')
+        .then(async (value) => {
+          if (value?.status === 1) {
             showModal({
               type: 'success',
               main: <p>{value.message}</p>,
-              title: 'خطا',
+              title: 'موفق',
               autoClose: 2,
             })
-          else
+            setTimeout(
+              async () =>
+                await getBeneficiaryData().then(
+                  (result) => result && setBeneficiaryData(result)
+                ),
+              2222
+            )
+          } else
             showModal({
               type: 'error',
               main: <p>{value.message}</p>,

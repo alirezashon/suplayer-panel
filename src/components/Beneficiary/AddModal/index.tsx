@@ -70,20 +70,29 @@ const AddModal = ({ data, close }: AddModalProps) => {
       newErrors.visitor_family = 'این فیلد اجباریست'
     if (!refs.current.visitor_tel) newErrors.visitor_tel = 'این فیلد اجباریست'
     setErrors(newErrors)
+    console.log(newErrors)
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors)
       return
     }
     const accessToken = await getCookieByKey('access_token')
 
-    if (data && data?.visitor_uid) {
-      EditBeneficiary({ ...refs.current, accessToken })
+    if (data && data.visitor_uid) {
+      EditBeneficiary({
+        ...data,
+        ...Object.fromEntries(
+          Object.entries(refs.current).filter(
+            ([_, value]) => value !== '' && value !== 0
+          )
+        ),
+        accessToken,
+      })
         .then((value) => {
-          if (value?.status === '-1')
+          if (value?.status === 1)
             showModal({
               type: 'success',
               main: <p>{value.message}</p>,
-              title: 'خطا',
+              title: 'موفق',
               autoClose: 2,
             })
           else
@@ -333,12 +342,11 @@ const AddModal = ({ data, close }: AddModalProps) => {
                     <div className='flex flex-col w-full'>
                       <label>نام صاحب کسب و کار </label>
                       <input
-                        defaultValue={
-                          data?.visitor_family ||
-                          refs.current.visitor_specialty ||
-                          ''
-                        }
-                        name='visitor_specialty'
+                        defaultValue={refs.current.visitor_family}
+                        className={`border ${
+                          errors.visitor_family && errorClass
+                        }`}
+                        name='visitor_family'
                         onChange={handleChange}
                         placeholder='متخصص پوست و مو'
                       />
@@ -351,10 +359,13 @@ const AddModal = ({ data, close }: AddModalProps) => {
                         }
                         onChange={handleChange}
                         name='visitor_tel'
+                        className={`border ${errors.visitor_tel && errorClass}`}
                         placeholder='۰۹۱۲۷۶۸۵۶۴۷۳'
                       />
-                      {errors.phone && (
-                        <span className='text-red-500'>{errors.phone}</span>
+                      {errors.visitor_tel && (
+                        <span className='text-red-500'>
+                          {errors.visitor_tel}
+                        </span>
                       )}
                     </div>
                   </div>
@@ -433,9 +444,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
               <div className='my-4'>
                 <label>آدرس</label>
                 <input
-                  defaultValue={
-                    data?.visitor_address || refs.current.visitor_address
-                  }
+                  defaultValue={refs.current.visitor_address}
                   name='visitor_address'
                   onChange={handleChange}
                   className={`w-full border ${
@@ -451,7 +460,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
           <div className='flex items-center'>
             <button
               type={step === 1 ? 'button' : 'submit'}
-              onClick={(e) => (step === 1 ? validateForm() : handleSubmit(e))}
+              onClick={() => step === 1 && validateForm()}
               style={{
                 animation: `${
                   isConfirmed

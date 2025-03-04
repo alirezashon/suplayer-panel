@@ -79,7 +79,11 @@ const Release = () => {
     setFinalReleaseData(released as FinalReleaseInterface[])
 
     if (!allocationList) return
-    const allocated = allocationList
+    const subGroupAllocatedList = allocationList?.filter(
+      (allocate) =>
+        allocate?.supervisor_code === selectedSubGroupData?.supervisor_code
+    )
+    const allocated = subGroupAllocatedList
       .filter((allocate) => allocate.wstatus === 1)
       .map((allocate) => ({
         visitor_name: beneficiaryData?.find(
@@ -243,13 +247,16 @@ const Release = () => {
 
     // بررسی مقدار جدید که فقط عدد باشد
     if (!/^\d*$/.test(cleanValue)) return
-    setData((prev) =>
-      prev.map((last) =>
-        last.visitor_tel === id
+    setData((prev) => {
+      const updatedData = prev.map((last) =>
+        last.visitor_uid === id
           ? { ...last, newReleaseAmount: setComma(cleanValue) }
           : last
       )
-    )
+      console.log('Updated Data:', updatedData) // بررسی مقدار جدید در کنسول
+      return updatedData
+    })
+
     setReleaseData((prev) => {
       const existingIndex = prev.findIndex((item) => item.visitor_uid === id)
 
@@ -368,7 +375,7 @@ const Release = () => {
               </thead>
               <tbody>
                 {data?.map((row, index) => (
-                  <tr key={row.visitor_tel} className='border-b'>
+                  <tr key={index} className='border-b'>
                     <td className='text-center px-4 py-2 border-r'>
                       {index + 1}
                     </td>
@@ -407,7 +414,7 @@ const Release = () => {
                         placeholder='مبلغ آزادسازی را وارد کنید'
                       />
                     </td>
-                    <td className='text-center px-4 py-2'>
+                    <td className='text-center px-4 py-2 border-l'>
                       {row.fileId.length < 1 ? (
                         <label className='flex flex-col items-center gap-2 cursor-pointer w-full'>
                           <input

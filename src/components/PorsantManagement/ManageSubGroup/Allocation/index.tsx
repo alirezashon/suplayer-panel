@@ -1,7 +1,8 @@
 import { getCookieByKey } from '@/actions/cookieToken'
+import { getAllocatedList } from '@/actions/setData'
 import { walletBoxStyle } from '@/app/assets/style'
 import Loading from '@/components/shared/LoadingSpinner'
-import OTPInput from '@/components/shared/OTPinput'
+import OtpModal from '@/components/shared/OtpModal'
 import { useData } from '@/Context/Data'
 import { useMenu } from '@/Context/Menu'
 import { useStates } from '@/Context/States'
@@ -11,7 +12,7 @@ import {
   DefineAllocationInterface,
   SaveAllocatedDataInterface,
 } from '@/interfaces'
-import { DefineAllocation } from '@/services/allocation'
+import { ChangeAllocationStatus, DefineAllocation } from '@/services/allocation'
 import { Printer, WalletMoney } from 'iconsax-react'
 import { useEffect, useState } from 'react'
 
@@ -25,7 +26,6 @@ const headers = [
 const Allocation = () => {
   const [filterType, setFilterType] = useState<number>(0)
   const [loading, setLoading] = useState<boolean>()
-  const { beneficiaryData, balance, allocationList } = useData()
   const [allocatedData, setAllocatedData] = useState<
     SaveAllocatedDataInterface[]
   >([])
@@ -37,7 +37,10 @@ const Allocation = () => {
     { id: string; value: string }[]
   >([])
   const [otp, setOtp] = useState<string>()
+  const [showOtpModal, setshowOtpModal] = useState<boolean>(false)
   const { setMenu } = useMenu()
+  const { beneficiaryData, balance, allocationList, setAllocationList } =
+    useData()
   const {
     selectedSubGroupData,
     selectedGroupData,
@@ -59,38 +62,20 @@ const Allocation = () => {
       .map((allocate) => ({
         commission_allocation_uid: allocate.commission_allocation_uid,
         status: 1,
-        wamount: allocate.amount,
-        allocation_status_id_file: allocate.allocation_status_id_file,
+        wamount: allocate.remain_amount,
+        allocation_status_id_file: allocate.allocation_status_id_file || '',
         assignment_otp: '',
         Signature: '',
       }))
 
     setAllocatedData(allocated as SaveAllocatedDataInterface[])
 
-    const newAllocationData: DefineAllocationInterface[] = []
     const uneditableIds: string[] = []
     const newCommaAmount: { id: string; value: string }[] = []
 
     allocationList
-      .filter((allocate) => allocate.wstatus === 1)
+      .filter((allocate) => allocate.wstatus === 0)
       .forEach((allocate) => {
-        newAllocationData.push({
-          commission_type: 0,
-          allocation_type: 0,
-          source_type: 1,
-          sup_group_code: selectedGroupData?.sup_group_code as string,
-          supervisor_code: selectedSubGroupData?.supervisor_code as string,
-          visitor_uid: allocate.visitor_uid,
-          amount: allocate.amount,
-          currency_type: 241,
-          Signature: generateAllocationSignature({
-            amount: `${allocate.amount}`,
-            customerMobile: allocate?.visitor_uid,
-            sup_group_code: selectedGroupData?.sup_group_code as string,
-            supervisor_code: selectedSubGroupData?.supervisor_code as string,
-            visitor_uid: allocate?.visitor_uid,
-          }),
-        })
         uneditableIds.push(allocate.visitor_uid)
         newCommaAmount.push({
           id: allocate.visitor_uid,
@@ -98,12 +83,10 @@ const Allocation = () => {
         })
       })
 
-    setAllocationData(newAllocationData)
     setUneditableIds(uneditableIds)
     setCommaAmount(newCommaAmount) // مقداردهی مقدار اولیه `commaAmount`
   }, [setMenu, selectedGroupData, allocationList, selectedSubGroupData])
-
-  console.table(allocationData)
+ 
   const handleCreditChange = (id: string, value: string) => {
     // حذف کاماهای اضافی
     const cleanValue = value.replace(/,/g, '')
@@ -174,7 +157,7 @@ const Allocation = () => {
     setLoading(true)
     const accessToken = (await getCookieByKey('access_token')) || ''
     await DefineAllocation({ accessToken, allocations: allocationData }).then(
-      (result) => {
+      async (result) => {
         setLoading(false)
         if (result?.status === 1) {
           setAllocationData([])
@@ -184,6 +167,9 @@ const Allocation = () => {
             main: <p>درخواست شما ثبت شد.</p>,
             autoClose: 1,
           })
+          await getAllocatedList().then(
+            (result) => result && setAllocationList(result)
+          )
         } else
           showModal({
             title: 'ناموفق',
@@ -195,26 +181,50 @@ const Allocation = () => {
     )
   }
   const changeAllocateStatus = async () => {
-    showModal({
-      type: 'info',
-      main: (
-        <>
-          <button onClick={() => closeModal()}></button>
-          <OTPInput
-            setResult={(value: string) => {
-              if (value?.length > 5) closeModal()
-              setOtp(value)
-            }}
-          />
-        </>
-      ),
-      title: 'کد ارسال شده را وارد کنید',
+    if (!otp || otp?.length < 5) {
+      showModal({
+        main: 'کد صحیح نیست',
+        title: 'خطا',
+        type: 'error',
+        autoClose: 1,
+        hideButton: true,
+      })
+      return
+    }
+
+    navigator.clipboard.writeText(JSON.stringify(allocatedData))
+    const accessToken = (await getCookieByKey('access_token')) || ''
+    await ChangeAllocationStatus({
+      accessToken,
+      status_updates: allocatedData.map((allocated) => ({
+        ...allocated,
+        assignment_otp: `${otp}`,
+      })),
+    }).then(async (result) => {
+      showModal({
+        title: result?.status === 1 ? 'موفق' : 'ناموفق',
+        type: result?.status === 1 ? 'success' : 'error',
+        main: result?.message || 'خطایی رخ داد',
+        autoClose: 1,
+      })
+      await getAllocatedList().then((result) => {
+        if (result) {
+          setAllocationList(result)
+          setshowOtpModal(false)
+        }
+      })
     })
-    // const accessToken = (await getCookieByKey('access_token')) || ''
-    // await ChangeAllocationStatus({ accessToken, status_updates: allocatedData })
   }
   return (
     <div className='m-4'>
+      {showOtpModal && (
+        <OtpModal
+          setOtp={setOtp}
+          title='ثبت نهایی تخصیص اعتبار'
+          close={() => setshowOtpModal(false)}
+          submit={changeAllocateStatus}
+        />
+      )}
       <div className='flex justify-between items-center mb-7'>
         <p>
           <span
@@ -301,39 +311,49 @@ const Allocation = () => {
                 </tr>
               </thead>
               <tbody>
-                {beneficiaryData?.map((row, index) => (
-                  <tr key={index} className='border-b'>
-                    <td className='text-center px-4 py-2 border-r'>{index}</td>
-                    <td className='text-center px-4 py-2'>
-                      {row.visitor_name}
-                    </td>
-                    <td className='text-center px-4 py-2'>
-                      {row.visitor_family}
-                    </td>
-                    <td className='text-center px-4 py-2'>{row.visitor_tel}</td>
-                    <td className='text-center px-4 py-2'>
-                      <input
-                        inputMode='numeric'
-                        maxLength={21}
-                        value={
-                          commaAmount.find(
-                            (item) => item.id === row.visitor_uid
-                          )?.value || ''
-                        }
-                        placeholder='مبلغ اعتبار را وارد کنید'
-                        onChange={(e) => {
-                          handleCreditChange(row.visitor_uid, e.target.value)
-                        }}
-                        disabled={uneditableIds.includes(row.visitor_uid)}
-                        className={`border-none rounded px-2 py-1 w-full text-center ${
-                          uneditableIds.includes(row.visitor_uid)
-                            ? 'bg-gray-100 cursor-not-allowed'
-                            : ''
-                        }`}
-                      />
-                    </td>
-                  </tr>
-                ))}
+                {beneficiaryData
+                  ?.filter(
+                    (item) =>
+                      item?.supervisor_id ===
+                      selectedSubGroupData?.supervisor_id
+                  )
+                  ?.map((row, index) => (
+                    <tr key={index} className='border-b'>
+                      <td className='text-center px-4 py-2 border-r'>
+                        {index}
+                      </td>
+                      <td className='text-center px-4 py-2'>
+                        {row.visitor_name}
+                      </td>
+                      <td className='text-center px-4 py-2'>
+                        {row.visitor_family}
+                      </td>
+                      <td className='text-center px-4 py-2'>
+                        {row.visitor_tel}
+                      </td>
+                      <td className='text-center px-4 py-2'>
+                        <input
+                          inputMode='numeric'
+                          maxLength={21}
+                          value={
+                            commaAmount.find(
+                              (item) => item.id === row.visitor_uid
+                            )?.value || ''
+                          }
+                          placeholder='مبلغ اعتبار را وارد کنید'
+                          onChange={(e) => {
+                            handleCreditChange(row.visitor_uid, e.target.value)
+                          }}
+                          disabled={uneditableIds.includes(row.visitor_uid)}
+                          className={`border-none rounded px-2 py-1 w-full text-center ${
+                            uneditableIds.includes(row.visitor_uid)
+                              ? 'bg-gray-100 cursor-not-allowed'
+                              : ''
+                          }`}
+                        />
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
             <div className='flex items-center justify-between'>
@@ -355,7 +375,7 @@ const Allocation = () => {
                   )}
                 </button>
                 <button
-                  onClick={changeAllocateStatus}
+                  onClick={() => setshowOtpModal(true)}
                   disabled={loading}
                   className={`fill-button h-10 rounded-lg  w-56 flex justify-center items-center`}>
                   {loading ? <Loading size={5} color='#ffffff' /> : 'ثبت نهایی'}

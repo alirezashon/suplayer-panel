@@ -39,13 +39,6 @@ const CustomModal = () => {
       <div className='absolute bg-slate-600 opacity-50 w-full h-full z-40 top-0 right-0'></div>
       {/* جعبه مودال */}
       <div className='p-10 rounded-lg max-md:w-[100%] w-[40vw] z-50 right-side-animate bg-white border border-gray-300 shadow-lg transition-transform duration-700 ease-in-out'>
-        {modalContent?.autoClose && (
-          <div className='w-full bg-gray-200 h-1 mb-10 overflow-hidden'>
-            <div
-              className='bg-purple-600 h-full'
-              style={{ width: `${progress}%` }}></div>
-          </div>
-        )}
         {/* هدر مودال */}
         <div className='flex justify-between items-center w-full text-xl font-medium text-right text-gray-800 max-md:max-w-full'>
           <div className='flex-1 shrink self-stretch my-auto min-w-[240px] max-md:max-w-full'>
@@ -69,12 +62,21 @@ const CustomModal = () => {
         </div>
         {/* نمایش Progress Bar در صورت وجود autoClose */}
         {modalContent?.main}
-        <button
-          type='button'
-          className='w-full mt-10 px-4 py-2 bg-[#7747C0] text-white rounded-lg hover:bg-purple-800'
-          onClick={closeModal}>
-          بستن
-        </button>
+        {!modalContent?.hideButton && (
+          <button
+            type='button'
+            className='w-full mt-10 px-4 py-2 bg-[#7747C0] text-white rounded-lg hover:bg-purple-800'
+            onClick={closeModal}>
+            بستن
+          </button>
+        )}
+        {modalContent?.autoClose && (
+          <div className='w-full bg-gray-200 h-1 mt-10 overflow-hidden'>
+            <div
+              className='bg-purple-600 h-full'
+              style={{ width: `${progress}%` }}></div>
+          </div>
+        )}
       </div>
     </div>
   )

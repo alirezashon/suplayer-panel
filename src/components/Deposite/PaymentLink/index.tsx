@@ -91,17 +91,17 @@ const PaymentLink = () => {
               <button
                 onClick={() => (refs.current.amount = '100000000')}
                 className='px-4 py-2 rounded-md border hover:bg-gray-100 text-[#7747C0]'>
-                ۱۰۰ میلیون ریال
+                ۱۰۰  ریال
               </button>
               <button
                 onClick={() => (refs.current.amount = '200000000')}
                 className='px-4 py-2 rounded-md border hover:bg-gray-100 text-[#7747C0]'>
-                ۲۰۰ میلیون ریال
+                ۲۰۰  ریال
               </button>
               <button
                 onClick={() => (refs.current.amount = '300000000')}
                 className='px-4 py-2 rounded-md border hover:bg-gray-100 text-[#7747C0]'>
-                ۳۰۰ میلیون ریال
+                ۳۰۰  ریال
               </button>
             </div>
             <div>

@@ -21,12 +21,14 @@ interface StatesContextProps {
     title: string
     type?: 'success' | 'error' | 'info'
     autoClose?: number
+    hideButton?: boolean
   } | null
   showModal: (content: {
     main: ReactNode
     title: string
     type?: 'success' | 'error' | 'info'
     autoClose?: number
+    hideButton?: boolean
   }) => void
   closeModal: () => void
   selectedProductData:
@@ -79,6 +81,7 @@ export const StatesProvider = ({ children }: { children: ReactNode }) => {
     title: string
     type?: 'success' | 'error' | 'info'
     autoClose?: number
+    hideButton?: boolean
   } | null>(null)
 
   const [selectedProductData, setSelectedProductData] = useState<{
@@ -105,6 +108,7 @@ export const StatesProvider = ({ children }: { children: ReactNode }) => {
     title: string
     type?: 'success' | 'error' | 'info'
     autoClose?: number
+    hideButton?: boolean
   }) => setModalContent(content)
   const closeModal = () => setModalContent(null)
   return (
