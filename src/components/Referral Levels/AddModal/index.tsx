@@ -105,7 +105,7 @@ const AddModal = ({
           `}>
         <form
           onSubmit={handleSubmit}
-          className='flex flex-col bg-white max-w-[594px] pb-[852px] max-md:px-5 max-md:pb-24 '>
+          className='flex flex-col bg-white pb-[852px] max-md:px-5 max-md:pb-24 '>
           <div className='flex justify-between items-center w-full text-xl font-medium text-right text-gray-800 max-md:max-w-full'>
             <div className='flex shrink self-stretch my-auto min-w-[240px] max-md:max-w-full'>
               {state > 0 && (

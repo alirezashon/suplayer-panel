@@ -1,4 +1,5 @@
 import { getCookieByKey } from '@/actions/cookieToken'
+import { getReleasedList } from '@/actions/setData'
 import { useData } from '@/Context/Data'
 import { useMenu } from '@/Context/Menu'
 import { useStates } from '@/Context/States'
@@ -9,7 +10,7 @@ import {
   FinalReleaseInterface,
   ReleaseAllocatedInterface,
 } from '@/interfaces'
-import { AddDocFile } from '@/services/allocation'
+import { AddDocFile, ReleaseAllocatedList } from '@/services/allocation'
 import { Printer, SearchNormal, TickCircle, Trash } from 'iconsax-react'
 import { useEffect, useState } from 'react'
 
@@ -31,7 +32,8 @@ type TableDataType = Partial<BeneficiaryData> & {
   disable?: boolean
 }
 const Release = () => {
-  const { beneficiaryData, allocationList, releasedList } = useData()
+  const { beneficiaryData, allocationList, releasedList, setReleasedList } =
+    useData()
   const {
     showModal,
     selectedSubGroupData,
@@ -52,6 +54,47 @@ const Release = () => {
     FinalReleaseInterface[]
   >([])
   const [data, setData] = useState<TableDataType[]>([])
+  const calculateReleased = () => {
+    const updatedData: TableDataType[] = []
+    const finalRelease: FinalReleaseInterface[] = []
+
+    data.forEach((row) => {
+      const matchedRelease = releasedList?.find(
+        (release) =>
+          release.visitor_uid === row.visitor_tel && release.wstatus === 0
+      )
+
+      const updatedRow: TableDataType = {
+        ...row,
+        disable: !!matchedRelease, // اگر مقدار در releasedList باشد، disable = true
+        newReleaseAmount: matchedRelease
+          ? `${matchedRelease.amount}`
+          : row.newReleaseAmount,
+      }
+
+      updatedData.push(updatedRow)
+
+      if (matchedRelease) {
+        finalRelease.push({
+          commission_allocation_uid: matchedRelease.commission_release_uid,
+          status: 1,
+          wamount: matchedRelease.amount,
+          allocation_status_id_file: matchedRelease.allocation_status_id_file,
+          assignment_otp: '',
+          Signature: generateAllocationSignature({
+            amount: `${matchedRelease.amount}`,
+            customerMobile: matchedRelease.visitor_uid,
+            sup_group_code: selectedGroupData?.sup_group_code as string,
+            supervisor_code: selectedSubGroupData?.supervisor_code as string,
+            visitor_uid: matchedRelease.visitor_uid,
+          }),
+        })
+      }
+    })
+
+    setData(updatedData)
+    setFinalReleaseData(finalRelease)
+  }
 
   useEffect(() => {
     if (!selectedGroupData) {
@@ -59,55 +102,38 @@ const Release = () => {
       setMenu('porsant')
     }
     if (!releaseData) return
-
-    const released = releasedList
-      ?.filter((release) => release.wstatus === 1)
-      .map((row) => ({
-        commission_allocation_uid: row.commission_release_uid,
-        status: 1,
-        wamount: row.amount,
-        allocation_status_id_file: row.allocation_status_id_file,
-        assignment_otp: '',
-        Signature: generateAllocationSignature({
-          amount: `${row.amount}`,
-          customerMobile: row.visitor_uid,
-          sup_group_code: selectedGroupData?.sup_group_code as string,
-          supervisor_code: selectedSubGroupData?.supervisor_code as string,
-          visitor_uid: row.visitor_uid,
-        }),
-      }))
-    setFinalReleaseData(released as FinalReleaseInterface[])
-
-    if (!allocationList) return
-    const subGroupAllocatedList = allocationList?.filter(
-      (allocate) =>
-        allocate?.supervisor_code === selectedSubGroupData?.supervisor_code
-    )
-    const allocated = subGroupAllocatedList
-      .filter((allocate) => allocate.wstatus === 1)
-      .map((allocate) => ({
-        visitor_name: beneficiaryData?.find(
-          (beneficiary) => beneficiary.visitor_uid === allocate?.visitor_uid
-        )?.visitor_name,
-        visitor_family: beneficiaryData?.find(
-          (beneficiary) => beneficiary.visitor_uid === allocate?.visitor_uid
-        )?.visitor_family,
-        visitor_tel: allocate.visitor_uid,
-        allocatedAmount: setComma(`${allocate.allocated_amount}`),
-        releasedAmount: setComma(`${allocate.released_amount}`),
-        newReleaseAmount:
-          releasedList
+    calculateReleased()
+    if (allocationList && data.length < 1) {
+      const subGroupAllocatedList = allocationList?.filter(
+        (allocate) =>
+          allocate?.supervisor_code === selectedSubGroupData?.supervisor_code
+      )
+      const allocated = subGroupAllocatedList
+        .filter((allocate) => allocate.wstatus === 1)
+        .map((allocate) => ({
+          visitor_name: beneficiaryData?.find(
+            (beneficiary) => beneficiary.visitor_uid === allocate?.visitor_uid
+          )?.visitor_name,
+          visitor_family: beneficiaryData?.find(
+            (beneficiary) => beneficiary.visitor_uid === allocate?.visitor_uid
+          )?.visitor_family,
+          visitor_tel: allocate.visitor_uid,
+          allocatedAmount: setComma(`${allocate.allocated_amount}`),
+          releasedAmount: setComma(`${allocate.released_amount}`),
+          newReleaseAmount:
+            releasedList
+              ?.filter((release) => release.wstatus === 1)
+              ?.find((final) => final?.visitor_uid === allocate?.visitor_uid)
+              ?.amount.toString() || '',
+          fileId: '',
+          disable: releasedList
             ?.filter((release) => release.wstatus === 1)
             ?.find((final) => final?.visitor_uid === allocate?.visitor_uid)
-            ?.amount.toString() || '',
-        fileId: '',
-        disable: releasedList
-          ?.filter((release) => release.wstatus === 1)
-          ?.find((final) => final?.visitor_uid === allocate?.visitor_uid)
-          ? true
-          : false,
-      }))
-    setData(allocated)
+            ? true
+            : false,
+        }))
+      setData(allocated)
+    }
   }, [
     setMenu,
     selectedGroupData,
@@ -237,7 +263,7 @@ const Release = () => {
       type: 'error',
       main: <p>{message}</p>,
       title: 'خطا',
-      autoClose: 2,
+      autoClose: 1,
     })
   }
 
@@ -249,11 +275,10 @@ const Release = () => {
     if (!/^\d*$/.test(cleanValue)) return
     setData((prev) => {
       const updatedData = prev.map((last) =>
-        last.visitor_uid === id
-          ? { ...last, newReleaseAmount: setComma(cleanValue) }
+        last.visitor_tel === id
+          ? { ...last, newReleaseAmount: `${parseInt(cleanValue, 10)}` }
           : last
       )
-      console.log('Updated Data:', updatedData) // بررسی مقدار جدید در کنسول
       return updatedData
     })
 
@@ -273,15 +298,17 @@ const Release = () => {
       }
 
       const newItem: ReleaseAllocatedInterface = {
-        commission_type: 0,
+        commission_type: 1,
         source_type: 1,
         sup_group_code: selectedGroupData?.sup_group_code as string,
         supervisor_code: selectedSubGroupData?.supervisor_code as string,
         visitor_uid: id,
         amount: parseInt(cleanValue),
         currency_type: 241,
-        ref_allocation_uid: '',
-        allocation_type: NaN,
+        ref_allocation_uid:
+          allocationList?.find((allocated) => allocated.visitor_uid === id)
+            ?.commission_allocation_uid || '',
+        allocation_type: 1,
         Signature: generateAllocationSignature({
           amount: cleanValue,
           customerMobile: id,
@@ -292,6 +319,32 @@ const Release = () => {
       }
       return [...prev, newItem]
     })
+  }
+  const releasingData = async () => {
+    if (releaseData.length < 1) {
+      showErrorModal('لیست شما خالی است')
+      return
+    }
+    const accessToken = await getCookieByKey('access_token')
+    await ReleaseAllocatedList({ accessToken, data: releaseData }).then(
+      async (result) => {
+        if (result && result?.status === 1) {
+          await getReleasedList().then((result) => {
+            if (result) setReleasedList(result)
+          })
+          setReleaseData([])
+          setData((prv) =>
+            prv.map((last) => ({ ...last, newReleaseAmount: '' }))
+          )
+          showModal({
+            type: 'success',
+            title: 'موفق',
+            main: result?.message,
+            autoClose: 1,
+          })
+        } else showErrorModal(result?.message || 'خطای ارتباط با سرور')
+      }
+    )
   }
 
   return (
@@ -395,22 +448,17 @@ const Release = () => {
                       <input
                         inputMode='numeric'
                         maxLength={21}
-                        value={row?.newReleaseAmount}
+                        value={setComma(row.newReleaseAmount)}
                         onChange={(e) => {
+                          // e.target.value =
+                          //   e.target.value.replace(/,/g, '')
+
                           handleCreditChange(
                             `${row.visitor_tel}`,
                             e.target.value
                           )
                         }}
-                        disabled={row?.disable}
-                        className={`border-none rounded px-2 py-1 w-full text-center
-                           ${
-                             ''
-                             // uneditableIds.includes(row.visitor_uid)
-                             //   ? 'bg-gray-100 cursor-not-allowed'
-                             //   : ''
-                           }
-                        `}
+                        className='border-none rounded px-2 py-1 w-full text-center'
                         placeholder='مبلغ آزادسازی را وارد کنید'
                       />
                     </td>
@@ -471,7 +519,7 @@ const Release = () => {
               </div>
               <div className='flex mt-4 gap-10 justify-end'>
                 <button
-                  type='submit'
+                  onClick={releasingData}
                   className='border-button px-10 h-10 rounded-lg '>
                   ذخیره پیش نویس آزادسازی
                 </button>

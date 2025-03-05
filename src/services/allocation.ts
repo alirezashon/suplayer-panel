@@ -75,6 +75,8 @@ export const ReleaseAllocatedList = async ({
         method: 'POST',
         headers: {
           authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+          accept: 'application/json',
         },
         body: JSON.stringify({ releases: data }),
       }
