@@ -104,6 +104,7 @@ export const ChangeReleaseStatus = async ({
         headers: {
           authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
+          
         },
         body: JSON.stringify({ status_updates }),
       }

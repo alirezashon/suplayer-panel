@@ -150,11 +150,11 @@ const ContextLoader = () => {
       await getSystemTypes().then((result) => {
         if (result) setSystemTypes(result)
       })
-      await getAllocatedList().then(
-        (result) => result && setAllocationList(result)
-      )
       await getReleasedList().then(
         (result) => result && setReleasedList(result)
+      )
+      await getAllocatedList().then(
+        (result) => result && setAllocationList(result)
       )
     }
     fetcher()

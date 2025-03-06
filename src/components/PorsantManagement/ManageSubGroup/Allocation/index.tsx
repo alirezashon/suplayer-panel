@@ -192,7 +192,6 @@ const Allocation = () => {
       return
     }
 
-    navigator.clipboard.writeText(JSON.stringify(allocatedData))
     const accessToken = (await getCookieByKey('access_token')) || ''
     await ChangeAllocationStatus({
       accessToken,

@@ -1,5 +1,6 @@
 import { getCookieByKey } from '@/actions/cookieToken'
 import { getReleasedList } from '@/actions/setData'
+import OtpModal from '@/components/shared/OtpModal'
 import { useData } from '@/Context/Data'
 import { useMenu } from '@/Context/Menu'
 import { useStates } from '@/Context/States'
@@ -10,7 +11,11 @@ import {
   FinalReleaseInterface,
   ReleaseAllocatedInterface,
 } from '@/interfaces'
-import { AddDocFile, ReleaseAllocatedList } from '@/services/allocation'
+import {
+  AddDocFile,
+  ChangeReleaseStatus,
+  ReleaseAllocatedList,
+} from '@/services/allocation'
 import { Printer, SearchNormal, TickCircle, Trash } from 'iconsax-react'
 import { useEffect, useState } from 'react'
 
@@ -19,17 +24,17 @@ const headers = [
   'نام ذی‌نفع',
   'نام خانوادگی ذی‌نفع',
   'اعتبار تخصیص داده شده',
-  'اعتبار آزادسازی شده',
+  'اعتبار آزادسازی نشده',
   'آزادسازی اعتبار',
   'بارگذاری فایل محاسبه',
 ]
 
 type TableDataType = Partial<BeneficiaryData> & {
   allocatedAmount: string
-  releasedAmount: string
+  remain_amount: string
   newReleaseAmount: string
   fileId: string
-  disable?: boolean
+  disable: boolean
 }
 const Release = () => {
   const { beneficiaryData, allocationList, releasedList, setReleasedList } =
@@ -54,8 +59,15 @@ const Release = () => {
     FinalReleaseInterface[]
   >([])
   const [data, setData] = useState<TableDataType[]>([])
-  const calculateReleased = () => {
-    const updatedData: TableDataType[] = []
+  const [otp, setOtp] = useState<string>()
+  const [showOtpModal, setshowOtpModal] = useState<boolean>(false)
+
+  useEffect(() => {
+    if (!selectedGroupData) {
+      location.hash = 'porsant'
+      setMenu('porsant')
+    }
+
     const finalRelease: FinalReleaseInterface[] = []
 
     data.forEach((row) => {
@@ -64,22 +76,13 @@ const Release = () => {
           release.visitor_uid === row.visitor_tel && release.wstatus === 0
       )
 
-      const updatedRow: TableDataType = {
-        ...row,
-        disable: !!matchedRelease, // اگر مقدار در releasedList باشد، disable = true
-        newReleaseAmount: matchedRelease
-          ? `${matchedRelease.amount}`
-          : row.newReleaseAmount,
-      }
-
-      updatedData.push(updatedRow)
-
       if (matchedRelease) {
         finalRelease.push({
           commission_allocation_uid: matchedRelease.commission_release_uid,
           status: 1,
           wamount: matchedRelease.amount,
-          allocation_status_id_file: matchedRelease.allocation_status_id_file,
+          allocation_status_id_file:
+            matchedRelease.allocation_status_id_file || '',
           assignment_otp: '',
           Signature: generateAllocationSignature({
             amount: `${matchedRelease.amount}`,
@@ -91,18 +94,8 @@ const Release = () => {
         })
       }
     })
-
-    setData(updatedData)
     setFinalReleaseData(finalRelease)
-  }
 
-  useEffect(() => {
-    if (!selectedGroupData) {
-      location.hash = 'porsant'
-      setMenu('porsant')
-    }
-    if (!releaseData) return
-    calculateReleased()
     if (allocationList && data.length < 1) {
       const subGroupAllocatedList = allocationList?.filter(
         (allocate) =>
@@ -119,18 +112,18 @@ const Release = () => {
           )?.visitor_family,
           visitor_tel: allocate.visitor_uid,
           allocatedAmount: setComma(`${allocate.allocated_amount}`),
-          releasedAmount: setComma(`${allocate.released_amount}`),
+          remain_amount: setComma(`${allocate.remain_amount}`),
           newReleaseAmount:
             releasedList
-              ?.filter((release) => release.wstatus === 1)
+              ?.filter((release) => release.wstatus === 0)
               ?.find((final) => final?.visitor_uid === allocate?.visitor_uid)
               ?.amount.toString() || '',
           fileId: '',
-          disable: releasedList
-            ?.filter((release) => release.wstatus === 1)
-            ?.find((final) => final?.visitor_uid === allocate?.visitor_uid)
-            ? true
-            : false,
+          disable: Boolean(
+            releasedList
+              ?.filter((release) => release.wstatus === 0)
+              ?.find((final) => final?.visitor_uid === allocate?.visitor_uid)
+          ),
         }))
       setData(allocated)
     }
@@ -346,9 +339,50 @@ const Release = () => {
       }
     )
   }
+  const changeReleasedStatus = async () => {
+    if (!otp || otp?.length < 5) {
+      showModal({
+        main: 'کد صحیح نیست',
+        title: 'خطا',
+        type: 'error',
+        autoClose: 1,
+        hideButton: true,
+      })
+      return
+    }
 
+    const accessToken = (await getCookieByKey('access_token')) || ''
+    await ChangeReleaseStatus({
+      accessToken,
+      status_updates: finalReleaseData.map((allocated) => ({
+        ...allocated,
+        assignment_otp: `${otp}`,
+      })),
+    }).then(async (result) => {
+      showModal({
+        title: result?.status === 1 ? 'موفق' : 'ناموفق',
+        type: result?.status === 1 ? 'success' : 'error',
+        main: result?.message || 'خطایی رخ داد',
+        autoClose: 1,
+      })
+      await getReleasedList().then((result) => {
+        if (result) {
+          setReleasedList(result)
+          setshowOtpModal(false)
+        }
+      })
+    })
+  }
   return (
     <div className='m-4'>
+      {showOtpModal && (
+        <OtpModal
+          setOtp={setOtp}
+          title='ثبت نهایی آزادسازی اعتبار'
+          close={() => setshowOtpModal(false)}
+          submit={changeReleasedStatus}
+        />
+      )}
       <div className='flex justify-between items-center mb-7'>
         <p>
           <span
@@ -427,88 +461,90 @@ const Release = () => {
                 </tr>
               </thead>
               <tbody>
-                {data?.map((row, index) => (
-                  <tr key={index} className='border-b'>
-                    <td className='text-center px-4 py-2 border-r'>
-                      {index + 1}
-                    </td>
-                    <td className='text-center px-4 py-2'>
-                      {row.visitor_name}
-                    </td>
-                    <td className='text-center px-4 py-2'>
-                      {row.visitor_family}
-                    </td>
-                    <td className='text-center px-4 py-2'>
-                      {row?.allocatedAmount} ریال
-                    </td>
-                    <td className='text-center px-4 py-2'>
-                      {row?.releasedAmount} ریال
-                    </td>
-                    <td className='text-center px-4 py-2'>
-                      <input
-                        inputMode='numeric'
-                        maxLength={21}
-                        value={setComma(row.newReleaseAmount)}
-                        onChange={(e) => {
-                          // e.target.value =
-                          //   e.target.value.replace(/,/g, '')
+                {data.length > 0 &&
+                  data?.map((row, index) => (
+                    <tr key={index} className='border-b'>
+                      <td className='text-center px-4 py-2 border-r'>
+                        {index + 1}
+                      </td>
+                      <td className='text-center px-4 py-2'>
+                        {row.visitor_name}
+                      </td>
+                      <td className='text-center px-4 py-2'>
+                        {row.visitor_family}
+                      </td>
+                      <td className='text-center px-4 py-2'>
+                        {row?.allocatedAmount} ریال
+                      </td>
+                      <td className='text-center px-4 py-2'>
+                        {row?.remain_amount} ریال
+                      </td>
+                      <td className='text-center px-4 py-2'>
+                        <input
+                          inputMode='numeric'
+                          maxLength={21}
+                          value={setComma(row.newReleaseAmount)}
+                          disabled={row?.disable}
+                          onChange={(e) => {
+                            // e.target.value =
+                            //   e.target.value.replace(/,/g, '')
 
-                          handleCreditChange(
-                            `${row.visitor_tel}`,
-                            e.target.value
-                          )
-                        }}
-                        className='border-none rounded px-2 py-1 w-full text-center'
-                        placeholder='مبلغ آزادسازی را وارد کنید'
-                      />
-                    </td>
-                    <td className='text-center px-4 py-2 border-l'>
-                      {row.fileId.length < 1 ? (
-                        <label className='flex flex-col items-center gap-2 cursor-pointer w-full'>
-                          <input
-                            type='file'
-                            onChange={(e) =>
-                              handleUploadFile(e, `${row.visitor_tel}`)
-                            }
-                            className='hidden'
-                          />
-                          <div className='w-full flex items-center justify-center border border-[#7747C0] text-[#7747C0] rounded-md px-4 py-2 text-sm hover:bg-[#7747C0] hover:text-white'>
-                            {uploadStatuses[`${row.visitor_tel}`]?.status ===
-                            'uploading'
-                              ? 'در حال بارگذاری...'
-                              : 'بارگذاری فایل'}
-                          </div>
-                          {uploadStatuses[`${row.visitor_tel}`]?.status ===
-                            'uploading' && (
-                            <div className='w-full bg-gray-200 rounded-full h-2 mt-2'>
-                              <div
-                                className='bg-[#7747C0] h-2 rounded-full transition-all duration-500'
-                                style={{
-                                  width: `${
-                                    uploadStatuses[`${row.visitor_tel}`]
-                                      ?.progress
-                                  }%`,
-                                }}></div>
+                            handleCreditChange(
+                              `${row.visitor_tel}`,
+                              e.target.value
+                            )
+                          }}
+                          className='border-none rounded px-2 py-1 w-full text-center'
+                          placeholder='مبلغ آزادسازی را وارد کنید'
+                        />
+                      </td>
+                      <td className='text-center px-4 py-2 border-l'>
+                        {row.fileId.length < 1 ? (
+                          <label className='flex flex-col items-center gap-2 cursor-pointer w-full'>
+                            <input
+                              type='file'
+                              onChange={(e) =>
+                                handleUploadFile(e, `${row.visitor_tel}`)
+                              }
+                              className='hidden'
+                            />
+                            <div className='w-full flex items-center justify-center border border-[#7747C0] text-[#7747C0] rounded-md px-4 py-2 text-sm hover:bg-[#7747C0] hover:text-white'>
+                              {uploadStatuses[`${row.visitor_tel}`]?.status ===
+                              'uploading'
+                                ? 'در حال بارگذاری...'
+                                : 'بارگذاری فایل'}
                             </div>
-                          )}
-                        </label>
-                      ) : (
-                        <div className='flex items-center gap-2 '>
-                          <TickCircle size={24} color='#0F973D' />
-                          بارگذاری انجام شد
-                          <Trash
-                            size={24}
-                            onClick={() =>
-                              handleDeleteFile(`${row.visitor_tel}`)
-                            }
-                            color='#B2BBC7'
-                            className='cursor-pointer'
-                          />
-                        </div>
-                      )}
-                    </td>
-                  </tr>
-                ))}
+                            {uploadStatuses[`${row.visitor_tel}`]?.status ===
+                              'uploading' && (
+                              <div className='w-full bg-gray-200 rounded-full h-2 mt-2'>
+                                <div
+                                  className='bg-[#7747C0] h-2 rounded-full transition-all duration-500'
+                                  style={{
+                                    width: `${
+                                      uploadStatuses[`${row.visitor_tel}`]
+                                        ?.progress
+                                    }%`,
+                                  }}></div>
+                              </div>
+                            )}
+                          </label>
+                        ) : (
+                          <div className='flex items-center gap-2 '>
+                            <TickCircle size={24} color='#0F973D' />
+                            بارگذاری انجام شد
+                            <Trash
+                              size={24}
+                              onClick={() =>
+                                handleDeleteFile(`${row.visitor_tel}`)
+                              }
+                              color='#B2BBC7'
+                              className='cursor-pointer'
+                            />
+                          </div>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
 
@@ -524,7 +560,7 @@ const Release = () => {
                   ذخیره پیش نویس آزادسازی
                 </button>
                 <button
-                  type='submit'
+                  onClick={() => setshowOtpModal(true)}
                   className='fill-button px-10 h-10 rounded-lg w-56'>
                   ثبت نهایی
                 </button>
