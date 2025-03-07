@@ -62,12 +62,7 @@ const Release = () => {
   const [otp, setOtp] = useState<string>()
   const [showOtpModal, setshowOtpModal] = useState<boolean>(false)
 
-  useEffect(() => {
-    if (!selectedGroupData) {
-      location.hash = 'porsant'
-      setMenu('porsant')
-    }
-
+  const calculateFinalData = () => {
     const finalRelease: FinalReleaseInterface[] = []
 
     data.forEach((row) => {
@@ -81,8 +76,7 @@ const Release = () => {
           commission_allocation_uid: matchedRelease.commission_release_uid,
           status: 1,
           wamount: matchedRelease.amount,
-          allocation_status_id_file:
-            matchedRelease.allocation_status_id_file || '',
+          allocation_status_id_file: `${matchedRelease.allocation_status_id_file}`,
           assignment_otp: '',
           Signature: generateAllocationSignature({
             amount: `${matchedRelease.amount}`,
@@ -95,6 +89,12 @@ const Release = () => {
       }
     })
     setFinalReleaseData(finalRelease)
+  }
+  useEffect(() => {
+    if (!selectedGroupData) {
+      location.hash = 'porsant'
+      setMenu('porsant')
+    }
 
     if (allocationList && data.length < 1) {
       const subGroupAllocatedList = allocationList?.filter(
@@ -127,6 +127,7 @@ const Release = () => {
         }))
       setData(allocated)
     }
+    calculateFinalData()
   }, [
     setMenu,
     selectedGroupData,
@@ -339,7 +340,10 @@ const Release = () => {
       }
     )
   }
+  console.log(finalReleaseData)
   const changeReleasedStatus = async () => {
+    calculateFinalData()
+    if (finalReleaseData?.length < 1) return
     if (!otp || otp?.length < 5) {
       showModal({
         main: 'کد صحیح نیست',

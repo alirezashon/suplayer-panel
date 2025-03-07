@@ -98,13 +98,13 @@ export const ChangeReleaseStatus = async ({
 }) => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/batch_commission_allocation_status`,
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/batch_commission_release_status`,
       {
         method: 'POST',
         headers: {
           authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
-          
+          accept: 'application/json',
         },
         body: JSON.stringify({ status_updates }),
       }
