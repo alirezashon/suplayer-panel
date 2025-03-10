@@ -15,11 +15,7 @@ import { GetCurrentUser } from '@/services/user'
 import { GetReferrerChartList, GetReferrerList } from '@/services/referrer'
 import { GetCampaignList } from '@/services/campaign'
 import { GetPromotionList } from '@/services/promotion'
-import {
-  GetdDraftsList,
-  GetTransactions,
-  GetWalletDetail,
-} from '@/services/finance'
+import { GetdDraftsList, GetTransactions, GetWalletDetail } from '@/services/finance'
 import { GetAllocatedList, GetReleasedList } from '@/services/allocation'
 import { TreeChartInterface } from '@/interfaces'
 

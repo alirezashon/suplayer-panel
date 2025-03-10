@@ -30,7 +30,7 @@ const AppointmentModal = ({ data, close }: AppointmentModalProps) => {
     subGroupId: '',
     productGroupId: 0,
     brandId: 1,
-    productId: 0,
+    productId: '',
   })
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -41,14 +41,14 @@ const AppointmentModal = ({ data, close }: AppointmentModalProps) => {
     const accessToken = (await getCookieByKey('access_token')) || ''
     await DefineAppointmentTask({
       accessToken,
-      personnel_uid: data?.pers_uid || '',
+      personnel_uid: data?.personnel_uid || '',
       supervisor_code: refs.current.subGroupId || '',
       sup_group_code: refs.current.groupId || '',
       visitor_uid: '',
       task_kpi_uid: '',
-      pgroup_id: NaN,
-      chart_id: NaN,
-      product_uid: '',
+      pgroup_id: refs.current.productGroupId,
+      chart_id: refs.current.brandId,
+      product_uid: refs.current.productId,
     }).then((result) => {
       showModal({
         type: result.status === 1 ? 'success' : 'error',

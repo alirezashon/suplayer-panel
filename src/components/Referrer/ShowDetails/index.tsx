@@ -92,33 +92,23 @@ const ShowDetails = ({ data, close }: ShowDetailsProps) => {
           </div>
           <div className='flex flex-col my-3'>
             <p className='text-[#5F6474]'>وضعیت بازاریاب</p>
-            <p className='text-[#0F973D] bg-[#DAFEE5] w-fit min-w-16 mx-3 rounded-lg text-center'>
-              {data.pers_status}
+            <p className={`${data.pers_status === 1 ? ' text-[#0F973D] bg-[#DAFEE5]' : 'text-[#97130f] bg-[#fedcda]'} w-fit min-w-16 mx-3 rounded-lg text-center`}>
+              {data.pers_status === 1 ? 'فعال' : 'غیر فعال'}
             </p>
           </div>
           <div className='flex flex-col mt-5'>
             <p className='text-[#5F6474]'> گروه‌ و زیرگروه‌های عضو شده</p>
             <div className='flex gap-3'>
-              {taskList?.map(
-                (task, index) =>
-               (
-                    <p
-                      key={index}
-                      className='text-[#3B5A4F] bg-[#A1E3CB] px-5 py-1 rounded-full w-fit'>
-                      {task.personnel_uid}
-                    </p>
-                  )
-              )}
-              {taskList?.map(
-                (task, index) =>
-                  task?.supervisor_name?.length > 0 && (
-                    <p
-                      key={index}
-                      className='text-[#3B5A4F] bg-[#A1E3CB] px-5 py-1 rounded-full w-fit'>
-                      {task.supervisor_name}
-                    </p>
-                  )
-              )}
+              {taskList?.map((task, index) => (
+                <div key={index} className='flex gap-3'>
+                  <p className='text-[#3B5A4F] bg-[#A1E3CB] px-5 py-1 rounded-full w-fit'>
+                    {task.sup_group_name}
+                  </p>
+                  <p className='text-[#3B5A4F] bg-[#A1E3CB] px-5 py-1 rounded-full w-fit'>
+                    {task.supervisor_name}
+                  </p>
+                </div>
+              ))}
             </div>
           </div>
           <div className='flex flex-col mt-5'>

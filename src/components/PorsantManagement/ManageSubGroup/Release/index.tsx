@@ -64,38 +64,36 @@ const Release = () => {
 
   const calculateFinalData = () => {
     const finalRelease: FinalReleaseInterface[] = []
-
-    data.forEach((row) => {
-      const matchedRelease = releasedList?.find(
-        (release) =>
-          release.visitor_uid === row.visitor_tel && release.wstatus === 0
-      )
-
-      if (matchedRelease) {
+    const subGroupAllocatedList = releasedList?.filter(
+      (release) =>
+        release?.wstatus === 0 &&
+        release?.supervisor_code === selectedSubGroupData?.supervisor_code
+    )
+    subGroupAllocatedList?.forEach((row) => {
+      // const matchedRelease = releasedList?.find(
+      //   (release) =>
+      //     release.visitor_uid === row.visitor_tel && release.wstatus === 0
+      // )
+      if (row) {
         finalRelease.push({
-          commission_allocation_uid: matchedRelease.commission_release_uid,
+          commission_allocation_uid: row.commission_release_uid,
           status: 1,
-          wamount: matchedRelease.amount,
-          allocation_status_id_file: `${matchedRelease.allocation_status_id_file}`,
+          wamount: row.amount,
+          allocation_status_id_file: `${row.allocation_status_id_file}`,
           assignment_otp: '',
           Signature: generateAllocationSignature({
-            amount: `${matchedRelease.amount}`,
-            customerMobile: matchedRelease.visitor_uid,
+            amount: `${row.amount}`,
+            customerMobile: row.visitor_uid,
             sup_group_code: selectedGroupData?.sup_group_code as string,
             supervisor_code: selectedSubGroupData?.supervisor_code as string,
-            visitor_uid: matchedRelease.visitor_uid,
+            visitor_uid: row.visitor_uid,
           }),
         })
       }
     })
     setFinalReleaseData(finalRelease)
   }
-  useEffect(() => {
-    if (!selectedGroupData) {
-      location.hash = 'porsant'
-      setMenu('porsant')
-    }
-
+  const calculateData = () => {
     if (allocationList && data.length < 1) {
       const subGroupAllocatedList = allocationList?.filter(
         (allocate) =>
@@ -115,18 +113,35 @@ const Release = () => {
           remain_amount: setComma(`${allocate.remain_amount}`),
           newReleaseAmount:
             releasedList
-              ?.filter((release) => release.wstatus === 0)
+              ?.filter(
+                (release) =>
+                  release.wstatus === 0 &&
+                  release.supervisor_code ===
+                    selectedSubGroupData?.supervisor_code
+              )
               ?.find((final) => final?.visitor_uid === allocate?.visitor_uid)
               ?.amount.toString() || '',
           fileId: '',
           disable: Boolean(
             releasedList
-              ?.filter((release) => release.wstatus === 0)
+              ?.filter(
+                (release) =>
+                  release.wstatus === 0 &&
+                  release.supervisor_code ===
+                    selectedSubGroupData?.supervisor_code
+              )
               ?.find((final) => final?.visitor_uid === allocate?.visitor_uid)
           ),
         }))
       setData(allocated)
     }
+  }
+  useEffect(() => {
+    if (!selectedGroupData) {
+      location.hash = 'porsant'
+      setMenu('porsant')
+    }
+    calculateData()
     calculateFinalData()
   }, [
     setMenu,
@@ -231,7 +246,17 @@ const Release = () => {
                 : last
             )
           )
-
+          setFinalReleaseData((prev) =>
+            prev.map((last) =>
+              releasedList?.find(
+                (release) =>
+                  release.commission_release_uid ===
+                  last.commission_allocation_uid
+              )?.visitor_uid === visitorTel
+                ? { ...last, fileId: result?.rec_id_file }
+                : last
+            )
+          )
           clearInterval(interval) // متوقف کردن اینتروال وقتی آپلود کامل شد
 
           setUploadStatuses((prev) => ({
@@ -264,13 +289,16 @@ const Release = () => {
   const handleCreditChange = (id: string, value: string) => {
     // حذف کاماهای اضافی
     const cleanValue = value.replace(/,/g, '')
-
-    // بررسی مقدار جدید که فقط عدد باشد
     if (!/^\d*$/.test(cleanValue)) return
+
+    const parsedValue = cleanValue ? parseInt(cleanValue, 10) : ''
     setData((prev) => {
       const updatedData = prev.map((last) =>
         last.visitor_tel === id
-          ? { ...last, newReleaseAmount: `${parseInt(cleanValue, 10)}` }
+          ? {
+              ...last,
+              newReleaseAmount: parsedValue !== '' ? `${parsedValue}` : '',
+            }
           : last
       )
       return updatedData
@@ -279,15 +307,13 @@ const Release = () => {
     setReleaseData((prev) => {
       const existingIndex = prev.findIndex((item) => item.visitor_uid === id)
 
-      if (cleanValue === '') {
+      if (parsedValue === '') {
         return prev.filter((item) => item.visitor_uid !== id)
       }
 
       if (existingIndex !== -1) {
         return prev.map((item, index) =>
-          index === existingIndex
-            ? { ...item, amount: parseInt(cleanValue, 10) }
-            : item
+          index === existingIndex ? { ...item, amount: parsedValue } : item
         )
       }
 
@@ -297,7 +323,7 @@ const Release = () => {
         sup_group_code: selectedGroupData?.sup_group_code as string,
         supervisor_code: selectedSubGroupData?.supervisor_code as string,
         visitor_uid: id,
-        amount: parseInt(cleanValue),
+        amount: parsedValue,
         currency_type: 241,
         ref_allocation_uid:
           allocationList?.find((allocated) => allocated.visitor_uid === id)
@@ -324,7 +350,11 @@ const Release = () => {
       async (result) => {
         if (result && result?.status === 1) {
           await getReleasedList().then((result) => {
-            if (result) setReleasedList(result)
+            if (result) {
+              setReleasedList(result)
+              calculateData()
+              calculateFinalData()
+            }
           })
           setReleaseData([])
           setData((prv) =>
@@ -340,9 +370,7 @@ const Release = () => {
       }
     )
   }
-  console.log(finalReleaseData)
   const changeReleasedStatus = async () => {
-    calculateFinalData()
     if (finalReleaseData?.length < 1) return
     if (!otp || otp?.length < 5) {
       showModal({
@@ -506,6 +534,7 @@ const Release = () => {
                         {row.fileId.length < 1 ? (
                           <label className='flex flex-col items-center gap-2 cursor-pointer w-full'>
                             <input
+                              disabled={!row.disable}
                               type='file'
                               onChange={(e) =>
                                 handleUploadFile(e, `${row.visitor_tel}`)
@@ -564,7 +593,16 @@ const Release = () => {
                   ذخیره پیش نویس آزادسازی
                 </button>
                 <button
-                  onClick={() => setshowOtpModal(true)}
+                  onClick={() => {
+                    if (finalReleaseData.length > 0) setshowOtpModal(true)
+                    else
+                      showModal({
+                        type: 'error',
+                        main: 'ابتدا لیست را در پیش نویس ذخیره کنید',
+                        title: 'خطا',
+                        autoClose: 1,
+                      })
+                  }}
                   className='fill-button px-10 h-10 rounded-lg w-56'>
                   ثبت نهایی
                 </button>

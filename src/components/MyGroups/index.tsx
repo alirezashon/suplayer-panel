@@ -6,14 +6,18 @@ import AddSubGroup from '../SubGroups/AddModal'
 import DeleteModal from './DeleteModal'
 import { useData } from '@/Context/Data'
 import Image from 'next/image'
+import { useStates } from '@/Context/States'
+import { GroupData } from '@/interfaces'
 
 const MyGroups: React.FC = () => {
   const { setMenu } = useMenu()
   const { groupData } = useData()
+  const { setSelectedGroupData } = useStates()
   const [showAddModal, setShowAddModal] = useState<null | string[]>(null)
   const [addSubGroup, setAddSubGroup] = useState<number | null>()
   const [showDeleteModal, setShowDeleteModal] = useState<null | string[]>(null)
-  const changeRoute = () => {
+  const changeRoute = (group: GroupData) => {
+    setSelectedGroupData(group)
     setMenu('subgroups')
     location.hash = 'subgroups'
   }
@@ -130,7 +134,7 @@ const MyGroups: React.FC = () => {
                 </div>
                 <button
                   onClick={() => {
-                    if (group.supervisors_count > 0) changeRoute()
+                    if (group.supervisors_count > 0) changeRoute(group)
                     else setAddSubGroup(group.sup_group_id)
                   }}
                   className={`w-full h-10  font-semibold rounded ${

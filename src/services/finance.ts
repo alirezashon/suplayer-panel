@@ -259,7 +259,7 @@ export const GetWalletDetail = async ({
 }): Promise<WalletDetail | undefined> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/visitor_totalaccount_detail`,
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/customers_totalaccount`,
       {
         method: 'GET',
         headers: {
@@ -273,7 +273,7 @@ export const GetWalletDetail = async ({
     }
 
     const result = await response.json()
-    return result[0]
+    return result.data
   } catch (error) {
     console.log(error)
   }

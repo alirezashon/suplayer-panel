@@ -1,40 +1,17 @@
 import Calendar from '@/components/shared/Calendar'
 import { useData } from '@/Context/Data'
-import { AllocationListInterface } from '@/interfaces'
-import {
-  ExportCurve,
-  ImportCurve,
-  Receipt1,
-  ReceiveSquare,
-  TransmitSquare,
-} from 'iconsax-react'
+import { TransactionInterface } from '@/interfaces'
+import { ExportCurve, Receipt1 } from 'iconsax-react'
 import { useEffect, useState } from 'react'
-const headers = [
-  'ردیف',
-  'نام و نام خانوادگی',
-  'نوع تراکنش',
-  'مبلغ(ریال)',
-  'تاریخ',
-  'فایل محاسبه',
-]
+const headers = ['ردیف', 'تراکنش', 'تاریخ', 'بدهکار', 'بستانکار']
 const FinanceReports = () => {
   const [initialData, setInitialData] = useState<
-    Partial<AllocationListInterface>[]
+    Partial<TransactionInterface>[]
   >([])
-  const { allocationList } = useData()
+  const { transactionsData } = useData()
   useEffect(() => {
-    setInitialData(
-      Array.isArray(allocationList)
-        ? allocationList.map((transaction) => ({
-            visitor_uid: transaction.visitor_uid,
-            wstatus: transaction.wstatus,
-            amount: transaction.amount,
-            regdate: transaction.regdate_pe,
-            file_uid: transaction.allocation_status_id_file,
-          }))
-        : []
-    )
-  }, [allocationList])
+    setInitialData(transactionsData as TransactionInterface[])
+  }, [transactionsData])
 
   const filterPersonnel = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -88,12 +65,12 @@ const FinanceReports = () => {
           </div>
           <div className='flex flex-col w-full'>
             <label className='text-base font-medium text-right text-gray-800'>
-              نوع تراکنش
+              وضعیت تراکنش
             </label>
             <input
               name='pers_tel'
               onChange={filterPersonnel}
-              placeholder='شماره همراه'
+              placeholder='وضعیت تراکنش'
             />
           </div>
         </div>
@@ -113,7 +90,7 @@ const FinanceReports = () => {
           </div>
           <div className='flex flex-col w-full'>
             <label className='text-base font-medium text-right text-gray-800'>
-              مبلغ
+              مبلغ (ریال)
             </label>
             <div className='flex gap-4'>
               <input className='flex-1' placeholder='از مبلغ' />
@@ -146,43 +123,23 @@ const FinanceReports = () => {
 
             <tbody>
               {initialData?.map((personnel, index) => (
-                <tr key={index} className='border-b '>
-                  {[index + 1, ...[...Object.values(personnel)]].map(
-                    (detail, detailIndex) => (
-                      <td
-                        key={detailIndex}
-                        className={`text-center h-10 ${
-                          detailIndex === 0
-                            ? ' border-r '
-                            : detailIndex === 5 && ' border-l '
-                        }`}>
-                        {detailIndex === 2 ? (
-                          <div className='flex justify-center items-center gap-2'>
-                            {detail === 1 ? (
-                              <p className='bg-[#E2F1FC] rounded-full p-1'>
-                                <TransmitSquare size={22} color='#0F6195' />
-                              </p>
-                            ) : (
-                              <p className='bg-[#DAFEE5] rounded-full p-1'>
-                                <ReceiveSquare size={22} color='#0F973D' />
-                              </p>
-                            )}
-                            <p>
-                              {detail === 1
-                                ? 'آزاد سازی اعتبار'
-                                : 'تخصیص اعتبار'}
-                            </p>
-                          </div>
-                        ) : detailIndex === 5 ? (
-                          <p className='flex justify-center cursor-pointer'>
-                            <ImportCurve color='#7747C0' size={24} />
-                          </p>
-                        ) : (
-                          detail
-                        )}
-                      </td>
-                    )
-                  )}
+                <tr key={index} className='border-b'>
+                  {[
+                    index + 1,
+                    ...['pan', 'settlementDate_pe', 'Debit', 'Credit'].map(
+                      (key) => personnel[key as keyof TransactionInterface]
+                    ),
+                  ].map((detail, detailIndex) => (
+                    <td
+                      key={detailIndex}
+                      className={`text-center h-10 ${
+                        detailIndex === 0
+                          ? ' border-r '
+                          : detailIndex === 5 && ' border-l '
+                      }`}>
+                      {detail}
+                    </td>
+                  ))}
                 </tr>
               ))}
             </tbody>

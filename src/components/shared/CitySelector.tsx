@@ -7,43 +7,21 @@ import { useState, useRef, useEffect } from 'react'
 const CitySelector = ({
   setResult,
   showError,
+  state = '',
+  countyCode = '',
+  city = '',
 }: {
   setResult: (value: string) => void
   showError?: boolean
+  state?: string
+  countyCode?: string
+  city?: string
 }) => {
   const [states, setStates] = useState<States[]>([])
   const [county, setCounty] = useState<County[]>([])
   const [cities, Setcities] = useState<Cities[]>([])
-  const locationRefs = useRef({ state: '', county: '', city: '' })
-
-  useEffect(() => {
-    const getLocs = async () => {
-      const accessToken = await getCookieByKey('access_token')
-      await GetStates({ accessToken }).then(async (value) => {
-        if (value) {
-          setStates(value)
-          await GetCounty({ accessToken, state: value[0]?.StateCode }).then(
-            async (counties) => {
-              if (counties) {
-                setCounty(counties)
-                await GetCity({
-                  accessToken,
-                  state: value[0]?.StateCode,
-                  county: counties[0].CountyCode,
-                }).then((cityList) => {
-                  if (cityList) {
-                    Setcities(cityList)
-                  }
-                })
-              }
-            }
-          )
-        }
-      })
-    }
-    getLocs()
-  }, [])
-
+  const locationRefs = useRef({ state, county: countyCode })
+  const [selectedCity, setSelectedCity] = useState<string>(city)
   const getCounty = async (state: string) => {
     const accessToken = await getCookieByKey('access_token')
     await GetCounty({ accessToken, state: state }).then(async (counties) => {
@@ -73,6 +51,36 @@ const CitySelector = ({
       }
     })
   }
+  useEffect(() => {
+    const getLocs = async () => {
+      const accessToken = await getCookieByKey('access_token')
+      await GetStates({ accessToken }).then(async (value) => {
+        if (value) {
+          setStates(value)
+          await GetCounty({ accessToken, state: value[0]?.StateCode }).then(
+            async (counties) => {
+              if (counties) {
+                setCounty(counties)
+                await GetCity({
+                  accessToken,
+                  state: value[0]?.StateCode,
+                  county: counties[0].CountyCode,
+                }).then((cityList) => {
+                  if (cityList) {
+                    Setcities(cityList)
+                    if (countyCode) {
+                      getCounty(state)
+                    }
+                  }
+                })
+              }
+            }
+          )
+        }
+      })
+    }
+    getLocs()
+  }, [])
 
   return (
     <div className='w-full'>
@@ -80,6 +88,7 @@ const CitySelector = ({
         <div className='flex-1'>
           <label> استان </label>
           <select
+            value={locationRefs.current.state}
             className={`${
               showError && errorClass
             } w-full border rounded-lg h-10 px-1 outline-none`}
@@ -98,6 +107,7 @@ const CitySelector = ({
         <div className='flex-1'>
           <label> شهرستان </label>
           <select
+            value={locationRefs.current.county}
             className={`${
               showError && errorClass
             } w-full border rounded-lg h-10 px-1 outline-none`}
@@ -118,10 +128,14 @@ const CitySelector = ({
         <div className='flex-1'>
           <label> شهر </label>
           <select
+            value={selectedCity}
             className={`${
               showError && errorClass
             } w-full border rounded-lg h-10 px-1 outline-none`}
-            onChange={(e) => setResult(e.target.value)}>
+            onChange={(e) => {
+              setResult(e.target.value)
+              setSelectedCity(e.target.value)
+            }}>
             {cities.length > 0 &&
               cities.map((item, index) => (
                 <option key={index} value={item.CityUID}>

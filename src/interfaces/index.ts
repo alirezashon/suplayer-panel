@@ -269,6 +269,8 @@ export interface IAccountBalanceResponse {
 }
 export interface TransactionInterface {
   pan_name: string
+  pan: string
+  pan_id: number
   amount: number
   description: string
   transactionDate_pe: string
@@ -281,9 +283,9 @@ export interface TransactionInterface {
   transactionType: string
   transaction_cost: number
   wage_cost: number
-  ttype: string
+  ttype: string | number
   CHID: string
-  ref_id: string
+  ref_id: string | number
   Debit: number
   Credit: number
   auto_code_id: number
@@ -384,6 +386,13 @@ export interface AppointmentTaskInterface {
   visitor_full_name: string
   task_kpi_uid: string
   cstatus: number
+  product_uid: string
+  ini_code: string
+  ini_name: string
+  pgroup_id: string
+  group_desc: string
+  chart_id: string
+  chtitle: string
 }
 export interface ReleaseAllocatedInterface {
   ref_allocation_uid: string

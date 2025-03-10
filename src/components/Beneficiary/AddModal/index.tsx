@@ -32,7 +32,6 @@ const AddModal = ({ data, close }: AddModalProps) => {
     visitor_tel: '',
   })
   const [foundAddresses, setFoundAddresses] = useState<SearchAddress[]>([])
-
   const refs = useRef({
     supervisor_id: data?.supervisor_id || 0,
     visitor_type: data?.visitor_type || 0,
@@ -87,15 +86,18 @@ const AddModal = ({ data, close }: AddModalProps) => {
         ),
         accessToken,
       })
-        .then((value) => {
-          if (value?.status === 1)
+        .then(async (value) => {
+          if (value?.status === 1) {
             showModal({
               type: 'success',
               main: <p>{value.message}</p>,
               title: 'موفق',
               autoClose: 2,
             })
-          else
+            await getBeneficiaryData().then((result) => {
+              if (result) setBeneficiaryData(result)
+            })
+          } else
             showModal({
               type: 'error',
               main: <p>{value.message}</p>,
@@ -348,8 +350,39 @@ const AddModal = ({ data, close }: AddModalProps) => {
                         }`}
                         name='visitor_family'
                         onChange={handleChange}
-                        placeholder='متخصص پوست و مو'
+                        placeholder='امیر'
                       />
+                    </div>
+                    <div className='flex flex-col w-full'>
+                      <label>نام خانوادگی صاحب کسب و کار </label>
+                      <input
+                        defaultValue={refs.current.visitor_family}
+                        className={`border ${
+                          errors.visitor_family && errorClass
+                        }`}
+                        name='visitor_family'
+                        onChange={handleChange}
+                        placeholder='امیدی'
+                      />
+                    </div>
+                  </div>
+                  <div className='flex gap-4 my-3'>
+                    <div className='flex flex-col w-full'>
+                      <label>تخصص ذی نفع </label>
+                      <input
+                        defaultValue={
+                          data?.visitor_tel || refs.current.visitor_tel || ''
+                        }
+                        onChange={handleChange}
+                        name='visitor_tel'
+                        className={`border ${errors.visitor_tel && errorClass}`}
+                        placeholder='روانپزشکی'
+                      />
+                      {errors.visitor_tel && (
+                        <span className='text-red-500'>
+                          {errors.visitor_tel}
+                        </span>
+                      )}
                     </div>
                     <div className='flex flex-col w-full'>
                       <label>شماره همراه </label>
@@ -394,6 +427,9 @@ const AddModal = ({ data, close }: AddModalProps) => {
           ) : (
             <>
               <CitySelector
+                state={data?.StateCode || ''}
+                countyCode={data?.CountyCode || ''}
+                city={data?.CityUID || ''}
                 setResult={(value: string) => (refs.current.CityUID = value)}
               />
 

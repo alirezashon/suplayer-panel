@@ -89,6 +89,7 @@ const Referrer: React.FC = () => {
       pers_chart_id: person.pers_chart_id,
       pers_status: person.pers_status,
       pers_tob: person.pers_tob,
+      pers_uid: person?.pers_uid,
     }))
 
     setInitialData(filteredFieldsData as Partial<ReferrerData>[])
@@ -280,7 +281,11 @@ const Referrer: React.FC = () => {
                                 className='border-button px-2 rounded-md'
                                 onClick={() =>
                                   setShowAppointmentModal(
-                                    personnel as ReferrerData
+                                    referrerData?.find(
+                                      (personnel) =>
+                                        personnel?.pers_uid ===
+                                        personnel?.pers_uid
+                                    ) as ReferrerData
                                   )
                                 }>
                                 انتصاب دادن

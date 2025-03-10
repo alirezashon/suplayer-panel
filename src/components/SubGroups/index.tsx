@@ -7,10 +7,14 @@ import { useData } from '@/Context/Data'
 import Image from 'next/image'
 import { SubGroup } from '@/interfaces'
 import AppointmentModal from './Appointment'
+import { useStates } from '@/Context/States'
 const SubGroups: React.FC = () => {
   const { setMenu } = useMenu()
   const { groupData, subGroupData } = useData()
-  const [activeTab, setActiveTab] = useState<number>(0)
+  const { selectedGroupData } = useStates()
+  const [activeTab, setActiveTab] = useState<number>(
+    selectedGroupData?.sup_group_id as number
+  )
   const [showAddModal, setShowAddModal] = useState<boolean | string>(false)
   const [showAppointmentModal, setShowAppointmenModal] = useState<
     boolean | { data: SubGroup; type: 0 | 1 }
@@ -19,10 +23,10 @@ const SubGroups: React.FC = () => {
     false
   )
   useEffect(() => {
-    if (groupData && groupData.length > 0) {
+    if (!selectedGroupData && groupData && groupData.length > 0) {
       setActiveTab(groupData[0].sup_group_id)
     }
-  }, [groupData])
+  }, [groupData, selectedGroupData])
   return (
     <>
       {showAddModal && (
