@@ -143,7 +143,7 @@ export interface BeneficiaryData {
 
 export interface ReferrerData {
   personnel_code: string
-  pers_chart_id: number | string
+  pers_chart_id: number
   pers_chart_title: string
   pers_job_id: number
   pers_type: number

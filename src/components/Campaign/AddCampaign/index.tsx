@@ -2,7 +2,6 @@ import { getCookieByKey } from '@/actions/cookieToken'
 import { getCampaignData } from '@/actions/setData'
 import { errorClass } from '@/app/assets/style'
 import Calendar from '@/components/shared/Calendar'
-import CitySelector from '@/components/shared/CitySelector'
 import SelectList from '@/components/shared/SelectList'
 import { useData } from '@/Context/Data'
 import { useStates } from '@/Context/States'
@@ -192,6 +191,29 @@ const AddCampaign = ({
                       <p className='text-red-500 text-sm'>{errors.ctitle}</p>
                     )}
                   </div>
+                  <div className='flex flex-col w-full'>
+                    <label className='text-base font-medium text-right text-gray-800'>
+                      نوع کمپین
+                    </label>
+                    <select
+                      // defaultValue={
+                      //   data?.default_weight ||
+                      //   refs.current.default_weight ||
+                      //   ''
+                      // }
+                      // onChange={(e) =>
+                      //   (refs.current.default_weight = parseInt(
+                      //     `${e.target.value}`
+                      //   ))
+                      // }
+                      className='w-full border rounded-lg h-10 px-1'>
+                      <option value={1}>1</option>
+                      <option value={2}>2</option>
+                    </select>
+                    {errors.ctitle && (
+                      <p className='text-red-500 text-sm'>{errors.ctitle}</p>
+                    )}
+                  </div>
                   <div className='flex gap-4'>
                     <div className='w-full'>
                       <label className=' m-1 text-sm'>تاریخ شروع</label>
@@ -232,17 +254,6 @@ const AddCampaign = ({
                       )}
                     </div>
                   </div>
-                  <CitySelector
-                    setResult={(value: string) => {
-                      refs.current.loc_uid = value
-                      setErrors((prevErrors) => ({
-                        ...prevErrors,
-                        ['loc_uid']: null,
-                      }))
-                    }}
-                    showError={typeof errors.loc_uid === 'string'}
-                  />
-
                   <div>
                     <label className='block mb-2 text-sm'>بودجه (ریال)</label>
                     <input

@@ -119,7 +119,9 @@ const AddModal = ({ data, close }: AddModalProps) => {
         accessToken,
         ...refs.current,
         visitor_full_name:
-          refs.current.visitor_name + ' ' + refs.current.visitor_family,
+          type === 1
+            ? refs.current.visitor_name + ' ' + refs.current.visitor_family
+            : refs.current.visitor_full_name,
         visitor_uid: refs.current?.visitor_tel,
       }).then(
         async (value) =>
@@ -308,19 +310,19 @@ const AddModal = ({ data, close }: AddModalProps) => {
                       <input
                         defaultValue={
                           data?.visitor_full_name ||
-                          refs.current.visitor_name ||
+                          refs.current.visitor_full_name ||
                           ''
                         }
                         name='visitor_name'
                         onChange={handleChange}
                         placeholder='نام کسب و کار'
                         className={`border ${
-                          errors.visitor_name && errorClass
+                          errors.visitor_full_name && errorClass
                         }`}
                       />
-                      {errors.visitor_name && (
+                      {errors.visitor_full_name && (
                         <span className='text-red-500'>
-                          {errors.visitor_name}
+                          {errors.visitor_full_name}
                         </span>
                       )}
                     </div>
@@ -388,16 +390,16 @@ const AddModal = ({ data, close }: AddModalProps) => {
                       <label>شماره همراه </label>
                       <input
                         defaultValue={
-                          data?.visitor_tel || refs.current.visitor_tel || ''
+                          data?.visitor_uid || refs.current.visitor_uid || ''
                         }
                         onChange={handleChange}
-                        name='visitor_tel'
-                        className={`border ${errors.visitor_tel && errorClass}`}
+                        name='visitor_uid'
+                        className={`border ${errors.visitor_uid && errorClass}`}
                         placeholder='۰۹۱۲۷۶۸۵۶۴۷۳'
                       />
-                      {errors.visitor_tel && (
+                      {errors.visitor_uid && (
                         <span className='text-red-500'>
-                          {errors.visitor_tel}
+                          {errors.visitor_uid}
                         </span>
                       )}
                     </div>

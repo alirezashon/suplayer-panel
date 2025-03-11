@@ -75,7 +75,7 @@ export const CreateReferrer = async ({
     )
 
     return await response.json()
-  }catch (error) {
+  } catch (error) {
     console.log(error)
   }
 }
@@ -152,7 +152,7 @@ export const EditReferrer = async ({
       }
     )
     return await response.json()
-  }catch (error) {
+  } catch (error) {
     console.log(error)
   }
 }
@@ -226,7 +226,7 @@ export const DefineAppointmentTask = async ({
     )
 
     return await response.json()
-  }catch (error) {
+  } catch (error) {
     console.log(error)
   }
 }
@@ -237,6 +237,11 @@ export const EditAppointmentTask = async ({
   sup_group_code,
   visitor_uid,
   task_kpi_uid,
+  task_uid,
+  status,
+  pgroup_id,
+  chart_id,
+  product_uid,
 }: {
   accessToken: string | undefined
   personnel_uid: string
@@ -246,6 +251,9 @@ export const EditAppointmentTask = async ({
   task_kpi_uid: string
   task_uid: string
   status: number
+  pgroup_id: number
+  chart_id: number
+  product_uid: string
 }) => {
   try {
     const response = await fetch(
@@ -262,12 +270,17 @@ export const EditAppointmentTask = async ({
           sup_group_code,
           visitor_uid,
           task_kpi_uid,
+          task_uid,
+          status,
+          pgroup_id,
+          chart_id,
+          product_uid,
         }),
       }
     )
 
     return await response.json()
-  }catch (error) {
+  } catch (error) {
     console.log(error)
   }
 }
@@ -280,7 +293,7 @@ export const GetAppointmentTaskList = async ({
 }): Promise<AppointmentTaskInterface[] | undefined> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_task_list?personnel_uid=${uid}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_task_list?personnel_uid=${uid}&status_id=1`,
       {
         method: 'GET',
         headers: {
@@ -331,7 +344,7 @@ export const DefineAppointmentTaskList = async ({
     )
 
     return await response.json()
-  }catch (error) {
+  } catch (error) {
     console.log(error)
   }
 }
@@ -369,7 +382,7 @@ export const EditAppointmentTaskList = async ({
     )
 
     return await response.json()
-  }catch (error) {
+  } catch (error) {
     console.log(error)
   }
 }
@@ -405,7 +418,7 @@ export const CreateReferrerChart = async ({
     )
 
     return await response.json()
-  }catch (error) {
+  } catch (error) {
     console.log(error)
   }
 }
@@ -443,7 +456,7 @@ export const EditReferrerChart = async ({
       }
     )
     return await response.json()
-  }catch (error) {
+  } catch (error) {
     console.log(error)
   }
 }

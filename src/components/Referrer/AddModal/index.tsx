@@ -8,7 +8,6 @@ import CitySelector from '@/components/shared/CitySelector'
 import { GetEducationalDegree, GetMajor } from '@/services/general'
 import { useMenu } from '@/Context/Menu'
 import { errorClass } from '@/app/assets/style'
-
 import { getReferrerData } from '@/actions/setData'
 import { useStates } from '@/Context/States'
 
@@ -43,23 +42,23 @@ const AddModal = ({ data, close }: AddModalProps) => {
   const { showModal } = useStates()
   const refererTypes = ['شخص', 'کسب و کار']
   const [formData, setFormData] = useState({
-    personnel_code: '',
-    pers_chart_id: 0,
-    pers_job_id: 0,
-    pers_type: 1,
-    pers_tob: 0,
-    pers_uid: '',
-    pers_tel: '',
-    pers_full_name: '',
-    pers_name: '',
-    pers_family: '',
-    pers_status: 1,
-    CityUID: '',
-    pers_address: '',
-    last_educational_degree_id: 0,
-    last_educational_major_id: 0,
-    marital_status_id: 0,
-    sex_id: 0,
+    personnel_code:data?.personnel_code || '',
+    pers_chart_id: data?.pers_chart_id || 0,
+    pers_job_id: data?.pers_job_id || 0,
+    pers_type: data?.pers_type || 1,
+    pers_tob: data?.pers_tob || 0,
+    pers_uid: data?.pers_uid ||'',
+    pers_tel:data?.pers_tel || '',
+    pers_full_name:data?.pers_full_name|| '',
+    pers_name: data?.pers_name ||'',
+    pers_family:data?.pers_family || '',
+    pers_status: data?.pers_status ||1,
+    CityUID: data?.CityUID ||'',
+    pers_address: data?.pers_address ||'',
+    last_educational_degree_id:data?.last_educational_degree_id || 0,
+    last_educational_major_id:data?.last_educational_major_id || 0,
+    marital_status_id: data?.marital_status_id || 0,
+    sex_id: data?.sex_id ||0,
   })
 
   const [errors, setErrors] = useState<Record<string, string | number>>({
@@ -156,7 +155,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
                 step > 1 ? 'border-[#7747C0]' : 'border-[#C9D0D8]'
               }`}></div>
           </div>
-          {['انتخاب سطح بازاریاب', ' اطلاعات فردی بازاریاب'].map(
+          {['انتخاب سطح بازاریاب', ' اطلاعات فردی ', 'اطلاعات آدرس'].map(
             (section, index) => (
               <div className='flex flex-col items-center' key={index}>
                 <div
@@ -245,157 +244,168 @@ const AddModal = ({ data, close }: AddModalProps) => {
           <form
             onSubmit={handleSubmit}
             className='flex flex-col mx-2 my-2 bg-white p-4'>
-            <div className='flex flex-col mt-3'>
-              <p className='text-[#7747C0]'>انتخاب نوع بازاریاب</p>
-              <div className='flex flex-col gap-3 mt-2'>
-                {refererTypes.map((beneficiary, index) => (
-                  <label
-                    key={index}
-                    className='flex items-center gap-3 cursor-pointer'>
+            {step === 2 ? (
+              <>
+                <div className='flex flex-col mt-3'>
+                  <p className='text-[#7747C0]'>انتخاب نوع بازاریاب</p>
+                  <div className='flex flex-col gap-3 mt-2'>
+                    {refererTypes.map((beneficiary, index) => (
+                      <label
+                        key={index}
+                        className='flex items-center gap-3 cursor-pointer'>
+                        <input
+                          type='radio'
+                          defaultChecked={index === 0}
+                          name='beneficiary'
+                          value={beneficiary}
+                          onChange={() => (formData.pers_tob = index)}
+                          className='w-5 h-5 cursor-pointer accent-[#7747C0]'
+                        />
+                        <span className='text-gray-700'>{beneficiary}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+                <div className='flex gap-4 my-2'>
+                  <div className='flex flex-col w-full'>
+                    <label>نام</label>
                     <input
-                      type='radio'
-                      defaultChecked={index === 0}
-                      name='beneficiary'
-                      value={beneficiary}
-                      onChange={() => (formData.pers_tob = index)}
-                      className='w-5 h-5 cursor-pointer accent-[#7747C0]'
+                      name='pers_name'
+                      defaultValue={data?.pers_name || ''}
+                      placeholder='پرهام'
+                      onChange={handleChange}
+                      className={`border ${errors.pers_name && errorClass}`}
                     />
-                    <span className='text-gray-700'>{beneficiary}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-            <div className='flex gap-4 my-2'>
-              <div className='flex flex-col w-full'>
-                <label>نام</label>
-                <input
-                  name='pers_name'
-                  defaultValue={data?.pers_name || ''}
-                  placeholder='پرهام'
-                  onChange={handleChange}
-                  className={`border ${errors.pers_name && errorClass}`}
+                    {errors.pers_name && (
+                      <span className='text-red-500'>{errors.pers_name}</span>
+                    )}
+                  </div>
+                  <div className='flex flex-col w-full'>
+                    <label>نام خانوادگی</label>
+                    <input
+                      name='pers_family'
+                      defaultValue={data?.pers_family || ''}
+                      onChange={handleChange}
+                      placeholder='پازکی'
+                      className={`border ${errors.pers_family && errorClass}`}
+                    />
+                    {errors.pers_family && (
+                      <span className='text-red-500'>{errors.pers_family}</span>
+                    )}
+                  </div>
+                </div>
+                <div className='flex gap-4 my-3'>
+                  <div className='flex flex-col w-full'>
+                    <label>وضعیت تاهل</label>
+                    <select
+                      name='marital_status_id'
+                      className={`w-full border rounded-lg h-10 px-1 outline-none ${
+                        errors.marital_status_id && errorClass
+                      }`}
+                      onChange={handleChange}>
+                      <option value={0}>نامشخص</option>
+                      <option value={1}>مجرد</option>
+                      <option value={2}>متاهل </option>
+                    </select>
+                  </div>
+                  <div className='flex flex-col w-full'>
+                    <label>شماره همراه</label>
+                    <input
+                      onChange={handleChange}
+                      name='pers_uid'
+                      defaultValue={data?.pers_uid || ''}
+                      placeholder='متخصص پوست و مو'
+                      className={`border ${errors.pers_uid && errorClass}`}
+                    />
+                    {errors.pers_uid && (
+                      <span className='text-red-500'>{errors.pers_uid}</span>
+                    )}
+                  </div>
+                </div>
+                <div className='flex gap-4 my-3'>
+                  <div className='flex flex-col w-full'>
+                    <label>آخرین مدرک تحصیلی </label>
+                    <select
+                      className='w-full border rounded-lg h-10 px-1 outline-none'
+                      onChange={(e) => {
+                        formData.last_educational_degree_id = parseInt(
+                          `${e.target.value}`
+                        )
+                      }}>
+                      {educational?.degree?.map((degree, index) => (
+                        <option key={index} value={degree?.id}>
+                          {degree.title}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className='flex flex-col w-full'>
+                    <label>آخرین رشته تحصیلی </label>
+                    <select
+                      className='w-full border rounded-lg h-10 px-1 outline-none'
+                      onChange={(e) => {
+                        formData.last_educational_major_id = parseInt(
+                          `${e.target.value}`
+                        )
+                      }}>
+                      {educational?.major?.map((major, index) => (
+                        <option key={index} value={major?.id}>
+                          {major.title}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+                <div className='flex gap-4 my-3'>
+                  <div className='flex flex-col w-full'>
+                    <label>جنسیت </label>
+                    <select
+                      name='sex_id'
+                      className={`w-full border rounded-lg h-10 px-1 outline-none ${
+                        errors.sex_id && errorClass
+                      }`}
+                      onChange={handleChange}>
+                      <option value={1}>زن </option>
+                      <option value={2}>مرد </option>
+                    </select>
+                  </div>
+                  <div className='flex flex-col w-full'>
+                    <label> کد پرسنلی</label>
+                    <input
+                      defaultValue={data?.personnel_code}
+                      name='personnel_code'
+                      onChange={handleChange}
+                      className={`w-full border ${
+                        errors.personnel_code && errorClass
+                      }`}
+                    />
+                    {errors.personnel_code && (
+                      <span className='text-red-500'>
+                        {errors.personnel_code}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
+                <CitySelector
+                  city={data?.CityUID}
+                  state={data?.StateCode}
+                  countyCode={data?.CountyCode}
+                  setResult={(value: string) => (formData.CityUID = value)}
                 />
-                {errors.pers_name && (
-                  <span className='text-red-500'>{errors.pers_name}</span>
-                )}
-              </div>
-              <div className='flex flex-col w-full'>
-                <label>نام خانوادگی</label>
-                <input
-                  name='pers_family'
-                  defaultValue={data?.pers_family || ''}
-                  onChange={handleChange}
-                  placeholder='پازکی'
-                  className={`border ${errors.pers_family && errorClass}`}
-                />
-                {errors.pers_family && (
-                  <span className='text-red-500'>{errors.pers_family}</span>
-                )}
-              </div>
-            </div>
-            <div className='flex gap-4 my-3'>
-              <div className='flex flex-col w-full'>
-                <label>وضعیت تاهل</label>
-                <select
-                  name='marital_status_id'
-                  className={`w-full border rounded-lg h-10 px-1 outline-none ${
-                    errors.marital_status_id && errorClass
-                  }`}
-                  onChange={handleChange}>
-                  <option value={0}>نامشخص</option>
-                  <option value={1}>مجرد</option>
-                  <option value={2}>متاهل </option>
-                </select>
-              </div>
-              <div className='flex flex-col w-full'>
-                <label>شماره همراه</label>
-                <input
-                  onChange={handleChange}
-                  name='pers_uid'
-                  defaultValue={data?.pers_uid || ''}
-                  placeholder='متخصص پوست و مو'
-                  className={`border ${errors.pers_uid && errorClass}`}
-                />
-                {errors.pers_uid && (
-                  <span className='text-red-500'>{errors.pers_uid}</span>
-                )}
-              </div>
-            </div>
-            <div className='flex gap-4 my-3'>
-              <div className='flex flex-col w-full'>
-                <label>آخرین مدرک تحصیلی </label>
-                <select
-                  className='w-full border rounded-lg h-10 px-1 outline-none'
-                  onChange={(e) => {
-                    formData.last_educational_degree_id = parseInt(
-                      `${e.target.value}`
-                    )
-                  }}>
-                  {educational?.degree?.map((degree, index) => (
-                    <option key={index} value={degree?.id}>
-                      {degree.title}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className='flex flex-col w-full'>
-                <label>آخرین رشته تحصیلی </label>
-                <select
-                  className='w-full border rounded-lg h-10 px-1 outline-none'
-                  onChange={(e) => {
-                    formData.last_educational_major_id = parseInt(
-                      `${e.target.value}`
-                    )
-                  }}>
-                  {educational?.major?.map((major, index) => (
-                    <option key={index} value={major?.id}>
-                      {major.title}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-            <div className='flex gap-4 my-3'>
-              <div className='flex flex-col w-full'>
-                <label>جنسیت </label>
-                <select
-                  name='sex_id'
-                  className={`w-full border rounded-lg h-10 px-1 outline-none ${
-                    errors.sex_id && errorClass
-                  }`}
-                  onChange={handleChange}>
-                  <option value={1}>زن </option>
-                  <option value={2}>مرد </option>
-                </select>
-              </div>
-              <div className='flex flex-col w-full'>
-                <label> کد پرسنلی</label>
-                <input
-                  defaultValue={data?.personnel_code}
-                  name='personnel_code'
-                  onChange={handleChange}
-                  className={`w-full border ${
-                    errors.personnel_code && errorClass
-                  }`}
-                />
-                {errors.personnel_code && (
-                  <span className='text-red-500'>{errors.personnel_code}</span>
-                )}
-              </div>
-            </div>
-            <CitySelector
-              setResult={(value: string) => (formData.CityUID = value)}
-            />
-            <div className='my-4'>
-              <label>آدرس</label>
-              <input
-                defaultValue={data?.pers_address}
-                name='pers_address'
-                onChange={(e) => (formData.pers_address = e.target.value)}
-                className={`w-full border ${errors.address && errorClass}`}
-              />
-            </div>
-
+                <div className='my-4'>
+                  <label>آدرس</label>
+                  <input
+                    defaultValue={data?.pers_address}
+                    name='pers_address'
+                    onChange={(e) => (formData.pers_address = e.target.value)}
+                    className={`w-full border ${errors.address && errorClass}`}
+                  />
+                </div>
+              </>
+            )}
             <div className='w-full sticky bottom-0 left-0 right-0 bg-white flex items-center gap-4 p-2 max-w-[40vw] mx-auto'>
               <button
                 type='submit'
