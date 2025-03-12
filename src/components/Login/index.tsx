@@ -139,8 +139,8 @@ const Login = () => {
           <Loading size={40} />
         </div>
       ) : (
-        <div className='flex w-[100vw] min-h-screen bg-white'>
-          <div className='flex flex-col justify-center items-center w-1/2'>
+        <div className='flex w-[100vw]  max-lg:flex-col min-h-screen bg-white'>
+          <div className='flex flex-col z-50 bg-white bg-opacity-90 justify-center items-center w-1/2 max-lg:w-full max-lg:translate-y-52'>
             <div className='w-full px-20'>
               <Image
                 src={LogoSrc}
@@ -257,7 +257,7 @@ const Login = () => {
               </form>
             </div>
           </div>
-          <div className='relative overflow-y-hidden flex flex-col items-center w-1/2 text-white'>
+          <div className='max-md:absolute max-md:w-full max-md:h-screen max-md:opacity-90 relative overflow-y-hidden flex flex-col items-center w-1/2 text-white'>
             <Image
               src={LoginShadow}
               alt='Login illustration 1'

@@ -18,6 +18,7 @@ import { useMenu } from '@/Context/Menu'
 import { useData } from '@/Context/Data'
 import { useStates } from '@/Context/States'
 import { BeneficiaryData } from '@/interfaces'
+import RelocationReports from './RelocationReport'
 
 const PorsantManagement = () => {
   const [showAddModal, setShowAddModal] = useState<boolean | string>(false)
@@ -60,9 +61,9 @@ const PorsantManagement = () => {
         />
       )}
       {showReportModal && (
-        <AddModal
+        <RelocationReports
           groupName={typeof showAddModal === 'string' ? showAddModal : ''}
-          close={setShowAddModal}
+          close={()=>setShowReportModal(false)}
         />
       )}
       <div className='container mx-auto px-4 py-6'>
@@ -230,18 +231,22 @@ const PorsantManagement = () => {
 
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
           {beneficiaryList?.map((beneficiary, index) => (
-            <BeneficiaryCard
+            <div
               key={index}
-              data={beneficiary}
-              setDeleteItems={(value: string) =>
-                setDeleteState((prv) =>
-                  prv.includes(value)
-                    ? prv.filter((lastOne) => lastOne !== value)
-                    : [...prv, value]
-                )
-              }
-              showDeleteMode={showDeleteState}
-            />
+              className=''
+              onClick={() => setShowReportModal(beneficiary)}>
+              <BeneficiaryCard
+                data={beneficiary}
+                setDeleteItems={(value: string) =>
+                  setDeleteState((prv) =>
+                    prv.includes(value)
+                      ? prv.filter((lastOne) => lastOne !== value)
+                      : [...prv, value]
+                  )
+                }
+                showDeleteMode={showDeleteState}
+              />
+            </div>
           ))}
         </div>
       </div>

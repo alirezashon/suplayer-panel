@@ -29,7 +29,9 @@ const AddModal = ({
           supervisor_id: selectedSubGroupData?.supervisor_id as number,
         }).then(async (result) => {
           if (result.status) {
-            await getBeneficiaryData()
+            await getBeneficiaryData().then((result) => {
+              if (result) setBeneficiaryData(result)
+            })
             showModal({
               type: result.status === 1 ? 'success' : 'error',
               title: `${result.status === 1 ? 'موفق' : 'ناموفق'}`,
@@ -69,7 +71,7 @@ const AddModal = ({
             </div>
             <div className='flex mb-5 justify-between'>
               <p className='text-[#7747C0]'>نام زیر گروه </p>
-              <p>{groupName}</p>
+              <p>{selectedSubGroupData?.supervisor_name}</p>
             </div>
             <div className='flex mb-5 justify-between'>
               <p className='text-[#7747C0]'>بازاریاب </p>
@@ -81,10 +83,7 @@ const AddModal = ({
                   انتخاب ذی‌نفع‌های من
                 </label>
                 <div className=''>
-                  <label className='my-2'>
-                    {' '}
-                    ذی‌نفع‌های خود را انتخاب کنید{' '}
-                  </label>
+                  <label className='my-2'>ذی‌نفع‌های خود را انتخاب کنید</label>
                   <SelectList
                     items={
                       beneficiaryData
