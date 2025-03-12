@@ -6,7 +6,7 @@ const StatCard: React.FC<{
 }> = ({ title, value, Icon, backgroundImage }) => {
   return (
     <div
-      className='flex flex-col justify-between  p-4 rounded-lg shadow-md'
+      className='flex flex-col justify-between  p-4 rounded-lg shadow-md cursor-pointer'
       style={{
         background: `url(${backgroundImage}) no-repeat center`,
         backgroundSize: 'cover',

@@ -80,7 +80,7 @@ const CitySelector = ({
       })
     }
     getLocs()
-  }, [])
+  }, [countyCode,state])
 
   return (
     <div className='w-full'>

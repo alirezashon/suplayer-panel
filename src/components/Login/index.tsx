@@ -181,7 +181,11 @@ const Login = () => {
                         setResult={(value: boolean) => {
                           if (value === true) {
                             setCaptchaPass(value)
-                            setErrors(({ captcha, ...rest }) => rest)
+                            setErrors((prevErrors) => {
+                              const rest = { ...prevErrors }
+                              delete rest.captcha
+                              return rest
+                            })
                           }
                         }}
                       />

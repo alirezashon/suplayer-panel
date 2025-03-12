@@ -82,8 +82,7 @@ const RelocationReports = ({
                 </label>
                 <div className=''>
                   <label className='my-2'>
-                    {' '}
-                    ذی‌نفع‌های خود را انتخاب کنید{' '}
+                    ذی‌نفع‌های خود را انتخاب کنید
                   </label>
                   <SelectList
                     items={

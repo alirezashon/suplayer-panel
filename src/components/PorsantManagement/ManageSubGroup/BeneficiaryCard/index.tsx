@@ -6,7 +6,7 @@ const BeneficiaryCard: React.FC<{
   showDeleteMode: boolean
 }> = ({ data, setDeleteItems, showDeleteMode }) => {
   return (
-    <div className='flex flex-col p-4 border rounded-lg shadow-sm bg-white'>
+    <div className='flex flex-col p-4 border rounded-lg shadow-sm bg-white cursor-pointer'>
       <div className='flex items-center gap-1'>
         {showDeleteMode && (
           <input

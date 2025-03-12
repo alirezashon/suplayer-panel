@@ -7,6 +7,7 @@ import { OptionTrees } from '@/interfaces'
 import { AddPromotionImage, CreatePromotion } from '@/services/promotion'
 import { DocumentCloud, Eye, EyeSlash, TickCircle, Trash } from 'iconsax-react'
 import Image from 'next/image'
+import { locationTree } from '../../../hooks/Locations'
 import { FormEvent, useRef, useState } from 'react'
 
 const AddPromotion = () => {
@@ -15,7 +16,7 @@ const AddPromotion = () => {
   >('idle')
   const [progress, setProgress] = useState<number>(0)
   const [draftSrc, setDraftSrc] = useState<string>()
-  const { showModal, productGroupSelectorData, groupSelectorData } = useStates()
+  const { showModal, productGroupSelectorData } = useStates()
   const [step, setStep] = useState<number>(2)
 
   const refs = useRef({
@@ -486,7 +487,7 @@ const AddPromotion = () => {
                           onChange={handleInputChange}
                           className='w-5 h-5 cursor-pointer accent-[#7747C0]'
                         />
-                        تخفیف جنسی
+                        تخفیف غیر نقدی
                       </label>
                     </div>
                     {errors.discountType && (
@@ -508,14 +509,16 @@ const AddPromotion = () => {
           </div>
         ) : step === 2 ? (
           <MultiLevelSelect
-            data={groupSelectorData as OptionTrees[]}
+            data={locationTree as OptionTrees[]}
             onSelectionChange={() => 'void'}
+            title='مناطق جغرافیایی خود را انتخاب کنید'
           />
         ) : (
           step === 3 && (
             <MultiLevelSelect
               data={productGroupSelectorData as OptionTrees[]}
               onSelectionChange={() => 'void'}
+              title='گروه خود را انتخاب کنید'
             />
           )
         )}

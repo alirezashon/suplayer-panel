@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react'
 
 interface MultiLevelSelectProps {
   data: OptionTrees[]
+  title: string
   onSelectionChange: (selected: {
     level1: string[]
     level2: string[]
@@ -14,6 +15,7 @@ interface MultiLevelSelectProps {
 const MultiLevelSelect: React.FC<MultiLevelSelectProps> = ({
   data,
   onSelectionChange,
+  title,
 }) => {
   const [selected, setSelected] = useState<{
     level1: string[]
@@ -129,7 +131,7 @@ const MultiLevelSelect: React.FC<MultiLevelSelectProps> = ({
 
   return (
     <div className='p-4' ref={containerRef}>
-      <h3>گروه خود را انتخاب کنید</h3>
+      <h3>{title}</h3>
       <div
         className='border rounded-md min-h-12 px-4 py-2 cursor-pointer flex justify-between items-center'
         onClick={() => setIsOpen(!isOpen)}>

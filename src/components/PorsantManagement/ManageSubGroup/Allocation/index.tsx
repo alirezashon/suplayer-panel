@@ -46,7 +46,6 @@ const Allocation = () => {
     selectedGroupData,
     setSelectedGroupData,
     showModal,
-    closeModal,
   } = useStates()
 
   useEffect(() => {
@@ -86,7 +85,7 @@ const Allocation = () => {
     setUneditableIds(uneditableIds)
     setCommaAmount(newCommaAmount) // مقداردهی مقدار اولیه `commaAmount`
   }, [setMenu, selectedGroupData, allocationList, selectedSubGroupData])
- 
+
   const handleCreditChange = (id: string, value: string) => {
     // حذف کاماهای اضافی
     const cleanValue = value.replace(/,/g, '')

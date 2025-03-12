@@ -17,7 +17,7 @@ import {
   ReleaseAllocatedList,
 } from '@/services/allocation'
 import { Printer, SearchNormal, TickCircle, Trash } from 'iconsax-react'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 const headers = [
   'ردیف',
@@ -62,7 +62,7 @@ const Release = () => {
   const [otp, setOtp] = useState<string>()
   const [showOtpModal, setshowOtpModal] = useState<boolean>(false)
 
-  const calculateFinalData = () => {
+  const calculateFinalData = useCallback(() => {
     const finalRelease: FinalReleaseInterface[] = []
     const subGroupAllocatedList = releasedList?.filter(
       (release) =>
@@ -92,8 +92,8 @@ const Release = () => {
       }
     })
     setFinalReleaseData(finalRelease)
-  }
-  const calculateData = () => {
+  }, [])
+  const calculateData = useCallback(() => {
     if (allocationList && data.length < 1) {
       const subGroupAllocatedList = allocationList?.filter(
         (allocate) =>
@@ -135,7 +135,7 @@ const Release = () => {
         }))
       setData(allocated)
     }
-  }
+  }, [])
   useEffect(() => {
     if (!selectedGroupData) {
       location.hash = 'porsant'
@@ -143,15 +143,7 @@ const Release = () => {
     }
     calculateData()
     calculateFinalData()
-  }, [
-    setMenu,
-    selectedGroupData,
-    selectedSubGroupData,
-    allocationList,
-    beneficiaryData,
-    releaseData,
-    releasedList,
-  ])
+  }, [setMenu, selectedGroupData, calculateData, calculateFinalData])
 
   const handleDeleteFile = (visitorTel: string) => {
     setData((prev) =>

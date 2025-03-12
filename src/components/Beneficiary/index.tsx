@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Edit2, FolderAdd, SearchNormal, Trash } from 'iconsax-react'
+import { Edit2, SearchNormal, Trash } from 'iconsax-react'
 import AddModal from './AddModal'
 import DeleteModal from './DeleteModal'
 import { useMenu } from '@/Context/Menu'

@@ -81,7 +81,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
         ...data,
         ...Object.fromEntries(
           Object.entries(refs.current).filter(
-            ([_, value]) => value !== '' && value !== 0
+            ([, value]) => value !== '' && value !== 0
           )
         ),
         accessToken,

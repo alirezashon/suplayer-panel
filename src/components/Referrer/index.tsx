@@ -43,10 +43,11 @@ const Referrer: React.FC = () => {
         ? referrerData.map((referrer) => ({
             pers_name: referrer.pers_name,
             pers_family: referrer.pers_family,
-            pers_chart_id:
+            pers_chart_id: parseInt(
               TreeChartInterface?.find(
                 (chart) => chart.id === referrer.pers_chart_id
-              )?.chlabel || '',
+              )?.chlabel || ''
+            ),
             pers_status: referrer.pers_status,
             pers_tob: referrer.pers_tob,
           }))

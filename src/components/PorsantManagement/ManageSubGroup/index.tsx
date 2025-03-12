@@ -21,6 +21,9 @@ import { BeneficiaryData } from '@/interfaces'
 
 const PorsantManagement = () => {
   const [showAddModal, setShowAddModal] = useState<boolean | string>(false)
+  const [showReportModal, setShowReportModal] = useState<
+    boolean | BeneficiaryData
+  >(false)
   const [showDeleteState, setShowDeleteState] = useState<boolean>(false)
   const [, setDeleteState] = useState<string[]>([])
   const [searching, setSearching] = useState<string | null>()
@@ -51,6 +54,12 @@ const PorsantManagement = () => {
   return (
     <>
       {showAddModal && (
+        <AddModal
+          groupName={typeof showAddModal === 'string' ? showAddModal : ''}
+          close={setShowAddModal}
+        />
+      )}
+      {showReportModal && (
         <AddModal
           groupName={typeof showAddModal === 'string' ? showAddModal : ''}
           close={setShowAddModal}
