@@ -77,14 +77,14 @@ const AppointmentModal = ({ data, close, type }: AppointmentModalProps) => {
               type: 'success',
               title: 'موفق',
               main: <p>{result.message}</p>,
-              autoClose: 0.9,
+              autoClose: 1,
             })
           } else {
             showModal({
               type: 'error',
               title: 'ناموفق',
               main: <p>{result.message}</p>,
-              autoClose: 0.9,
+              autoClose:1,
             })
             close()
           }

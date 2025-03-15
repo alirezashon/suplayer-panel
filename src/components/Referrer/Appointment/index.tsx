@@ -1,8 +1,8 @@
 import { getCookieByKey } from '@/actions/cookieToken'
 import { ReferrerData } from '@/interfaces'
-import { DefineAppointmentTask } from '@/services/referrer'
+import { DefineAppointmentTaskList } from '@/services/referrer'
 import { ArrowDown2, CloseSquare, Profile } from 'iconsax-react'
-import { useState, useRef } from 'react'
+import { useRef, useState } from 'react'
 import { useData } from '@/Context/Data'
 import { useStates } from '@/Context/States'
 import SelectList from '@/components/shared/SelectList'
@@ -17,6 +17,17 @@ const AppointmentModal = ({ data, close }: AppointmentModalProps) => {
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [step, setStep] = useState<number>(1)
   const [showDetails, setShowDetails] = useState<boolean>(false)
+  const refs = useRef({
+    personnel_uid: `${data?.personnel_uid}`,
+    visitor_uid: '',
+    task_kpi_uid: '',
+    sup_group_code: [] as string[],
+    supervisor_code: [] as string[],
+    pgroup_id: [] as number[],
+    chart_id: [] as number[],
+    product_uid: [] as string[],
+  })
+  // data?.personnel_uid || ''
   const {
     groupData,
     subGroupData,
@@ -25,13 +36,6 @@ const AppointmentModal = ({ data, close }: AppointmentModalProps) => {
     productData,
     TreeChartInterface,
   } = useData()
-  const refs = useRef({
-    groupId: '',
-    subGroupId: '',
-    productGroupId: 0,
-    brandId: 1,
-    productId: '',
-  })
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -39,16 +43,16 @@ const AppointmentModal = ({ data, close }: AppointmentModalProps) => {
     setErrors({})
 
     const accessToken = (await getCookieByKey('access_token')) || ''
-    await DefineAppointmentTask({
+    await DefineAppointmentTaskList({
       accessToken,
-      personnel_uid: data?.personnel_uid || '',
-      supervisor_code: refs.current.subGroupId || '',
-      sup_group_code: refs.current.groupId || '',
-      visitor_uid: '',
-      task_kpi_uid: '',
-      pgroup_id: refs.current.productGroupId,
-      chart_id: refs.current.brandId,
-      product_uid: refs.current.productId,
+      personnel_uid: refs.current.personnel_uid,
+      supervisor_code: refs.current.supervisor_code,
+      sup_group_code: refs.current.sup_group_code,
+      visitor_uid: refs.current.visitor_uid,
+      task_kpi_uid: refs.current.task_kpi_uid,
+      pgroup_id: refs.current.pgroup_id,
+      chart_id: refs.current.chart_id,
+      product_uid: refs.current.product_uid,
     }).then((result) => {
       showModal({
         type: result.status === 1 ? 'success' : 'error',
@@ -199,36 +203,36 @@ const AppointmentModal = ({ data, close }: AppointmentModalProps) => {
         {step === 1 ? (
           <div className='flex flex-col m-3 gap-3'>
             <div className='flex flex-col w-full'>
-              <label>گروه خود را انتخاب کنید</label>
-              <select
-                className='w-full border rounded-lg h-10 px-1 outline-none'
-                onChange={(e) => (refs.current.groupId = e.target.value)}>
-                {groupData?.map((group) => (
-                  <option key={group.sup_group_id} value={group.sup_group_id}>
-                    {group.sup_group_name}
-                  </option>
-                ))}
-              </select>
-              {errors.phone && (
-                <span className='text-red-500'>{errors.phone}</span>
-              )}
+              <SelectList
+                label='گروه خود را انتخاب کنید'
+                items={
+                  groupData?.map((gp) => {
+                    return {
+                      id: gp.sup_group_id,
+                      label: gp.sup_group_name,
+                    }
+                  }) || []
+                }
+                setSelectedItems={(result) =>
+                  (refs.current.sup_group_code = result as string[])
+                }
+              />
             </div>
             <div className='flex flex-col w-full'>
-              <label>زیرگروه خود را انتخاب کنید</label>
-              <select
-                className='w-full border rounded-lg h-10 px-1 outline-none'
-                onChange={(e) => (refs.current.subGroupId = e.target.value)}>
-                {subGroupData?.map((subGroupData) => (
-                  <option
-                    key={subGroupData.supervisor_id}
-                    value={subGroupData.supervisor_code}>
-                    {subGroupData.supervisor_name}
-                  </option>
-                ))}
-              </select>
-              {errors.phone && (
-                <span className='text-red-500'>{errors.phone}</span>
-              )}
+              <SelectList
+                label='زیرگروه خود را انتخاب کنید'
+                items={
+                  subGroupData?.map((gp) => {
+                    return {
+                      id: gp.supervisor_id,
+                      label: gp.supervisor_name,
+                    }
+                  }) || []
+                }
+                setSelectedItems={(result) =>
+                  (refs.current.supervisor_code = result as string[])
+                }
+              />
             </div>
             <div className='w-full mt-10 sticky bottom-0 left-0 right-0 bg-white p-2 max-w-[40vw] mx-auto'>
               <button
@@ -241,33 +245,39 @@ const AppointmentModal = ({ data, close }: AppointmentModalProps) => {
         ) : (
           <div className='flex flex-col m-3 gap-3'>
             <div className='flex flex-col w-full'>
-              <label>گروه محصول را انتخاب کنید</label>
-              <select
-                className='w-full border rounded-lg h-10 px-1 outline-none'
-                onChange={(e) =>
-                  (refs.current.productGroupId = parseInt(`${e.target.value}`))
-                }>
-                {productGroupData?.map((pg) => (
-                  <option key={pg.id} value={pg.id}>
-                    {pg.group_desc}
-                  </option>
-                ))}
-              </select>
+              <SelectList
+                label='گروه محصول را انتخاب کنید'
+                items={
+                  productGroupData?.map((gp) => {
+                    return {
+                      id: gp.id,
+                      label: gp.group_desc,
+                    }
+                  }) || []
+                }
+                setSelectedItems={(result) =>
+                  (refs.current.pgroup_id = result as number[])
+                }
+              />
               {errors.phone && (
                 <span className='text-red-500'>{errors.phone}</span>
               )}
             </div>
             <div className='flex flex-col w-full'>
-              <label>برند محصول را انتخاب کنید</label>
-              <select
-                className='w-full border rounded-lg h-10 px-1 outline-none'
-                onChange={(e) => (refs.current.groupId = e.target.value)}>
-                {brandsData?.map((brand) => (
-                  <option key={brand.id} value={brand.id}>
-                    {brand.group_desc}
-                  </option>
-                ))}
-              </select>
+              <SelectList
+                label='برند محصول را انتخاب کنید'
+                items={
+                  brandsData?.map((gp) => {
+                    return {
+                      id: gp.id,
+                      label: gp.group_desc,
+                    }
+                  }) || []
+                }
+                setSelectedItems={(result) =>
+                  (refs.current.chart_id = result as number[])
+                }
+              />
               {errors.phone && (
                 <span className='text-red-500'>{errors.phone}</span>
               )}
@@ -283,21 +293,10 @@ const AppointmentModal = ({ data, close }: AppointmentModalProps) => {
                     }
                   }) || []
                 }
-                setSelectedItems={(result) => result}
+                setSelectedItems={(result) =>
+                  (refs.current.product_uid = result as string[])
+                }
               />
-
-              <select
-                className='w-full border rounded-lg h-10 px-1 outline-none'
-                onChange={(e) => (refs.current.groupId = e.target.value)}>
-                {productData?.map((product) => (
-                  <option key={product.id} value={product.id}>
-                    {product.ini_name}
-                  </option>
-                ))}
-              </select>
-              {errors.phone && (
-                <span className='text-red-500'>{errors.phone}</span>
-              )}
             </div>
             <div className='w-full mt-10 sticky bottom-0 left-0 right-0 bg-white p-2 max-w-[40vw] mx-auto'>
               <button

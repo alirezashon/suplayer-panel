@@ -19,7 +19,8 @@ interface AddModalProps {
 
 const AddModal = ({ data, close }: AddModalProps) => {
   const [mapData, setMapData] = useState<[number, number]>([
-    35.72249924640049, 51.335191350784214,
+    data?.latitude || 35.72249924640049,
+    data?.longitude || 51.335191350784214,
   ])
   const [step, setStep] = useState<number>(1)
   const [isConfirmed, setIsConfirmed] = useState(false)
@@ -463,7 +464,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
                 )}
               </div>
               <Map
-                coord={mapData}
+                coord={data?.latitude ? [data.latitude, data.longitude] : mapData}
                 setCoord={setMapData}
                 setAddress={(value: string) =>
                   (refs.current.visitor_address = value)

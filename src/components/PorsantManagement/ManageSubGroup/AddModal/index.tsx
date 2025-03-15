@@ -36,7 +36,7 @@ const AddModal = ({
               type: result.status === 1 ? 'success' : 'error',
               title: `${result.status === 1 ? 'موفق' : 'ناموفق'}`,
               main: <p>{result.message}</p>,
-              autoClose: 0.9,
+              autoClose: 1,
             })
           }
         })

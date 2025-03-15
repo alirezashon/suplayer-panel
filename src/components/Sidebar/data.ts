@@ -104,7 +104,7 @@ export const data: Items[] = [
       },
       {
         name: 'محصولات من',
-        link: ['productgroups', 'product-brands'],
+        link: ['productgroups', 'product-brands','products'],
         iconIndex: 10,
       },
     ],

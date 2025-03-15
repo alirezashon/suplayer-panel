@@ -69,7 +69,7 @@ const MyGroups: React.FC = () => {
       )}
       <div className='p-6 bg-white rounded-lg border border-gray-200'>
         {groupData && groupData?.length > 0 ? (
-          <div className='grid grid-cols-3 gap-6 mt-6'>
+     <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4'>
             {groupData?.map((group, index) => (
               <div
                 key={index}

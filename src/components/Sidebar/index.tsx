@@ -82,7 +82,7 @@ const Sidebar = ({
     <div
       style={{ scrollbarWidth: 'none' }}
       className={`fixed top-2 right-2 h-[98vh] rounded-md  transition-all duration-700 ${
-        isOpen ? 'min-w-[17%]' : 'w-[5%]'
+        isOpen ? 'min-w-[17%] max-lg:min-w-[39%]' : 'w-[5%] max-lg:min-w-[7%]'
       } bg-white flex flex-col overflow-y-auto border border-[#C9D0D8]`}>
       <div
         className={`sticky top-0 ${
@@ -176,7 +176,7 @@ const Sidebar = ({
                     <span
                       className={`mr-1 ${
                         subItem.link.includes(menu)
-                          ? 'text-[#7747C0]'
+                          ? 'text-[#7747C0] border-b border-purple-400'
                           : 'text-[#50545F]'
                       }`}>
                       {subItem.name}

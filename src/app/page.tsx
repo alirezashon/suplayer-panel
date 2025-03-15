@@ -55,7 +55,7 @@ const Home = () => {
 
   return (
     <MainLayout>
-      <>
+      <div >
         {modalContent && <CustomModal />}
 
         {loading ? (
@@ -117,7 +117,7 @@ const Home = () => {
         ) : (
           <Profile />
         )}
-      </>
+      </div>
     </MainLayout>
   )
 }

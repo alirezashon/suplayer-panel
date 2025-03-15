@@ -62,8 +62,8 @@ const PorsantManagement = () => {
       )}
       {showReportModal && (
         <RelocationReports
-          groupName={typeof showAddModal === 'string' ? showAddModal : ''}
-          close={()=>setShowReportModal(false)}
+          beneficiary={showReportModal as BeneficiaryData}
+          close={() => setShowReportModal(false)}
         />
       )}
       <div className='container mx-auto px-4 py-6'>

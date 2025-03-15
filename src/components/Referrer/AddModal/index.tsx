@@ -58,7 +58,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
     last_educational_degree_id:data?.last_educational_degree_id || 0,
     last_educational_major_id:data?.last_educational_major_id || 0,
     marital_status_id: data?.marital_status_id || 0,
-    sex_id: data?.sex_id ||0,
+    sex_id: data?.sex_id ||1,
   })
 
   const [errors, setErrors] = useState<Record<string, string | number>>({

@@ -29,7 +29,7 @@ const Dashboard = () => {
 
   return (
     <div className='flex flex-col m-5'>
-      <div className='my-10 flex gap-4'>
+      <div className='my-10 flex gap-4 flex-wrap'>
         <div className='h-fit flex flex-col flex-1 p-6 bg-white rounded-xl border border-gray-200 shadow min-w-[240px] max-md:px-5'>
           <div className='flex justify-between items-center text-sm text-zinc-600'>
             <span> گروه‌های فعال من</span>

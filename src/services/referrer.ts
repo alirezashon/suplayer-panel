@@ -182,54 +182,7 @@ export const GetReferrerList = async ({
     console.log(error)
   }
 }
-export const DefineAppointmentTask = async ({
-  accessToken,
-  personnel_uid,
-  supervisor_code,
-  sup_group_code,
-  visitor_uid,
-  task_kpi_uid,
-  pgroup_id,
-  chart_id,
-  product_uid,
-}: {
-  accessToken: string | undefined
-  personnel_uid: string
-  supervisor_code: string
-  sup_group_code: string
-  visitor_uid: string
-  task_kpi_uid: string
-  pgroup_id: number
-  chart_id: number
-  product_uid: string
-}) => {
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_define_task`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({
-          personnel_uid,
-          supervisor_code,
-          sup_group_code,
-          visitor_uid,
-          task_kpi_uid,
-          pgroup_id,
-          chart_id,
-          product_uid,
-        }),
-      }
-    )
 
-    return await response.json()
-  } catch (error) {
-    console.log(error)
-  }
-}
 export const EditAppointmentTask = async ({
   accessToken,
   personnel_uid,
@@ -314,23 +267,28 @@ export const GetAppointmentTaskList = async ({
 
 export const DefineAppointmentTaskList = async ({
   accessToken,
-  tasks,
+  personnel_uid,
+  supervisor_code,
+  sup_group_code,
+  visitor_uid,
+  task_kpi_uid,
+  pgroup_id,
+  chart_id,
+  product_uid,
 }: {
   accessToken: string | undefined
-  tasks: {
-    personnel_uid: string
-    supervisor_code: string
-    sup_group_code: string
-    visitor_uid: string
-    task_kpi_uid: string
-    pgroup_id: number
-    chart_id: number
-    product_uid: string
-  }[]
+  personnel_uid: string
+  supervisor_code: string[]
+  sup_group_code: string[]
+  visitor_uid: string
+  task_kpi_uid: string
+  pgroup_id: number[]
+  chart_id: number[]
+  product_uid: string[]
 }) => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/batch_prv_define_task`,
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_define_task`,
       {
         method: 'POST',
         headers: {
@@ -338,7 +296,14 @@ export const DefineAppointmentTaskList = async ({
           authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
-          tasks,
+          personnel_uid,
+          supervisor_code,
+          sup_group_code,
+          visitor_uid,
+          task_kpi_uid,
+          pgroup_id,
+          chart_id,
+          product_uid,
         }),
       }
     )

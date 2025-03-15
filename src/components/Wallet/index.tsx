@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react'
 import Chart from 'chart.js/auto'
-import { Add, InfoCircle, Wallet3 } from 'iconsax-react'
+import { Add, Chart2, InfoCircle, Wallet3 } from 'iconsax-react'
 import { useMenu } from '@/Context/Menu'
 import { useData } from '@/Context/Data'
 import ShowAnimateNumber from '../shared/AnimateNumber'
@@ -77,7 +77,7 @@ const Wallet: React.FC = () => {
 
   return (
     <div className='bg-gray-100 flex flex-col justify-center items-center p-6 min-h-screen gap-20'>
-      <div className='flex  min-w-[45vw]'>
+      <div className='flex min-w-[45vw] max-md:w-[100%]'>
         <div
           className='w-full flex flex-col gap-10 p-4 rounded-lg'
           style={walletBoxStyle}>
@@ -158,15 +158,16 @@ const Wallet: React.FC = () => {
                 location.hash = 'deposite'
                 setMenu('deposite')
               }}>
-              <Add size={22} color='#ffffff' />
+              <Add size={22} color='#0F973D' />
               <p> افزایش نقدی</p>
             </button>
           </div>
         </div>
       </div>
-      <div className='w-11/12 md:w-4/5 lg:w-2/3 bg-white shadow-lg rounded-lg p-6'>
+      <div className='w-11/12 md:w-4/5 lg:w-2/3 max-md:w-[100%] bg-white shadow-lg rounded-lg p-6'>
         <h4 className='text-right text-gray-700 text-lg font-bold mb-4'>
-          گزارش کیف پول 📊
+          گزارش کیف پول 
+          <Chart2/>
         </h4>
         <div className='h-80'>
           <canvas ref={chartRef}></canvas>

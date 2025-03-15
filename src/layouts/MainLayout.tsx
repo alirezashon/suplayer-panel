@@ -14,7 +14,7 @@ const MainLayout = ({
     <div className='flex min-h-screen bg-gray-100 transition-all duration-700'>
       <div
         className={`transition-all duration-700 ${
-          isSidebarOpen ? 'min-w-[17%]' : 'w-[5%]'
+          isSidebarOpen ? 'min-w-[17%] max-md:min-w-[85%] ' : 'w-[5%] max-md:w-[7%]'
         }`}>
         <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen}/>
       </div>
@@ -22,7 +22,7 @@ const MainLayout = ({
         <div className='px-8 py-4'>
           <Header />
         </div>
-        <div className='p-4 flex-grow'>{children}</div>
+        <div className='p-4 flex-grow' >{children}</div>
       </div>
     </div>
   )

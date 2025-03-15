@@ -43,13 +43,13 @@ const Referrer: React.FC = () => {
         ? referrerData.map((referrer) => ({
             pers_name: referrer.pers_name,
             pers_family: referrer.pers_family,
-            pers_chart_id: parseInt(
+            pers_chart_title:
               TreeChartInterface?.find(
                 (chart) => chart.id === referrer.pers_chart_id
-              )?.chlabel || ''
-            ),
+              )?.chlabel || '',
             pers_status: referrer.pers_status,
             pers_tob: referrer.pers_tob,
+            pers_uid: referrer.pers_uid,
           }))
         : []
     )
@@ -87,7 +87,7 @@ const Referrer: React.FC = () => {
     const filteredFieldsData = filteredData?.map((person) => ({
       pers_name: person.pers_name,
       pers_family: person.pers_family,
-      pers_chart_id: person.pers_chart_id,
+      pers_chart_title: person.pers_chart_title,
       pers_status: person.pers_status,
       pers_tob: person.pers_tob,
       pers_uid: person?.pers_uid,
@@ -248,54 +248,54 @@ const Referrer: React.FC = () => {
                   {initialData?.map((personnel, index) => (
                     <tr key={index} className='border-b'>
                       {[index + 1, ...[...Object.values(personnel)]].map(
-                        (detail, detailIndex) => (
-                          <td
-                            key={detailIndex}
-                            className={`text-center h-10 ${
-                              detailIndex === 0 && 'border-r'
-                            }`}>
-                            {detailIndex === 0 ? (
-                              <div className='flex items-center  justify-center gap-7'>
-                                <input
-                                  checked={selectedItems.includes(index)} // همگام‌سازی وضعیت چک‌باکس با selectedItems
-                                  onChange={() =>
-                                    handleRowCheckboxChange(index)
-                                  }
-                                  type='checkbox'
-                                  className=' cursor-pointer accent-[#7747C0] w-4'
-                                />
-                                <p className='mt-1'>{detail}</p>
-                              </div>
-                            ) : detailIndex === 4 ? (
-                              <p className='flex justify-center'>
-                                <span
-                                  className={`min-w-16 ${
-                                    detail === 1
-                                      ? 'bg-[#DAFEE5] text-[#0CAD41] rounded-lg'
-                                      : 'bg-[#FEE3E2] text-[#D42620] rounded-lg'
-                                  }`}>
-                                  {detail === 1 ? 'فعال' : 'غیرفعال'}
-                                </span>
-                              </p>
-                            ) : detailIndex === 5 ? (
-                              <button
-                                className='border-button px-2 rounded-md'
-                                onClick={() =>
-                                  setShowAppointmentModal(
-                                    referrerData?.find(
-                                      (personnel) =>
-                                        personnel?.pers_uid ===
-                                        personnel?.pers_uid
-                                    ) as ReferrerData
-                                  )
-                                }>
-                                انتصاب دادن
-                              </button>
-                            ) : (
-                              detail
-                            )}
-                          </td>
-                        )
+                        (detail, detailIndex) =>
+                          detailIndex !== 6 && (
+                            <td
+                              key={detailIndex}
+                              className={`text-center h-10 ${
+                                detailIndex === 0 && 'border-r'
+                              }`}>
+                              {detailIndex === 0 ? (
+                                <div className='flex items-center  justify-center gap-7'>
+                                  <input
+                                    checked={selectedItems.includes(index)} // همگام‌سازی وضعیت چک‌باکس با selectedItems
+                                    onChange={() =>
+                                      handleRowCheckboxChange(index)
+                                    }
+                                    type='checkbox'
+                                    className=' cursor-pointer accent-[#7747C0] w-4'
+                                  />
+                                  <p className='mt-1'>{detail}</p>
+                                </div>
+                              ) : detailIndex === 4 ? (
+                                <p className='flex justify-center'>
+                                  <span
+                                    className={`min-w-16 ${
+                                      detail === 1
+                                        ? 'bg-[#DAFEE5] text-[#0CAD41] rounded-lg'
+                                        : 'bg-[#FEE3E2] text-[#D42620] rounded-lg'
+                                    }`}>
+                                    {detail === 1 ? 'فعال' : 'غیرفعال'}
+                                  </span>
+                                </p>
+                              ) : detailIndex === 5 ? (
+                                <button
+                                  className='border-button px-2 rounded-md'
+                                  onClick={() => {
+                                    setShowAppointmentModal(
+                                      referrerData?.find(
+                                        (pers) =>
+                                          pers?.pers_uid === personnel?.pers_uid
+                                      ) as ReferrerData
+                                    )
+                                  }}>
+                                  انتصاب دادن
+                                </button>
+                              ) : (
+                                detail
+                              )}
+                            </td>
+                          )
                       )}
                       <td className='text-center'>
                         <p className='flex justify-center cursor-pointer'>

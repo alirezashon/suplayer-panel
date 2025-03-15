@@ -8,16 +8,16 @@ import { EditBeneficiary } from '@/services/items'
 import { CloseSquare } from 'iconsax-react'
 import { useState } from 'react'
 const RelocationReports = ({
-  groupName,
+  beneficiary,
   close,
 }: {
-  groupName?: string
+  beneficiary: BeneficiaryData
   close: (show: boolean) => void
 }) => {
   const [names] = useState<(string | number)[]>([''])
   const [selected, setSelected] = useState<BeneficiaryData[]>([])
   const { beneficiaryData, setBeneficiaryData } = useData()
-  const { selectedSubGroupData, showModal } = useStates()
+  const { selectedSubGroupData, selectedGroupData, showModal } = useStates()
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     const accessToken = await getCookieByKey('access_token')
@@ -34,7 +34,7 @@ const RelocationReports = ({
               type: result.status === 1 ? 'success' : 'error',
               title: `${result.status === 1 ? 'موفق' : 'ناموفق'}`,
               main: <p>{result.message}</p>,
-              autoClose: 0.9,
+              autoClose: 1,
             })
           }
         })
@@ -65,15 +65,11 @@ const RelocationReports = ({
           <div className='mt-5 w-full max-md:max-w-full'>
             <div className='flex mb-5 justify-between'>
               <p className='text-[#7747C0]'>نام گروه</p>
-              <p>{groupName}</p>
+              <p>{selectedGroupData?.sup_group_name}</p>
             </div>
             <div className='flex mb-5 justify-between'>
               <p className='text-[#7747C0]'>نام زیر گروه </p>
-              <p>{groupName}</p>
-            </div>
-            <div className='flex mb-5 justify-between'>
-              <p className='text-[#7747C0]'>بازاریاب </p>
-              <p>{groupName}</p>
+              <p>{selectedSubGroupData?.supervisor_name}</p>
             </div>
             {names.map((name, index) => (
               <div key={index} className='flex flex-col w-full mb-4'>
@@ -81,9 +77,7 @@ const RelocationReports = ({
                   انتخاب ذی‌نفع‌های من
                 </label>
                 <div className=''>
-                  <label className='my-2'>
-                    ذی‌نفع‌های خود را انتخاب کنید
-                  </label>
+                  <label className='my-2'>ذی‌نفع‌های خود را انتخاب کنید</label>
                   <SelectList
                     items={
                       beneficiaryData
