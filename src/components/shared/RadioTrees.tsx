@@ -1,5 +1,5 @@
 import { ArrowLeft2, ArrowRight2, Profile } from 'iconsax-react'
-import React, { useState } from 'react'
+import  { useState } from 'react'
 
 interface TreeItem {
   id: number | string

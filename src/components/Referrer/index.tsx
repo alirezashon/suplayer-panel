@@ -118,7 +118,7 @@ const Referrer: React.FC = () => {
           close={setShowDeleteModal}
         />
       )}
-      <div className='flex flex-col p-5'>
+      <div className='flex flex-col p-5 max-md:w-[94vw] max-md:mr-[4vw]'>
         <div className='flex justify-between items-center mb-7'>
           <p className='cursor-pointer'>
             <span
@@ -150,9 +150,9 @@ const Referrer: React.FC = () => {
             </div>
           )}
         </div>
-        <div className='p-6 bg-white rounded-lg border border-gray-200'>
-          <form className='flex flex-col bg-[#F6F5FD] my-3 p-3 max-md:px-5 max-md:pb-24 rounded-lg'>
-            <div className='flex gap-4 items-center'>
+        <div className='p-6 max-md:w-[99.4%] bg-white rounded-lg border border-gray-200'>
+          <form className='flex  flex-col bg-[#F6F5FD] my-3 p-3 max-md:px-5 max-md:pb-24 rounded-lg'>
+            <div className='flex max-md:flex-col  gap-4 items-center'>
               <div className='flex flex-col w-full'>
                 <label className='text-base font-medium text-right text-gray-800'>
                   نام
@@ -204,145 +204,150 @@ const Referrer: React.FC = () => {
                   <span>ارسال پیامک گروهی</span>
                 </button>
               </div>
-              <table className='my-10 w-full'>
-                <thead>
-                  <tr>
-                    {headers.map((head, headIndex) => (
-                      <th
-                        className={`bg-[#F3F4F5] h-10 ${
-                          headIndex === 0
-                            ? 'rounded-tr-lg '
-                            : headIndex === headers.length - 1 &&
-                              'rounded-tl-lg'
-                        } `}
-                        key={headIndex}>
-                        <div
-                          className={`flex justify-center items-center border-y h-10  ${
+              <div className='overflow-x-auto'>
+                <table className='my-10 text-nowrap w-full min-w-[800px]'>
+                  <thead>
+                    <tr>
+                      {headers.map((head, headIndex) => (
+                        <th
+                          className={`bg-[#F3F4F5] h-10 ${
                             headIndex === 0
-                              ? 'border-r rounded-tr-lg'
+                              ? 'rounded-tr-lg '
                               : headIndex === headers.length - 1 &&
-                                'border-l rounded-tl-lg'
-                          }`}>
-                          {headIndex !== 0 ? (
-                            head
-                          ) : (
-                            <div className='flex items-center  justify-center gap-2'>
-                              <input
-                                onChange={handleHeaderCheckboxChange}
-                                checked={
-                                  selectedItems.length === initialData.length
-                                }
-                                type='checkbox'
-                                className=' cursor-pointer accent-[#7747C0] w-4'
-                              />
-                              <span className='mt-1'>{head}</span>
-                            </div>
-                          )}
-                        </div>
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
+                                'rounded-tl-lg'
+                          }`}
+                          key={headIndex}>
+                          <div
+                            className={`flex justify-center items-center border-y h-10 ${
+                              headIndex === 0
+                                ? 'border-r rounded-tr-lg'
+                                : headIndex === headers.length - 1 &&
+                                  'border-l rounded-tl-lg'
+                            }`}>
+                            {headIndex !== 0 ? (
+                              head
+                            ) : (
+                              <div className='flex items-center justify-center gap-2'>
+                                <input
+                                  onChange={handleHeaderCheckboxChange}
+                                  checked={
+                                    selectedItems.length === initialData.length
+                                  }
+                                  type='checkbox'
+                                  className='cursor-pointer accent-[#7747C0] w-4'
+                                />
+                                <span className='mt-1'>{head}</span>
+                              </div>
+                            )}
+                          </div>
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
 
-                <tbody>
-                  {initialData?.map((personnel, index) => (
-                    <tr key={index} className='border-b'>
-                      {[index + 1, ...[...Object.values(personnel)]].map(
-                        (detail, detailIndex) =>
-                          detailIndex !== 6 && (
-                            <td
-                              key={detailIndex}
-                              className={`text-center h-10 ${
-                                detailIndex === 0 && 'border-r'
-                              }`}>
-                              {detailIndex === 0 ? (
-                                <div className='flex items-center  justify-center gap-7'>
-                                  <input
-                                    checked={selectedItems.includes(index)} // همگام‌سازی وضعیت چک‌باکس با selectedItems
-                                    onChange={() =>
-                                      handleRowCheckboxChange(index)
-                                    }
-                                    type='checkbox'
-                                    className=' cursor-pointer accent-[#7747C0] w-4'
-                                  />
-                                  <p className='mt-1'>{detail}</p>
-                                </div>
-                              ) : detailIndex === 4 ? (
-                                <p className='flex justify-center'>
-                                  <span
-                                    className={`min-w-16 ${
-                                      detail === 1
-                                        ? 'bg-[#DAFEE5] text-[#0CAD41] rounded-lg'
-                                        : 'bg-[#FEE3E2] text-[#D42620] rounded-lg'
-                                    }`}>
-                                    {detail === 1 ? 'فعال' : 'غیرفعال'}
-                                  </span>
-                                </p>
-                              ) : detailIndex === 5 ? (
-                                <button
-                                  className='border-button px-2 rounded-md'
-                                  onClick={() => {
-                                    setShowAppointmentModal(
-                                      referrerData?.find(
-                                        (pers) =>
-                                          pers?.pers_uid === personnel?.pers_uid
-                                      ) as ReferrerData
-                                    )
-                                  }}>
-                                  انتصاب دادن
-                                </button>
-                              ) : (
-                                detail
-                              )}
-                            </td>
-                          )
-                      )}
-                      <td className='text-center'>
-                        <p className='flex justify-center cursor-pointer'>
-                          <MoreSquare
-                            size={25}
+                  <tbody>
+                    {initialData?.map((personnel, index) => (
+                      <tr key={index} className='border-b'>
+                        {[index + 1, ...Object.values(personnel)].map(
+                          (detail, detailIndex) =>
+                            detailIndex !== 6 && (
+                              <td
+                                key={detailIndex}
+                                className={`text-center h-10 ${
+                                  detailIndex === 0 && 'border-r'
+                                }`}>
+                                {detailIndex === 0 ? (
+                                  <div className='flex items-center justify-center gap-7'>
+                                    <input
+                                      checked={selectedItems.includes(index)}
+                                      onChange={() =>
+                                        handleRowCheckboxChange(index)
+                                      }
+                                      type='checkbox'
+                                      className='cursor-pointer accent-[#7747C0] w-4'
+                                    />
+                                    <p className='mt-1'>{detail}</p>
+                                  </div>
+                                ) : detailIndex === 4 ? (
+                                  <p className='flex justify-center'>
+                                    <span
+                                      className={`min-w-16 ${
+                                        detail === 1
+                                          ? 'bg-[#DAFEE5] text-[#0CAD41] rounded-lg'
+                                          : 'bg-[#FEE3E2] text-[#D42620] rounded-lg'
+                                      }`}>
+                                      {detail === 1 ? 'فعال' : 'غیرفعال'}
+                                    </span>
+                                  </p>
+                                ) : detailIndex === 5 ? (
+                                  <button
+                                    className='border-button px-2 rounded-md'
+                                    onClick={() => {
+                                      setShowAppointmentModal(
+                                        referrerData?.find(
+                                          (pers) =>
+                                            pers?.pers_uid ===
+                                            personnel?.pers_uid
+                                        ) as ReferrerData
+                                      )
+                                    }}>
+                                    انتصاب دادن
+                                  </button>
+                                ) : (
+                                  detail
+                                )}
+                              </td>
+                            )
+                        )}
+                        <td className='text-center'>
+                          <p className='flex justify-center cursor-pointer'>
+                            <MoreSquare
+                              size={25}
+                              color='#7747C0'
+                              onClick={() =>
+                                setShowDetailModal(
+                                  referrerData?.filter(
+                                    (referrer) =>
+                                      referrer.pers_name === personnel.pers_name
+                                  )[0] as ReferrerData
+                                )
+                              }
+                            />
+                          </p>
+                        </td>
+                        <td className='text-center h-10 flex justify-center gap-2 border-l'>
+                          <Trash
+                            size={24}
                             color='#7747C0'
+                            className='cursor-pointer'
                             onClick={() =>
-                              setShowDetailModal(
+                              setShowDeleteModal(
                                 referrerData?.filter(
-                                  (referrer) =>
-                                    referrer.pers_name === personnel.pers_name
+                                  (data) =>
+                                    data.pers_name === personnel.pers_name
                                 )[0] as ReferrerData
                               )
                             }
                           />
-                        </p>
-                      </td>
-                      <td className='text-center h-10 flex justify-center gap-2 border-l'>
-                        <Trash
-                          size={24}
-                          color='#7747C0'
-                          className='cursor-pointer'
-                          onClick={() =>
-                            setShowDeleteModal(
-                              referrerData?.filter(
-                                (data) => data.pers_name === personnel.pers_name
-                              )[0] as ReferrerData
-                            )
-                          }
-                        />
-                        <Edit2
-                          size={24}
-                          color='#7747C0'
-                          className='cursor-pointer'
-                          onClick={() =>
-                            setShowAddModal(
-                              referrerData?.filter(
-                                (data) => data.pers_name === personnel.pers_name
-                              )[0] as ReferrerData
-                            )
-                          }
-                        />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                          <Edit2
+                            size={24}
+                            color='#7747C0'
+                            className='cursor-pointer'
+                            onClick={() =>
+                              setShowAddModal(
+                                referrerData?.filter(
+                                  (data) =>
+                                    data.pers_name === personnel.pers_name
+                                )[0] as ReferrerData
+                              )
+                            }
+                          />
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           ) : (
             <div className='w-full bg-white flex flex-col gap-2 justify-center items-center'>
@@ -371,3 +376,5 @@ const Referrer: React.FC = () => {
 }
 
 export default Referrer
+
+

@@ -97,7 +97,7 @@ const Wallet: React.FC = () => {
                   targetValue={balance?.Releasable || 0}
                   incrementValue={balance?.Releasable || 0}
                 />
-                 ریال
+                ریال
               </b>
             </div>
             <div className='flex w-full justify-between'>
@@ -111,7 +111,7 @@ const Wallet: React.FC = () => {
                   targetValue={balance?.Debit || 0}
                   incrementValue={balance?.Debit || 0}
                 />
-                 ریال
+                ریال
               </b>
             </div>
 
@@ -125,7 +125,7 @@ const Wallet: React.FC = () => {
                   targetValue={balance?.SumCredit || 0}
                   incrementValue={balance?.SumCredit || 0}
                 />
-                 ریال
+                ریال
               </b>
             </div>
             <div className='flex w-full justify-between'>
@@ -138,7 +138,7 @@ const Wallet: React.FC = () => {
                   targetValue={balance?.Credit || 0}
                   incrementValue={balance?.Credit || 0}
                 />
-                 ریال
+                ریال
               </b>
             </div>
           </div>
@@ -165,10 +165,12 @@ const Wallet: React.FC = () => {
         </div>
       </div>
       <div className='w-11/12 md:w-4/5 lg:w-2/3 max-md:w-[100%] bg-white shadow-lg rounded-lg p-6'>
-        <h4 className='text-right text-gray-700 text-lg font-bold mb-4'>
-          گزارش کیف پول 
-          <Chart2/>
-        </h4>
+        <div className='flex justify-between'>
+          <h4 className='text-right text-gray-700 text-lg font-bold mb-4'>
+            گزارش کیف پول
+          </h4>
+          <Chart2 color='#7747C0' size={28} />
+        </div>
         <div className='h-80'>
           <canvas ref={chartRef}></canvas>
         </div>

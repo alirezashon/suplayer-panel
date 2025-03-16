@@ -1,28 +1,16 @@
-import React, { useState } from 'react'
-
-interface TreeItem {
-  id: number | string
-  label: string
-  children: string[]
-}
-
+import { useState } from 'react'
 interface RadioTreeSelectorProps {
-  trees: TreeItem[]
+  items: { value: string; id: string | number }[]
   placeholder: string
   onSelect: (selected: string) => void
 }
-
-const RadioSelectree: React.FC<RadioTreeSelectorProps> = ({
-  trees,
+const RadioSelectList: React.FC<RadioTreeSelectorProps> = ({
+  items,
   placeholder,
   onSelect,
 }) => {
-  const [selectedManager, setSelectedManager] = useState<
-    number | string | null
-  >(null)
   const [isOpen, setIsOpen] = useState(false)
   const [selectedName, setSelectedName] = useState<string | null>(null)
-
   return (
     <div className='w-full'>
       <div
@@ -31,58 +19,39 @@ const RadioSelectree: React.FC<RadioTreeSelectorProps> = ({
         <span className='text-gray-700'>{selectedName || placeholder}</span>
         <span className='text-gray-400'>&#x25BC;</span>
       </div>
-      {isOpen && !selectedManager ? (
-        <div className='flex flex-col'>
-          {trees.map((tree) => (
-            <div
-              key={tree.id}
-              className='flex items-center gap-2 px-4 py-2 cursor-pointer hover:bg-gray-100'
-              onClick={() => setSelectedManager(tree.id)}>
-              <span>{tree.label}</span>
-              <span className='ml-auto'>&#x1F464;</span> {/* Icon */}
-            </div>
-          ))}
-        </div>
-      ) : (
-        isOpen && (
+      <div className='border rounded-lg'>
+        {isOpen && (
           <div className='flex flex-col'>
-            <div
-              className='flex items-center gap-2 px-4 py-2 cursor-pointer text-[#7747C0]'
-              onClick={() => setSelectedManager(null)}>
-              <span>بازگشت</span>
-              <span className='ml-auto'>&#x25C0;</span> {/* Back Arrow Icon */}
-            </div>
-            {trees
-              .find((tree) => tree.id === selectedManager)
-              ?.children.map((child, index) => (
-                <label
-                  key={index}
-                  className='flex items-center gap-2 px-4 py-2 cursor-pointer'>
-                  <input
-                    type='radio'
-                    name='teamMember'
-                    checked={selectedName === child}
-                    onChange={() => {
-                      setSelectedName(child)
-                      onSelect(child)
-                    }}
-                    className='form-radio appearance-none h-5 w-5 border-2 rounded-full bg-white checked:bg-[#7747C0] cursor-pointer'
-                  />
-                  <span
-                    className={`${
-                      selectedName === child
-                        ? 'text-[#7747C0]'
-                        : 'text-gray-700'
-                    }`}>
-                    {child}
-                  </span>
-                </label>
-              ))}
+            {items.map((child, index) => (
+              <label
+                key={index}
+                className='flex items-center gap-2 px-4 py-2 cursor-pointer hover:bg-purple-100'>
+                <input
+                  type='radio'
+                  name='teamMember'
+                  checked={selectedName === `${child.value}`}
+                  onChange={() => {
+                    setSelectedName(`${child.value}`)
+                    onSelect(`${child.id}`)
+                    setTimeout(() => setIsOpen(false), 154)
+                  }}
+                  className='form-radio appearance-none h-5 w-5 border-2 rounded-full bg-white checked:bg-[#7747C0] cursor-pointer'
+                />
+                <span
+                  className={`${
+                    selectedName === `${child.value}`
+                      ? 'text-[#7747C0]'
+                      : 'text-gray-700'
+                  }`}>
+                  {child.value}
+                </span>
+              </label>
+            ))}
           </div>
-        )
-      )}
+        )}
+      </div>
     </div>
   )
 }
 
-export default RadioSelectree
+export default RadioSelectList

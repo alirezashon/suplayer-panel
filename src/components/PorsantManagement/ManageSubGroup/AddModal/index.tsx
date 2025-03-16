@@ -14,7 +14,6 @@ const AddModal = ({
   groupName?: string
   close: (show: boolean) => void
 }) => {
-  const [names] = useState<(string | number)[]>([''])
   const [selected, setSelected] = useState<BeneficiaryData[]>([])
   const { beneficiaryData, setBeneficiaryData } = useData()
   const { selectedSubGroupData, showModal } = useStates()
@@ -77,35 +76,33 @@ const AddModal = ({
               <p className='text-[#7747C0]'>بازاریاب </p>
               <p>{groupName}</p>
             </div>
-            {names.map((name, index) => (
-              <div key={index} className='flex flex-col w-full mb-4'>
-                <label className='text-base font-medium text-right text-gray-800 my-5'>
-                  انتخاب ذی‌نفع‌های من
-                </label>
-                <div className=''>
-                  <label className='my-2'>ذی‌نفع‌های خود را انتخاب کنید</label>
-                  <SelectList
-                    items={
-                      beneficiaryData
-                        ?.filter((row) => row.supervisor_id === 0)
-                        ?.map((bn) => ({
-                          id: bn.visitor_name,
-                          label: bn.visitor_full_name,
-                        })) || []
-                    }
-                    setSelectedItems={(selectedIds) =>
-                      setSelected(
-                        () =>
-                          beneficiaryData?.filter((data) =>
-                            selectedIds.includes(data.visitor_name)
-                          ) || []
-                      )
-                    }
-                    label='نام ذی‌نفع‌ها '
-                  />
-                </div>
+            <div className='flex flex-col w-full mb-4'>
+              <label className='text-base font-medium text-right text-gray-800 my-5'>
+                انتخاب ذی‌نفع‌های من
+              </label>
+              <div className=''>
+                <label className='my-2'>ذی‌نفع‌های خود را انتخاب کنید</label>
+                <SelectList
+                  items={
+                    beneficiaryData
+                      ?.filter((row) => !row.supervisor_id )
+                      ?.map((bn) => ({
+                        id: bn.visitor_name,
+                        label: bn.visitor_full_name,
+                      })) || []
+                  }
+                  setSelectedItems={(selectedIds) =>
+                    setSelected(
+                      () =>
+                        beneficiaryData?.filter((data) =>
+                          selectedIds.includes(data.visitor_name)
+                        ) || []
+                    )
+                  }
+                  label='نام ذی‌نفع‌ها '
+                />
               </div>
-            ))}
+            </div>
           </div>
           <button
             type='submit'
@@ -119,3 +116,17 @@ const AddModal = ({
 }
 
 export default AddModal
+
+
+curl https://api.openai.com/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer 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" \
+  -d '{
+    "model": "gpt-4o-mini",
+    "store": true,
+    "messages": [
+      {"role": "user", "content": "write a haiku about ai"}
+    ]
+  }'
+
+  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

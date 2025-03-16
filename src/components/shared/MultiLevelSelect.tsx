@@ -1,6 +1,6 @@
 import { OptionTrees } from '@/interfaces'
 import { ArrowDown2, CloseCircle, SearchNormal } from 'iconsax-react'
-import React, { useEffect, useRef, useState } from 'react'
+import  { useEffect, useRef, useState } from 'react'
 
 interface MultiLevelSelectProps {
   data: OptionTrees[]

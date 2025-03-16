@@ -1,6 +1,7 @@
 import { getCookieByKey } from '@/actions/cookieToken'
 import { getSubGroupData } from '@/actions/setData'
 import { errorClass } from '@/app/assets/style'
+import RadioSelectList from '@/components/shared/RadioSelectree'
 import RadioTreeSelector from '@/components/shared/RadioTrees'
 import { useData } from '@/Context/Data'
 import { useMenu } from '@/Context/Menu'
@@ -198,24 +199,21 @@ const AddModal = ({
               onClick={() => close()}
             />
           </div>
-          <div className='my-4'>
-            <label id='status-label'> گروه خود را انتخاب کنید</label>
-            <select
-              onChange={(e) =>
+          <div className='mb-3 mt-10'>
+            <RadioSelectList
+              items={
+                groupData?.map((gp) => {
+                  return { value: gp.sup_group_name, id: gp.sup_group_id }
+                }) || []
+              }
+              onSelect={(result: string) => {
                 setData((prev) => ({
                   ...prev,
-                  groupId: Number(e.target.value),
+                  groupId: parseInt(result),
                 }))
-              }
-              defaultValue={groupId}
-              className={`!w-full outline-none border rounded-lg h-10 px-1 cursor-pointer border-[#C9D0D8]`}>
-              {Array.isArray(groupData) &&
-                groupData?.map((gp) => (
-                  <option key={gp.sup_group_code} value={gp.sup_group_code}>
-                    {gp.sup_group_name}
-                  </option>
-                ))}
-            </select>
+              }}
+              placeholder='گروه خود را انتخاب کنید'
+            />
           </div>
           {systemTypes?.groupTypes && (
             <div className='mt-10'>
