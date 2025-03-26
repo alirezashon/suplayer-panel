@@ -117,16 +117,3 @@ const AddModal = ({
 
 export default AddModal
 
-
-curl https://api.openai.com/v1/chat/completions \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer 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" \
-  -d '{
-    "model": "gpt-4o-mini",
-    "store": true,
-    "messages": [
-      {"role": "user", "content": "write a haiku about ai"}
-    ]
-  }'
-
-  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
