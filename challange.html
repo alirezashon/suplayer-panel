@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>چالش برنامه‌نویسی</title>
+
+    <!-- Bootstrap RTL -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css"
+      rel="stylesheet"
+      crossorigin="anonymous"
+    />
+
+    <!-- فونت فارسی -->
+    <link rel="stylesheet" href="https://cdn.font-store.ir/behdad.css" />
+
+    <!-- PrismJS برای نمایش کد با استایل VS Code -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+
+    <style>
+      body {
+        font-family: 'behdad', sans-serif;
+        background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+        min-height: 100vh;
+        padding: 2rem;
+      }
+      .card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+      .title {
+        font-weight: bold;
+        font-size: 1.4rem;
+        margin-bottom: 1rem;
+        color: #6a1b9a;
+      }
+      pre {
+        border-radius: 10px;
+        font-size: 0.9rem;
+        direction: ltr;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="card">
+        <div class="title">بخش اول: ساختن آرایه با متد Array</div>
+        <pre><code class="language-json">{
+  "id": 1,
+  "name": "Alireza",
+  "email": "alireza@example.com",
+  "age": 27,
+  "city": "Tehran",
+  "isActive": true,
+  "role": "admin"
+}</code></pre>
+        <p>
+          با استفاده از متد <code>Array</code> یک آرایه ۱۰ عضوی از آبجکت بالا
+          بسازید.
+          <br />
+          مقدار <code>id</code> در هر عضو از ۱ تا ۱۰ به ترتیب تنظیم شود.
+          <br />
+          مقدار <code>age</code> و <code>city</code> در ایندکس دوم 
+          باید به ترتیب برابر با <strong>23</strong> و <strong>اصفهان</strong>
+          باشد.
+          <br />
+          همچنین، برای ایندکس‌های زوج مقدار
+          <code>isActive</code> برابر با <code>false</code> قرار گیرد.
+        </p>
+
+        <div class="title">بخش دوم: فیلتر و بازسازی داده</div>
+        <p>
+          آرایه ساخته‌شده را پیمایش کنید و یک خروجی مطابق با ساختار زیر بسازید:
+          <br />
+          یک آبجکت با دو کلید <code>even</code> و <code>odd</code>، که هر کدام
+          شامل یک آبجکت <code>parent</code> هستند. داخل parent اطلاعات مشخص شده
+          ذخیره شود، و یک کلید <code>children</code> که شامل لیستی از آبجکت‌هایی
+          است که <code>id</code> آن‌ها به ترتیب زوج یا فرد است.
+        </p>
+
+        <pre><code class="language-json">{
+  "even": {
+    "parent": {
+      "id": 1,
+      "name": "Alireza",
+      "email": "alireza@example.com",
+      "age": 27,
+      "city": "Tehran",
+      "isActive": false,
+      "role": "admin",
+      "children": [ /* آبجکت‌هایی با آی دی زوج */ ]
+    }
+  },
+  "odd": {
+    "parent": {
+      "id": 2,
+      "name": "Alireza",
+      "email": "alireza@example.com",
+      "age": 23,
+      "city": "Isfahan",
+      "isActive": true,
+      "role": "admin",
+      "children": [ /* آبجکت‌هایی با آی دی فرد */ ]
+    }
+  }
+}</code></pre>
+      </div>
+    </div>
+  </body>
+</html>
