@@ -1,11 +1,18 @@
 'use client'
 import { useEffect, useState } from 'react'
 import {
+  GetCurrentUser,
   GetOtpWithMobile,
+  GetUserPermissions,
   LoginWithOtpAndMobile,
   UserLoginAPI,
 } from '@/services/user'
-import { IAccessTokenResponse, setTokenIntoCookie } from '@/actions/cookieToken'
+import {
+  IAccessTokenResponse,
+  setCookieByTagAndValue,
+  setCurrentUsertoCookie,
+  setTokenIntoCookie,
+} from '@/actions/cookieToken'
 import { ArrowRight2 } from 'iconsax-react'
 import Loading from '../shared/LoadingSpinner'
 import Image from 'next/image'
@@ -84,20 +91,44 @@ const Login = () => {
           data: response as IAccessTokenResponse,
           mobile,
         })
+        const currentUser = await GetCurrentUser({
+          accessToken: response.access_token,
+        })
+        if (currentUser) await setCurrentUsertoCookie({ data: currentUser })
+        if (!currentUser) return
+        if (currentUser?.user_role_id) {
+          await GetUserPermissions({
+            accessToken: response.access_token,
+            role_id: currentUser.user_role_id,
+          }).then((result) => {
+            if (result)
+              setCookieByTagAndValue({
+                key: 'uzrprm',
+                value: JSON.stringify(
+                  result?.reduce(
+                    (acc, row) => {
+                      acc[0].push(row.menu_code)
+                      acc[1].push(row.form_code)
+                      acc[2].push(row.action_type)
+                      return acc
+                    },
+                    [[], [], []] as [string[], string[], number[]]
+                  )
+                ),
+              })
+          })
+        }
         showModal({
           type: 'success',
           main: <p>هویت شما تایید شد. لطفا برای ورود چند لحظه منتظر بمانید!</p>,
           title: 'ورود موفق ',
           autoClose: 2,
         })
-        if (response.user_status === 'INACTIVE') {
+        if (currentUser.user_status === 'INACTIVE') {
           location.href = '/auth/validator'
           return
         }
-        if (
-          response.approve_status !== 1 ||
-          response.user_approve_status !== 1
-        ) {
+        if (currentUser.approve_status !== 1) {
           setLoading(false)
           showModal({
             main: <p>کاربر فعال نمی باشد</p>,
@@ -106,7 +137,7 @@ const Login = () => {
           })
           return
         }
-        if (response.user_status === 'DISABLED') {
+        if (currentUser.user_status === 'DISABLED') {
           setLoading(false)
           showModal({
             main: <p>کاربر غیر فعال می باشد</p>,
@@ -115,7 +146,7 @@ const Login = () => {
           })
           return
         }
-        if (response.role) {
+        if (currentUser.role) {
           localStorage.setItem('mobile', mobile)
           location.href = '/'
         }
@@ -297,3 +328,4 @@ const Login = () => {
   )
 }
 export default Login
+

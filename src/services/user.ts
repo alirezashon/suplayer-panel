@@ -261,3 +261,43 @@ export const UpdateProfile = async ({
     console.log(error)
   }
 }
+export const GetUserPermissions = async ({
+  accessToken,
+  role_id,
+}: {
+  accessToken: string | undefined
+  role_id: string | number
+}): Promise<
+  | {
+      menu_code: string
+      menu_type: string
+      role_type: number
+      form_code: string
+      form_status: number
+      form_version: number
+      action_type: number
+    }[]
+  | undefined
+> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/get_permissions?role_id=${role_id}`,
+      {
+        method: 'GET',
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+          // authorization: `JWT ${token}`,
+        },
+      }
+    )
+
+    if (!response.ok || response.status === 500) {
+      throw new Error('Failed to GetCurrentUser')
+    }
+
+    const result = await response.json()
+    return result.data
+  } catch (error) {
+    console.log(error)
+  }
+}

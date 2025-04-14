@@ -28,6 +28,11 @@ export interface IUserResponse {
   customer_code: string
   role: string
   approve_status: number
+  uid: number
+  user_approve: number
+  customer_approve: number
+  user_status: string
+  user_role_id: number
 }
 export interface IShabaDestinationList {
   sid: string
@@ -125,7 +130,7 @@ export interface BeneficiaryData {
   visitor_status: number
   CityUID: string
   visitor_address: string
-  visitor_specialty: string
+  visitor_specialty: number
   default_weight: number
   latitude: number
   longitude: number

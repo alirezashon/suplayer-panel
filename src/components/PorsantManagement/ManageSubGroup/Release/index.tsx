@@ -44,6 +44,8 @@ const Release = () => {
     selectedSubGroupData,
     selectedGroupData,
     setSelectedGroupData,
+    submitting,
+    setSubmitting,
   } = useStates()
   const { setMenu } = useMenu()
   const [uploadStatuses, setUploadStatuses] = useState<
@@ -374,7 +376,7 @@ const Release = () => {
       })
       return
     }
-
+    setSubmitting(true)
     const accessToken = (await getCookieByKey('access_token')) || ''
     await ChangeReleaseStatus({
       accessToken,
@@ -389,6 +391,7 @@ const Release = () => {
         main: result?.message || 'خطایی رخ داد',
         autoClose: 1,
       })
+      setSubmitting(false)
       await getReleasedList().then((result) => {
         if (result) {
           setReleasedList(result)
@@ -399,7 +402,7 @@ const Release = () => {
   }
   return (
     <div className='m-4'>
-      {showOtpModal && (
+      {showOtpModal && !submitting && (
         <OtpModal
           setOtp={setOtp}
           title='ثبت نهایی آزادسازی اعتبار'
@@ -434,7 +437,7 @@ const Release = () => {
             }}>
             {selectedSubGroupData?.supervisor_name}/
           </span>
-          <span className='text-[#7747C0]'> آزادسازی گروهی </span>
+          <span className='text-[#7747C0]'>آزادسازی گروهی</span>
         </p>
       </div>
       <div className='flex flex-col bg-white p-3'>
@@ -608,3 +611,5 @@ const Release = () => {
 }
 
 export default Release
+
+

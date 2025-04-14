@@ -27,7 +27,6 @@ button {
     font-size: 13px !important;
   }
 }
-
 ::-webkit-scrollbar {
   width: 1.2vh;
   height: 4px;

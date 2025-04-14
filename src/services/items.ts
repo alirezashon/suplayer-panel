@@ -221,7 +221,7 @@ export const CreateBeneficiary = async ({
   visitor_status: number
   CityUID: string
   visitor_address: string
-  visitor_specialty: string
+  visitor_specialty: number
   default_weight: number
   latitude: number
   longitude: number
@@ -291,7 +291,7 @@ export const EditBeneficiary = async ({
   visitor_status?: number
   CityUID: string
   visitor_address: string
-  visitor_specialty: string
+  visitor_specialty: number
   default_weight: number
   latitude: number
   longitude: number

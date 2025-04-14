@@ -65,6 +65,8 @@ interface StatesContextProps {
   setGroupSelectorData: (data: OptionTrees[] | null) => void
   productGroupSelectorData: OptionTrees[] | undefined | null
   setProductGroupSelectorData: (data: OptionTrees[] | null) => void
+  submitting: boolean
+  setSubmitting: (value: boolean) => void
 }
 
 const StatesContext = createContext<StatesContextProps | undefined>(undefined)
@@ -102,7 +104,7 @@ export const StatesProvider = ({ children }: { children: ReactNode }) => {
   const [productGroupSelectorData, setProductGroupSelectorData] = useState<
     OptionTrees[] | null
   >()
-
+  const [submitting, setSubmitting] = useState<boolean>(false)
   const showModal = (content: {
     main: ReactNode
     title: string
@@ -133,6 +135,8 @@ export const StatesProvider = ({ children }: { children: ReactNode }) => {
         setGroupSelectorData,
         productGroupSelectorData,
         setProductGroupSelectorData,
+        submitting,
+        setSubmitting,
       }}>
       {children}
     </StatesContext.Provider>

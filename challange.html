@@ -118,3 +118,46 @@
     </div>
   </body>
 </html>
+
+
+
+
+<!-- 
+const baseUser = {
+  name: "Alireza",
+  email: "alireza@example.com",
+  age: 27,
+  city: "Tehran",
+  isActive: true,
+  role: "admin",
+};
+
+const users = Array.from({ length: 10 }, (_, i) => {
+  const id = i + 1;
+  return {
+    id,
+    ...baseUser,
+    age: id === 3 ? 23 : baseUser.age,
+    city: id === 3 ? "Isfahan" : baseUser.city,
+    isActive: id % 2 !== 0 ? false : baseUser.isActive,
+  };
+});
+
+const output = {
+  even: {
+    parent: {
+      ...users.find((user) => user.id === 2),
+      children: users.filter((user) => user.id % 2 === 0),
+    },
+  },
+  odd: {
+    parent: {
+      ...users.find((user) => user.id === 3),
+      children: users.filter((user) => user.id % 2 !== 0),
+    },
+  },
+};
+console.table(users)
+console.log(' ')
+console.table(output)
+ -->

@@ -45,7 +45,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
     visitor_status: data?.visitor_status || 1,
     CityUID: data?.CityUID || '',
     visitor_address: data?.visitor_address || '',
-    visitor_specialty: data?.visitor_specialty || '',
+    visitor_specialty: data?.visitor_specialty || 0,
     default_weight: data?.default_weight || 0,
     latitude: data?.latitude || 0,
     longitude: data?.longitude || 0,
@@ -279,6 +279,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
                           refs.current.visitor_specialty ||
                           ''
                         }
+                        type='number'
                         name='visitor_specialty'
                         onChange={handleChange}
                         placeholder='متخصص پوست و مو'
@@ -464,7 +465,9 @@ const AddModal = ({ data, close }: AddModalProps) => {
                 )}
               </div>
               <Map
-                coord={data?.latitude ? [data.latitude, data.longitude] : mapData}
+                coord={
+                  data?.latitude ? [data.latitude, data.longitude] : mapData
+                }
                 setCoord={setMapData}
                 setAddress={(value: string) =>
                   (refs.current.visitor_address = value)

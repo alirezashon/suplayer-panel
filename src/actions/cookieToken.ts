@@ -1,21 +1,26 @@
 'use server'
 
+import { IUserResponse } from '@/interfaces'
 import { cookies } from 'next/headers'
 
 export interface IAccessTokenResponse {
-  customer_status: string
   access_token: string
   token_type: string
   lastlogin_date: string
   lastlogin_time: string
   last_login_ip: string
-  user_status: string
-  city_level: number
-  customer_code: string
-  role: string
-  approve_status: number
-  user_approve_status: number
-  detail?: string
+  role_id: number
+}
+
+export async function setCurrentUsertoCookie({
+  data,
+}: {
+  data: IUserResponse
+}) {
+  ;(await cookies()).set('role', `${data.role}`)
+  ;(await cookies()).set('mobile', data.mobile)
+  ;(await cookies()).set('user_status', data.customer_status)
+  ;(await cookies()).set('clevel', `${data.city_level}`)
 }
 
 export async function setTokenIntoCookie({
@@ -29,13 +34,9 @@ export async function setTokenIntoCookie({
     maxAge: (60 * 60) / 2,
     path: '/',
   })
-  ;(await cookies()).set('role', data.role)
   ;(await cookies()).set('mobile', mobile)
   ;(await cookies()).set('lastlogin_date', data.lastlogin_date)
   ;(await cookies()).set('lastlogin_time', data.lastlogin_time)
-  ;(await cookies()).set('user_status', data.user_status)
-  ;(await cookies()).set('clevel', `${data.city_level}`)
-  ;(await cookies()).set('approve_status', String(data.user_approve_status))
 }
 
 export async function deleteAllCookies() {

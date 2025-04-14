@@ -64,7 +64,7 @@ const Drafts = () => {
     const chequeData = {
       accessToken,
       cheque_type: chequeType,
-      amount: parseInt(`${refs.current.amount}`),
+      amount: parseInt(refs.current.amount),
       cheque_number: refs.current.cheque_number,
       cheque_date: refs.current.cheque_date,
       cheque_id_file: refs.current.cheque_id_file || '',
@@ -85,6 +85,16 @@ const Drafts = () => {
             title: 'واریز',
             autoClose: 2,
           })
+          refs.current.cheque_type = ''
+          refs.current.amount = ''
+          refs.current.cheque_number = ''
+          refs.current.cheque_date = ''
+          refs.current.cheque_id_file = ''
+          refs.current.sayad_number = ''
+          refs.current.cheque_bank = ''
+          refs.current.cheque_branch = ''
+          refs.current.shaba_number = ''
+          refs.current.description = ''
           await getDraftsData().then((value) => value && setDraftsData(value))
         } else {
         }

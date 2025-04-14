@@ -3,7 +3,6 @@ import Drafts from './Drafts'
 import { useState } from 'react'
 import OnlinePayment from './OnlinePayment'
 import { useMenu } from '@/Context/Menu'
-
 const Deposite = () => {
   const { menu } = useMenu()
   const [tab, setTab] = useState<number>(menu === 'deposite-draft' ? 3 : 0)
@@ -29,44 +28,6 @@ const Deposite = () => {
             </div>
           </button>
         </div>
-        {/* <div
-          className={`transition-all duration-500 px-5 border-b ${
-            tab === 1 && 'bg-[#E6DBFB80] border-b-[#704CB9]'
-          }`}>
-          <button
-            className={`w-full flex justify-center !rounded-lg items-center gap-4 !py-3 ${
-              tab === 1 ? '!text-[#704CB9]' : 'text-[#344054]'
-            }`}
-            onClick={() => {
-              setTab(1)
-            }}>
-            <div
-              className={`flex gap-1 ${
-                tab === 1 ? 'text-[#2f27ce]' : 'text-[#344054]'
-              }`}>
-              واریز شناسه‌دار
-            </div>
-          </button>
-        </div>
-        <div
-          className={`transition-all duration-500 px-5 border-b ${
-            tab === 2 && 'bg-[#E6DBFB80] border-b-[#704CB9]'
-          }`}>
-          <button
-            className={`w-full flex justify-center !rounded-lg items-center gap-4 !py-3 ${
-              tab === 2 ? '!text-[#704CB9]' : 'text-[#344054]'
-            }`}
-            onClick={() => {
-              setTab(2)
-            }}>
-            <div
-              className={`flex gap-1 ${
-                tab === 2 ? 'text-[#2f27ce]' : 'text-[#344054]'
-              }`}>
-              لینک پرداخت
-            </div>
-          </button>
-        </div> */}
         <div
           className={`transition-all duration-500 px-5 border-b ${
             tab === 3 && 'bg-[#E6DBFB80] border-b-[#704CB9]'
@@ -97,7 +58,6 @@ const Deposite = () => {
         // )
         tab === 3 && <Drafts />
       )}
-      <Drafts />
       <Report />
     </div>
   )

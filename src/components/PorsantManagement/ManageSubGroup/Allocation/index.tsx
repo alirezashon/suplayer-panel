@@ -46,6 +46,8 @@ const Allocation = () => {
     selectedGroupData,
     setSelectedGroupData,
     showModal,
+    submitting,
+    setSubmitting,
   } = useStates()
 
   useEffect(() => {
@@ -180,6 +182,7 @@ const Allocation = () => {
     )
   }
   const changeAllocateStatus = async () => {
+    setSubmitting(true)
     if (!otp || otp?.length < 5) {
       showModal({
         main: 'کد صحیح نیست',
@@ -205,6 +208,7 @@ const Allocation = () => {
         main: result?.message || 'خطایی رخ داد',
         autoClose: 1,
       })
+      setSubmitting(false)
       await getAllocatedList().then((result) => {
         if (result) {
           setAllocationList(result)
@@ -215,7 +219,7 @@ const Allocation = () => {
   }
   return (
     <div className='m-4'>
-      {showOtpModal && (
+      {showOtpModal && !submitting && (
         <OtpModal
           setOtp={setOtp}
           title='ثبت نهایی تخصیص اعتبار'
@@ -292,7 +296,7 @@ const Allocation = () => {
             ))}
           </div>
           <div className='m-4'>
-            <table className='my-10 w-full border-collapse border border-gray-200'>
+            <table className='my-10 w-full border-collapse border border-gray-200 printable-table '>
               <thead>
                 <tr>
                   {headers.map((head, headIndex) => (
