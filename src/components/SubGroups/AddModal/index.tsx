@@ -20,7 +20,7 @@ const AddModal = ({
   close: () => void
 }) => {
   const { groupData, setSubGroupData, systemTypes } = useData()
-  const { showModal, closeModal } = useStates()
+  const { showModal, closeModal, submitting, setSubmitting } = useStates()
   const { setMenu } = useMenu()
   const [data, setData] = useState<{ name: string; groupId: number }>({
     name: existName?.split('#$%^@!~')[0] || '',
@@ -131,6 +131,7 @@ const AddModal = ({
       setErrors(newErrors)
       return
     }
+    setSubmitting(true)
     setIsConfirmed(true)
     await saveData(data.groupId, data.name)
     await Promise.all(
@@ -142,6 +143,7 @@ const AddModal = ({
       setIsConfirmed(false)
       close()
     }, 4444)
+    setSubmitting(false)
   }
 
   const handleAddInput = () => {
@@ -305,7 +307,10 @@ const AddModal = ({
                     : 'showSubmitAnimate 1s ease-in-out forwards '
                 }`,
               }}
-              className={`w-full fill-button px-10 h-10 mt-10 rounded-lg transition-transform duration-200 ease-in-out hover:scale-105`}>
+              disabled={submitting}
+              className={`w-full fill-button ${
+                submitting && 'opacity-30 cursor-not-allowed'
+              }  px-10 h-10 mt-10 rounded-lg transition-transform duration-200 ease-in-out hover:scale-105`}>
               ثبت
             </button>
             <div

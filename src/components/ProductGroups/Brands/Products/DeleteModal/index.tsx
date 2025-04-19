@@ -11,24 +11,23 @@ const DeleteModal = ({
   data: ProductsData
   close: (show: boolean) => void
 }) => {
-  const { showModal } = useStates()
+  const { showModal, submitting, setSubmitting } = useStates()
   const handleSubmit = async () => {
     const accessToken = (await getCookieByKey('access_token')) || ''
-
-    {
-      await EditProduct({
-        accessToken,
-        name: data?.ini_name,
-        id: data?.ini_code,
-      }).then((result) => {
-        showModal({
-          type: result.status === 1 ? 'success' : 'error',
-          main: <p>{result.message}</p>,
-          title: result.status === 1 ? 'موفق' : 'خطا',
-          autoClose: 2,
-        })
+    setSubmitting(true)
+    await EditProduct({
+      accessToken,
+      name: data?.ini_name,
+      id: data?.ini_code,
+    }).then((result) => {
+      showModal({
+        type: result.status === 1 ? 'success' : 'error',
+        main: <p>{result.message}</p>,
+        title: result.status === 1 ? 'موفق' : 'خطا',
+        autoClose: 2,
       })
-    }
+    })
+    setSubmitting(false)
   }
 
   return (
@@ -71,7 +70,10 @@ const DeleteModal = ({
             </button>
             <button
               type='submit'
-              className='flex gap-1 justify-center w-full mt-4 px-4 py-2 border border-red-700 text-red-700 rounded-lg hover:bg-purple-100'>
+              disabled={submitting}
+              className={`     ${
+                submitting && 'opacity-30 cursor-not-allowed'
+              }flex gap-1 justify-center w-full mt-4 px-4 py-2 border border-red-700 text-red-700 rounded-lg hover:bg-purple-100`}>
               <Trash size={24} color='#D42620' />
               حذف محصول
             </button>

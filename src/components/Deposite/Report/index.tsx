@@ -1,5 +1,6 @@
 'use client'
 import { getDraftsData } from '@/actions/setData'
+import Calendar from '@/components/shared/Calendar'
 import ExcelGenerator from '@/components/shared/GenerateExcel'
 import { useData } from '@/Context/Data'
 import { Receipt1 } from 'iconsax-react'
@@ -75,57 +76,55 @@ const Report = () => {
         <form className='flex flex-col'>
           <div className='flex gap-6'>
             <div className='w-full'>
-              <label>از تاریخ</label>
-              <input
-                className={`!w-full outline-none rounded-lg  h-10 cursor-pointer text-slate-400 `}
-              />
+              <label>تاریخ</label>
+              <Calendar setDate={() => ''} placeholder='از تاریخ' />
             </div>
             <div className='w-full'>
-              <label> تا تاریخ</label>
-              <select
+              <label className='opacity-0'> _</label>
+              <Calendar setDate={() => ''} placeholder='تا تاریخ' />
+
+              {/* <select
                 defaultValue={'0'}
                 className={`!w-full outline-none border border-[#cccccc] rounded-lg  h-10 cursor-pointer text-slate-400`}>
                 <option value='0'> نام بانک </option>
                 <option value='1'>test</option>
-              </select>
+              </select> */}
             </div>
             <div className='w-full'>
-              <label> تا مبلغ </label>
-              <select
-                defaultValue={'0'}
-                className={`!w-full outline-none border border-[#cccccc] rounded-lg  h-10 cursor-pointer  text-slate-400`}>
-                <option value='0'>نام طرف حساب </option>
-                <option value='1'>test</option>
-              </select>
+              <label> مبلغ </label>
+              <div className='relative w-full'>
+                <input
+                  inputMode='numeric'
+                  className='w-full pl-12 py-2 border rounded'
+                  placeholder='از مبلغ'
+                />
+                <span className='absolute left-2 top-1/2 -translate-y-1/2 text-gray-400'>
+                  ریال
+                </span>
+              </div>
             </div>
             <div className='w-full'>
-              <label> از مبلغ</label>
-              <select
-                defaultValue={'0'}
-                className={`!w-full outline-none border border-[#cccccc] rounded-lg  h-10 cursor-pointer  text-slate-400`}>
-                <option value='0'> وضعیت </option>
-                <option value='1'>test</option>
-              </select>
+              <label className='opacity-0'>تا مبلغ</label>
+              <div className='relative w-full'>
+                <input
+                  inputMode='numeric'
+                  className='w-full pl-12 py-2 border rounded'
+                  placeholder='تا مبلغ'
+                />
+                <span className='absolute left-2 top-1/2 -translate-y-1/2 text-gray-400'>
+                  ریال
+                </span>
+              </div>
             </div>
           </div>
           <div className='flex gap-6 my-5'>
             <div className='w-full'>
-              <label> وضعیت</label>
-              <select
-                defaultValue={'0'}
-                className={`!w-full outline-none border border-[#cccccc] rounded-lg  h-10 cursor-pointer text-slate-400`}>
-                <option value='0'> حساب کل </option>
-                <option value='1'>test</option>
-              </select>
+              <label> نام چک </label>
+              <input className='w-full' placeholder='نام چک' />
             </div>
             <div className='w-full'>
-              <label> شبا </label>
-              <select
-                defaultValue={'0'}
-                className={`!w-full outline-none border border-[#cccccc] rounded-lg  h-10 cursor-pointer  text-slate-400`}>
-                <option value='0'> حساب معین </option>
-                <option value='1'>test</option>
-              </select>
+              <label> وضعیت</label>
+              <input className='w-full' placeholder='موفق' />
             </div>
           </div>
         </form>

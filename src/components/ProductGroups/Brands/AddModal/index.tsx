@@ -23,7 +23,7 @@ const AddModal = ({
   const [status, setStatus] = useState<React.ReactElement | null>()
   const [isConfirmed, setIsConfirmed] = useState(false)
   const [errors, setErrors] = useState<Record<string, string[]>>()
-  const { showModal } = useStates()
+  const { showModal, submitting, setSubmitting } = useStates()
 
   const setResult = (state: boolean, text?: string) => {
     if (state) {
@@ -80,7 +80,7 @@ const AddModal = ({
       newErrors.brands = ['تمام فیلدهای برند اجباریست']
 
     setIsConfirmed(true)
-
+    setSubmitting(true)
     const accessToken = (await getCookieByKey('access_token')) || ''
     if (data?.group_desc)
       await EditProductGroup({
@@ -140,6 +140,7 @@ const AddModal = ({
       setIsConfirmed(false)
       setStatus(null)
     }, 3333)
+    setSubmitting(false)
   }
 
   return (
@@ -246,7 +247,10 @@ const AddModal = ({
                       : 'showSubmitAnimate 1s ease-in-out forwards '
                   }`,
                 }}
-                className={`w-full fill-button px-10 h-10 mt-10 rounded-lg transition-transform duration-200 ease-in-out hover:scale-105`}>
+                disabled={submitting}
+                className={` ${
+                  submitting && 'opacity-30 cursor-not-allowed'
+                } w-full fill-button px-10 h-10 mt-10 rounded-lg transition-transform duration-200 ease-in-out hover:scale-105`}>
                 ثبت
               </button>
 

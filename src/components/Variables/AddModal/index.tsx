@@ -9,7 +9,7 @@ import { CloseSquare, Grammerly } from 'iconsax-react'
 import { useRef, useState } from 'react'
 
 const AddModal = ({ data, close }: { data: KPIData; close: () => void }) => {
-  const [name, ] = useState<string>(data?.kpi_title || '')
+  const [name] = useState<string>(data?.kpi_title || '')
   const [isConfirmed, setIsConfirmed] = useState(false)
   const [status, setStatus] = useState<React.ReactElement | null>()
   const [errors, setErrors] = useState<Record<string, string | number>>({
@@ -19,7 +19,7 @@ const AddModal = ({ data, close }: { data: KPIData; close: () => void }) => {
   })
 
   const { setKPITaskData } = useData()
-  const { showModal } = useStates()
+  const { showModal, submitting, setSubmitting } = useStates()
   const refs = useRef({
     kpi_title: data.kpi_title || '',
     kpi_code: data.kpi_code || '',
@@ -63,6 +63,7 @@ const AddModal = ({ data, close }: { data: KPIData; close: () => void }) => {
       return
     }
     setIsConfirmed(true)
+    setSubmitting(true)
     const accessToken = (await getCookieByKey('access_token')) || ''
     if (!data.id) {
       const response = await CreateKPITask({ accessToken, ...refs.current })
@@ -103,6 +104,7 @@ const AddModal = ({ data, close }: { data: KPIData; close: () => void }) => {
       setIsConfirmed(false)
       setStatus(null)
     }, 2222)
+    setSubmitting(false)
   }
   return (
     <div>
@@ -110,9 +112,10 @@ const AddModal = ({ data, close }: { data: KPIData; close: () => void }) => {
       <div
         className={`fixed p-8 z-50 right-0 top-0 max-md:left-[0] max-md:w-[100%] w-[40vw] h-full bg-white border border-gray-300 shadow-lg transition-transform duration-300 ease-in-out right-side-animate 
      `}>
-              <form
+        <form
           onSubmit={handleSubmit}
-          className='flex flex-col bg-white  max-md:px-5 max-md:pb-24'>          <div className='flex justify-between items-center w-full text-xl font-medium text-right text-gray-800 max-md:max-w-full'>
+          className='flex flex-col bg-white  max-md:px-5 max-md:pb-24'>
+          <div className='flex justify-between items-center w-full text-xl font-medium text-right text-gray-800 max-md:max-w-full'>
             <div className='flex-1 shrink self-stretch my-auto min-w-[240px] max-md:max-w-full'>
               {data?.kpi_title ? 'ویرایش متغیر خارجی' : ' تعریف متغیر خارجی '}
             </div>
@@ -127,7 +130,6 @@ const AddModal = ({ data, close }: { data: KPIData; close: () => void }) => {
               />
             </div>
           </div>
-
           <div className='mt-10 w-full max-md:max-w-full'>
             <div className='flex flex-col w-full'>
               <label className='text-base font-medium text-right text-gray-800'>
@@ -145,7 +147,6 @@ const AddModal = ({ data, close }: { data: KPIData; close: () => void }) => {
               )}
             </div>
           </div>
-
           <div className='mt-10 w-full max-md:max-w-full'>
             <div className='flex flex-col w-full'>
               <label className='text-base font-medium text-right text-gray-800'>
@@ -184,7 +185,6 @@ const AddModal = ({ data, close }: { data: KPIData; close: () => void }) => {
               <span className='text-red-500'>{errors.kpi_time_series}</span>
             )}
           </div>
-
           <div className='mt-10 w-full max-md:max-w-full'>
             <div className='flex items-center'>
               <button
@@ -196,7 +196,10 @@ const AddModal = ({ data, close }: { data: KPIData; close: () => void }) => {
                       : 'showSubmitAnimate 1s ease-in-out forwards '
                   }`,
                 }}
-                className={`w-full fill-button px-10 h-10 mt-10 rounded-lg transition-transform duration-200 ease-in-out hover:scale-105`}>
+                disabled={submitting}
+                className={` ${
+                  submitting && 'opacity-30 cursor-not-allowed'
+                } w-full fill-button px-10 h-10 mt-10 rounded-lg transition-transform duration-200 ease-in-out hover:scale-105`}>
                 ثبت
               </button>
 

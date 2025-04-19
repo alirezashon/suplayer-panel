@@ -16,12 +16,12 @@ const DeleteModal = ({
   close: (show: boolean) => void
 }) => {
   const { setProductGroupData } = useData()
-  const { showModal } = useStates()
+  const { showModal, submitting, setSubmitting } = useStates()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     const accessToken = (await getCookieByKey('access_token')) || ''
-
+    setSubmitting(true)
     await EditProductGroup({
       accessToken,
       status: 9,
@@ -40,6 +40,7 @@ const DeleteModal = ({
       })
       close(false)
     })
+    setSubmitting(false)
   }
 
   return (
@@ -89,7 +90,10 @@ const DeleteModal = ({
             {isActive ? (
               <button
                 type='submit'
-                className={`fill-button px-10 h-10 rounded-lg  `}>
+                disabled={submitting}
+                className={`${
+                  submitting && 'opacity-30 cursor-not-allowed'
+                } fill-button px-10 h-10 rounded-lg  `}>
                 بستن
               </button>
             ) : (

@@ -39,26 +39,26 @@ const AddModal = ({ data, close }: AddModalProps) => {
   ]
   const { TreeChartInterface, setReferrerData } = useData()
   const { setMenu } = useMenu()
-  const { showModal } = useStates()
+  const { showModal, setSubmitting, submitting } = useStates()
   const refererTypes = ['شخص', 'کسب و کار']
   const [formData, setFormData] = useState({
-    personnel_code:data?.personnel_code || '',
+    personnel_code: data?.personnel_code || '',
     pers_chart_id: data?.pers_chart_id || 0,
     pers_job_id: data?.pers_job_id || 0,
     pers_type: data?.pers_type || 1,
     pers_tob: data?.pers_tob || 0,
-    pers_uid: data?.pers_uid ||'',
-    pers_tel:data?.pers_tel || '',
-    pers_full_name:data?.pers_full_name|| '',
-    pers_name: data?.pers_name ||'',
-    pers_family:data?.pers_family || '',
-    pers_status: data?.pers_status ||1,
-    CityUID: data?.CityUID ||'',
-    pers_address: data?.pers_address ||'',
-    last_educational_degree_id:data?.last_educational_degree_id || 0,
-    last_educational_major_id:data?.last_educational_major_id || 0,
+    pers_uid: data?.pers_uid || '',
+    pers_tel: data?.pers_tel || '',
+    pers_full_name: data?.pers_full_name || '',
+    pers_name: data?.pers_name || '',
+    pers_family: data?.pers_family || '',
+    pers_status: data?.pers_status || 1,
+    CityUID: data?.CityUID || '',
+    pers_address: data?.pers_address || '',
+    last_educational_degree_id: data?.last_educational_degree_id || 0,
+    last_educational_major_id: data?.last_educational_major_id || 0,
     marital_status_id: data?.marital_status_id || 0,
-    sex_id: data?.sex_id ||1,
+    sex_id: data?.sex_id || 1,
   })
 
   const [errors, setErrors] = useState<Record<string, string | number>>({
@@ -94,6 +94,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
       })
       return
     }
+    setSubmitting(true)
     const accessToken = (await getCookieByKey('access_token')) || ''
     await CreateReferrer({
       ...formData,
@@ -115,6 +116,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
         close(false)
       }
     })
+    setSubmitting(false)
   }
   useEffect(() => {
     const getEducationDetails = async () => {
@@ -235,7 +237,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
                   location.hash = 'referral-levels'
                   setMenu('referral-levels')
                 }}
-                className='fill-button h-10 rounded-md'>
+                className='fill-button h-10 rounded-md m-5'>
                 تعریف سطح بازاریاب
               </button>
             )}
@@ -408,13 +410,19 @@ const AddModal = ({ data, close }: AddModalProps) => {
             )}
             <div className='w-full sticky bottom-0 left-0 right-0 bg-white flex items-center gap-4 p-2 max-w-[40vw] mx-auto'>
               <button
+                disabled={submitting}
                 type='submit'
-                className='w-full h-10 text-white bg-[#7747C0] rounded-lg'>
+                className={`${
+                  submitting && 'opacity-30 cursor-not-allowed'
+                } w-full h-10 text-white bg-[#7747C0] rounded-lg`}>
                 ثبت و ادامه
               </button>
               <button
+                disabled={submitting}
                 type='submit'
-                className='flex justify-center items-center w-full h-10 border border-[#7747C0] text-[#7747C0] rounded-lg hover:bg-purple-100'>
+                className={`${
+                  submitting && 'opacity-30 cursor-not-allowed'
+                } flex justify-center items-center w-full h-10 border border-[#7747C0] text-[#7747C0] rounded-lg hover:bg-purple-100`}>
                 ثبت و بررسی
               </button>
             </div>

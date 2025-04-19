@@ -20,7 +20,7 @@ const AddModal = ({
   const [status, setStatus] = useState<React.ReactElement | null>()
   const [errors, setErrors] = useState<Record<string, string>>()
   const { setGroupData } = useData()
-  const { showModal } = useStates()
+  const { showModal, submitting, setSubmitting } = useStates()
 
   const setResult = (state: boolean, text?: string) => {
     if (state) {
@@ -45,6 +45,7 @@ const AddModal = ({
       return
     }
     setIsConfirmed(true)
+    setSubmitting(true)
     const accessToken = (await getCookieByKey('access_token')) || ''
     if (!sup_group_code) {
       const response = await CreateGroup({ accessToken, name })
@@ -87,6 +88,7 @@ const AddModal = ({
       setIsConfirmed(false)
       setStatus(null)
     }, 2222)
+    setSubmitting(false)
   }
   return (
     <div>
@@ -144,7 +146,10 @@ const AddModal = ({
                       : 'showSubmitAnimate 1s ease-in-out forwards '
                   }`,
                 }}
-                className={`w-full fill-button px-10 h-10 mt-10 rounded-lg transition-transform duration-200 ease-in-out hover:scale-105`}>
+                disabled={submitting}
+                className={`w-full fill-button ${
+                  submitting && 'opacity-30 cursor-not-allowed'
+                } px-10 h-10 mt-10 rounded-lg transition-transform duration-200 ease-in-out hover:scale-105`}>
                 ثبت
               </button>
 

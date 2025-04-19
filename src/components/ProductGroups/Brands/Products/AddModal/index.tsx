@@ -19,7 +19,13 @@ const AddModal = ({
   brand: ProductGroupData
   close: (show: boolean) => void
 }) => {
-  const { showModal, selectedProductData, setSelectedProductData } = useStates()
+  const {
+    showModal,
+    selectedProductData,
+    setSelectedProductData,
+    submitting,
+    setSubmitting,
+  } = useStates()
   const { systemTypes } = useData()
   const [names, setNames] = useState<string[]>([editData?.ini_name || ''])
   const [selectedType, setSelectedType] = useState<number>(0)
@@ -53,7 +59,7 @@ const AddModal = ({
     const newErrors = names.map((name) => name.trim() === '')
     setErrors(newErrors)
     if (newErrors.includes(true)) return // اگر خطا وجود داشت، ارسال متوقف شود
-
+    setSubmitting(true)
     const accessToken = (await getCookieByKey('access_token')) || ''
     await Promise.all(
       names.map(async (name) => {
@@ -96,6 +102,7 @@ const AddModal = ({
         }
       })
     )
+    setSubmitting(false)
   }
 
   return (
@@ -187,7 +194,9 @@ const AddModal = ({
           )}
           <button
             type='submit'
-            className='fill-button px-10 h-10 rounded-lg w-full mt-10'>
+            disabled={submitting}
+            className={`${submitting && 'opacity-30 cursor-not-allowed'}
+          fill-button px-10 h-10 rounded-lg w-full mt-10 `}>
             ثبت
           </button>
         </form>

@@ -16,11 +16,11 @@ const DeleteModal = ({
   close: (show: boolean) => void
 }) => {
   const { setProductGroupData, setBrandsData } = useData()
-  const { showModal } = useStates()
+  const { showModal, submitting, setSubmitting } = useStates()
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     const accessToken = (await getCookieByKey('access_token')) || ''
-
+    setSubmitting(true)
     await EditProductGroup({
       accessToken,
       status: 9,
@@ -40,6 +40,7 @@ const DeleteModal = ({
       })
       close(false)
     })
+    setSubmitting(false)
   }
 
   return (
@@ -101,7 +102,11 @@ const DeleteModal = ({
                 </button>
                 <button
                   type='submit'
-                  className='flex gap-1 justify-center w-full mt-4 px-4 py-2 border border-red-700 text-red-700 rounded-lg hover:bg-purple-100'>
+                  disabled={submitting}
+                  className={`     ${
+                    submitting && 'opacity-30 cursor-not-allowed'
+                  }
+              flex gap-1 justify-center w-full mt-4 px-4 py-2 border border-red-700 text-red-700 rounded-lg hover:bg-purple-100`}>
                   <Trash size={24} color='#D42620' />
                   حذف گروه محصول
                 </button>

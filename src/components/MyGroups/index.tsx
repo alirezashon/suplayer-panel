@@ -64,7 +64,7 @@ const MyGroups: React.FC = () => {
         <DeleteModal
           sup_group_code={showDeleteModal[1]}
           name={`${showDeleteModal[0]}`}
-          close={setShowDeleteModal}
+          close={()=>setShowDeleteModal(null)}
         />
       )}
       <div className='p-6 bg-white rounded-lg border border-gray-200'>

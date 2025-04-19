@@ -13,14 +13,15 @@ const DeleteModal = ({
 }: {
   isActive?: boolean
   name: string
-  close: (show: null) => void
+  close: () => void
   sup_group_code: string
 }) => {
-  const { showModal } = useStates()
+  const { showModal, submitting, setSubmitting } = useStates()
   const { setGroupData } = useData()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setSubmitting(true)
     const accessToken = (await getCookieByKey('access_token')) || ''
     const response = await EditGroup({
       accessToken,
@@ -50,7 +51,8 @@ const DeleteModal = ({
         autoClose: 2,
       })
     }
-    close(null)
+    setSubmitting(false)
+    close()
   }
 
   return (
@@ -73,7 +75,7 @@ const DeleteModal = ({
                 size={24}
                 cursor='pointer'
                 color='#50545F'
-                onClick={() => close(null)}
+                onClick={() => close()}
               />
             </div>
           </div>

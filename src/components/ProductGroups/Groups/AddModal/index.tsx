@@ -24,7 +24,7 @@ const AddModal = ({
   const [isConfirmed, setIsConfirmed] = useState(false)
   const [groupDesc, setGroupDesc] = useState(data?.group_desc || '')
   const [brands, setBrands] = useState<string[]>([''])
-  const { showModal } = useStates()
+  const { showModal, submitting, setSubmitting } = useStates()
 
   const setResult = (state: boolean, text?: string) => {
     if (state) {
@@ -94,6 +94,7 @@ const AddModal = ({
       return
     }
     setIsConfirmed(true)
+    setSubmitting(true)
     const accessToken = (await getCookieByKey('access_token')) || ''
     if (data?.group_desc)
       await EditProductGroup({
@@ -148,6 +149,7 @@ const AddModal = ({
       setIsConfirmed(false)
       setStatus(null)
     }, 3333)
+    setSubmitting(false)
   }
   return (
     <div>
@@ -156,16 +158,12 @@ const AddModal = ({
         style={{ scrollbarWidth: 'none' }}
         className={`fixed p-6 z-50 right-0 top-0 max-md:left-[0] max-md:w-[100%] w-[40vw] h-full bg-white border border-gray-300 shadow-lg transition-transform duration-300 ease-in-out right-side-animate overflow-y-auto  
      `}>
-        <form
-          onSubmit={handleSubmit}
-          className='flex flex-col bg-white'>
+        <form onSubmit={handleSubmit} className='flex flex-col bg-white'>
           <div className='flex justify-between items-center w-full text-xl font-medium text-right text-gray-800 max-md:max-w-full'>
             <div className='flex-1 shrink self-stretch my-auto min-w-[240px] max-md:max-w-full'>
               گروه محصول جدید
             </div>
-            <div
-              className='
-           '>
+            <div className=''>
               <CloseSquare
                 size={24}
                 cursor='pointer'
@@ -239,7 +237,10 @@ const AddModal = ({
                       : 'showSubmitAnimate 1s ease-in-out forwards '
                   }`,
                 }}
-                className={`w-full fill-button px-10 h-10 mt-10 rounded-lg transition-transform duration-200 ease-in-out hover:scale-105`}>
+                disabled={submitting}
+                className={`${
+                  submitting && 'opacity-30 cursor-not-allowed'
+                } w-full fill-button px-10 h-10 mt-10 rounded-lg transition-transform duration-200 ease-in-out hover:scale-105`}>
                 ثبت
               </button>
 

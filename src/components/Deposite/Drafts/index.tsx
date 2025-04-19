@@ -30,7 +30,7 @@ const Drafts = () => {
     cheque_number: '',
     cheque_date: '',
   })
-  const { showModal } = useStates()
+  const { showModal, submitting, setSubmitting } = useStates()
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -77,6 +77,7 @@ const Drafts = () => {
     }
     try {
       if (validateForm()) {
+        setSubmitting(true)
         const response = await DepositWithDraft(chequeData)
         if (response) {
           showModal({
@@ -97,10 +98,18 @@ const Drafts = () => {
           refs.current.description = ''
           await getDraftsData().then((value) => value && setDraftsData(value))
         } else {
+          showModal({
+            type: 'error',
+            main: <p>{response.message || 'خطا در ثبت چک'}</p>,
+            title: 'واریز',
+            autoClose: 2,
+          })
         }
+        setSubmitting(false)
       }
     } catch (error) {
       console.log(error)
+      setSubmitting(false)
       showModal({
         main: <p>خطا در ثبت اطلاعات. لطفاً مجدداً تلاش کنید.</p>,
         title: 'واریز',
@@ -165,9 +174,7 @@ const Drafts = () => {
                 name='amount'
                 defaultValue={refs.current.amount}
                 onChange={handleInputChange}
-                placeholder={`مبلغ ${
-                  chequeType === 1 ? ' چک ' : 'سند'
-                } را به ریال وارد نمایید`}
+                placeholder={`مبلغ ${chequeType === 1 ? ' چک ' : 'سند'} `}
                 className={`w-full p-3 border ${
                   errors.amount && errorClass
                 } rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400`}
@@ -196,7 +203,9 @@ const Drafts = () => {
             <label
               htmlFor='cheque_number'
               className='block text-gray-600 mb-2 text-right'>
-              شماره سریال {chequeType === 1 ? ' چک ' : ' سند '}
+              {chequeType === 1
+                ? ' شماره شبا حساب مبدا '
+                : '  شماره سریال سند  '}
             </label>
             <input
               name='cheque_number'
@@ -217,7 +226,7 @@ const Drafts = () => {
                 <label
                   htmlFor='shaba_number'
                   className='block text-gray-600 mb-2 text-right'>
-                  شماره شبا حساب مبدا
+                  شماره سریال چک
                 </label>
                 <input
                   name='shaba_number'
@@ -240,9 +249,7 @@ const Drafts = () => {
                   name='sayad_number'
                   defaultValue={refs.current.sayad_number}
                   onChange={handleInputChange}
-                  placeholder={`شناسه${
-                    chequeType === 1 ? ' چک ' : ' سند '
-                  }صیاد را وارد کنید`}
+                  placeholder={'1242527'}
                   className='w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400'
                 />
               </div>
@@ -259,7 +266,7 @@ const Drafts = () => {
                 name='cheque_bank'
                 defaultValue={refs.current.cheque_bank}
                 onChange={handleInputChange}
-                placeholder='نام بانک را وارد کنید'
+                placeholder='نام بانک'
                 className='w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400'
               />
             </div>
@@ -273,7 +280,7 @@ const Drafts = () => {
                 name='cheque_branch'
                 defaultValue={refs.current.cheque_branch}
                 onChange={handleInputChange}
-                placeholder='کد شعبه بانک را وارد کنید'
+                placeholder='کد شعبه بانک'
                 className='w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400'
               />
             </div>
@@ -297,7 +304,10 @@ const Drafts = () => {
           <div className='flex gap-10'>
             <button
               onClick={handleSubmit}
-              className='flex items-center gap-2 w-full justify-center h-10 rounded-lg bg-[#7747C0] hover:bg-[#7747C0] text-white font-bold'>
+              disabled={submitting}
+              className={`flex items-center gap-2 w-full ${
+                submitting && 'opacity-30 cursor-not-allowed'
+              } justify-center h-10 rounded-lg bg-[#7747C0] hover:bg-[#7747C0] text-white font-bold`}>
               ذخیره
             </button>
             <button className='flex items-center gap-2 w-full justify-center h-10 rounded-lg bg-purple-50 hover:bg-purple-100 text-[#7747C0] border border-[#7747c0] font-bold'>

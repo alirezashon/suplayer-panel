@@ -51,7 +51,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
     longitude: data?.longitude || 0,
   })
   const { setBeneficiaryData } = useData()
-  const { showModal } = useStates()
+  const { showModal, submitting, setSubmitting } = useStates()
   const beneficiaries = ['شخص', 'کسب و کار']
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -76,7 +76,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
       return
     }
     const accessToken = await getCookieByKey('access_token')
-
+    setSubmitting(true)
     if (data && data.visitor_uid) {
       EditBeneficiary({
         ...data,
@@ -135,6 +135,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
     setTimeout(() => {
       setIsConfirmed(false)
     }, 2222)
+    setSubmitting(false)
   }
   const validateForm = () => {
     const newErrors: Record<string, string> = {}
@@ -510,7 +511,10 @@ const AddModal = ({ data, close }: AddModalProps) => {
                     : 'showSubmitAnimate 1s ease-in-out forwards '
                 }`,
               }}
-              className={`w-full fill-button px-10 h-10 mt-10 rounded-lg transition-transform duration-200 ease-in-out hover:scale-105`}>
+              disabled={submitting}
+              className={`w-full ${
+                submitting && 'opacity-30 cursor-not-allowed'
+              } fill-button px-10 h-10 mt-10 rounded-lg transition-transform duration-200 ease-in-out hover:scale-105`}>
               ثبت و ذخیره
             </button>
 

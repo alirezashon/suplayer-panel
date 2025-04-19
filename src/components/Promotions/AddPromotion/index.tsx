@@ -16,7 +16,8 @@ const AddPromotion = () => {
   >('idle')
   const [progress, setProgress] = useState<number>(0)
   const [draftSrc, setDraftSrc] = useState<string>()
-  const { showModal, productGroupSelectorData } = useStates()
+  const { showModal, productGroupSelectorData, submitting, setSubmitting } =
+    useStates()
   const [step, setStep] = useState<number>(2)
 
   const refs = useRef({
@@ -78,6 +79,7 @@ const AddPromotion = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     if (validateForm()) {
+      setSubmitting(true)
       const accessToken = await getCookieByKey('access_token')
       await CreatePromotion({ accessToken, ...refs.current }).then((result) => {
         showModal({
@@ -87,6 +89,7 @@ const AddPromotion = () => {
           autoClose: 2,
         })
       })
+      setSubmitting(false)
     }
   }
 
@@ -290,6 +293,29 @@ const AddPromotion = () => {
                 {errors.ctitle && (
                   <p className='text-red-500 text-sm'>{errors.ctitle}</p>
                 )}
+              </div>
+              <label className='block text-sm font-bold'>
+                نوع انتشار پروموشن
+              </label>
+              <div className='flex mb-1'>
+                {['زمان دار', 'بدون زمان'].map((item, index) => (
+                  <label
+                    key={index}
+                    className='flex flex-1 items-center gap-3 cursor-pointer'>
+                    <input
+                      type='radio'
+                      defaultChecked={index === 0}
+                      name='beneficiary'
+                      value={item}
+                      // onChange={() => {
+                      //   setType(index === 0 ? 1 : 2)
+                      //   refs.current.visitor_tob = index === 0 ? 1 : 2
+                      // }}
+                      className='w-5 h-5 cursor-pointer accent-[#7747C0]'
+                    />
+                    <span className='text-gray-700'>{item}</span>
+                  </label>
+                ))}
               </div>
               <div className='flex gap-5'>
                 <div className='w-full '>
@@ -534,7 +560,10 @@ const AddPromotion = () => {
           <button
             type={step < 3 ? 'button' : 'submit'}
             onClick={() => step < 3 && validateForm(step)}
-            className='mt-6 px-12 bg-[#7747C0] text-white py-2 rounded-md'>
+            disabled={submitting}
+            className={`mt-6 px-12 bg-[#7747C0] text-white py-2 rounded-md ${
+              submitting && 'opacity-30 cursor-not-allowed'
+            } `}>
             {step < 3 ? 'مرحله بعد' : ' ثبت پروموشن'}
           </button>
         </div>

@@ -9,7 +9,6 @@ import {
 import { useEffect, useRef, useState } from 'react'
 import { useData } from '@/Context/Data'
 import { CreateReferrerChart } from '@/services/referrer'
-
 import { TreeChartInterface } from '@/interfaces'
 import { getReferrerChart } from '@/actions/setData'
 import { useStates } from '@/Context/States'
@@ -38,7 +37,7 @@ const AddModal = ({
     chlabel: '',
   })
   const { setTreeChartInterface } = useData()
-  const { showModal } = useStates()
+  const { showModal, submitting, setSubmitting } = useStates()
   const refs = useRef({ chtitle: '', chlabel: '' })
   useEffect(() => {
     if (data) {
@@ -65,7 +64,7 @@ const AddModal = ({
 
     setIsConfirmed(true)
     const accessToken = (await getCookieByKey('access_token')) || ''
-
+    setSubmitting(true)
     await CreateReferrerChart({
       accessToken,
       chpid: state === 0 ? 0 : parent?.id,
@@ -90,10 +89,10 @@ const AddModal = ({
         )
       }
     })
-
     setTimeout(() => {
       setIsConfirmed(false)
     }, 2222)
+    setSubmitting(false)
   }
 
   return (
@@ -317,7 +316,10 @@ const AddModal = ({
                           : 'showSubmitAnimate 1s ease-in-out forwards '
                       }`,
                     }}
-                    className={`w-full border-button px-10 h-10 mt-10 rounded-lg transition-transform duration-200 ease-in-out hover:scale-105`}>
+                    disabled={submitting}
+                    className={` ${
+                      submitting && 'opacity-30 cursor-not-allowed'
+                    } w-full border-button px-10 h-10 mt-10 rounded-lg transition-transform duration-200 ease-in-out hover:scale-105`}>
                     {state === 0 ? 'انصراف' : 'ثبت و خروج'}
                   </button>
                   <div
@@ -341,12 +343,14 @@ const AddModal = ({
                     type='button'
                     onClick={(e) => {
                       e.preventDefault()
-
                       refs.current.chlabel = ''
                       refs.current.chtitle = ''
                       setState(2)
                     }}
-                    className={`w-full fill-button px-10 h-10 mt-10 rounded-lg transition-transform duration-200 ease-in-out hover:scale-105`}>
+                    disabled={submitting}
+                    className={`    ${
+                      submitting && 'opacity-30 cursor-not-allowed'
+                    } w-full fill-button px-10 h-10 mt-10 rounded-lg transition-transform duration-200 ease-in-out hover:scale-105`}>
                     ثبت و ادامه
                   </button>
                   <button

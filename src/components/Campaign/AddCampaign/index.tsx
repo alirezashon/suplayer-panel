@@ -28,7 +28,7 @@ const AddCampaign = ({
     productData,
     setCampaignData,
   } = useData()
-  const { showModal } = useStates()
+  const { showModal, submitting, setSubmitting } = useStates()
 
   const refs = useRef({
     cstatus: existData?.cstatus || 0,
@@ -51,7 +51,9 @@ const AddCampaign = ({
   const [errors, setErrors] = useState<Record<string, string | null>>({})
   const [, setSelectedItems] = useState<Array<string | number>>([])
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name } = e.target
     let { value } = e.target
     if (['budget', 'expected_response', 'expected_amount'].includes(name))
@@ -70,19 +72,15 @@ const AddCampaign = ({
     const newErrors: Record<string, string> = {}
     if (step < 3) {
       if (!refs.current.ctitle) newErrors.ctitle = 'این فیلد اجباری است'
-      if (!refs.current.start_date) newErrors.start_date = 'این فیلد اجباری است'
-      if (!refs.current.exp_date) newErrors.exp_date = 'این فیلد اجباری است'
-      if (!refs.current.budget) newErrors.budget = 'این فیلد اجباری است'
-      if (!refs.current.expected_amount)
-        newErrors.expected_amount = 'این فیلد اجباری است'
-      if (!refs.current.loc_uid) newErrors.loc_uid = 'این فیلد اجباری است'
+      if (!refs.current.ctype) newErrors.ctype = 'این فیلد اجباری است'
     }
-
+    console.table(newErrors)
     setErrors(newErrors)
     if (Object.keys(newErrors).length === 0) setStep(step + 1)
   }
 
   const handleSubmit = async (e: FormEvent) => {
+    setSubmitting(true)
     e.preventDefault()
     const accessToken = await getCookieByKey('access_token')
     await CreateCampaign({ ...refs.current, accessToken })
@@ -115,6 +113,7 @@ const AddCampaign = ({
           autoClose: 2,
         })
       )
+    setSubmitting(false)
   }
 
   return (
@@ -206,12 +205,14 @@ const AddCampaign = ({
                       //     `${e.target.value}`
                       //   ))
                       // }
+                      name='ctype'
+                      onChange={handleInputChange}
                       className='w-full border rounded-lg h-10 px-1'>
                       <option value={1}>1</option>
                       <option value={2}>2</option>
                     </select>
-                    {errors.ctitle && (
-                      <p className='text-red-500 text-sm'>{errors.ctitle}</p>
+                    {errors.ctype && (
+                      <p className='text-red-500 text-sm'>{errors.ctype}</p>
                     )}
                   </div>
                   <div className='flex gap-4'>
@@ -255,7 +256,7 @@ const AddCampaign = ({
                     </div>
                   </div>
                   <div>
-                    <label className='block mb-2 text-sm'>بودجه (ریال)</label>
+                    <label className='block mb-2 text-sm'>بودجه</label>
                     <input
                       name='budget'
                       defaultValue={refs.current.budget || existData?.budget}
@@ -279,7 +280,7 @@ const AddCampaign = ({
                   <div className='flex gap-4'>
                     <div className='w-full'>
                       <label className='block mb-2 text-sm'>
-                        پاسخ مورد انتظار (ریال)
+                        پاسخ مورد انتظار
                       </label>
                       <input
                         name='expected_response'
@@ -300,7 +301,7 @@ const AddCampaign = ({
                     </div>
                     <div className='w-full'>
                       <label className='block mb-2 text-sm'>
-                        درآمد مورد انتظار (ریال)
+                        درآمد مورد انتظار
                       </label>
                       <input
                         onInput={(e) => {
@@ -391,12 +392,14 @@ const AddCampaign = ({
                     <label className='my-2'> گروه محصول را انتخاب کنید </label>
                     <SelectList
                       items={
-                        productGroupData?.map((pgp) => {
-                          return {
-                            id: pgp.id,
-                            label: pgp.group_desc,
-                          }
-                        }) || []
+                        (productGroupData &&
+                          productGroupData?.map((pgp) => {
+                            return {
+                              id: pgp.id,
+                              label: pgp.group_desc,
+                            }
+                          })) ||
+                        []
                       }
                       setSelectedItems={setSelectedItems}
                       label='گروه محصول'
@@ -406,12 +409,14 @@ const AddCampaign = ({
                     <label className='my-2'> برند محصول را انتخاب کنید</label>
                     <SelectList
                       items={
-                        brandsData?.map((brands) => {
-                          return {
-                            id: brands.id,
-                            label: brands.group_desc,
-                          }
-                        }) || []
+                        (brandsData &&
+                          brandsData?.map((brands) => {
+                            return {
+                              id: brands.id,
+                              label: brands.group_desc,
+                            }
+                          })) ||
+                        []
                       }
                       setSelectedItems={setSelectedItems}
                       label='برندها'
@@ -421,12 +426,14 @@ const AddCampaign = ({
                     <label className='my-2'> محصول را انتخاب کنید</label>
                     <SelectList
                       items={
-                        productData?.map((gp) => {
-                          return {
-                            id: gp.id,
-                            label: gp.ini_name,
-                          }
-                        }) || []
+                        (productData &&
+                          productData?.map((gp) => {
+                            return {
+                              id: gp.id,
+                              label: gp.ini_name,
+                            }
+                          })) ||
+                        []
                       }
                       setSelectedItems={setSelectedItems}
                       label='محصول'
@@ -437,8 +444,11 @@ const AddCampaign = ({
               <div className='mt-10 w-full max-md:max-w-full'>
                 <button
                   type={step < 4 ? 'button' : 'submit'}
+                  disabled={submitting}
                   onClick={() => (step < 4 ? validateForm(step) : handleSubmit)}
-                  className={`fill-button px-10 h-10 rounded-lg w-full`}>
+                  className={`fill-button ${
+                    submitting && 'opacity-30 cursor-not-allowed'
+                  }  px-10 h-10 rounded-lg w-full`}>
                   {step < 3 ? 'ادامه' : 'ثبت'}
                 </button>
               </div>
@@ -546,5 +556,4 @@ const AddCampaign = ({
     </div>
   )
 }
-
 export default AddCampaign
