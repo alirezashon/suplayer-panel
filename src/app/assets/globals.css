@@ -27,6 +27,7 @@ button {
     font-size: 13px !important;
   }
 }
+@print({{{{
 ::-webkit-scrollbar {
   width: 1.2vh;
   height: 4px;

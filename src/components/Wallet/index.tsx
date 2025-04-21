@@ -7,7 +7,7 @@ import { useMenu } from '@/Context/Menu'
 import { useData } from '@/Context/Data'
 import ShowAnimateNumber from '../shared/AnimateNumber'
 import { walletBoxStyle } from '@/app/assets/style'
-
+ 
 const Wallet: React.FC = () => {
   const chartRef = useRef<HTMLCanvasElement>(null)
   const chartInstanceRef = useRef<Chart | null>(null)
