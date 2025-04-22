@@ -21,13 +21,11 @@ body {
 button {
   outline: none;
 }
-
 @media (max-width: 520px) {
   body {
     font-size: 13px !important;
   }
 }
-@print({{{{
 ::-webkit-scrollbar {
   width: 1.2vh;
   height: 4px;

@@ -15,7 +15,11 @@ import { GetCurrentUser } from '@/services/user'
 import { GetReferrerChartList, GetReferrerList } from '@/services/referrer'
 import { GetCampaignList } from '@/services/campaign'
 import { GetPromotionList } from '@/services/promotion'
-import { GetdDraftsList, GetTransactions, GetWalletDetail } from '@/services/finance'
+import {
+  GetdDraftsList,
+  GetTransactions,
+  GetWalletDetail,
+} from '@/services/finance'
 import { GetAllocatedList, GetReleasedList } from '@/services/allocation'
 import { TreeChartInterface } from '@/interfaces'
 
@@ -169,5 +173,27 @@ export const getSystemTypes = async () => {
     const groupTypes = processTypes(groupTypesResult)
 
     return { productTypes, groupTypes }
+  }
+}
+
+export const getPermissions = async () => {
+  const cookie = await getCookieByKey('uzrprm')
+  if (!cookie) return [[], [], []]
+  try {
+    const parsed = JSON.parse(decodeURIComponent(cookie)) as [
+      string[],
+      string[],
+      number[]
+    ]
+    const safeParsed: [string[], string[], number[]] = [
+      parsed[0] || [],
+      parsed[1] || [],
+      parsed[2] || [],
+    ]
+
+    return safeParsed
+  } catch (err) {
+    console.error('خطا در پارس کوکی:', err)
+    return [[], [], []]
   }
 }

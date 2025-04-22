@@ -16,6 +16,7 @@ import {
   getAllocatedList,
   getSystemTypes,
   getReleasedList,
+  getPermissions,
 } from '@/actions/setData'
 import { useStates } from './States'
 import { useData } from './Data'
@@ -47,6 +48,7 @@ const ContextLoader = () => {
     setAllocationList,
     setSystemTypes,
     setReleasedList,
+    setPermissions,
   } = useData()
   const {
     setProductGroupStates,
@@ -156,6 +158,7 @@ const ContextLoader = () => {
       await getAllocatedList().then(
         (result) => result && setAllocationList(result)
       )
+      await getPermissions().then((result) => result && setPermissions)
     }
     fetcher()
   }, [

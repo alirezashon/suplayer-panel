@@ -65,6 +65,8 @@ interface DataContextProps {
     productTypes: ShowSystemTypeUI[]
     groupTypes: ShowSystemTypeUI[]
   }) => void
+  permissions: [string[], string[], number[]]
+  setPermissions: (value: [string[], string[], number[]]) => void
 }
 const DataContext = createContext<DataContextProps | undefined>(undefined)
 
@@ -98,7 +100,9 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
     productTypes: ShowSystemTypeUI[]
     groupTypes: ShowSystemTypeUI[]
   }>({ productTypes: [], groupTypes: [] })
-
+  const [permissions, setPermissions] = useState<
+    [string[], string[], number[]]
+  >([[''], [''], [0]])
   return (
     <DataContext.Provider
       value={{
@@ -138,6 +142,8 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
         setSystemTypes,
         releasedList,
         setReleasedList,
+        permissions,
+        setPermissions,
       }}>
       {children}
     </DataContext.Provider>
