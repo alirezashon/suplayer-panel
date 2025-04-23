@@ -67,6 +67,8 @@ interface StatesContextProps {
   setProductGroupSelectorData: (data: OptionTrees[] | null) => void
   submitting: boolean
   setSubmitting: (value: boolean) => void
+  permissions: [string[], string[], number[]]
+  setPermissions: (value: [string[], string[], number[]]) => void
 }
 
 const StatesContext = createContext<StatesContextProps | undefined>(undefined)
@@ -113,6 +115,9 @@ export const StatesProvider = ({ children }: { children: ReactNode }) => {
     hideButton?: boolean
   }) => setModalContent(content)
   const closeModal = () => setModalContent(null)
+  const [permissions, setPermissions] = useState<
+    [string[], string[], number[]]
+  >([[''], [''], [0]])
   return (
     <StatesContext.Provider
       value={{
@@ -137,6 +142,8 @@ export const StatesProvider = ({ children }: { children: ReactNode }) => {
         setProductGroupSelectorData,
         submitting,
         setSubmitting,
+        permissions,
+        setPermissions,
       }}>
       {children}
     </StatesContext.Provider>

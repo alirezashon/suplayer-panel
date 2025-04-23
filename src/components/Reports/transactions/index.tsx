@@ -22,7 +22,8 @@ const TransactionReports = () => {
   const filterPersonnel = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    const { name, value } = e.target
+    console.log(e)
+    // const { name, value } = e.target
     // const filteredData = allocationList?.filter((person) => {
     //   const fieldValue = person?.[name as keyof AllocationListInterface]
     //   if (typeof fieldValue === 'string') {
@@ -133,7 +134,12 @@ const TransactionReports = () => {
                 <tr key={index} className='border-b'>
                   {[
                     index + 1,
-                    ...['pan', 'settlementDate_pe', 'amount', 'transactionDate_pe'].map(
+                    ...[
+                      'pan',
+                      'settlementDate_pe',
+                      'amount',
+                      'transactionDate_pe',
+                    ].map(
                       (key) => personnel[key as keyof TransactionInterface]
                     ),
                   ].map((detail, detailIndex) => (

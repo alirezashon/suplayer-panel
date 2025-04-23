@@ -16,7 +16,7 @@ import {
 import { ArrowRight2 } from 'iconsax-react'
 import Loading from '../shared/LoadingSpinner'
 import Image from 'next/image'
-import LogoSrc from '../../../public/icons/logo.png'
+import LogoSrc from '../../../public/icons/logo.svg'
 import LoginBg1 from '../../../public/images/login1.jpg'
 import LoginBg2 from '../../../public/images/login2.jpg'
 import LoginShadow from '../../../public/images/login-bg.svg'

@@ -31,7 +31,7 @@ import { useMenu } from '@/Context/Menu'
 
 const user = {
   name: 'محدثه عالمی',
-  src: '/icons/logo.png',
+  src: '/icons/logo.svg',
 }
 
 const Sidebar = ({
@@ -83,7 +83,7 @@ const Sidebar = ({
       style={{ scrollbarWidth: 'none' }}
       className={`fixed top-2 right-2 h-[98vh] rounded-md  transition-all duration-700 ${
         isOpen ? 'min-w-[17%] max-lg:min-w-[39%] ' : 'w-[5%] max-lg:min-w-[7%]'
-      } bg-white flex flex-col overflow-y-auto border border-[#C9D0D8]`}>
+      } bg-white flex flex-col overflow-y-auto `}>
       <div
         className={`sticky top-0 ${
           isOpen ? 'justify-between' : 'justify-center'
@@ -91,13 +91,12 @@ const Sidebar = ({
         {isOpen && (
           <div className='flex items-center gap-2'>
             <Image
-              src={'/icons/logo.png'}
+              src={'/icons/logo.svg'}
               alt='logo'
-              width={55}
+              width={67}
               height={48}
               className=' object-contain mt-4'
             />
-            <div className='mt-3'>پورسانتو</div>
           </div>
         )}
 
@@ -120,7 +119,7 @@ const Sidebar = ({
 
       {/* Menu Items */}
       <ul className='mt-[2vh]'>
-        <p className={`${isOpen ? 'text-[#878FA4]' : 'hidden'}`}>منو اصلی</p>
+        <p className={`${isOpen ? 'text-[#878FA4]' : 'hidden'}`}></p>
         {data.map((item, index) => (
           <li key={index} className='w-full my-3'>
             <div
@@ -201,7 +200,7 @@ const Sidebar = ({
             alt='پروفایل کاربر'
             width={48}
             height={48}
-            className='w-[6vh] h-[6vh] object-cover rounded-full cursor-pointer'
+            className='w-[6vh] h-[6vh] object-contain rounded-full cursor-pointer'
           />
           <div className='absolute bottom-[0.5vh] right-[0.5vh] w-[1.5vh] h-[1.5vh] bg-[#0F973D] rounded-full'></div>
         </div>

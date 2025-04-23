@@ -16,7 +16,7 @@ const DeleteModal = ({
   close: () => void
   sup_group_code: string
 }) => {
-  const { showModal, submitting, setSubmitting } = useStates()
+  const { showModal, setSubmitting } = useStates()
   const { setGroupData } = useData()
 
   const handleSubmit = async (e: React.FormEvent) => {

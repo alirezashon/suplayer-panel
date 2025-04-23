@@ -162,7 +162,7 @@ const Profile = () => {
       <div className='flex flex-col bg-white border rounded-lg p-4 m-2'>
         <div className='flex gap-4 m-4'>
           <Image
-            src={'/icons/logo.png'}
+            src={'/icons/logo.svg'}
             alt='پروفایل کاربر'
             width={104}
             height={104}

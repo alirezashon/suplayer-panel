@@ -57,7 +57,6 @@ const Home = () => {
     <MainLayout>
       <div >
         {modalContent && <CustomModal />}
-
         {loading ? (
           <div className='flex h-screen w-full justify-center items-center'>
             <Loading size={56} />

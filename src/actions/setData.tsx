@@ -178,22 +178,24 @@ export const getSystemTypes = async () => {
 
 export const getPermissions = async () => {
   const cookie = await getCookieByKey('uzrprm')
-  if (!cookie) return [[], [], []]
-  try {
-    const parsed = JSON.parse(decodeURIComponent(cookie)) as [
-      string[],
-      string[],
-      number[]
-    ]
-    const safeParsed: [string[], string[], number[]] = [
-      parsed[0] || [],
-      parsed[1] || [],
-      parsed[2] || [],
-    ]
+  if (!cookie) return [[], [], []] as [string[], string[], number[]]
 
-    return safeParsed
+  try {
+    const parsed = JSON.parse(decodeURIComponent(cookie))
+
+    if (
+      Array.isArray(parsed) &&
+      parsed.length === 3 &&
+      Array.isArray(parsed[0]) &&
+      Array.isArray(parsed[1]) &&
+      Array.isArray(parsed[2])
+    ) {
+      return [parsed[0], parsed[1], parsed[2]] as [string[], string[], number[]]
+    } else {
+      return [[], [], []] as [string[], string[], number[]]
+    }
   } catch (err) {
     console.error('خطا در پارس کوکی:', err)
-    return [[], [], []]
+    return [[], [], []] as [string[], string[], number[]]
   }
 }

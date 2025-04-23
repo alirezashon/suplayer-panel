@@ -31,8 +31,12 @@ const PorsantManagement = () => {
   const [beneficiaryList, setBeneficiaryList] = useState<BeneficiaryData[]>([])
   const { setMenu } = useMenu()
   const { beneficiaryData } = useData()
-  const { selectedSubGroupData, selectedGroupData, setSelectedGroupData } =
-    useStates()
+  const {
+    selectedSubGroupData,
+    selectedGroupData,
+    setSelectedGroupData,
+    permissions,
+  } = useStates()
   useEffect(() => {
     if (!selectedGroupData) {
       location.hash = 'porsant'
@@ -119,22 +123,26 @@ const PorsantManagement = () => {
               ) : (
                 <div className='flex'>
                   <div className='flex gap-3 mx-7'>
-                    <button
-                      onClick={() => {
-                        location.hash = 'allocation'
-                        setMenu('allocation')
-                      }}
-                      className={`bg-[#7747C0] text-white px-5  h-10 rounded-lg`}>
-                      تخصیص اعتبار
-                    </button>
-                    <button
-                      onClick={() => {
-                        location.hash = 'release'
-                        setMenu('release')
-                      }}
-                      className={`border border-[#7747C0] text-[#7747C0] px-5  h-10 rounded-lg`}>
-                      آزادسازی اعتبار
-                    </button>
+                    {permissions[1].includes('749') && (
+                      <button
+                        onClick={() => {
+                          location.hash = 'allocation'
+                          setMenu('allocation')
+                        }}
+                        className={`bg-[#7747C0] text-white px-5  h-10 rounded-lg`}>
+                        تخصیص اعتبار
+                      </button>
+                    )}
+                    {permissions[1].includes('748') && (
+                      <button
+                        onClick={() => {
+                          location.hash = 'release'
+                          setMenu('release')
+                        }}
+                        className={`border border-[#7747C0] text-[#7747C0] px-5  h-10 rounded-lg`}>
+                        آزادسازی اعتبار
+                      </button>
+                    )}
                   </div>
                   <div className='flex gap-2 items-center'>
                     <SearchNormal
@@ -143,31 +151,37 @@ const PorsantManagement = () => {
                       cursor={'pointer'}
                       onClick={() => setSearching(' ')}
                     />
-                    <Receipt1
-                      size={28}
-                      color='#2F3237'
-                      cursor={'pointer'}
-                      onClick={() => {
-                        location.hash = 'reports'
-                        setMenu('reports')
-                      }}
-                    />
-                    <Trash
-                      size={28}
-                      color='#D42620'
-                      cursor={'pointer'}
-                      onClick={() => setShowDeleteState(true)}
-                    />
-                    <AddCircle
-                      size={28}
-                      color='#0F973D'
-                      cursor={'pointer'}
-                      onClick={() =>
-                        setShowAddModal(
-                          selectedGroupData?.sup_group_name as string
-                        )
-                      }
-                    />
+                    {permissions[1].includes('746') && (
+                      <Receipt1
+                        size={28}
+                        color='#2F3237'
+                        cursor={'pointer'}
+                        onClick={() => {
+                          location.hash = 'reports'
+                          setMenu('reports')
+                        }}
+                      />
+                    )}
+                    {permissions[1].includes('706') && (
+                      <Trash
+                        size={28}
+                        color='#D42620'
+                        cursor={'pointer'}
+                        onClick={() => setShowDeleteState(true)}
+                      />
+                    )}
+                    {permissions[1].includes('705') && (
+                      <AddCircle
+                        size={28}
+                        color='#0F973D'
+                        cursor={'pointer'}
+                        onClick={() =>
+                          setShowAddModal(
+                            selectedGroupData?.sup_group_name as string
+                          )
+                        }
+                      />
+                    )}
                   </div>
                 </div>
               )}
@@ -230,24 +244,25 @@ const PorsantManagement = () => {
         )}
 
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
-          {beneficiaryList?.map((beneficiary, index) => (
-            <div
-              key={index}
-              className=''
-              onClick={() => setShowReportModal(beneficiary)}>
-              <BeneficiaryCard
-                data={beneficiary}
-                setDeleteItems={(value: string) =>
-                  setDeleteState((prv) =>
-                    prv.includes(value)
-                      ? prv.filter((lastOne) => lastOne !== value)
-                      : [...prv, value]
-                  )
-                }
-                showDeleteMode={showDeleteState}
-              />
-            </div>
-          ))}
+          {permissions[1].includes('747') &&
+            beneficiaryList?.map((beneficiary, index) => (
+              <div
+                key={index}
+                className=''
+                onClick={() => setShowReportModal(beneficiary)}>
+                <BeneficiaryCard
+                  data={beneficiary}
+                  setDeleteItems={(value: string) =>
+                    setDeleteState((prv) =>
+                      prv.includes(value)
+                        ? prv.filter((lastOne) => lastOne !== value)
+                        : [...prv, value]
+                    )
+                  }
+                  showDeleteMode={showDeleteState}
+                />
+              </div>
+            ))}
         </div>
       </div>
     </>

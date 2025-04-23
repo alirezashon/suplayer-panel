@@ -46,6 +46,7 @@ const Release = () => {
     setSelectedGroupData,
     submitting,
     setSubmitting,
+    permissions,
   } = useStates()
   const { setMenu } = useMenu()
   const [uploadStatuses, setUploadStatuses] = useState<
@@ -94,7 +95,7 @@ const Release = () => {
       }
     })
     setFinalReleaseData(finalRelease)
-  }, [])
+  }, [releasedList, selectedGroupData, selectedSubGroupData])
   const calculateData = useCallback(() => {
     if (allocationList && data.length < 1) {
       const subGroupAllocatedList = allocationList?.filter(
@@ -137,7 +138,13 @@ const Release = () => {
         }))
       setData(allocated)
     }
-  }, [])
+  }, [
+    allocationList,
+    beneficiaryData,
+    data,
+    selectedSubGroupData,
+    releasedList,
+  ])
   useEffect(() => {
     if (!selectedGroupData) {
       location.hash = 'porsant'
@@ -401,215 +408,218 @@ const Release = () => {
     })
   }
   return (
-    <div className='m-4'>
-      {showOtpModal && !submitting && (
-        <OtpModal
-          setOtp={setOtp}
-          title='ثبت نهایی آزادسازی اعتبار'
-          close={() => setshowOtpModal(false)}
-          submit={changeReleasedStatus}
-        />
-      )}
-      <div className='flex justify-between items-center mb-7'>
-        <p>
-          <span
-            className='text-[#98A2B3] cursor-pointer'
-            onClick={() => {
-              setMenu('porsant')
-              location.hash = 'porsant'
-              setSelectedGroupData(null)
-            }}>
-            مدیریت پورسانت‌دهی/
-          </span>
-          <span
-            className='text-[#98A2B3] cursor-pointer'
-            onClick={() => {
-              setMenu('porsant')
-              location.hash = 'porsant'
-            }}>
-            {selectedGroupData?.sup_group_name}/
-          </span>
-          <span
-            className='text-[#98A2B3] cursor-pointer'
-            onClick={() => {
-              setMenu('porsantmanagement')
-              location.hash = 'porsantmanagement'
-            }}>
-            {selectedSubGroupData?.supervisor_name}/
-          </span>
-          <span className='text-[#7747C0]'>آزادسازی گروهی</span>
-        </p>
-      </div>
-      <div className='flex flex-col bg-white p-3'>
-        <div className='flex flex-col'>
-          <p className='text-[#8455D2]'>آزادسازی اعتبار تخصیص داده شده</p>
-
-          <div className='flex gap-5 items-center'>
-            <div className='relative w-full flex items-center'>
-              <div className='absolute left-3 z-20 cursor-pointer text-[#50545F]'>
-                <SearchNormal size={24} color='gray' />
-              </div>
-
-              <input
-                type='search'
-                placeholder='جستجو'
-                className='absolute w-full z-10 border border-gray-300 rounded-md px-4 py-2 text-right outline-none focus:border-red-400'
-              />
-            </div>
-            <button
-              type='submit'
-              className='border-button w-56 px-10 h-10 rounded-lg'>
-              جستجو
-            </button>
+    <>
+      {permissions[1].includes('748') && (
+        <div className='m-4'>
+          {showOtpModal && !submitting && (
+            <OtpModal
+              setOtp={setOtp}
+              title='ثبت نهایی آزادسازی اعتبار'
+              close={() => setshowOtpModal(false)}
+              submit={changeReleasedStatus}
+            />
+          )}
+          <div className='flex justify-between items-center mb-7'>
+            <p>
+              <span
+                className='text-[#98A2B3] cursor-pointer'
+                onClick={() => {
+                  setMenu('porsant')
+                  location.hash = 'porsant'
+                  setSelectedGroupData(null)
+                }}>
+                مدیریت پورسانت‌دهی/
+              </span>
+              <span
+                className='text-[#98A2B3] cursor-pointer'
+                onClick={() => {
+                  setMenu('porsant')
+                  location.hash = 'porsant'
+                }}>
+                {selectedGroupData?.sup_group_name}/
+              </span>
+              <span
+                className='text-[#98A2B3] cursor-pointer'
+                onClick={() => {
+                  setMenu('porsantmanagement')
+                  location.hash = 'porsantmanagement'
+                }}>
+                {selectedSubGroupData?.supervisor_name}/
+              </span>
+              <span className='text-[#7747C0]'>آزادسازی گروهی</span>
+            </p>
           </div>
-          <div className='m-4'>
-            <table className='my-10 w-full border-collapse border rounded-lg overflow-hidden'>
-              <thead>
-                <tr>
-                  {headers.map((head, headIndex) => (
-                    <th
-                      className={`bg-[#F5F7F8] border-z h-10 ${
-                        headIndex === 0
-                          ? 'rounded-tr-lg'
-                          : headIndex === headers.length - 1 && 'rounded-tl-lg'
-                      } `}
-                      key={headIndex}>
-                      <p
-                        className={`flex justify-center items-center border-y h-10  ${
-                          headIndex === 0
-                            ? 'border-r rounded-tr-lg'
-                            : headIndex === headers.length - 1 &&
-                              'border-l rounded-tl-lg'
-                        }`}>
-                        {head}
-                      </p>
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {data.length > 0 &&
-                  data?.map((row, index) => (
-                    <tr key={index} className='border-b'>
-                      <td className='text-center px-4 py-2 border-r'>
-                        {index + 1}
-                      </td>
-                      <td className='text-center px-4 py-2'>
-                        {row.visitor_name}
-                      </td>
-                      <td className='text-center px-4 py-2'>
-                        {row.visitor_family}
-                      </td>
-                      <td className='text-center px-4 py-2'>
-                        {row?.allocatedAmount} ریال
-                      </td>
-                      <td className='text-center px-4 py-2'>
-                        {row?.remain_amount} ریال
-                      </td>
-                      <td className='text-center px-4 py-2'>
-                        <input
-                          inputMode='numeric'
-                          maxLength={21}
-                          value={setComma(row.newReleaseAmount)}
-                          disabled={row?.disable}
-                          onChange={(e) => {
-                            // e.target.value =
-                            //   e.target.value.replace(/,/g, '')
+          <div className='flex flex-col bg-white p-3'>
+            <div className='flex flex-col'>
+              <p className='text-[#8455D2]'>آزادسازی اعتبار تخصیص داده شده</p>
 
-                            handleCreditChange(
-                              `${row.visitor_tel}`,
-                              e.target.value
-                            )
-                          }}
-                          className='border-none rounded px-2 py-1 w-full text-center'
-                          placeholder='مبلغ آزادسازی را وارد کنید'
-                        />
-                      </td>
-                      <td className='text-center px-4 py-2 border-l'>
-                        {row.fileId.length < 1 ? (
-                          <label className='flex flex-col items-center gap-2 cursor-pointer w-full'>
+              <div className='flex gap-5 items-center'>
+                <div className='relative w-full flex items-center'>
+                  <div className='absolute left-3 z-20 cursor-pointer text-[#50545F]'>
+                    <SearchNormal size={24} color='gray' />
+                  </div>
+
+                  <input
+                    type='search'
+                    placeholder='جستجو'
+                    className='absolute w-full z-10 border border-gray-300 rounded-md px-4 py-2 text-right outline-none focus:border-red-400'
+                  />
+                </div>
+                <button
+                  type='submit'
+                  className='border-button w-56 px-10 h-10 rounded-lg'>
+                  جستجو
+                </button>
+              </div>
+              <div className='m-4'>
+                <table className='my-10 w-full border-collapse border rounded-lg overflow-hidden'>
+                  <thead>
+                    <tr>
+                      {headers.map((head, headIndex) => (
+                        <th
+                          className={`bg-[#F5F7F8] border-z h-10 ${
+                            headIndex === 0
+                              ? 'rounded-tr-lg'
+                              : headIndex === headers.length - 1 &&
+                                'rounded-tl-lg'
+                          } `}
+                          key={headIndex}>
+                          <p
+                            className={`flex justify-center items-center border-y h-10  ${
+                              headIndex === 0
+                                ? 'border-r rounded-tr-lg'
+                                : headIndex === headers.length - 1 &&
+                                  'border-l rounded-tl-lg'
+                            }`}>
+                            {head}
+                          </p>
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data.length > 0 &&
+                      data?.map((row, index) => (
+                        <tr key={index} className='border-b'>
+                          <td className='text-center px-4 py-2 border-r'>
+                            {index + 1}
+                          </td>
+                          <td className='text-center px-4 py-2'>
+                            {row.visitor_name}
+                          </td>
+                          <td className='text-center px-4 py-2'>
+                            {row.visitor_family}
+                          </td>
+                          <td className='text-center px-4 py-2'>
+                            {row?.allocatedAmount} ریال
+                          </td>
+                          <td className='text-center px-4 py-2'>
+                            {row?.remain_amount} ریال
+                          </td>
+                          <td className='text-center px-4 py-2'>
                             <input
-                              disabled={!row.disable}
-                              type='file'
-                              onChange={(e) =>
-                                handleUploadFile(e, `${row.visitor_tel}`)
-                              }
-                              className='hidden'
+                              inputMode='numeric'
+                              maxLength={21}
+                              value={setComma(row.newReleaseAmount)}
+                              disabled={row?.disable}
+                              onChange={(e) => {
+                                // e.target.value =
+                                //   e.target.value.replace(/,/g, '')
+
+                                handleCreditChange(
+                                  `${row.visitor_tel}`,
+                                  e.target.value
+                                )
+                              }}
+                              className='border-none rounded px-2 py-1 w-full text-center'
+                              placeholder='مبلغ آزادسازی را وارد کنید'
                             />
-                            <div className='w-full flex items-center justify-center border border-[#7747C0] text-[#7747C0] rounded-md px-4 py-2 text-sm hover:bg-[#7747C0] hover:text-white'>
-                              {uploadStatuses[`${row.visitor_tel}`]?.status ===
-                              'uploading'
-                                ? 'در حال بارگذاری...'
-                                : 'بارگذاری فایل'}
-                            </div>
-                            {uploadStatuses[`${row.visitor_tel}`]?.status ===
-                              'uploading' && (
-                              <div className='w-full bg-gray-200 rounded-full h-2 mt-2'>
-                                <div
-                                  className='bg-[#7747C0] h-2 rounded-full transition-all duration-500'
-                                  style={{
-                                    width: `${
-                                      uploadStatuses[`${row.visitor_tel}`]
-                                        ?.progress
-                                    }%`,
-                                  }}></div>
+                          </td>
+                          <td className='text-center px-4 py-2 border-l'>
+                            {row.fileId.length < 1 ? (
+                              <label className='flex flex-col items-center gap-2 cursor-pointer w-full'>
+                                <input
+                                  disabled={!row.disable}
+                                  type='file'
+                                  onChange={(e) =>
+                                    handleUploadFile(e, `${row.visitor_tel}`)
+                                  }
+                                  className='hidden'
+                                />
+                                <div className='w-full flex items-center justify-center border border-[#7747C0] text-[#7747C0] rounded-md px-4 py-2 text-sm hover:bg-[#7747C0] hover:text-white'>
+                                  {uploadStatuses[`${row.visitor_tel}`]
+                                    ?.status === 'uploading'
+                                    ? 'در حال بارگذاری...'
+                                    : 'بارگذاری فایل'}
+                                </div>
+                                {uploadStatuses[`${row.visitor_tel}`]
+                                  ?.status === 'uploading' && (
+                                  <div className='w-full bg-gray-200 rounded-full h-2 mt-2'>
+                                    <div
+                                      className='bg-[#7747C0] h-2 rounded-full transition-all duration-500'
+                                      style={{
+                                        width: `${
+                                          uploadStatuses[`${row.visitor_tel}`]
+                                            ?.progress
+                                        }%`,
+                                      }}></div>
+                                  </div>
+                                )}
+                              </label>
+                            ) : (
+                              <div className='flex items-center gap-2 '>
+                                <TickCircle size={24} color='#0F973D' />
+                                بارگذاری انجام شد
+                                <Trash
+                                  size={24}
+                                  onClick={() =>
+                                    handleDeleteFile(`${row.visitor_tel}`)
+                                  }
+                                  color='#B2BBC7'
+                                  className='cursor-pointer'
+                                />
                               </div>
                             )}
-                          </label>
-                        ) : (
-                          <div className='flex items-center gap-2 '>
-                            <TickCircle size={24} color='#0F973D' />
-                            بارگذاری انجام شد
-                            <Trash
-                              size={24}
-                              onClick={() =>
-                                handleDeleteFile(`${row.visitor_tel}`)
-                              }
-                              color='#B2BBC7'
-                              className='cursor-pointer'
-                            />
-                          </div>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
 
-            <div className='flex items-center justify-between'>
-              <div className='flex text-[#7747C0] cursor-pointer'>
-                <Printer size={22} color='#7747C0' />
-                <p>چاپ لیست</p>
-              </div>
-              <div className='flex mt-4 gap-10 justify-end'>
-                <button
-                  onClick={releasingData}
-                  className='border-button px-10 h-10 rounded-lg '>
-                  ذخیره پیش نویس آزادسازی
-                </button>
-                <button
-                  onClick={() => {
-                    if (finalReleaseData.length > 0) setshowOtpModal(true)
-                    else
-                      showModal({
-                        type: 'error',
-                        main: 'ابتدا لیست را در پیش نویس ذخیره کنید',
-                        title: 'خطا',
-                        autoClose: 1,
-                      })
-                  }}
-                  className='fill-button px-10 h-10 rounded-lg w-56'>
-                  ثبت نهایی
-                </button>
+                <div className='flex items-center justify-between'>
+                  <div className='flex text-[#7747C0] cursor-pointer'>
+                    <Printer size={22} color='#7747C0' />
+                    <p>چاپ لیست</p>
+                  </div>
+                  <div className='flex mt-4 gap-10 justify-end'>
+                    <button
+                      onClick={releasingData}
+                      className='border-button px-10 h-10 rounded-lg '>
+                      ذخیره پیش نویس آزادسازی
+                    </button>
+                    <button
+                      onClick={() => {
+                        if (finalReleaseData.length > 0) setshowOtpModal(true)
+                        else
+                          showModal({
+                            type: 'error',
+                            main: 'ابتدا لیست را در پیش نویس ذخیره کنید',
+                            title: 'خطا',
+                            autoClose: 1,
+                          })
+                      }}
+                      className='fill-button px-10 h-10 rounded-lg w-56'>
+                      ثبت نهایی
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      )}
+    </>
   )
 }
 
 export default Release
-
-

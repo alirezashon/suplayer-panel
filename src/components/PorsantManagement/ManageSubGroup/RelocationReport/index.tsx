@@ -29,7 +29,9 @@ const RelocationReports = ({
           supervisor_id: selectedSubGroupData?.supervisor_id as number,
         }).then(async (result) => {
           if (result.status) {
-            await getBeneficiaryData()
+            await getBeneficiaryData().then(
+              (response) => response && setBeneficiaryData(response)
+            )
             showModal({
               type: result.status === 1 ? 'success' : 'error',
               title: `${result.status === 1 ? 'موفق' : 'ناموفق'}`,
@@ -43,6 +45,7 @@ const RelocationReports = ({
   }
   return (
     <div>
+      {beneficiary.visitor_name}
       <div className='absolute bg-slate-600 opacity-50 w-full h-[200vh] z-50 top-0 right-0'></div>
       <div
         className={`fixed p-8 z-50 right-0 top-0 max-md:left-[0] max-md:w-[100%] w-[40vw] h-full bg-white border border-gray-300 shadow-lg transition-transform duration-300 ease-in-out right-side-animate`}>

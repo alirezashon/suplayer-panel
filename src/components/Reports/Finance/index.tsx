@@ -16,7 +16,8 @@ const FinanceReports = () => {
   const filterPersonnel = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    const { name, value } = e.target
+    console.log(e)
+    // const { name, value } = e.target
     // const filteredData = allocationList?.filter((person:AllocationListInterface) => {
     //   const fieldValue = person?.[name as keyof AllocationListInterface]
     //   if (typeof fieldValue === 'string') {

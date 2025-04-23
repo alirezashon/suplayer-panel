@@ -88,11 +88,11 @@ const Header: React.FC = () => {
             setMenu('profile')
           }}>
           <Image
-            src={'/icons/logo.png'}
+            src={'/icons/logo.svg'}
             alt='پروفایل کاربر'
             width={48}
             height={48}
-            className='w-[6vh] h-[6vh] object-cover rounded-full cursor-pointer'
+            className='w-[6vh] h-[6vh] object-contain rounded-full cursor-pointer'
           />
           <div className='absolute bottom-[0.5vh] right-[0.5vh] w-[1.5vh] h-[1.5vh] bg-[#0F973D] rounded-full'></div>
         </div>
