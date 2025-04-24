@@ -7,6 +7,7 @@ import Wait from '../CampaignCard/Wait'
 import { ArrowLeft2 } from 'iconsax-react'
 import { useState } from 'react'
 import AddCampaign from '../AddCampaign'
+import { useStates } from '@/Context/States'
 
 const Kanban = ({
   done,
@@ -22,6 +23,7 @@ const Kanban = ({
   setListStatus: (status: string) => void
 }) => {
   const { setMenu } = useMenu()
+  const { permissions } = useStates()
   const [showAddModal, setShowAddModal] = useState<boolean | CampaignInterface>(
     false
   )
@@ -40,7 +42,7 @@ const Kanban = ({
           <p className='cursor-pointer'>
             <span className='text-[#98A2B3]'> کمپین </span>
           </p>
-          {length > 0 && (
+          {length > 0 && permissions[1].includes('704') && (
             <button
               onClick={() => {
                 setShowAddModal(true)
@@ -131,12 +133,14 @@ const Kanban = ({
               />
               <div className='border min-w-[40%] my-5'></div>
               <h1 className='text-2xl'> تعریف کمپین </h1>
-              <button
-                type='submit'
-                onClick={() => setShowAddModal(true)}
-                className='h-10 min-w-40 bg-[#7747C0] text-white rounded-lg hover:bg-purple-800'>
-                + کمپین جدید
-              </button>
+              {permissions[1].includes('704') && (
+                <button
+                  type='submit'
+                  onClick={() => setShowAddModal(true)}
+                  className='h-10 min-w-40 bg-[#7747C0] text-white rounded-lg hover:bg-purple-800'>
+                  + کمپین جدید
+                </button>
+              )}
             </div>
           )}
         </div>

@@ -4,14 +4,16 @@ import { useMenu } from '@/Context/Menu'
 import CampaignList from './CampaignList'
 import { useData } from '@/Context/Data'
 import moment from 'moment-jalaali'
+import { useStates } from '@/Context/States'
 const today = moment().format('jYYYY/jM/jD')
 const Campaign = () => {
   const { campaignData } = useData()
   const [listStatus, setListStatus] = useState<string>('')
   const { menu } = useMenu()
+  const { permissions } = useStates()
   return (
     <div>
-      {menu === 'campaign' ? (
+      {permissions[1].includes('745') && menu === 'campaign' ? (
         <Kanban
           done={
             (Array.isArray(campaignData) &&

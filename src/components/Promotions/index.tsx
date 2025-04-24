@@ -6,15 +6,16 @@ import AddPromotion from './AddPromotion'
 import { useData } from '@/Context/Data'
 import moment from 'moment-jalaali'
 import PromotionView from './View'
+import { useStates } from '@/Context/States'
 const today = moment().format('jYYYY/jM/jD')
 const Promotion = () => {
   const { promotionData } = useData()
   const [listStatus, setListStatus] = useState<string>('')
-
+  const { permissions } = useStates()
   const { menu } = useMenu()
   return (
     <div>
-      {menu === 'promotion' ? (
+      {permissions[1].includes('744') && menu === 'promotion' ? (
         <Kanban
           done={
             (Array.isArray(promotionData) &&

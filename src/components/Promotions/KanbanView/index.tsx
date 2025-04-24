@@ -5,6 +5,7 @@ import Done from '../PromotionCard/Done'
 import Progress from '../PromotionCard/Progress'
 import Wait from '../PromotionCard/Wait'
 import { ArrowLeft2, Danger } from 'iconsax-react'
+import { useStates } from '@/Context/States'
 
 const Kanban = ({
   done,
@@ -20,7 +21,7 @@ const Kanban = ({
   setListStatus: (status: string) => void
 }) => {
   const { setMenu } = useMenu()
-
+  const { permissions } = useStates()
   return (
     <>
       <div className='flex flex-col p-5'>
@@ -28,7 +29,7 @@ const Kanban = ({
           <p className='cursor-pointer'>
             <span className='text-[#98A2B3]'>پروموشن</span>
           </p>
-          {length > 0 && (
+          {length > 0 && permissions[1].includes('702') && (
             <button
               onClick={() => {
                 location.hash = 'new-promotion'
@@ -133,12 +134,14 @@ const Kanban = ({
               />
               <div className='border min-w-[40%] my-5'></div>
               <h1 className='text-2xl'> تعریف پروموشن</h1>
-              <button
-                type='submit'
-                onClick={() => setMenu('new-promotion')}
-                className='h-10 min-w-40 bg-[#7747C0] text-white rounded-lg hover:bg-purple-800'>
-                + پروموشن جدید
-              </button>
+              {permissions[1].includes('702') && (
+                <button
+                  type='submit'
+                  onClick={() => setMenu('new-promotion')}
+                  className='h-10 min-w-40 bg-[#7747C0] text-white rounded-lg hover:bg-purple-800'>
+                  + پروموشن جدید
+                </button>
+              )}
             </div>
           )}
         </div>
