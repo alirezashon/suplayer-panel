@@ -8,6 +8,7 @@ import { useData } from '@/Context/Data'
 import AppointmentModal from './Appointment'
 import { ReferrerData } from '@/interfaces'
 import ShowDetails from './ShowDetails'
+import { useStates } from '@/Context/States'
 
 const headers = [
   'ردیف',
@@ -34,7 +35,7 @@ const Referrer: React.FC = () => {
   )
   const [selectedItems, setSelectedItems] = useState<number[]>([])
   const [initialData, setInitialData] = useState<Partial<ReferrerData>[]>([])
-
+  const { permissions } = useStates()
   const { setMenu } = useMenu()
   const { referrerData, TreeChartInterface } = useData()
   useEffect(() => {
@@ -139,242 +140,250 @@ const Referrer: React.FC = () => {
               بازاریاب‌های من
             </span>
           </p>
-          {initialData && initialData?.length > 0 && (
-            <div className='flex gap-5'>
-              <button
-                type='submit'
-                onClick={() => setShowAddModal(true)}
-                className='h-10 min-w-40 bg-[#7747C0] text-white rounded-lg hover:bg-purple-800'>
-                + بازاریاب جدید
-              </button>
-            </div>
-          )}
-        </div>
-        <div className='p-6 max-md:w-[99.4%] bg-white rounded-lg border border-gray-200'>
-          <form className='flex  flex-col bg-[#F6F5FD] my-3 p-3 max-md:px-5 max-md:pb-24 rounded-lg'>
-            <div className='flex max-md:flex-col  gap-4 items-center'>
-              <div className='flex flex-col w-full'>
-                <label className='text-base font-medium text-right text-gray-800'>
-                  نام
-                </label>
-                <input
-                  name='pers_name'
-                  onChange={filterPersonnel}
-                  placeholder='نام'
-                />
-              </div>
-              <div className='flex flex-col w-full'>
-                <label className='text-base font-medium text-right text-gray-800'>
-                  نام خانوادگی
-                </label>
-                <input
-                  name='pers_family'
-                  onChange={filterPersonnel}
-                  placeholder='نام خانوادگی'
-                />
-              </div>
-
-              <div className='flex flex-col w-full'>
-                <label className='text-base font-medium text-right text-gray-800'>
-                  شماره همراه
-                </label>
-                <input
-                  name='pers_tel'
-                  onChange={filterPersonnel}
-                  placeholder='شماره همراه'
-                />
-              </div>
-            </div>
-            <div className='mt-10 w-full flex justify-end '>
-              <button
-                type='submit'
-                className={` gap-2 px-2 py-2 w-40 text-base text-center text-white bg-[#7747C0] rounded-lg border border-[#7747C0] border-solid min-h-10 `}>
-                جستجو
-              </button>
-            </div>
-          </form>
-          {initialData && initialData?.length > 0 ? (
-            <div className='p-6 bg-white rounded-lg border border-gray-200 flex flex-col gap-5'>
-              <div className='flex justify-end'>
+          {permissions[1].includes('694') &&
+            initialData &&
+            initialData?.length > 0 && (
+              <div className='flex gap-5'>
                 <button
                   type='submit'
                   onClick={() => setShowAddModal(true)}
-                  className='h-10 w-fit border-button px-3 flex items-center gap-2 rounded-lg hover:bg-purple-50'>
-                  <Message size={24} color='#7747C0' />
-                  <span>ارسال پیامک گروهی</span>
+                  className='h-10 min-w-40 bg-[#7747C0] text-white rounded-lg hover:bg-purple-800'>
+                  + بازاریاب جدید
                 </button>
               </div>
-              <div className='overflow-x-auto'>
-                <table className='my-10 text-nowrap w-full min-w-[800px]'>
-                  <thead>
-                    <tr>
-                      {headers.map((head, headIndex) => (
-                        <th
-                          className={`bg-[#F3F4F5] h-10 ${
-                            headIndex === 0
-                              ? 'rounded-tr-lg '
-                              : headIndex === headers.length - 1 &&
-                                'rounded-tl-lg'
-                          }`}
-                          key={headIndex}>
-                          <div
-                            className={`flex justify-center items-center border-y h-10 ${
-                              headIndex === 0
-                                ? 'border-r rounded-tr-lg'
-                                : headIndex === headers.length - 1 &&
-                                  'border-l rounded-tl-lg'
-                            }`}>
-                            {headIndex !== 0 ? (
-                              head
-                            ) : (
-                              <div className='flex items-center justify-center gap-2'>
-                                <input
-                                  onChange={handleHeaderCheckboxChange}
-                                  checked={
-                                    selectedItems.length === initialData.length
-                                  }
-                                  type='checkbox'
-                                  className='cursor-pointer accent-[#7747C0] w-4'
-                                />
-                                <span className='mt-1'>{head}</span>
-                              </div>
-                            )}
-                          </div>
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-
-                  <tbody>
-                    {initialData?.map((personnel, index) => (
-                      <tr key={index} className='border-b'>
-                        {[index + 1, ...Object.values(personnel)].map(
-                          (detail, detailIndex) =>
-                            detailIndex !== 6 && (
-                              <td
-                                key={detailIndex}
-                                className={`text-center h-10 ${
-                                  detailIndex === 0 && 'border-r'
-                                }`}>
-                                {detailIndex === 0 ? (
-                                  <div className='flex items-center justify-center gap-7'>
-                                    <input
-                                      checked={selectedItems.includes(index)}
-                                      onChange={() =>
-                                        handleRowCheckboxChange(index)
-                                      }
-                                      type='checkbox'
-                                      className='cursor-pointer accent-[#7747C0] w-4'
-                                    />
-                                    <p className='mt-1'>{detail}</p>
-                                  </div>
-                                ) : detailIndex === 4 ? (
-                                  <p className='flex justify-center'>
-                                    <span
-                                      className={`min-w-16 ${
-                                        detail === 1
-                                          ? 'bg-[#DAFEE5] text-[#0CAD41] rounded-lg'
-                                          : 'bg-[#FEE3E2] text-[#D42620] rounded-lg'
-                                      }`}>
-                                      {detail === 1 ? 'فعال' : 'غیرفعال'}
-                                    </span>
-                                  </p>
-                                ) : detailIndex === 5 ? (
-                                  <button
-                                    className='border-button px-2 rounded-md'
-                                    onClick={() => {
-                                      setShowAppointmentModal(
-                                        referrerData?.find(
-                                          (pers) =>
-                                            pers?.pers_uid ===
-                                            personnel?.pers_uid
-                                        ) as ReferrerData
-                                      )
-                                    }}>
-                                    انتصاب دادن
-                                  </button>
-                                ) : (
-                                  detail
-                                )}
-                              </td>
-                            )
-                        )}
-                        <td className='text-center'>
-                          <p className='flex justify-center cursor-pointer'>
-                            <MoreSquare
-                              size={25}
-                              color='#7747C0'
-                              onClick={() =>
-                                setShowDetailModal(
-                                  referrerData?.filter(
-                                    (referrer) =>
-                                      referrer.pers_name === personnel.pers_name
-                                  )[0] as ReferrerData
-                                )
-                              }
-                            />
-                          </p>
-                        </td>
-                        <td className='text-center h-10 flex justify-center gap-2 border-l'>
-                          <Trash
-                            size={24}
-                            color='#7747C0'
-                            className='cursor-pointer'
-                            onClick={() =>
-                              setShowDeleteModal(
-                                referrerData?.filter(
-                                  (data) =>
-                                    data.pers_name === personnel.pers_name
-                                )[0] as ReferrerData
-                              )
-                            }
-                          />
-                          <Edit2
-                            size={24}
-                            color='#7747C0'
-                            className='cursor-pointer'
-                            onClick={() =>
-                              setShowAddModal(
-                                referrerData?.filter(
-                                  (data) =>
-                                    data.pers_name === personnel.pers_name
-                                )[0] as ReferrerData
-                              )
-                            }
-                          />
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          ) : (
-            <div className='w-full bg-white flex flex-col gap-2 justify-center items-center'>
-              <h1 className='text-2xl'>بازاریابی ندارید</h1>
-              <Image
-                src={'/icons/empty-box.svg'}
-                width={444}
-                height={333}
-                alt=''
-                className='w-[10%]'
-              />
-              <div className='border min-w-[40%] my-5'></div>
-              <h1 className='text-2xl'> تعریف بازاریاب</h1>
-              <button
-                type='submit'
-                onClick={() => setShowAddModal(true)}
-                className='h-10 min-w-40 bg-[#7747C0] text-white rounded-lg hover:bg-purple-800'>
-                + بازاریاب جدید
-              </button>
-            </div>
-          )}
+            )}
         </div>
+        {permissions[1].includes('739') && (
+          <div className='p-6 max-md:w-[99.4%] bg-white rounded-lg border border-gray-200'>
+            <form className='flex  flex-col bg-[#F6F5FD] my-3 p-3 max-md:px-5 max-md:pb-24 rounded-lg'>
+              <div className='flex max-md:flex-col  gap-4 items-center'>
+                <div className='flex flex-col w-full'>
+                  <label className='text-base font-medium text-right text-gray-800'>
+                    نام
+                  </label>
+                  <input
+                    name='pers_name'
+                    onChange={filterPersonnel}
+                    placeholder='نام'
+                  />
+                </div>
+                <div className='flex flex-col w-full'>
+                  <label className='text-base font-medium text-right text-gray-800'>
+                    نام خانوادگی
+                  </label>
+                  <input
+                    name='pers_family'
+                    onChange={filterPersonnel}
+                    placeholder='نام خانوادگی'
+                  />
+                </div>
+
+                <div className='flex flex-col w-full'>
+                  <label className='text-base font-medium text-right text-gray-800'>
+                    شماره همراه
+                  </label>
+                  <input
+                    name='pers_tel'
+                    onChange={filterPersonnel}
+                    placeholder='شماره همراه'
+                  />
+                </div>
+              </div>
+              <div className='mt-10 w-full flex justify-end '>
+                <button
+                  type='submit'
+                  className={` gap-2 px-2 py-2 w-40 text-base text-center text-white bg-[#7747C0] rounded-lg border border-[#7747C0] border-solid min-h-10 `}>
+                  جستجو
+                </button>
+              </div>
+            </form>
+            {initialData && initialData?.length > 0 ? (
+              <div className='p-6 bg-white rounded-lg border border-gray-200 flex flex-col gap-5'>
+                <div className='flex justify-end'>
+                  <button
+                    type='submit'
+                    onClick={() => setShowAddModal(true)}
+                    className='h-10 w-fit border-button px-3 flex items-center gap-2 rounded-lg hover:bg-purple-50'>
+                    <Message size={24} color='#7747C0' />
+                    <span>ارسال پیامک گروهی</span>
+                  </button>
+                </div>
+                <div className='overflow-x-auto'>
+                  <table className='my-10 text-nowrap w-full min-w-[800px]'>
+                    <thead>
+                      <tr>
+                        {headers.map((head, headIndex) => (
+                          <th
+                            className={`bg-[#F3F4F5] h-10 ${
+                              headIndex === 0
+                                ? 'rounded-tr-lg '
+                                : headIndex === headers.length - 1 &&
+                                  'rounded-tl-lg'
+                            }`}
+                            key={headIndex}>
+                            <div
+                              className={`flex justify-center items-center border-y h-10 ${
+                                headIndex === 0
+                                  ? 'border-r rounded-tr-lg'
+                                  : headIndex === headers.length - 1 &&
+                                    'border-l rounded-tl-lg'
+                              }`}>
+                              {headIndex !== 0 ? (
+                                head
+                              ) : (
+                                <div className='flex items-center justify-center gap-2'>
+                                  <input
+                                    onChange={handleHeaderCheckboxChange}
+                                    checked={
+                                      selectedItems.length ===
+                                      initialData.length
+                                    }
+                                    type='checkbox'
+                                    className='cursor-pointer accent-[#7747C0] w-4'
+                                  />
+                                  <span className='mt-1'>{head}</span>
+                                </div>
+                              )}
+                            </div>
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      {initialData?.map((personnel, index) => (
+                        <tr key={index} className='border-b'>
+                          {[index + 1, ...Object.values(personnel)].map(
+                            (detail, detailIndex) =>
+                              detailIndex !== 6 && (
+                                <td
+                                  key={detailIndex}
+                                  className={`text-center h-10 ${
+                                    detailIndex === 0 && 'border-r'
+                                  }`}>
+                                  {detailIndex === 0 ? (
+                                    <div className='flex items-center justify-center gap-7'>
+                                      <input
+                                        checked={selectedItems.includes(index)}
+                                        onChange={() =>
+                                          handleRowCheckboxChange(index)
+                                        }
+                                        type='checkbox'
+                                        className='cursor-pointer accent-[#7747C0] w-4'
+                                      />
+                                      <p className='mt-1'>{detail}</p>
+                                    </div>
+                                  ) : detailIndex === 4 ? (
+                                    <p className='flex justify-center'>
+                                      <span
+                                        className={`min-w-16 ${
+                                          detail === 1
+                                            ? 'bg-[#DAFEE5] text-[#0CAD41] rounded-lg'
+                                            : 'bg-[#FEE3E2] text-[#D42620] rounded-lg'
+                                        }`}>
+                                        {detail === 1 ? 'فعال' : 'غیرفعال'}
+                                      </span>
+                                    </p>
+                                  ) : detailIndex === 5 ? (
+                                    <button
+                                      className='border-button px-2 rounded-md'
+                                      onClick={() => {
+                                        setShowAppointmentModal(
+                                          referrerData?.find(
+                                            (pers) =>
+                                              pers?.pers_uid ===
+                                              personnel?.pers_uid
+                                          ) as ReferrerData
+                                        )
+                                      }}>
+                                      انتصاب دادن
+                                    </button>
+                                  ) : (
+                                    detail
+                                  )}
+                                </td>
+                              )
+                          )}
+                          <td className='text-center'>
+                            <p className='flex justify-center cursor-pointer'>
+                              <MoreSquare
+                                size={25}
+                                color='#7747C0'
+                                onClick={() =>
+                                  setShowDetailModal(
+                                    referrerData?.filter(
+                                      (referrer) =>
+                                        referrer.pers_name ===
+                                        personnel.pers_name
+                                    )[0] as ReferrerData
+                                  )
+                                }
+                              />
+                            </p>
+                          </td>
+                          {permissions[1].includes('693') && (
+                            <td className='text-center h-10 flex justify-center gap-2 border-l'>
+                              <Trash
+                                size={24}
+                                color='#7747C0'
+                                className='cursor-pointer'
+                                onClick={() =>
+                                  setShowDeleteModal(
+                                    referrerData?.filter(
+                                      (data) =>
+                                        data.pers_name === personnel.pers_name
+                                    )[0] as ReferrerData
+                                  )
+                                }
+                              />
+                              <Edit2
+                                size={24}
+                                color='#7747C0'
+                                className='cursor-pointer'
+                                onClick={() =>
+                                  setShowAddModal(
+                                    referrerData?.filter(
+                                      (data) =>
+                                        data.pers_name === personnel.pers_name
+                                    )[0] as ReferrerData
+                                  )
+                                }
+                              />
+                            </td>
+                          )}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            ) : (
+              <div className='w-full bg-white flex flex-col gap-2 justify-center items-center'>
+                <h1 className='text-2xl'>بازاریابی ندارید</h1>
+                <Image
+                  src={'/icons/empty-box.svg'}
+                  width={444}
+                  height={333}
+                  alt=''
+                  className='w-[10%]'
+                />
+                <div className='border min-w-[40%] my-5'></div>
+                <h1 className='text-2xl'> تعریف بازاریاب</h1>
+                {permissions[1].includes('694') && (
+                  <button
+                    type='submit'
+                    onClick={() => setShowAddModal(true)}
+                    className='h-10 min-w-40 bg-[#7747C0] text-white rounded-lg hover:bg-purple-800'>
+                    + بازاریاب جدید
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </>
   )
 }
 
 export default Referrer
-
-

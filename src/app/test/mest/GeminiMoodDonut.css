@@ -1,0 +1,45 @@
+.gemini-chart-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'Vazirmatn', sans-serif;
+  }
+  
+  .gemini-donut {
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    mask: radial-gradient(circle at center, transparent 55%, black 56%);
+    -webkit-mask: radial-gradient(circle at center, transparent 55%, black 56%);
+    transform: rotateX(50deg);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    margin: 30px 0;
+  }
+  
+  .gemini-legend {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    direction: rtl;
+  }
+  
+  .gemini-legend li {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    background: #f4f4f4;
+    padding: 4px 10px;
+    border-radius: 8px;
+  }
+  
+  .color-box {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin-left: 6px;
+    border-radius: 2px;
+  }
+  

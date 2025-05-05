@@ -9,7 +9,7 @@ import { useMenu } from '@/Context/Menu'
 
 const headers = ['ردیف', 'گروه محصول', 'برند محصول', 'نام محصول', 'عملیات']
 const Product: React.FC = () => {
-  const { selectedProductData } = useStates()
+  const { selectedProductData, permissions } = useStates()
   const { setMenu } = useMenu()
   const [, setData] = useState<ProductsData[]>()
   const [showAddModal, setShowAddModal] = useState<boolean | ProductsData>(
@@ -45,14 +45,16 @@ const Product: React.FC = () => {
             {selectedProductData?.brand.group_desc}
           </span>
         </p>
-        {selectedProductData?.data && selectedProductData?.data.length > 0 && (
-          <button
-            type='submit'
-            onClick={() => setShowAddModal(true)}
-            className='h-10 min-w-40 bg-[#7747C0] text-white rounded-lg hover:bg-purple-800'>
-            + محصول جدید
-          </button>
-        )}
+        {selectedProductData?.data &&
+          selectedProductData?.data.length > 0 &&
+          permissions[1].includes('686') && (
+            <button
+              type='submit'
+              onClick={() => setShowAddModal(true)}
+              className='h-10 min-w-40 bg-[#7747C0] text-white rounded-lg hover:bg-purple-800'>
+              + محصول جدید
+            </button>
+          )}
       </div>
       {showAddModal && (
         <AddModal
@@ -90,67 +92,71 @@ const Product: React.FC = () => {
               جستجو
             </button>
           </div>
-          <table className='my-10 w-full'>
-            <thead>
-              <tr>
-                {headers.map((head, headIndex) => (
-                  <th
-                    className={`bg-[#F3F4F5] border-z h-10 ${
-                      headIndex === 0
-                        ? 'rounded-tr-lg'
-                        : headIndex === headers.length - 1 && 'rounded-tl-lg'
-                    } `}
-                    key={headIndex}>
-                    <p
-                      className={`flex justify-center items-center border-y h-10  ${
+          {permissions[1].includes('730') && (
+            <table className='my-10 w-full'>
+              <thead>
+                <tr>
+                  {headers.map((head, headIndex) => (
+                    <th
+                      className={`bg-[#F3F4F5] border-z h-10 ${
                         headIndex === 0
-                          ? 'border-r rounded-tr-lg'
-                          : headIndex === headers.length - 1 &&
-                            'border-l rounded-tl-lg'
-                      }`}>
-                      {head}
-                    </p>
-                  </th>
-                ))}
-              </tr>
-            </thead>
-
-            <tbody>
-              {selectedProductData?.data?.map((product, index) => (
-                <tr key={index} className='border-b'>
-                  <td className={`text-center h-10 border-r`}>{index}</td>
-                  <td className={`text-center h-10 `}>
-                    {selectedProductData?.group?.group_desc}
-                  </td>
-                  <td className={`text-center h-10 `}>
-                    {selectedProductData?.brand?.group_desc}
-                  </td>
-                  <td className={`text-center h-10 `}>{product?.ini_name}</td>
-                  <td className={`text-center h-10 border-l`}>
-                    <div className='justify-center flex gap-2'>
-                      <Trash
-                        size={20}
-                        color='#D42620'
-                        cursor={'pointer'}
-                        onClick={() => {
-                          setData((prv) =>
-                            prv?.filter((ref) => ref.type !== product.type)
-                          )
-                          setShowDeleteModal(product)
-                        }}
-                      />
-                      <Edit2
-                        size={20}
-                        color='#8455D2'
-                        cursor={'pointer'}
-                        onClick={() => setShowAddModal(product)}
-                      />
-                    </div>
-                  </td>
+                          ? 'rounded-tr-lg'
+                          : headIndex === headers.length - 1 && 'rounded-tl-lg'
+                      } `}
+                      key={headIndex}>
+                      <p
+                        className={`flex justify-center items-center border-y h-10  ${
+                          headIndex === 0
+                            ? 'border-r rounded-tr-lg'
+                            : headIndex === headers.length - 1 &&
+                              'border-l rounded-tl-lg'
+                        }`}>
+                        {head}
+                      </p>
+                    </th>
+                  ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+
+              <tbody>
+                {selectedProductData?.data?.map((product, index) => (
+                  <tr key={index} className='border-b'>
+                    <td className={`text-center h-10 border-r`}>{index}</td>
+                    <td className={`text-center h-10 `}>
+                      {selectedProductData?.group?.group_desc}
+                    </td>
+                    <td className={`text-center h-10 `}>
+                      {selectedProductData?.brand?.group_desc}
+                    </td>
+                    <td className={`text-center h-10 `}>{product?.ini_name}</td>
+                    <td className={`text-center h-10 border-l`}>
+                      {permissions[1].includes('685') && (
+                        <div className='justify-center flex gap-2'>
+                          <Trash
+                            size={20}
+                            color='#D42620'
+                            cursor={'pointer'}
+                            onClick={() => {
+                              setData((prv) =>
+                                prv?.filter((ref) => ref.type !== product.type)
+                              )
+                              setShowDeleteModal(product)
+                            }}
+                          />
+                          <Edit2
+                            size={20}
+                            color='#8455D2'
+                            cursor={'pointer'}
+                            onClick={() => setShowAddModal(product)}
+                          />
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       ) : (
         <div className='flex flex-col gap-2 justify-center items-center h-[60vh]'>
@@ -164,12 +170,14 @@ const Product: React.FC = () => {
           />
           <div className='border min-w-[40%] my-5'></div>
           <h1 className='text-2xl'> تعریف محصول</h1>
-          <button
-            type='submit'
-            onClick={() => setShowAddModal(true)}
-            className='h-10 min-w-40 bg-[#7747C0] text-white rounded-lg hover:bg-purple-800'>
-            + محصول جدید
-          </button>
+          {permissions[1].includes('686') && (
+            <button
+              type='submit'
+              onClick={() => setShowAddModal(true)}
+              className='h-10 min-w-40 bg-[#7747C0] text-white rounded-lg hover:bg-purple-800'>
+              + محصول جدید
+            </button>
+          )}
         </div>
       )}
     </div>

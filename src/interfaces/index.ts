@@ -2,7 +2,6 @@ export interface WalletInfoProps {
   balance: string
   availableBalance: string
 }
-
 export interface RadioOptionProps {
   name: string
   iban: string
@@ -24,7 +23,6 @@ export interface IUserResponse {
   first_name: string
   last_name: string
   full_name: string
-  city_level: number
   customer_code: string
   role: string
   approve_status: number
@@ -33,6 +31,7 @@ export interface IUserResponse {
   customer_approve: number
   user_status: string
   user_role_id: number
+  role_count: number
 }
 export interface IShabaDestinationList {
   sid: string

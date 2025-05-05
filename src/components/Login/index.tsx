@@ -101,21 +101,22 @@ const Login = () => {
             accessToken: response.access_token,
             role_id: currentUser.user_role_id,
           }).then((result) => {
-            if (result)
-              setCookieByTagAndValue({
-                key: 'uzrprm',
-                value: JSON.stringify(
-                  result?.reduce(
-                    (acc, row) => {
-                      acc[0].push(row.menu_code)
-                      acc[1].push(row.form_code)
-                      acc[2].push(row.action_type)
-                      return acc
-                    },
-                    [[], [], []] as [string[], string[], number[]]
-                  )
-                ),
-              })
+            if (result) {
+              const value = JSON.stringify(
+                result?.reduce(
+                  (acc, row) => {
+                    acc[0].push(row.menu_code)
+                    acc[1].push(row.form_code)
+                    acc[2].push(row.action_type)
+                    return acc
+                  },
+                  [[], [], []] as [string[], string[], number[]]
+                )
+              )
+              document.cookie = `uzrprm=${encodeURIComponent(
+                value
+              )}; path=/; max-age=4200; SameSite=Lax`
+            }
           })
         }
         showModal({
@@ -328,4 +329,3 @@ const Login = () => {
   )
 }
 export default Login
-
