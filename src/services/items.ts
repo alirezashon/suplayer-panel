@@ -30,7 +30,7 @@ export const CreateGroup = async ({
     )
 
     return await response.json()
-  }catch (error) {
+  } catch (error) {
     console.log(error)
   }
 }
@@ -63,7 +63,7 @@ export const EditGroup = async ({
     )
 
     return await response.json()
-  }catch (error) {
+  } catch (error) {
     console.log(error)
   }
 }
@@ -124,7 +124,7 @@ export const CreateSubGroup = async ({
     )
 
     return await response.json()
-  }catch (error) {
+  } catch (error) {
     console.log(error)
   }
 }
@@ -162,7 +162,7 @@ export const EditSubGroup = async ({
     )
 
     return await response.json()
-  }catch (error) {
+  } catch (error) {
     console.log(error)
   }
 }
@@ -254,9 +254,8 @@ export const CreateBeneficiary = async ({
         }),
       }
     )
-
     return await response.json()
-  }catch (error) {
+  } catch (error) {
     console.log(error)
   }
 }
@@ -328,7 +327,7 @@ export const EditBeneficiary = async ({
     )
 
     return await response.json()
-  }catch (error) {
+  } catch (error) {
     console.log(error)
   }
 }
@@ -399,7 +398,7 @@ export const CreateFormula = async ({
     )
 
     return await response.json()
-  }catch (error) {
+  } catch (error) {
     console.log(error)
   }
 }
@@ -444,7 +443,7 @@ export const EditFormula = async ({
     )
 
     return await response.json()
-  }catch (error) {
+  } catch (error) {
     console.log(error)
   }
 }
@@ -509,7 +508,7 @@ export const CreateKPITask = async ({
     )
 
     return await response.json()
-  }catch (error) {
+  } catch (error) {
     console.log(error)
   }
 }
@@ -551,7 +550,7 @@ export const EditKPITask = async ({
     )
 
     return await response.json()
-  }catch (error) {
+  } catch (error) {
     console.log(error)
   }
 }

@@ -15,36 +15,51 @@ const AddPromotion = () => {
     'idle' | 'uploading' | 'success' | 'error' | 'showImage'
   >('idle')
   const [progress, setProgress] = useState<number>(0)
+  const [showTime, setShowTime] = useState<boolean>(false)
   const [draftSrc, setDraftSrc] = useState<string>()
-  const { showModal, productGroupSelectorData, submitting, setSubmitting } =
-    useStates()
+  const {
+    showModal,
+    productGroupSelectorData,
+    groupSelectorData,
+    submitting,
+    setSubmitting,
+  } = useStates()
   const [step, setStep] = useState<number>(2)
 
   const refs = useRef({
     cstatus: 1,
+    ctitle: '',
+    start_date: '0000-00-00',
+    exp_date: '9999-99-99',
     cta_link: '',
     distype: 0,
     file_uid: '',
-    ctitle: '',
-    ctype: 0,
-    start_date: '',
-    exp_date: '',
-    loc_type: 0,
-    loc_uid: '',
-    budget: '',
-    expected_response: 0,
-    expected_amount: 0,
     desc: '',
-    sgroup_id: 0,
-    supervisor_id: 0,
-    pgroup_id: 0,
-    chart_id: 0,
-    product_uid: '',
+    budget: '',
+    pdetails: [
+      {
+        pgroup_id: 0,
+        chart_id: 0,
+        product_uid: '',
+      },
+    ],
+    sdetails: [
+      {
+        sgroup_id: 0,
+        supervisor_id: 0,
+      },
+    ],
+    ldetails: [
+      {
+        CityUID: '',
+        CityCode: '',
+        CountyCode: '',
+        StateCode: '',
+      },
+    ],
   })
 
   const [errors, setErrors] = useState<Record<string, string>>({
-    startDate: '',
-    endDate: '',
     ctaLink: '',
     promotionImage: '',
     discountType: '',
@@ -64,9 +79,6 @@ const AddPromotion = () => {
     const newErrors: Record<string, string> = {}
     if (!step || step < 3) {
       if (!refs.current.ctitle) newErrors.ctitle = 'این فیلد اجباری است'
-      if (!refs.current.start_date) newErrors.start_date = 'این فیلد اجباری است'
-      if (!refs.current.exp_date) newErrors.exp_date = 'این فیلد اجباری است'
-      if (!refs.current.budget) newErrors.budget = 'این فیلد اجباری است'
       if (!refs.current.file_uid) newErrors.file_uid = 'این فیلد اجباری است'
       if (!refs.current.cta_link) newErrors.cta_link = 'این فیلد اجباری است'
     }
@@ -78,14 +90,14 @@ const AddPromotion = () => {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
-    if (validateForm()) {
+    if (validateForm() && step === 3) {
       setSubmitting(true)
-      const accessToken = await getCookieByKey('access_token')
+      const accessToken = (await getCookieByKey('access_token')) || ''
       await CreatePromotion({ accessToken, ...refs.current }).then((result) => {
         showModal({
-          type: result.status === 1 ? 'success' : 'error',
-          main: <p>{result.message}</p>,
-          title: result.status === 1 ? 'موفق' : 'خطا',
+          type: result && result.status === 1 ? 'success' : 'error',
+          main: <p>{result && result.message}</p>,
+          title: result && result.status === 1 ? 'موفق' : 'خطا',
           autoClose: 2,
         })
       })
@@ -304,49 +316,58 @@ const AddPromotion = () => {
                     className='flex flex-1 items-center gap-3 cursor-pointer'>
                     <input
                       type='radio'
-                      defaultChecked={index === 0}
+                      defaultChecked={index === 1}
                       name='beneficiary'
                       value={item}
-                      // onChange={() => {
-                      //   setType(index === 0 ? 1 : 2)
-                      //   refs.current.visitor_tob = index === 0 ? 1 : 2
-                      // }}
+                      onChange={() => {
+                        setShowTime(index === 0 ? true : false)
+                        if (index === 1) {
+                          refs.current.start_date = '0000-00-00'
+                          refs.current.exp_date = '9999-99-99'
+                        }
+                      }}
                       className='w-5 h-5 cursor-pointer accent-[#7747C0]'
                     />
                     <span className='text-gray-700'>{item}</span>
                   </label>
                 ))}
               </div>
-              <div className='flex gap-5'>
-                <div className='w-full '>
-                  <label className='block mb-1 text-sm font-bold'>
-                    تاریخ شروع پروموشن
-                  </label>
-                  <Calendar
-                    placeholder='تاریخ شروع'
-                    hasError={errors.start_date ? true : false}
-                    setDate={(value: string) =>
-                      (refs.current.start_date = value)
-                    }
-                  />
-                  {errors.start_date && (
-                    <p className='text-red-500 text-sm'>{errors.start_date}</p>
-                  )}
+              {showTime && (
+                <div className='flex gap-5'>
+                  <div className='w-full '>
+                    <label className='block mb-1 text-sm font-bold'>
+                      تاریخ شروع پروموشن
+                    </label>
+                    <Calendar
+                      placeholder='تاریخ شروع'
+                      hasError={errors.start_date ? true : false}
+                      setDate={(value: string) =>
+                        (refs.current.start_date = value)
+                      }
+                    />
+                    {errors.start_date && (
+                      <p className='text-red-500 text-sm'>
+                        {errors.start_date}
+                      </p>
+                    )}
+                  </div>
+                  <div className='w-full '>
+                    <label className='block mb-1 text-sm font-bold'>
+                      تاریخ پایان پروموشن
+                    </label>
+                    <Calendar
+                      placeholder='تاریخ پایان'
+                      hasError={errors.exp_date ? true : false}
+                      setDate={(value: string) =>
+                        (refs.current.exp_date = value)
+                      }
+                    />
+                    {errors.exp_date && (
+                      <p className='text-red-500 text-sm'>{errors.exp_date}</p>
+                    )}
+                  </div>
                 </div>
-                <div className='w-full '>
-                  <label className='block mb-1 text-sm font-bold'>
-                    تاریخ پایان پروموشن
-                  </label>
-                  <Calendar
-                    placeholder='تاریخ پایان'
-                    hasError={errors.exp_date ? true : false}
-                    setDate={(value: string) => (refs.current.exp_date = value)}
-                  />
-                  {errors.exp_date && (
-                    <p className='text-red-500 text-sm'>{errors.exp_date}</p>
-                  )}
-                </div>
-              </div>
+              )}
               <div>
                 <label className='block mb-2 text-sm font-bold'>
                   لینک CTA پروموشن خود را وارد کنید.
@@ -523,7 +544,7 @@ const AddPromotion = () => {
                     )}
                     <input
                       name='expected_amount'
-                      value={refs.current.expected_amount || ''}
+                      value={refs.current.budget || ''}
                       onChange={handleInputChange}
                       className=' p-2 border rounded-md'
                       placeholder=' درصد تخفیف'
@@ -536,16 +557,63 @@ const AddPromotion = () => {
         ) : step === 2 ? (
           <MultiLevelSelect
             data={locationTree as OptionTrees[]}
-            onSelectionChange={() => 'void'}
+            onSelectionChange={(result) => {
+              const states = result.level1.map((state) => ({
+                CityUID: '',
+                CityCode: '',
+                CountyCode: '',
+                StateCode: state,
+              }))
+              const counties = result.level2.map((county) => ({
+                CityUID: '',
+                CityCode: '',
+                CountyCode: county,
+                StateCode: '',
+              }))
+              const cities = result.level3.map((city) => ({
+                CityUID: '',
+                CityCode: city,
+                CountyCode: '',
+                StateCode: '',
+              }))
+              refs.current.ldetails = [...states, ...counties, ...cities]
+            }}
             title='مناطق جغرافیایی خود را انتخاب کنید'
           />
         ) : (
           step === 3 && (
-            <MultiLevelSelect
-              data={productGroupSelectorData as OptionTrees[]}
-              onSelectionChange={() => 'void'}
-              title='گروه خود را انتخاب کنید'
-            />
+            <>
+              <MultiLevelSelect
+                data={groupSelectorData as OptionTrees[]}
+                onSelectionChange={(result) => {
+                  const groups = result.level2.map((group) => ({
+                    sgroup_id: parseInt(`${group}`),
+                    supervisor_id: 0,
+                  }))
+                  const subGroups = result.level3.map((subGroup) => ({
+                    sgroup_id: 0,
+                    supervisor_id: parseInt(`${subGroup}`),
+                  }))
+                  refs.current.sdetails = [...groups, ...subGroups]
+                }}
+                title='گروه خود را انتخاب کنید'
+              />
+              <MultiLevelSelect
+                data={productGroupSelectorData as OptionTrees[]}
+                onSelectionChange={(result) => {
+                  const groups = result.level2.map((group) => ({
+                    sgroup_id: parseInt(`${group}`),
+                    supervisor_id: 0,
+                  }))
+                  const subGroups = result.level3.map((subGroup) => ({
+                    sgroup_id: 0,
+                    supervisor_id: parseInt(`${subGroup}`),
+                  }))
+                  refs.current.sdetails = [...groups, ...subGroups]
+                }}
+                title='گروه خود را انتخاب کنید'
+              />
+            </>
           )
         )}
         <div className='w-full flex justify-end gap-3'>

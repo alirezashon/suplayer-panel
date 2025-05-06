@@ -8,12 +8,11 @@ export const CreatePromotion = async ({
   distype,
   file_uid,
   desc,
-  sgroup_id,
-  supervisor_id,
-  pgroup_id,
-  chart_id,
-  product_uid,
   accessToken,
+  budget,
+  pdetails,
+  sdetails,
+  ldetails,
 }: {
   cstatus: number
   ctitle: string
@@ -23,12 +22,23 @@ export const CreatePromotion = async ({
   distype: number
   file_uid: string
   desc: string
-  sgroup_id: number
-  supervisor_id: number
-  pgroup_id: number
-  chart_id: number
-  product_uid: string
+  budget: string
   accessToken: string | undefined
+  pdetails: {
+    pgroup_id: number
+    chart_id: number
+    product_uid: string
+  }[]
+  sdetails: {
+    sgroup_id: number
+    supervisor_id: number
+  }[]
+  ldetails: {
+    CityUID: string
+    CityCode: string
+    CountyCode: string
+    StateCode: string
+  }[]
 }) => {
   try {
     const response = await fetch(
@@ -47,12 +57,11 @@ export const CreatePromotion = async ({
           cta_link,
           distype,
           file_uid,
+          budget,
           desc,
-          sgroup_id,
-          supervisor_id,
-          pgroup_id,
-          chart_id,
-          product_uid,
+          pdetails,
+          sdetails,
+          ldetails,
         }),
       }
     )
@@ -62,7 +71,7 @@ export const CreatePromotion = async ({
     }
 
     return await response.json()
-  }catch (error) {
+  } catch (error) {
     console.log(error)
   }
 }
@@ -75,13 +84,13 @@ export const EditProductPromotion = async ({
   distype,
   file_uid,
   desc,
-  sgroup_id,
-  supervisor_id,
-  pgroup_id,
-  chart_id,
-  product_uid,
   promotion_id,
   accessToken,
+  hdr_uid,
+  budget,
+  pdetails,
+  sdetails,
+  ldetails,
 }: {
   cstatus: number
   ctitle: string
@@ -91,13 +100,31 @@ export const EditProductPromotion = async ({
   distype: number
   file_uid: string
   desc: string
-  sgroup_id: number
-  supervisor_id: number
-  pgroup_id: number
-  chart_id: number
-  product_uid: string
   promotion_id: number
   accessToken: string | undefined
+  hdr_uid: string
+  budget: number
+  pdetails: [
+    {
+      pgroup_id: number
+      chart_id: number
+      product_uid: string
+    }
+  ]
+  sdetails: [
+    {
+      sgroup_id: number
+      supervisor_id: number
+    }
+  ]
+  ldetails: [
+    {
+      CityUID: string
+      CityCode: string
+      CountyCode: string
+      StateCode: string
+    }
+  ]
 }) => {
   try {
     const response = await fetch(
@@ -118,11 +145,11 @@ export const EditProductPromotion = async ({
           distype,
           file_uid,
           desc,
-          sgroup_id,
-          supervisor_id,
-          pgroup_id,
-          chart_id,
-          product_uid,
+          hdr_uid,
+          budget,
+          pdetails,
+          sdetails,
+          ldetails,
         }),
       }
     )
@@ -132,7 +159,7 @@ export const EditProductPromotion = async ({
     }
 
     return await response.json()
-  }catch (error) {
+  } catch (error) {
     console.log(error)
   }
 }
@@ -186,7 +213,7 @@ export const AddPromotionImage = async ({
     }
 
     return await response.json()
-  }catch (error) {
+  } catch (error) {
     console.log(error)
   }
 }
@@ -217,7 +244,7 @@ export const CheckPromotionImage = async ({
     }
 
     return await response.json()
-  }catch (error) {
+  } catch (error) {
     console.log(error)
   }
 }
