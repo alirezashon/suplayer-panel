@@ -141,7 +141,6 @@ const Release = () => {
   }, [
     allocationList,
     beneficiaryData,
-    data,
     selectedSubGroupData,
     releasedList,
   ])

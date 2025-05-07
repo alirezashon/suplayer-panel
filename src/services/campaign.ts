@@ -6,17 +6,13 @@ export const CreateCampaign = async ({
   ctype,
   start_date,
   exp_date,
-  loc_type,
-  loc_uid,
   budget,
   expected_response,
   expected_amount,
   desc,
-  sgroup_id,
-  supervisor_id,
-  pgroup_id,
-  chart_id,
-  product_uid,
+  syschart_id,
+  pdetails,
+  sdetails,
   accessToken,
 }: {
   cstatus: number
@@ -24,17 +20,24 @@ export const CreateCampaign = async ({
   ctype: number
   start_date: string
   exp_date: string
-  loc_type: number
-  loc_uid: string
   budget: number
   expected_response: number
   expected_amount: number
   desc: string
-  sgroup_id: number
-  supervisor_id: number
-  pgroup_id: number
-  chart_id: number
-  product_uid: string
+  syschart_id: number
+  pdetails: [
+    {
+      pgroup_id: number
+      chart_id: number
+      product_uid: string
+    }
+  ]
+  sdetails: [
+    {
+      sgroup_id: number
+      supervisor_id: number
+    }
+  ]
   accessToken: string | undefined
 }) => {
   try {
@@ -52,17 +55,13 @@ export const CreateCampaign = async ({
           ctype,
           start_date,
           exp_date,
-          loc_type,
-          loc_uid,
           budget,
           expected_response,
           expected_amount,
           desc,
-          sgroup_id,
-          supervisor_id,
-          pgroup_id,
-          chart_id,
-          product_uid,
+          syschart_id,
+          pdetails,
+          sdetails,
         }),
       }
     )
@@ -72,47 +71,48 @@ export const CreateCampaign = async ({
     }
 
     return await response.json()
-  }catch (error) {
+  } catch (error) {
     console.log(error)
   }
 }
-export const EditProductCampaign = async ({
+export const EditCampaign = async ({
   cstatus,
   ctitle,
   ctype,
   start_date,
   exp_date,
-  loc_type,
-  loc_uid,
   budget,
   expected_response,
   expected_amount,
   desc,
-  sgroup_id,
-  supervisor_id,
-  pgroup_id,
-  chart_id,
-  product_uid,
   campaign_id,
   accessToken,
+  hdr_uid,
+  syschart_id,
+  pdetails,
+  sdetails,
 }: {
   cstatus: number
   ctitle: string
   ctype: number
   start_date: string
   exp_date: string
-  loc_type: number
-  loc_uid: string
   budget: number
   expected_response: number
   expected_amount: number
   desc: string
-  sgroup_id: number
-  supervisor_id: number
-  pgroup_id: number
-  chart_id: number
-  product_uid: string
   campaign_id: number
+  hdr_uid: string
+  syschart_id: number
+  pdetails: {
+    pgroup_id: number
+    chart_id: number
+    product_uid: string
+  }[]
+  sdetails: {
+    sgroup_id: number
+    supervisor_id: number
+  }[]
   accessToken: string | undefined
 }) => {
   try {
@@ -125,23 +125,20 @@ export const EditProductCampaign = async ({
           authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
-          campaign_id: campaign_id || 0,
           cstatus,
           ctitle,
           ctype,
           start_date,
           exp_date,
-          loc_type,
-          loc_uid,
           budget,
           expected_response,
           expected_amount,
           desc,
-          sgroup_id,
-          supervisor_id,
-          pgroup_id,
-          chart_id,
-          product_uid,
+          campaign_id: campaign_id || 0,
+          hdr_uid,
+          syschart_id,
+          pdetails,
+          sdetails,
         }),
       }
     )
@@ -151,7 +148,7 @@ export const EditProductCampaign = async ({
     }
 
     return await response.json()
-  }catch (error) {
+  } catch (error) {
     console.log(error)
   }
 }

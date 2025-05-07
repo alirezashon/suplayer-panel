@@ -246,22 +246,18 @@ const PorsantManagement = () => {
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
           {permissions[1].includes('747') &&
             beneficiaryList?.map((beneficiary, index) => (
-              <div
+              <BeneficiaryCard
                 key={index}
-                className=''
-                onClick={() => setShowReportModal(beneficiary)}>
-                <BeneficiaryCard
-                  data={beneficiary}
-                  setDeleteItems={(value: string) =>
-                    setDeleteState((prv) =>
-                      prv.includes(value)
-                        ? prv.filter((lastOne) => lastOne !== value)
-                        : [...prv, value]
-                    )
-                  }
-                  showDeleteMode={showDeleteState}
-                />
-              </div>
+                data={beneficiary}
+                setDeleteItems={(value: string) =>
+                  setDeleteState((prv) =>
+                    prv.includes(value)
+                      ? prv.filter((lastOne) => lastOne !== value)
+                      : [...prv, value]
+                  )
+                }
+                showDeleteMode={showDeleteState}
+              />
             ))}
         </div>
       </div>

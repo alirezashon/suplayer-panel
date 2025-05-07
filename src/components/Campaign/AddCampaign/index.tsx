@@ -36,17 +36,26 @@ const AddCampaign = ({
     ctype: existData?.ctype || 0,
     start_date: existData?.start_date || '',
     exp_date: existData?.exp_date || '',
-    loc_type: existData?.loc_type || 0,
-    loc_uid: existData?.loc_uid || '',
     budget: existData?.budget || 0,
     expected_response: existData?.expected_response || 0,
     expected_amount: existData?.expected_amount || 0,
     desc: existData?.desc || '',
-    sgroup_id: existData?.sgroup_id || 0,
-    supervisor_id: existData?.supervisor_id || 0,
-    pgroup_id: existData?.pgroup_id || 0,
-    chart_id: existData?.chart_id || 0,
-    product_uid: existData?.product_uid || '',
+    campaign_id: existData?.campaign_id || 0,
+    hdr_uid: existData?.hdr_uid || '',
+    syschart_id: existData?.syschart_id || 0,
+    pdetails: existData?.pdetails || [
+      {
+        pgroup_id: 0,
+        chart_id: 0,
+        product_uid: '',
+      },
+    ],
+    sdetails: existData?.sdetails || [
+      {
+        sgroup_id: 0,
+        supervisor_id: 0,
+      },
+    ],
   })
   const [errors, setErrors] = useState<Record<string, string | null>>({})
   const [, setSelectedItems] = useState<Array<string | number>>([])

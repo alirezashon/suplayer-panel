@@ -55,7 +55,7 @@ const AddModal = ({
         groupID,
         name,
         syschart_id: selectedType,
-      }).then((value) => {
+      }).then(async (value) => {
         showModal({
           type: value.status === 1 ? 'success' : 'error',
           main: <p>{value.message}</p>,
@@ -64,7 +64,12 @@ const AddModal = ({
         })
 
         if (value.status === '-1') setResult(false, value.message)
-        else setResult(true)
+        else {
+          setResult(true)
+          await getSubGroupData().then(
+            (value) => value && setSubGroupData(value)
+          )
+        }
       })
     else
       EditSubGroup({

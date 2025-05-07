@@ -84,23 +84,32 @@ export interface PromotionInterface {
   product_uid: string
 }
 export interface CampaignInterface {
+  sgroup_id: number
+  campaign_id?: number
   cstatus: number
   ctitle: string
   ctype: number
   start_date: string
   exp_date: string
-  loc_type: number
-  loc_uid: string
   budget: number
   expected_response: number
   expected_amount: number
   desc: string
-  sgroup_id: number
-  supervisor_id: number
-  pgroup_id: number
-  chart_id: number
-  product_uid: string
-  campaign_id?: number
+  hdr_uid: string
+  syschart_id: number
+  pdetails: [
+    {
+      pgroup_id: number
+      chart_id: number
+      product_uid: string
+    }
+  ]
+  sdetails: [
+    {
+      sgroup_id: number
+      supervisor_id: number
+    }
+  ]
 }
 
 export interface States {

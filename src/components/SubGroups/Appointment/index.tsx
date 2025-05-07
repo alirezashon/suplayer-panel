@@ -127,7 +127,6 @@ const AppointmentModal = ({ data, close, type }: AppointmentModalProps) => {
 
   return (
     <div>
-      {`${errors}`}
       <div className='absolute bg-slate-600 opacity-50 w-full h-[200vh] z-50 top-0 right-0'></div>
       <div
         style={{ scrollbarWidth: 'none' }}

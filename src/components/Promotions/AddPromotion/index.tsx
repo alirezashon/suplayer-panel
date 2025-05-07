@@ -24,7 +24,7 @@ const AddPromotion = () => {
     submitting,
     setSubmitting,
   } = useStates()
-  const [step, setStep] = useState<number>(2)
+  const [step, setStep] = useState<number>(1)
 
   const refs = useRef({
     cstatus: 1,
@@ -64,7 +64,7 @@ const AddPromotion = () => {
     promotionImage: '',
     discountType: '',
     title: '',
-    description: '',
+    budget: '',
   })
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -81,6 +81,7 @@ const AddPromotion = () => {
       if (!refs.current.ctitle) newErrors.ctitle = 'این فیلد اجباری است'
       if (!refs.current.file_uid) newErrors.file_uid = 'این فیلد اجباری است'
       if (!refs.current.cta_link) newErrors.cta_link = 'این فیلد اجباری است'
+      if (!refs.current.budget) newErrors.budget = 'این فیلد اجباری است'
     }
     setErrors(newErrors)
     if (step && !Object.keys(newErrors).length) setStep(step + 1)
@@ -232,7 +233,7 @@ const AddPromotion = () => {
               src={draftSrc}
               width={777}
               height={777}
-              className='w-full'
+              className='w-full object-contain'
               alt='Uploaded file preview'
             />
           ) : (
@@ -345,11 +346,6 @@ const AddPromotion = () => {
                         (refs.current.start_date = value)
                       }
                     />
-                    {errors.start_date && (
-                      <p className='text-red-500 text-sm'>
-                        {errors.start_date}
-                      </p>
-                    )}
                   </div>
                   <div className='w-full '>
                     <label className='block mb-1 text-sm font-bold'>
@@ -362,9 +358,6 @@ const AddPromotion = () => {
                         (refs.current.exp_date = value)
                       }
                     />
-                    {errors.exp_date && (
-                      <p className='text-red-500 text-sm'>{errors.exp_date}</p>
-                    )}
                   </div>
                 </div>
               )}
@@ -537,11 +530,6 @@ const AddPromotion = () => {
                         تخفیف غیر نقدی
                       </label>
                     </div>
-                    {errors.discountType && (
-                      <p className='text-red-500 text-sm'>
-                        {errors.discountType}
-                      </p>
-                    )}
                     <input
                       name='expected_amount'
                       value={refs.current.budget || ''}
