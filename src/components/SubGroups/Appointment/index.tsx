@@ -15,7 +15,7 @@ interface AppointmentModalProps {
 }
 const AppointmentModal = ({ data, close, type }: AppointmentModalProps) => {
   const { showModal, selectedSubGroupData } = useStates()
-  const [errors, setErrors] = useState<Record<string, string>>({})
+  const [, setErrors] = useState<Record<string, string>>({})
   const [selectedBeneficiary, setSelectedBeneficiary] = useState<
     BeneficiaryData[]
   >([])
@@ -112,7 +112,7 @@ const AppointmentModal = ({ data, close, type }: AppointmentModalProps) => {
 
       // const result = await DefineAppointmentTaskList({
       //   accessToken,
-        
+
       // })
 
       // showModal({

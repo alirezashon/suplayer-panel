@@ -20,7 +20,6 @@ export async function setCurrentUsertoCookie({
   ;(await cookies()).set('role', `${data.role}`)
   ;(await cookies()).set('mobile', data.mobile)
   ;(await cookies()).set('user_status', data.customer_status)
-  ;(await cookies()).set('clevel', `${data.city_level}`)
 }
 
 export async function setTokenIntoCookie({

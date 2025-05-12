@@ -1,7 +1,7 @@
 import { getCookieByKey } from '@/actions/cookieToken'
 import { useStates } from '@/Context/States'
 import { CampaignInterface } from '@/interfaces'
-import { EditProductCampaign } from '@/services/campaign'
+import { EditCampaign } from '@/services/campaign'
 import { CloseSquare, Forbidden2, Trash } from 'iconsax-react'
 
 const DeleteModal = ({
@@ -18,25 +18,22 @@ const DeleteModal = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     const accessToken = (await getCookieByKey('access_token')) || ''
-    await EditProductCampaign({
+    await EditCampaign({
       accessToken,
       cstatus: data.cstatus,
       ctitle: data.ctitle,
       ctype: data.ctype,
       start_date: data.start_date,
       exp_date: data.exp_date,
-      loc_type: data.loc_type,
-      loc_uid: data.loc_uid,
       budget: data.budget,
       expected_response: data.expected_response,
       expected_amount: data.expected_amount,
       desc: data.desc,
-      sgroup_id: data.sgroup_id,
-      supervisor_id: data.supervisor_id,
-      pgroup_id: data.pgroup_id,
-      chart_id: data.chart_id,
-      product_uid: data.product_uid,
       campaign_id: data.campaign_id || 0,
+      hdr_uid: data.hdr_uid || '',
+      syschart_id: data.syschart_id,
+      pdetails: data.pdetails,
+      sdetails: data.sdetails,
     })
       .then((value) => {
         if (value?.status === '-1')
@@ -66,7 +63,7 @@ const DeleteModal = ({
   }
 
   return (
-    <div>
+    <div> 
       <div className='absolute bg-slate-600 opacity-50 w-full h-[200vh] z-50 top-0 right-0'></div>
       <div
         className={`fixed p-10 rounded-lg z-50  max-md:w-[100%] w-[40vw]  bg-white border border-gray-300 shadow-lg transition-transform duration-300 ease-in-out delete-box-animate 

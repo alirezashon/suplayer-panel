@@ -143,6 +143,7 @@ const Release = () => {
     beneficiaryData,
     selectedSubGroupData,
     releasedList,
+    data.length,
   ])
   useEffect(() => {
     if (!selectedGroupData) {

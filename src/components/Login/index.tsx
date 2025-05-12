@@ -9,7 +9,6 @@ import {
 } from '@/services/user'
 import {
   IAccessTokenResponse,
-  setCookieByTagAndValue,
   setCurrentUsertoCookie,
   setTokenIntoCookie,
 } from '@/actions/cookieToken'
