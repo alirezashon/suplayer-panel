@@ -76,12 +76,30 @@ export interface PromotionInterface {
   cta_link: string
   distype: number
   file_uid: string
-  desc: string
   sgroup_id: number
   supervisor_id: number
   pgroup_id: number
   chart_id: number
   product_uid: string
+  id: number
+  hdr_uid: string
+  cust_id: number
+  DESC: string
+  budget: number
+  pd_id: number
+  group_desc: string
+  chtitle: string
+  ini_name: string
+  sd_id: number
+  sup_group_name: string
+  supervisor_name: string
+  CityUID: string
+  CityCode: string
+  CityDesc: string
+  CountyCode: string
+  CountyDesc: string
+  StateCode: string
+  StateDesc: string
 }
 export interface CampaignInterface {
   sgroup_id: number
@@ -442,4 +460,27 @@ export interface FinalReleaseInterface {
   allocation_status_id_file: string
   assignment_otp: string
   Signature: string
+}
+
+export interface CommissionFullList {
+  rec_type: number
+  serial_uid: string
+  commission_type: number
+  allocation_type: number
+  source_type: number
+  source_uid: string
+  sup_group_code: string
+  supervisor_code: string
+  sup_group_name: string
+  supervisor_name: string
+  visitor_uid: string
+  visitor_full_name: string
+  amount: number
+  currency_type: number
+  commission_uid: string
+  ref_allocation_uid: string
+  regdate_pe: string
+  reg_time: string
+  allocation_status_id_file: string
+  wstatus: number
 }

@@ -17,6 +17,7 @@ import {
   ShowSystemTypeUI,
   AllocatedListInterface,
   ReleasedListInterface,
+  CommissionFullList,
 } from '@/interfaces'
 import { createContext, useContext, useState, ReactNode } from 'react'
 
@@ -65,6 +66,8 @@ interface DataContextProps {
     productTypes: ShowSystemTypeUI[]
     groupTypes: ShowSystemTypeUI[]
   }) => void
+  commissionFullList: CommissionFullList[] | undefined
+  setCommissionFullList: (value: CommissionFullList[]) => void
 }
 const DataContext = createContext<DataContextProps | undefined>(undefined)
 
@@ -93,6 +96,9 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
   const [balance, setBalance] = useState<WalletDetail>()
   const [transactionsData, setTransactionsData] = useState<
     TransactionInterface[]
+  >([])
+  const [commissionFullList, setCommissionFullList] = useState<
+    CommissionFullList[]
   >([])
   const [systemTypes, setSystemTypes] = useState<{
     productTypes: ShowSystemTypeUI[]
@@ -138,6 +144,8 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
         setSystemTypes,
         releasedList,
         setReleasedList,
+        commissionFullList,
+        setCommissionFullList,
       }}>
       {children}
     </DataContext.Provider>

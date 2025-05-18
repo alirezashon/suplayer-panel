@@ -319,3 +319,29 @@ export const AddDocFile = async ({
     console.log(error)
   }
 }
+
+export const GetCommissionFulList = async ({
+  accessToken,
+}: {
+  accessToken: string
+}) => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/commission_full_list`,
+      {
+        method: 'GET',
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+      }
+    )
+    if (response.status !== 200) {
+      return
+    }
+
+    const result = await response.json()
+    return result.data
+  } catch (error) {
+    console.log(error)
+  }
+}

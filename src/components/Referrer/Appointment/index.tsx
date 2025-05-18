@@ -208,7 +208,7 @@ const AppointmentModal = ({ data, close }: AppointmentModalProps) => {
                 items={
                   groupData?.map((gp) => {
                     return {
-                      id: gp.sup_group_id,
+                      id: gp.sup_group_name,
                       label: gp.sup_group_name,
                     }
                   }) || []

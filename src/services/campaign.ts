@@ -172,7 +172,8 @@ export const GetCampaignList = async ({
       throw new Error('Failed to GetAssistantList')
     }
 
-    return await response.json()
+    const result = await response.json()
+    return result.data
   } catch (error) {
     console.log(error)
   }

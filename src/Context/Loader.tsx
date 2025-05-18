@@ -151,7 +151,8 @@ const ContextLoader = () => {
           )
         if (permission[1].includes('744'))
           await getPromotiuonData().then(
-            (value) => value && setPromotionData(value)
+            (value) => {if(value) { setPromotionData(value)}
+          console.table(value)}
           )
         if (permission[1].includes('735'))
           await getKPITaskData().then(

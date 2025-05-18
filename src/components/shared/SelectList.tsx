@@ -59,8 +59,14 @@ const SelectList: React.FC<SelectListProps> = ({
         className='border border-gray-300  rounded-md h-10 py-2 px-4 cursor-pointer flex justify-between items-center'
         onClick={() => setIsOpen((prev) => !prev)}>
         <span className='text-gray-700'>
-          {selectedItems.length > 0 ? selectedItems.join(',') : label}
+          {selectedItems.length > 0
+            ? items
+                .filter((item) => selectedItems.includes(item.id))
+                .map((item) => item.label)
+                .join(', ')
+            : label}
         </span>
+
         <span className='text-gray-400'>&#x25BC;</span>
       </div>
       {isOpen && (

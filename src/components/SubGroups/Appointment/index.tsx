@@ -99,28 +99,6 @@ const AppointmentModal = ({ data, close, type }: AppointmentModalProps) => {
         })
         return
       }
-      // const newSelected = selectedReferrers?.map((value) => ({
-      //   personnel_uid: value,
-      //   supervisor_code: [''],
-      //   sup_group_code: [''],
-      //   visitor_uid: '',
-      //   task_kpi_uid: '',
-      //   pgroup_id: [0],
-      //   chart_id: [0],
-      //   product_uid: [''],
-      // }))
-
-      // const result = await DefineAppointmentTaskList({
-      //   accessToken,
-
-      // })
-
-      // showModal({
-      //   type: result.status === 1 ? 'success' : 'error',
-      //   main: <p>{result.message}</p>,
-      //   title: result.status === 1 ? 'موفق' : 'خطا',
-      //   autoClose: 2,
-      // })
       close()
     }
   }

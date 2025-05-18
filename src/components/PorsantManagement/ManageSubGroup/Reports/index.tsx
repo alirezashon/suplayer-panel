@@ -1,6 +1,8 @@
+import { getCookieByKey } from '@/actions/cookieToken'
 import Calendar from '@/components/shared/Calendar'
 import { useData } from '@/Context/Data'
 import { AllocationListInterface } from '@/interfaces'
+import { GetCommissionFulList } from '@/services/allocation'
 import {
   ExportCurve,
   ImportCurve,
@@ -21,32 +23,42 @@ const Reports = () => {
   const [initialData, setInitialData] = useState<
     Partial<AllocationListInterface>[]
   >([])
-  const { allocationList } = useData()
+  const { setCommissionFullList, commissionFullList } = useData()
   useEffect(() => {
+    const fetchData = async () => {
+      await GetCommissionFulList({
+        accessToken: (await getCookieByKey('access_token')) || '',
+      }).then((result) => {
+        if (result) setCommissionFullList(result)
+      })
+    }
+    fetchData()
     setInitialData(
-      Array.isArray(allocationList)
-        ? allocationList.map((transaction) => ({
-            visitor_uid: transaction.visitor_uid,
-            wstatus: transaction.wstatus,
+      Array.isArray(commissionFullList)
+        ? commissionFullList.map((transaction) => ({
+            visitor_uid: transaction.visitor_full_name,
+            wstatus: transaction.rec_type,
             amount: transaction.amount,
             regdate: transaction.regdate_pe,
             file_uid: transaction.allocation_status_id_file,
           }))
         : []
     )
-  }, [allocationList])
+  }, [commissionFullList])
 
   const filterPersonnel = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target
-    const filteredData = allocationList?.filter((person:Partial<AllocationListInterface>) => {
-      const fieldValue = person?.[name as keyof AllocationListInterface]
-      if (typeof fieldValue === 'string') {
-        return !value || fieldValue.includes(value)
+    const filteredData = commissionFullList?.filter(
+      (person: Partial<AllocationListInterface>) => {
+        const fieldValue = person?.[name as keyof AllocationListInterface]
+        if (typeof fieldValue === 'string') {
+          return !value || fieldValue.includes(value)
+        }
+        return !value
       }
-      return !value
-    })
+    )
 
     // فقط فیلدهای خاص را ذخیره می‌کنیم
     const filteredFieldsData = filteredData?.map((transaction) => ({

@@ -1,4 +1,5 @@
 import { BeneficiaryData } from '@/interfaces'
+import { Receipt, Receipt2, Receipt21, ReceiptMinus } from 'iconsax-react'
 
 const BeneficiaryCard: React.FC<{
   data: BeneficiaryData
@@ -16,6 +17,7 @@ const BeneficiaryCard: React.FC<{
           />
         )}
         <p className=''>{data.visitor_name}</p>
+        <ReceiptMinus size={24} color='#000' />
       </div>
       <p className='flex justify-between'>
         <span className='text-[#8455D2]'>تخصیص کل</span>

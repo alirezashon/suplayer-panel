@@ -29,8 +29,8 @@ const AddPromotion = () => {
   const refs = useRef({
     cstatus: 1,
     ctitle: '',
-    start_date: '0000-00-00',
-    exp_date: '9999-99-99',
+    start_date: '1380-03-07',
+    exp_date: '2380-03-07',
     cta_link: '',
     distype: 0,
     file_uid: '',
