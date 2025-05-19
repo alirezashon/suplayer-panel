@@ -19,6 +19,7 @@ import { useData } from '@/Context/Data'
 import { useStates } from '@/Context/States'
 import { BeneficiaryData } from '@/interfaces'
 import RelocationReports from './RelocationReport'
+import BeneficiaryReport from './BeneficiaryCard/Report'
 
 const PorsantManagement = () => {
   const [showAddModal, setShowAddModal] = useState<boolean | string>(false)
@@ -26,6 +27,8 @@ const PorsantManagement = () => {
     boolean | BeneficiaryData
   >(false)
   const [showDeleteState, setShowDeleteState] = useState<boolean>(false)
+  const [showBeneficiaryReport, setShowBeneficiaryReport] =
+    useState<BeneficiaryData | null>()
   const [, setDeleteState] = useState<string[]>([])
   const [searching, setSearching] = useState<string | null>()
   const [beneficiaryList, setBeneficiaryList] = useState<BeneficiaryData[]>([])
@@ -58,6 +61,12 @@ const PorsantManagement = () => {
   }
   return (
     <>
+      {showBeneficiaryReport && (
+        <BeneficiaryReport
+          close={() => setShowBeneficiaryReport(null)}
+          beneficiary={showBeneficiaryReport}
+        />
+      )}
       {showAddModal && (
         <AddModal
           groupName={typeof showAddModal === 'string' ? showAddModal : ''}
@@ -206,7 +215,6 @@ const PorsantManagement = () => {
             </div>
           )}
         </div>
-
         {!showDeleteState && (
           <div className='grid grid-cols-5 max-md:grid-cols-1 max-lg:grid-cols-2 gap-4 mb-6'>
             <StatCard
@@ -233,7 +241,6 @@ const PorsantManagement = () => {
               Icon={MoneyTick}
               backgroundImage='/images/green-theme-card.svg'
             />
-
             <StatCard
               title='ذی‌نفعان'
               value={`${selectedSubGroupData?.visitor_count}`}
@@ -242,7 +249,6 @@ const PorsantManagement = () => {
             />
           </div>
         )}
-
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
           {permissions[1].includes('747') &&
             beneficiaryList?.map((beneficiary, index) => (
@@ -257,6 +263,7 @@ const PorsantManagement = () => {
                   )
                 }
                 showDeleteMode={showDeleteState}
+                showReportModal={setShowBeneficiaryReport}
               />
             ))}
         </div>

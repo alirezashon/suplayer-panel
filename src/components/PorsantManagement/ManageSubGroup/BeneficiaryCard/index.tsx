@@ -1,14 +1,15 @@
 import { BeneficiaryData } from '@/interfaces'
-import { Receipt, Receipt2, Receipt21, ReceiptMinus } from 'iconsax-react'
+import { TransactionMinus } from 'iconsax-react'
 
 const BeneficiaryCard: React.FC<{
   data: BeneficiaryData
   setDeleteItems: (value: string) => void
   showDeleteMode: boolean
-}> = ({ data, setDeleteItems, showDeleteMode }) => {
+  showReportModal: (value: BeneficiaryData | null) => void
+}> = ({ data, setDeleteItems, showDeleteMode, showReportModal }) => {
   return (
     <div className='flex flex-col p-4 border rounded-lg shadow-sm bg-white cursor-pointer'>
-      <div className='flex items-center gap-1'>
+      <div className='flex items-center justify-between gap-1'>
         {showDeleteMode && (
           <input
             type='checkbox'
@@ -16,8 +17,12 @@ const BeneficiaryCard: React.FC<{
             className='accent-[#8455D2]'
           />
         )}
-        <p className=''>{data.visitor_name}</p>
-        <ReceiptMinus size={24} color='#000' />
+        <p className=''>{data.visitor_full_name}</p>
+        <TransactionMinus
+          size={24}
+          color='#000'
+          onClick={() => showReportModal(data)}
+        />
       </div>
       <p className='flex justify-between'>
         <span className='text-[#8455D2]'>تخصیص کل</span>

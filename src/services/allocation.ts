@@ -322,12 +322,14 @@ export const AddDocFile = async ({
 
 export const GetCommissionFulList = async ({
   accessToken,
+  visitor_uid,
 }: {
   accessToken: string
+  visitor_uid?: string
 }) => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/commission_full_list`,
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/commission_full_list?visitor_uid=${visitor_uid}`,
       {
         method: 'GET',
         headers: {

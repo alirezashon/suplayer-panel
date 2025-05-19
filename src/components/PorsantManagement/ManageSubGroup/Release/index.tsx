@@ -537,14 +537,18 @@ const Release = () => {
                           </td>
                           <td className='text-center px-4 py-2 border-l'>
                             {row.fileId.length < 1 ? (
-                              <label className='flex flex-col items-center gap-2 cursor-pointer w-full'>
+                              <label
+                                className='flex flex-col items-center gap-2 cursor-pointer w-full'
+                                htmlFor='fileUploader'>
                                 <input
+                                  id='fileUploader'
                                   disabled={!row.disable}
                                   type='file'
                                   onChange={(e) =>
                                     handleUploadFile(e, `${row.visitor_tel}`)
                                   }
                                   className='hidden'
+                                  accept='image/*'
                                 />
                                 <div className='w-full flex items-center justify-center border border-[#7747C0] text-[#7747C0] rounded-md px-4 py-2 text-sm hover:bg-[#7747C0] hover:text-white'>
                                   {uploadStatuses[`${row.visitor_tel}`]

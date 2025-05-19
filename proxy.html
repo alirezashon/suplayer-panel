@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Vanilla JS State</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <button id="updateBtn">آپدیت دیتا</button>
+
+    <script>
+      // تابع رندر
+      function render(data) {
+        const app = document.getElementById('app')
+        app.innerHTML = `<h2>نام: ${data.name}</h2><p>سن: ${data.age}</p>`
+      }
+
+      // ساخت یک state reactive با Proxy
+      const state = new Proxy(
+        {
+          name: 'علی',
+          age: 25,
+        },
+        {
+          set(target, key, value) {
+            target[key] = value
+            render(target) // رندر مجدد بعد از تغییر
+            return true
+          },
+        }
+      )
+
+      // بار اول رندر
+      render(state)
+
+      // آپدیت دیتا با کلیک
+      document.getElementById('updateBtn').addEventListener('click', () => {
+        // شبیه دریافت دیتا از بک‌اند
+        setTimeout(() => {
+          state.name = 'رضا'
+          state.age = 30
+        }, 500)
+      })
+    </script>
+  </body>
+</html>
