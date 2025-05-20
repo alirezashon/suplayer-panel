@@ -1,8 +1,9 @@
 import { getCookieByKey } from '@/actions/cookieToken'
 import Calendar from '@/components/shared/Calendar'
 import { useData } from '@/Context/Data'
+import { setComma } from '@/hooks/NumberFormat'
 import { AllocationListInterface } from '@/interfaces'
-import { GetCommissionFulList } from '@/services/allocation'
+import { GetCommissionFulList, GetdDocFile } from '@/services/allocation'
 import {
   ExportCurve,
   ImportCurve,
@@ -24,6 +25,7 @@ const Reports = () => {
     Partial<AllocationListInterface>[]
   >([])
   const { setCommissionFullList, commissionFullList } = useData()
+
   useEffect(() => {
     const fetchData = async () => {
       await GetCommissionFulList({
@@ -33,12 +35,14 @@ const Reports = () => {
       })
     }
     fetchData()
+  }, [setCommissionFullList])
+  useEffect(() => {
     setInitialData(
       Array.isArray(commissionFullList)
         ? commissionFullList.map((transaction) => ({
             visitor_uid: transaction.visitor_full_name,
             wstatus: transaction.rec_type,
-            amount: transaction.amount,
+            amount: setComma(transaction.amount),
             regdate: transaction.regdate_pe,
             file_uid: transaction.allocation_status_id_file,
           }))
@@ -134,7 +138,7 @@ const Reports = () => {
             </div>
           </div>
         </div>
-        <div className='mt-10 w-full flex justify-end '>
+        <div className='mt-10 w-full flex justify-end'>
           <button
             type='submit'
             className={` gap-2 px-2 py-2 w-40 text-base text-center text-white bg-[#7747C0] rounded-lg border border-[#7747C0] border-solid min-h-10 `}>
@@ -188,7 +192,20 @@ const Reports = () => {
                           </div>
                         ) : detailIndex === 5 ? (
                           <p className='flex justify-center cursor-pointer'>
-                            <ImportCurve color='#7747C0' size={24} />
+                            <ImportCurve
+                              color='#7747C0'
+                              className={`${!detail && 'cursor-not-allowed opacity-45'}`}
+                              size={24}
+                              onClick={async () => {
+                                if (detail)
+                                  await GetdDocFile({
+                                    file_uid: `${detail}`,
+                                    accessToken: await getCookieByKey(
+                                      'access_token'
+                                    ),
+                                  })
+                              }}
+                            />
                           </p>
                         ) : (
                           detail

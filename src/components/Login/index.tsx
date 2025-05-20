@@ -236,6 +236,9 @@ const Login = () => {
                       رمز عبور
                     </label>
                     <input
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') handleLogin()
+                      }}
                       type='password'
                       id='password'
                       value={password}

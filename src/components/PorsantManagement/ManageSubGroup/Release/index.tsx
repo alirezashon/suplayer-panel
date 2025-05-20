@@ -243,7 +243,7 @@ const Release = () => {
           setData((prev) =>
             prev.map((last) =>
               last.visitor_tel === visitorTel
-                ? { ...last, fileId: result?.rec_id_file }
+                ? { ...last, fileId: result.rec_id_file }
                 : last
             )
           )
@@ -525,7 +525,6 @@ const Release = () => {
                               onChange={(e) => {
                                 // e.target.value =
                                 //   e.target.value.replace(/,/g, '')
-
                                 handleCreditChange(
                                   `${row.visitor_tel}`,
                                   e.target.value
@@ -538,7 +537,7 @@ const Release = () => {
                           <td className='text-center px-4 py-2 border-l'>
                             {row.fileId.length < 1 ? (
                               <label
-                                className='flex flex-col items-center gap-2 cursor-pointer w-full'
+                                className={`${!row.disable && 'opacity-30 cursor-pointer'} flex flex-col items-center gap-2 cursor-pointer w-full`}
                                 htmlFor='fileUploader'>
                                 <input
                                   id='fileUploader'

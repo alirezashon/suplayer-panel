@@ -131,7 +131,7 @@ const AddModal = ({
           </div>
           <div className='flex justify-between mt-3'>
             <p className='text-[#8455D2]'>برند محصول</p>
-            <p>{brand.group_desc}</p>
+            <p>{brand?.group_desc}</p>
           </div>
           <div className='flex justify-center mt-5 p-2 rounded-lg gap-2 bg-[#E2F1FC]'>
             <Message color='#1D91CC' size={22} />

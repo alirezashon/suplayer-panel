@@ -8,7 +8,6 @@ import {
   CloseCircle,
   CloseSquare,
   ReceiveSquare,
-  Send,
   TransmitSquare,
 } from 'iconsax-react'
 import { useEffect, useState } from 'react'
@@ -42,9 +41,9 @@ const BeneficiaryReport = ({
       })
     }
     fetchData()
-  }, [])
+  }, [beneficiary])
 
-  const filterData = (value: string) => {}
+  // const filterData = (value: string) => {}
 
   return (
     <div>
@@ -90,34 +89,36 @@ const BeneficiaryReport = ({
         </div>
 
         <div className='flex sticky  top-0 mb-4 sm:mb-6'>
-          {['واریزی‌ها', 'واریز‌های منقضی شده']?.map((report, index) => (
-            <div
-              key={index}
-              className={`flex-1 border-b ${
-                tab === index ? 'border-b-[#7747C0]' : ''
-              }`}>
-              <button
-                className={`w-full flex justify-center !rounded-lg items-center gap-4 !py-3 ${
-                  tab === index ? 'text-[#7747C0]' : 'text-[#98A2B3]'
-                }`}
-                onClick={() => {
-                  setTab(index)
-                }}>
-                {index === 1 ? (
-                  <ReceiveSquare
-                    size={32}
-                    color={tab === index ? '#7747C0' : '#98A2B3'}
-                  />
-                ) : (
-                  <TransmitSquare
-                    size={32}
-                    color={tab === index ? '#7747C0' : '#98A2B3'}
-                  />
-                )}
-                {report}
-              </button>
-            </div>
-          ))}
+          {['تراکنش‌های آزادسازی شده', 'تراکنش‌های تخصیص اعتبار']?.map(
+            (report, index) => (
+              <div
+                key={index}
+                className={`flex-1 border-b ${
+                  tab === index ? 'border-b-[#7747C0]' : ''
+                }`}>
+                <button
+                  className={`w-full flex justify-center !rounded-lg items-center gap-4 !py-3 ${
+                    tab === index ? 'text-[#7747C0]' : 'text-[#98A2B3]'
+                  }`}
+                  onClick={() => {
+                    setTab(index)
+                  }}>
+                  {index === 1 ? (
+                    <ReceiveSquare
+                      size={32}
+                      color={tab === index ? '#7747C0' : '#98A2B3'}
+                    />
+                  ) : (
+                    <TransmitSquare
+                      size={32}
+                      color={tab === index ? '#7747C0' : '#98A2B3'}
+                    />
+                  )}
+                  {report}
+                </button>
+              </div>
+            )
+          )}
         </div>
         {data.filtered?.length > 0 &&
           data.filtered?.map((item, index) =>
@@ -125,7 +126,9 @@ const BeneficiaryReport = ({
               ? item.rec_type === 1 && (
                   <TransactionReports data={item} key={index} />
                 )
-              : item.rec_type === 2 && <TransactionReports data={item} />
+              : item.rec_type === 2 && (
+                  <TransactionReports data={item} key={index} />
+                )
           )}
       </div>
     </div>

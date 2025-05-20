@@ -164,8 +164,8 @@ const Dashboard = () => {
               <button
                 className='fill-button h-10 rounded-lg'
                 onClick={() => {
-                  setMenu('products')
-                  location.hash = 'products'
+                  setMenu('productgroups')
+                  location.hash = 'productgroups'
                 }}>
                 تعریف محصول‌ جدید
               </button>

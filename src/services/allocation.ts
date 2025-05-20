@@ -319,6 +319,48 @@ export const AddDocFile = async ({
     console.log(error)
   }
 }
+export const GetdDocFile = async ({
+  accessToken,
+  file_uid,
+}: {
+  accessToken: string | undefined
+  file_uid: string
+}) => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/checkdocfile`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ file_uid }),
+      }
+    )
+
+    if (!response.ok) return
+
+    const blob = await response.blob() // <- دریافت فایل به صورت blob
+    const contentDisposition = response.headers.get('content-disposition')
+
+    // سعی کن اسم فایل رو از content-disposition بگیری، وگرنه از file_uid استفاده کن
+    const filename =
+      contentDisposition?.match(/filename="(.+)"/)?.[1] || file_uid
+
+    // ساخت یک لینک برای دانلود فایل
+    const url = window.URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = filename // اینجا پسوند فایل هم مهمه
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
+    window.URL.revokeObjectURL(url)
+  } catch (error) {
+    console.error('Download failed:', error)
+  }
+}
 
 export const GetCommissionFulList = async ({
   accessToken,
@@ -328,8 +370,9 @@ export const GetCommissionFulList = async ({
   visitor_uid?: string
 }) => {
   try {
+    const params = visitor_uid?.length ? `?visitor_uid=${visitor_uid}` : ''
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/commission_full_list?visitor_uid=${visitor_uid}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/commission_full_list${params}`,
       {
         method: 'GET',
         headers: {
