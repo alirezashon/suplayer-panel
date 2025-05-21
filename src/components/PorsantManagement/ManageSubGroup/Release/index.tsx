@@ -73,10 +73,6 @@ const Release = () => {
         release?.supervisor_code === selectedSubGroupData?.supervisor_code
     )
     subGroupAllocatedList?.forEach((row) => {
-      // const matchedRelease = releasedList?.find(
-      //   (release) =>
-      //     release.visitor_uid === row.visitor_tel && release.wstatus === 0
-      // )
       if (row) {
         finalRelease.push({
           commission_allocation_uid: row.commission_release_uid,
@@ -103,7 +99,9 @@ const Release = () => {
           allocate?.supervisor_code === selectedSubGroupData?.supervisor_code
       )
       const allocated = subGroupAllocatedList
-        .filter((allocate) => allocate.wstatus === 1)
+        .filter(
+          (allocate) => allocate.wstatus === 1 && allocate.remain_amount > 0
+        )
         .map((allocate) => ({
           visitor_name: beneficiaryData?.find(
             (beneficiary) => beneficiary.visitor_uid === allocate?.visitor_uid
@@ -254,7 +252,7 @@ const Release = () => {
                   release.commission_release_uid ===
                   last.commission_allocation_uid
               )?.visitor_uid === visitorTel
-                ? { ...last, fileId: result?.rec_id_file }
+                ? { ...last, allocation_status_id_file: result?.rec_id_file }
                 : last
             )
           )
@@ -348,8 +346,8 @@ const Release = () => {
     }
     const accessToken = await getCookieByKey('access_token')
     await ReleaseAllocatedList({ accessToken, data: releaseData }).then(
-      async (result) => {
-        if (result && result?.status === 1) {
+      async (response) => {
+        if (response && response?.status === 1) {
           await getReleasedList().then((result) => {
             if (result) {
               setReleasedList(result)
@@ -357,17 +355,17 @@ const Release = () => {
               calculateFinalData()
             }
           })
+          showModal({
+            type: 'success',
+            title: 'موفق',
+            main: response?.message,
+            autoClose: 1,
+          })
           setReleaseData([])
           setData((prv) =>
             prv.map((last) => ({ ...last, newReleaseAmount: '' }))
           )
-          showModal({
-            type: 'success',
-            title: 'موفق',
-            main: result?.message,
-            autoClose: 1,
-          })
-        } else showErrorModal(result?.message || 'خطای ارتباط با سرور')
+        } else showErrorModal(response?.message || 'خطای ارتباط با سرور')
       }
     )
   }
@@ -523,12 +521,14 @@ const Release = () => {
                               value={setComma(row.newReleaseAmount)}
                               disabled={row?.disable}
                               onChange={(e) => {
-                                // e.target.value =
-                                //   e.target.value.replace(/,/g, '')
-                                handleCreditChange(
-                                  `${row.visitor_tel}`,
-                                  e.target.value
-                                )
+                                const result =
+                                  parseInt(
+                                    row.remain_amount.replace(/,/g, '')
+                                  ) >=
+                                  parseInt(e.target.value.replace(/,/g, ''))
+                                    ? e.target.value
+                                    : row.remain_amount
+                                handleCreditChange(`${row.visitor_tel}`, result)
                               }}
                               className='border-none rounded px-2 py-1 w-full text-center'
                               placeholder='مبلغ آزادسازی را وارد کنید'
@@ -537,7 +537,9 @@ const Release = () => {
                           <td className='text-center px-4 py-2 border-l'>
                             {row.fileId.length < 1 ? (
                               <label
-                                className={`${!row.disable && 'opacity-30 cursor-pointer'} flex flex-col items-center gap-2 cursor-pointer w-full`}
+                                className={`${
+                                  !row.disable && 'opacity-30 cursor-pointer'
+                                } flex flex-col items-center gap-2 cursor-pointer w-full`}
                                 htmlFor='fileUploader'>
                                 <input
                                   id='fileUploader'

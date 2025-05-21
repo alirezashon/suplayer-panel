@@ -4,6 +4,7 @@ import { useMenu } from '@/Context/Menu'
 import { useData } from '@/Context/Data'
 import { SubGroup } from '@/interfaces'
 import { useStates } from '@/Context/States'
+import { setComma } from '@/hooks/NumberFormat'
 
 const GroupsDetail = () => {
   const [data, setData] = useState<SubGroup[]>([])
@@ -53,7 +54,7 @@ const GroupsDetail = () => {
                   {product.assignment_amount ? (
                     <>
                       <span className='text-[#757575]'>تخصیص داده شده:</span>
-                      {product.assignment_amount}
+                      {setComma(product.assignment_amount)}
                     </>
                   ) : (
                     '  هنوز اعتباری داده نشده'

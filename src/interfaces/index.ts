@@ -202,6 +202,7 @@ export interface ReferrerData {
   CountyDesc: string
   StateCode: string
   StateDesc: string
+  task_count: number
 }
 export interface TreeChartInterface {
   id: number

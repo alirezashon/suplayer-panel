@@ -20,6 +20,7 @@ import { useStates } from '@/Context/States'
 import { BeneficiaryData } from '@/interfaces'
 import RelocationReports from './RelocationReport'
 import BeneficiaryReport from './BeneficiaryCard/Report'
+import { setComma } from '@/hooks/NumberFormat'
 
 const PorsantManagement = () => {
   const [showAddModal, setShowAddModal] = useState<boolean | string>(false)
@@ -225,7 +226,9 @@ const PorsantManagement = () => {
             />
             <StatCard
               title='مبلغ تخصیص داده شده'
-              value={`${selectedSubGroupData?.assignment_amount}  ریال`}
+              value={`${setComma(
+                `${selectedSubGroupData?.assignment_amount}`
+              )}  ریال`}
               Icon={Moneys}
               backgroundImage='/images/red-theme-card.svg'
             />
@@ -237,7 +240,9 @@ const PorsantManagement = () => {
             />
             <StatCard
               title='مبلغ قابل آزادسازی'
-              value={`${selectedSubGroupData?.withdrawable_amount}  ریال`}
+              value={`${setComma(
+                `${selectedSubGroupData?.withdrawable_amount}`
+              )}  ریال`}
               Icon={MoneyTick}
               backgroundImage='/images/green-theme-card.svg'
             />

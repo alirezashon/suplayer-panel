@@ -28,11 +28,7 @@ import {
 } from 'iconsax-react'
 import Image from 'next/image'
 import { useMenu } from '@/Context/Menu'
-
-const user = {
-  name: 'محدثه عالمی',
-  src: '/icons/logo.svg',
-}
+import { useData } from '@/Context/Data'
 
 const Sidebar = ({
   isOpen,
@@ -43,7 +39,7 @@ const Sidebar = ({
 }) => {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
   const { menu, setMenu } = useMenu()
-
+  const { userInfo } = useData()
   const iconList = [
     Menu,
     Strongbox2,
@@ -196,7 +192,7 @@ const Sidebar = ({
             setMenu('profile')
           }}>
           <Image
-            src={user.src}
+            src={'/icons/logo.svg'}
             alt='پروفایل کاربر'
             width={48}
             height={48}
@@ -204,7 +200,7 @@ const Sidebar = ({
           />
           <div className='absolute bottom-[0.5vh] right-[0.5vh] w-[1.5vh] h-[1.5vh] bg-[#0F973D] rounded-full'></div>
         </div>
-        {isOpen && <span className='ml-2'>{user.name}</span>}
+        {isOpen && <span className='ml-2'>{userInfo?.full_name}</span>}
         <LogoutCurve
           color='#50545F'
           size={24}

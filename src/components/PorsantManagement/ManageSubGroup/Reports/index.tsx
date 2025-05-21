@@ -40,7 +40,7 @@ const Reports = () => {
     setInitialData(
       Array.isArray(commissionFullList)
         ? commissionFullList.map((transaction) => ({
-            visitor_uid: transaction.visitor_full_name,
+            visitor_full_name: transaction.visitor_full_name,
             wstatus: transaction.rec_type,
             amount: setComma(transaction.amount),
             regdate: transaction.regdate_pe,
@@ -66,7 +66,7 @@ const Reports = () => {
 
     // فقط فیلدهای خاص را ذخیره می‌کنیم
     const filteredFieldsData = filteredData?.map((transaction) => ({
-      visitor_uid: transaction.visitor_uid,
+      visitor_full_name: transaction.visitor_full_name,
       wstatus: transaction.wstatus,
       amount: transaction.amount,
       regdate: transaction.regdate_pe,
@@ -98,7 +98,7 @@ const Reports = () => {
               نام خانوادگی
             </label>
             <input
-              name='pers_family'
+              name='visitor_full_name'
               onChange={filterPersonnel}
               placeholder='نام خانوادگی'
             />

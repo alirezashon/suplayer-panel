@@ -91,7 +91,7 @@ const Referrer: React.FC = () => {
       pers_chart_title: person.pers_chart_title,
       pers_status: person.pers_status,
       pers_tob: person.pers_tob,
-      pers_uid: person?.pers_uid,
+      task_count: person?.task_count,
     }))
 
     setInitialData(filteredFieldsData as Partial<ReferrerData>[])
@@ -285,19 +285,28 @@ const Referrer: React.FC = () => {
                                       </span>
                                     </p>
                                   ) : detailIndex === 5 ? (
-                                    <button
-                                      className='border-button px-2 rounded-md'
-                                      onClick={() => {
-                                        setShowAppointmentModal(
-                                          referrerData?.find(
-                                            (pers) =>
-                                              pers?.pers_uid ===
-                                              personnel?.pers_uid
-                                          ) as ReferrerData
-                                        )
-                                      }}>
-                                      انتصاب دادن
-                                    </button>
+                                    <>
+                                      {parseInt(`${detail}`) > 0 ? (
+                                        <button
+                                          className='border-button px-2 rounded-md'
+                                          onClick={() => {
+                                            setShowAppointmentModal(
+                                              referrerData?.find(
+                                                (pers) =>
+                                                  pers?.pers_uid ===
+                                                  personnel?.pers_uid
+                                              ) as ReferrerData
+                                            )
+                                          }}>
+                                          انتصاب دادن
+                                        </button>
+                                      ) : (
+                                        <div className='flex gap-2 cursor-pointer justify-center text-[#7747C0] items-center '>
+                                          <Edit2 size={16} color='#7747C0' />
+                                          <p>ویرایش انتصاب</p>
+                                        </div>
+                                      )}
+                                    </>
                                   ) : (
                                     detail
                                   )}

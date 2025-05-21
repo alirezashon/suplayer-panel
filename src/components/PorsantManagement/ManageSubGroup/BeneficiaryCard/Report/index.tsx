@@ -63,11 +63,11 @@ const BeneficiaryReport = ({
           <h2 className='font-bold'> {beneficiary.visitor_full_name}</h2>
           <div className='flex justify-between '>
             <p className='text-[#8455D2]'>تخصیص کل</p>
-            <p className=''> allocateded All</p>
+            <p className=''> {beneficiary.collectible_credit}</p>
           </div>
           <div className='flex justify-between '>
             <p className='text-[#8455D2]'>آزاد سازی نشده</p>
-            <p className=''>not Relleased</p>
+            <p className=''>{beneficiary.Uncollectible_credit}</p>
           </div>
         </div>
         <div className='flex gap-5 items-center my-7'>

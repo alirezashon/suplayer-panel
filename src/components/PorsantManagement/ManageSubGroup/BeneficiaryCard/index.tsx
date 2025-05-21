@@ -1,3 +1,4 @@
+import { setComma } from '@/hooks/NumberFormat'
 import { BeneficiaryData } from '@/interfaces'
 import { TransactionMinus } from 'iconsax-react'
 
@@ -24,17 +25,13 @@ const BeneficiaryCard: React.FC<{
           onClick={() => showReportModal(data)}
         />
       </div>
-      <p className='flex justify-between'>
+      <p className='flex justify-between mt-5'>
         <span className='text-[#8455D2]'>تخصیص کل</span>
-        {data.collectible_credit}
+        {setComma(`${data.collectible_credit}`)}
       </p>
-      <p className='flex justify-between'>
-        <span className='text-[#8455D2]'>آخرین تخصیص</span>
-        {data.visitor_name}
-      </p>
-      <p className='flex justify-between'>
+      <p className='flex justify-between mt-3'>
         <span className='text-[#8455D2]'>آزادسازی نشده</span>
-        {data.Uncollectible_credit}
+        {setComma(`${data.Uncollectible_credit}`)}
       </p>
     </div>
   )
