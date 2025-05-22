@@ -73,7 +73,7 @@ const GroupsDetail = () => {
                 <p className='text-sm  px-2 py-1 rounded'>
                   {product.visitor_count ? (
                     <>
-                      <span className='text-[#757575]'>تعداد ذی‌ :</span>
+                      <span className='text-[#757575]'>تعداد ذی‌نفع :</span>
                       {product.visitor_count}
                     </>
                   ) : (
@@ -92,7 +92,7 @@ const GroupsDetail = () => {
                     ? 'bg-[#7747C0] hover:bg-[#7747C0] text-white'
                     : 'border border-[#7747C0] text-[#7747C0] hover:bg-[#7747C0] hover:text-white'
                 } transition duration-300`}>
-                {!product.sup_group_name
+                {parseInt(`${product.visitor_count}`) > 0
                   ? ' مدیریت پورسانت‌ دهی'
                   : 'افزودن ذی‌نفع به زیرگروه'}
               </button>

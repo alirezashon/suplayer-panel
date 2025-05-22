@@ -287,6 +287,11 @@ const Referrer: React.FC = () => {
                                   ) : detailIndex === 5 ? (
                                     <>
                                       {parseInt(`${detail}`) > 0 ? (
+                                        <div className='flex gap-2 cursor-pointer justify-center text-[#7747C0] items-center '>
+                                          <Edit2 size={16} color='#7747C0' />
+                                          <p>ویرایش انتصاب</p>
+                                        </div>
+                                      ) : (
                                         <button
                                           className='border-button px-2 rounded-md'
                                           onClick={() => {
@@ -298,13 +303,8 @@ const Referrer: React.FC = () => {
                                               ) as ReferrerData
                                             )
                                           }}>
-                                          انتصاب دادن
+                                          انتصاب دادن{' '}
                                         </button>
-                                      ) : (
-                                        <div className='flex gap-2 cursor-pointer justify-center text-[#7747C0] items-center '>
-                                          <Edit2 size={16} color='#7747C0' />
-                                          <p>ویرایش انتصاب</p>
-                                        </div>
                                       )}
                                     </>
                                   ) : (
