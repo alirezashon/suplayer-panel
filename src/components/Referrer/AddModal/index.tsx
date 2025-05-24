@@ -10,6 +10,10 @@ import { useMenu } from '@/Context/Menu'
 import { errorClass } from '@/app/assets/style'
 import { getReferrerData } from '@/actions/setData'
 import { useStates } from '@/Context/States'
+import SelectList from '@/components/shared/SelectList'
+import RadioTreeSelector from '@/components/shared/RadioTrees'
+import SingleSelectList from '@/components/shared/SingleSelectList'
+import Calendar from '@/components/shared/Calendar'
 
 interface AddModalProps {
   data?: ReferrerData
@@ -59,6 +63,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
     last_educational_major_id: data?.last_educational_major_id || 0,
     marital_status_id: data?.marital_status_id || 0,
     sex_id: data?.sex_id || 1,
+    birthdate: data?.birthdate || '',
   })
 
   const [errors, setErrors] = useState<Record<string, string | number>>({
@@ -211,25 +216,6 @@ const AddModal = ({ data, close }: AddModalProps) => {
                     </label>
                   ))}
                 </div>
-                <div className='w-full mt-10 sticky bottom-0 left-0 right-0 bg-white flex items-center gap-4 p-2 max-w-[40vw] mx-auto'>
-                  <button
-                    onClick={() =>
-                      formData.pers_chart_id
-                        ? setStep(2)
-                        : setErrors((prv) => ({
-                            ...prv,
-                            pers_chart_id: 'لطفا یک گزینه را انتخاب کنید',
-                          }))
-                    }
-                    className='w-full h-10 text-white bg-[#7747C0] rounded-lg'>
-                    مرحله بعد
-                  </button>
-                  <button
-                    onClick={() => close(false)}
-                    className='flex justify-center items-center w-full h-10 border border-[#7747C0] text-[#7747C0] rounded-lg hover:bg-purple-100'>
-                    انصراف
-                  </button>
-                </div>
               </div>
             ) : (
               <button
@@ -248,26 +234,6 @@ const AddModal = ({ data, close }: AddModalProps) => {
             className='flex flex-col mx-2 my-2 bg-white p-4'>
             {step === 2 ? (
               <>
-                <div className='flex flex-col mt-3'>
-                  <p className='text-[#7747C0]'>انتخاب نوع بازاریاب</p>
-                  <div className='flex flex-col gap-3 mt-2'>
-                    {refererTypes.map((beneficiary, index) => (
-                      <label
-                        key={index}
-                        className='flex items-center gap-3 cursor-pointer'>
-                        <input
-                          type='radio'
-                          defaultChecked={index === 0}
-                          name='beneficiary'
-                          value={beneficiary}
-                          onChange={() => (formData.pers_tob = index)}
-                          className='w-5 h-5 cursor-pointer accent-[#7747C0]'
-                        />
-                        <span className='text-gray-700'>{beneficiary}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
                 <div className='flex gap-4 my-2'>
                   <div className='flex flex-col w-full'>
                     <label>نام</label>
@@ -299,22 +265,26 @@ const AddModal = ({ data, close }: AddModalProps) => {
                 <div className='flex gap-4 my-3'>
                   <div className='flex flex-col w-full'>
                     <label>وضعیت تاهل</label>
-                    <select
-                      name='marital_status_id'
-                      className={`w-full border rounded-lg h-10 px-1 outline-none ${
-                        errors.marital_status_id && errorClass
-                      }`}
-                      onChange={handleChange}>
-                      <option value={0}>نامشخص</option>
-                      <option value={1}>مجرد</option>
-                      <option value={2}>متاهل </option>
-                    </select>
+                    <SingleSelectList
+                      items={[
+                        { id: 0, label: 'نامشخص' },
+                        { id: 1, label: 'مجرد' },
+                        { id: 2, label: 'متاهل' },
+                      ]}
+                      setSelectedItems={(value: string | number) => {
+                        setFormData((prev) => ({
+                          ...prev,
+                          ['pers_uid']: `${value}`,
+                        }))
+                      }}
+                      label='وضعیت تاهل'
+                    />
                   </div>
                   <div className='flex flex-col w-full'>
                     <label>شماره همراه</label>
                     <input
                       onChange={handleChange}
-                      name='pers_uid'
+                      name=''
                       defaultValue={data?.pers_uid || ''}
                       placeholder='متخصص پوست و مو'
                       className={`border ${errors.pers_uid && errorClass}`}
@@ -327,35 +297,39 @@ const AddModal = ({ data, close }: AddModalProps) => {
                 <div className='flex gap-4 my-3'>
                   <div className='flex flex-col w-full'>
                     <label>آخرین مدرک تحصیلی </label>
-                    <select
-                      className='w-full border rounded-lg h-10 px-1 outline-none'
-                      onChange={(e) => {
-                        formData.last_educational_degree_id = parseInt(
-                          `${e.target.value}`
-                        )
-                      }}>
-                      {educational?.degree?.map((degree, index) => (
-                        <option key={index} value={degree?.id}>
-                          {degree.title}
-                        </option>
-                      ))}
-                    </select>
+                    <SingleSelectList
+                      items={
+                        educational?.degree?.map((degree) => ({
+                          id: degree.id,
+                          label: degree.title,
+                        })) || []
+                      }
+                      setSelectedItems={(value: string | number) => {
+                        setFormData((prev) => ({
+                          ...prev,
+                          ['last_educational_degree_id']: parseInt(`${value}`),
+                        }))
+                      }}
+                      label='آخرین مدرک تحصیلی'
+                    />
                   </div>
                   <div className='flex flex-col w-full'>
                     <label>آخرین رشته تحصیلی </label>
-                    <select
-                      className='w-full border rounded-lg h-10 px-1 outline-none'
-                      onChange={(e) => {
-                        formData.last_educational_major_id = parseInt(
-                          `${e.target.value}`
-                        )
-                      }}>
-                      {educational?.major?.map((major, index) => (
-                        <option key={index} value={major?.id}>
-                          {major.title}
-                        </option>
-                      ))}
-                    </select>
+                    <SingleSelectList
+                      items={
+                        educational?.degree?.map((degree) => ({
+                          id: degree.id,
+                          label: degree.title,
+                        })) || []
+                      }
+                      setSelectedItems={(value: string | number) => {
+                        setFormData((prev) => ({
+                          ...prev,
+                          ['last_educational_major_id']: parseInt(`${value}`),
+                        }))
+                      }}
+                      label='آخرین رشته تحصیلی'
+                    />
                   </div>
                 </div>
                 <div className='flex gap-4 my-3'>
@@ -372,21 +346,33 @@ const AddModal = ({ data, close }: AddModalProps) => {
                     </select>
                   </div>
                   <div className='flex flex-col w-full'>
-                    <label> کد پرسنلی</label>
-                    <input
-                      defaultValue={data?.personnel_code}
-                      name='personnel_code'
-                      onChange={handleChange}
-                      className={`w-full border ${
-                        errors.personnel_code && errorClass
-                      }`}
+                    <label>تاریخ تولد</label>
+                    <Calendar
+                      setDate={(value: string) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          ['birthdate']: `${value}`,
+                        }))
+                      }
+                      placeholder='۱۳۵۶/۰۶/۲۳'
                     />
-                    {errors.personnel_code && (
-                      <span className='text-red-500'>
-                        {errors.personnel_code}
-                      </span>
-                    )}
                   </div>
+                </div>
+                <div className='flex flex-col w-full'>
+                  <label> کد پرسنلی</label>
+                  <input
+                    defaultValue={data?.personnel_code}
+                    name='personnel_code'
+                    onChange={handleChange}
+                    className={`w-full border ${
+                      errors.personnel_code && errorClass
+                    }`}
+                  />
+                  {errors.personnel_code && (
+                    <span className='text-red-500'>
+                      {errors.personnel_code}
+                    </span>
+                  )}
                 </div>
               </>
             ) : (
@@ -408,25 +394,48 @@ const AddModal = ({ data, close }: AddModalProps) => {
                 </div>
               </>
             )}
-            <div className='w-full sticky bottom-0 left-0 right-0 bg-white flex items-center gap-4 p-2 max-w-[40vw] mx-auto'>
-              <button
-                disabled={submitting}
-                type='submit'
-                className={`${
-                  submitting && 'opacity-30 cursor-not-allowed'
-                } w-full h-10 text-white bg-[#7747C0] rounded-lg`}>
-                ثبت و ادامه
-              </button>
-              <button
-                disabled={submitting}
-                type='submit'
-                className={`${
-                  submitting && 'opacity-30 cursor-not-allowed'
-                } flex justify-center items-center w-full h-10 border border-[#7747C0] text-[#7747C0] rounded-lg hover:bg-purple-100`}>
-                ثبت و بررسی
-              </button>
-            </div>
+            {step === 3 && (
+              <div className='w-full sticky bottom-0 left-0 right-0 bg-white flex items-center gap-4 p-2 max-w-[40vw] mx-auto'>
+                <button
+                  disabled={submitting}
+                  type='submit'
+                  className={`${
+                    submitting && 'opacity-30 cursor-not-allowed'
+                  } w-full h-10 text-white bg-[#7747C0] rounded-lg`}>
+                  ثبت و ادامه
+                </button>
+                <button
+                  disabled={submitting}
+                  type='submit'
+                  className={`${
+                    submitting && 'opacity-30 cursor-not-allowed'
+                  } flex justify-center items-center w-full h-10 border border-[#7747C0] text-[#7747C0] rounded-lg hover:bg-purple-100`}>
+                  ثبت و بررسی
+                </button>
+              </div>
+            )}
           </form>
+        )}
+        {step < 3 && (
+          <div className='w-full mt-10 sticky bottom-0 left-0 right-0 bg-white flex items-center gap-4 p-2 max-w-[40vw] mx-auto'>
+            <button
+              onClick={() =>
+                formData.pers_chart_id
+                  ? setStep(step + 1)
+                  : setErrors((prv) => ({
+                      ...prv,
+                      pers_chart_id: 'لطفا یک گزینه را انتخاب کنید',
+                    }))
+              }
+              className='w-full h-10 text-white bg-[#7747C0] rounded-lg'>
+              مرحله بعد
+            </button>
+            <button
+              onClick={() => close(false)}
+              className='flex justify-center items-center w-full h-10 border border-[#7747C0] text-[#7747C0] rounded-lg hover:bg-purple-100'>
+              انصراف
+            </button>
+          </div>
         )}
       </div>
     </div>

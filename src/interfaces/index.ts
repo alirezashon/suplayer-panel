@@ -203,6 +203,7 @@ export interface ReferrerData {
   StateCode: string
   StateDesc: string
   task_count: number
+  birthdate: string
 }
 export interface TreeChartInterface {
   id: number
