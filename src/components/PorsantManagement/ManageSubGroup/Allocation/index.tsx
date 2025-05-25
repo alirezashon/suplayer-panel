@@ -1,7 +1,7 @@
 import { getCookieByKey } from '@/actions/cookieToken'
 import { getAllocatedList } from '@/actions/setData'
 import { walletBoxStyle } from '@/app/assets/style'
-import Loading from '@/components/shared/LoadingSpinner'
+import Loading from '@/components/shared/Loading'
 import OtpModal from '@/components/shared/OtpModal'
 import { useData } from '@/Context/Data'
 import { useMenu } from '@/Context/Menu'
@@ -9,11 +9,12 @@ import { useStates } from '@/Context/States'
 import { setComma } from '@/hooks/NumberFormat'
 import { generateAllocationSignature } from '@/hooks/Signature'
 import {
+  BeneficiaryData,
   DefineAllocationInterface,
   SaveAllocatedDataInterface,
 } from '@/interfaces'
 import { ChangeAllocationStatus, DefineAllocation } from '@/services/allocation'
-import { Printer, WalletMoney } from 'iconsax-react'
+import { Printer, SearchNormal, WalletMoney } from 'iconsax-react'
 import { useEffect, useState } from 'react'
 
 const headers = [
@@ -41,6 +42,7 @@ const Allocation = () => {
   const { setMenu } = useMenu()
   const { beneficiaryData, balance, allocationList, setAllocationList } =
     useData()
+  const [filteredData, setFilteredData] = useState<BeneficiaryData[]>([])
   const {
     selectedSubGroupData,
     selectedGroupData,
@@ -57,7 +59,7 @@ const Allocation = () => {
       setMenu('porsant')
     }
     if (!allocationList) return
-
+    setFilteredData(beneficiaryData as BeneficiaryData[])
     // ست کردن allocatedData
     const allocated = allocationList
       .filter((allocate) => allocate.wstatus === 0)
@@ -87,7 +89,13 @@ const Allocation = () => {
 
     setUneditableIds(uneditableIds)
     setCommaAmount(newCommaAmount) // مقداردهی مقدار اولیه `commaAmount`
-  }, [setMenu, selectedGroupData, allocationList, selectedSubGroupData])
+  }, [
+    setMenu,
+    selectedGroupData,
+    allocationList,
+    selectedSubGroupData,
+    beneficiaryData,
+  ])
 
   const handleCreditChange = (id: string, value: string) => {
     // حذف کاماهای اضافی
@@ -218,6 +226,18 @@ const Allocation = () => {
       })
     })
   }
+  const filterBeneficiary = (value: string) => {
+    const result = beneficiaryData?.filter(
+      (beneficiary) =>
+        beneficiary.supervisor_id === selectedSubGroupData?.supervisor_id &&
+        (beneficiary.visitor_full_name
+          .toLowerCase()
+          .includes(value.toLowerCase()) ||
+          beneficiary.visitor_uid.toLowerCase().includes(value.toLowerCase()))
+    )
+    setFilteredData(result as BeneficiaryData[])
+  }
+
   return (
     <>
       {permissions[1].includes('749') && (
@@ -298,6 +318,19 @@ const Allocation = () => {
                   </div>
                 ))}
               </div>
+              <div className='flex w-full justify-end items-center gap-2'>
+                <div className='relative w-full flex items-center h-full mt-10'>
+                  <div className='absolute left-10 z-20 cursor-pointer text-[#50545F]'>
+                    <SearchNormal size={24} color='gray' />
+                  </div>
+                  <input
+                    type='search'
+                    placeholder='جستجو'
+                    onChange={(e) => filterBeneficiary(e.target.value)}
+                    className='absolute w-full z-10 border border-gray-300 rounded-md px-4 py-2 text-right outline-none focus:border-purple-400'
+                  />
+                </div>
+              </div>
               <div className='m-4'>
                 <table className='my-10 w-full border-collapse border border-gray-200 printable-table '>
                   <thead>
@@ -317,7 +350,7 @@ const Allocation = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {beneficiaryData
+                    {filteredData
                       ?.filter(
                         (item) =>
                           item?.supervisor_id ===
@@ -378,7 +411,7 @@ const Allocation = () => {
                       disabled={loading}
                       className={`border-button h-10 rounded-lg  w-56 flex justify-center items-center`}>
                       {loading ? (
-                        <Loading size={5} color='#ffffff' />
+                        <Loading color='#ffffff' />
                       ) : (
                         'ذخیره پیش نویس تخصیص'
                       )}
@@ -387,11 +420,7 @@ const Allocation = () => {
                       onClick={() => setshowOtpModal(true)}
                       disabled={loading}
                       className={`fill-button h-10 rounded-lg  w-56 flex justify-center items-center`}>
-                      {loading ? (
-                        <Loading size={5} color='#ffffff' />
-                      ) : (
-                        'ثبت نهایی'
-                      )}
+                      {loading ? <Loading color='#ffffff' /> : 'ثبت نهایی'}
                     </button>
                   </div>
                 </div>

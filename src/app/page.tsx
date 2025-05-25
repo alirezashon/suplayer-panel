@@ -11,7 +11,7 @@ import Profile from '@/components/Profile'
 import Promotion from '@/components/Promotions'
 import ReferralLevels from '@/components/Referral Levels'
 import Referrer from '@/components/Referrer'
-import Loading from '@/components/shared/LoadingSpinner'
+import Loading from '@/components/shared/Loading'
 import SubGroups from '@/components/SubGroups'
 import Variables from '@/components/Variables'
 import Wallet from '@/components/Wallet'
@@ -59,7 +59,7 @@ const Home = () => {
         {modalContent && <CustomModal />}
         {loading ? (
           <div className='flex h-screen w-full justify-center items-center'>
-            <Loading size={56} />
+             <Loading />
           </div>
         ) : menu !== 'profile' ? (
           <div>

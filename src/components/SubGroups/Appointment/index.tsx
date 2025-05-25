@@ -7,6 +7,7 @@ import { useStates } from '@/Context/States'
 import SelectList from '@/components/shared/SelectList'
 import { EditBeneficiary } from '@/services/items'
 import MultiSelectTrees from '@/components/shared/MultiSelectTrees'
+import { getBeneficiaryData, getSubGroupData } from '@/actions/setData'
 
 interface AppointmentModalProps {
   data?: SubGroup
@@ -14,7 +15,7 @@ interface AppointmentModalProps {
   close: () => void
 }
 const AppointmentModal = ({ data, close, type }: AppointmentModalProps) => {
-  const { showModal, selectedSubGroupData } = useStates()
+  const { showModal } = useStates()
   const [, setErrors] = useState<Record<string, string>>({})
   const [selectedBeneficiary, setSelectedBeneficiary] = useState<
     BeneficiaryData[]
@@ -27,7 +28,8 @@ const AppointmentModal = ({ data, close, type }: AppointmentModalProps) => {
       children: { id: number | string; label: string }[]
     }[]
   >([])
-  const { beneficiaryData, referrerData } = useData()
+  const { beneficiaryData, referrerData, setSubGroupData, setBeneficiaryData } =
+    useData()
 
   useEffect(() => {
     if (!referrerData) return
@@ -69,7 +71,7 @@ const AppointmentModal = ({ data, close, type }: AppointmentModalProps) => {
           const result = await EditBeneficiary({
             accessToken,
             ...beneficiary,
-            supervisor_id: selectedSubGroupData?.supervisor_id as number,
+            supervisor_id: data?.supervisor_id as number,
           })
           if (result.status === 1) {
             showModal({
@@ -77,6 +79,12 @@ const AppointmentModal = ({ data, close, type }: AppointmentModalProps) => {
               title: 'موفق',
               main: <p>{result.message}</p>,
               autoClose: 1,
+            })
+            await getSubGroupData().then((response) => {
+              if (response) setSubGroupData(response)
+            })
+            await getBeneficiaryData().then((response) => {
+              if (response) setBeneficiaryData(response)
             })
           } else {
             showModal({
@@ -148,7 +156,7 @@ const AppointmentModal = ({ data, close, type }: AppointmentModalProps) => {
                         ) || []
                     )
                   }
-                  label='نام گروه'
+                  label='نام ذینفع'
                 />
               </div>
             ) : (

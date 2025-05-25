@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
 import { ArrowRight2, Eye, EyeSlash } from 'iconsax-react'
-import Loading from '../shared/LoadingSpinner'
+import Loading from '../shared/Loading'
 import Image from 'next/image'
 import LogoSrc from '../../../public/icons/logo.svg'
 import LoginBg1 from '../../../public/images/login1.jpg'
@@ -151,10 +151,10 @@ const SignUp = () => {
 
   return (
     <>
-    {otpCode}
+      {otpCode}
       {loading ? (
         <div className='flex justify-center items-center w-full h-screen'>
-          <Loading size={40} />
+          <Loading />
         </div>
       ) : (
         <div className='flex w-[100vw] min-h-screen bg-white'>
@@ -207,8 +207,8 @@ const SignUp = () => {
                       <input
                         id='email'
                         value={inputRefs.current.email}
-                        onChange={() =>
-                          handleInputChange
+                        onChange={
+                          () => handleInputChange
                           // (inputRefs.current.email = e.target.value)
                         }
                         placeholder='example@'

@@ -1,7 +1,7 @@
 'use client'
 import { ExportCurve } from 'iconsax-react'
 import { useState } from 'react'
-import Loading from './LoadingSpinner'
+import Loading from './Loading'
 const ExcelGenerator = ({
   rows,
   header,
@@ -50,7 +50,7 @@ const ExcelGenerator = ({
   return (
     <div>
       {loading ? (
-        <Loading size={10} />
+        <Loading />
       ) : (
         <ExportCurve onClick={generateExcel} size='32' color='#ffffff' />
       )}

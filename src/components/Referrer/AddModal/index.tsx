@@ -10,8 +10,6 @@ import { useMenu } from '@/Context/Menu'
 import { errorClass } from '@/app/assets/style'
 import { getReferrerData } from '@/actions/setData'
 import { useStates } from '@/Context/States'
-import SelectList from '@/components/shared/SelectList'
-import RadioTreeSelector from '@/components/shared/RadioTrees'
 import SingleSelectList from '@/components/shared/SingleSelectList'
 import Calendar from '@/components/shared/Calendar'
 
@@ -44,7 +42,6 @@ const AddModal = ({ data, close }: AddModalProps) => {
   const { TreeChartInterface, setReferrerData } = useData()
   const { setMenu } = useMenu()
   const { showModal, setSubmitting, submitting } = useStates()
-  const refererTypes = ['شخص', 'کسب و کار']
   const [formData, setFormData] = useState({
     personnel_code: data?.personnel_code || '',
     pers_chart_id: data?.pers_chart_id || 0,

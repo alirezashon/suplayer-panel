@@ -13,7 +13,7 @@ import {
   setTokenIntoCookie,
 } from '@/actions/cookieToken'
 import { ArrowRight2 } from 'iconsax-react'
-import Loading from '../shared/LoadingSpinner'
+import Loading from '../shared/Loading'
 import Image from 'next/image'
 import LogoSrc from '../../../public/icons/logo.svg'
 import LoginBg1 from '../../../public/images/login1.jpg'
@@ -77,9 +77,11 @@ const Login = () => {
       if (!response) {
         setLoading(false)
         showModal({
-          type: 'error',
-          main: <p>لطفا از اتصال به اینترنت اطمینان حاصل فرمایید</p>,
-          title: 'خطای ارتباط با سرور ',
+          type: response.access_token ? 'success' : 'error',
+          main: response.access_token
+            ? 'ورود موفق ، لطفا کمی صبر کنید.'
+            : 'خطایی رخ داد',
+          title: response.access_token ? 'موفق' : 'خطا',
           autoClose: 2,
         })
         return
@@ -167,7 +169,7 @@ const Login = () => {
       {modalContent && <CustomModal />}
       {loading ? (
         <div className='flex justify-center items-center w-full h-screen'>
-          <Loading size={40} />
+           <Loading />
         </div>
       ) : (
         <div className='flex w-[100vw]  max-lg:flex-col min-h-screen bg-white'>

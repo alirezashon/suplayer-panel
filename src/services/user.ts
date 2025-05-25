@@ -116,7 +116,6 @@ export const MobileValidatorRequest = async ({
 
     return await response.json()
   } catch (error: unknown) {
-    // throw new Error(error as any) // error type?
     console.log(error)
   }
 }
@@ -130,13 +129,13 @@ export const LoginWithOtpAndMobile = async ({
 }) => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/sbw_otplogin`,
+      `${process.env.NEXT_PUBLIC_API_URL}/otplogin`,
       {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ mobile, otp }),
+        body: JSON.stringify({ mobile, otp,scopes:'5' }),
       }
     )
 
@@ -146,7 +145,6 @@ export const LoginWithOtpAndMobile = async ({
 
     return await response.json()
   } catch (error: unknown) {
-    // throw new Error(error as any) // error type?
     console.log(error)
   }
 }
@@ -163,7 +161,6 @@ export const GetCurrentUser = async ({
         method: 'GET',
         headers: {
           authorization: `Bearer ${accessToken}`,
-          // authorization: `JWT ${token}`,
         },
       }
     )

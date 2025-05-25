@@ -61,8 +61,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
     }
     setErrors({ ...errors, [name]: '' })
   }
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleSubmit = async () => {
     setIsConfirmed(true)
     const newErrors: Record<string, string> = {}
     if (!refs.current.visitor_name) newErrors.visitor_name = 'این فیلد اجباریست'
@@ -349,11 +348,11 @@ const AddModal = ({ data, close }: AddModalProps) => {
                     <div className='flex flex-col w-full'>
                       <label>نام صاحب کسب و کار </label>
                       <input
-                        defaultValue={refs.current.visitor_family}
+                        defaultValue={refs.current.visitor_full_name}
                         className={`border ${
-                          errors.visitor_family && errorClass
+                          errors.visitor_full_name && errorClass
                         }`}
-                        name='visitor_family'
+                        name='visitor_full_name'
                         onChange={handleChange}
                         placeholder='امیر'
                       />
@@ -376,18 +375,17 @@ const AddModal = ({ data, close }: AddModalProps) => {
                       <label>تخصص ذی نفع </label>
                       <input
                         defaultValue={
-                          data?.visitor_tel || refs.current.visitor_tel || ''
+                          data?.visitor_specialty ||
+                          refs.current.visitor_specialty ||
+                          ''
                         }
                         onChange={handleChange}
-                        name='visitor_tel'
-                        className={`border ${errors.visitor_tel && errorClass}`}
+                        name='visitor_specialty'
+                        className={`border ${
+                          errors.visitor_specialty && errorClass
+                        }`}
                         placeholder='روانپزشکی'
                       />
-                      {errors.visitor_tel && (
-                        <span className='text-red-500'>
-                          {errors.visitor_tel}
-                        </span>
-                      )}
                     </div>
                     <div className='flex flex-col w-full'>
                       <label>شماره همراه </label>
@@ -500,39 +498,39 @@ const AddModal = ({ data, close }: AddModalProps) => {
               </div>
             </>
           )}
-          <div className='flex items-center'>
-            <button
-              type={step === 1 ? 'button' : 'submit'}
-              onClick={() => step === 1 && validateForm()}
-              style={{
-                animation: `${
-                  isConfirmed
-                    ? 'hideSubmitAnimate 1s ease-in-out forwards '
-                    : 'showSubmitAnimate 1s ease-in-out forwards '
-                }`,
-              }}
-              disabled={submitting}
-              className={`w-full ${
-                submitting && 'opacity-30 cursor-not-allowed'
-              } fill-button px-10 h-10 mt-10 rounded-lg transition-transform duration-200 ease-in-out hover:scale-105`}>
-              ثبت و ذخیره
-            </button>
-
-            <div
-              className={`absolute ${
-                !isConfirmed && ' opacity-0 '
-              } transform -translate-x-1/2 text-[#0F973D] flex rounded-lg transition-all duration-1000 ease-in-out`}
-              style={{
-                animation: `${
-                  isConfirmed
-                    ? 'showSuccessText 1s ease-in-out forwards '
-                    : 'hideSuccessText 1s ease-in-out forwards '
-                }`,
-              }}>
-              عملیات موفقیت‌آمیز بود! <Grammerly size={24} color='#0F973D' />
-            </div>
-          </div>
         </form>
+        <div className='flex items-center'>
+          <button
+            type={step === 1 ? 'button' : 'submit'}
+            onClick={() => (step === 1 ? validateForm() : handleSubmit())}
+            style={{
+              animation: `${
+                isConfirmed
+                  ? 'hideSubmitAnimate 1s ease-in-out forwards '
+                  : 'showSubmitAnimate 1s ease-in-out forwards '
+              }`,
+            }}
+            disabled={submitting}
+            className={`w-full ${
+              submitting && 'opacity-30 cursor-not-allowed'
+            } fill-button px-10 h-10 mt-10 rounded-lg transition-transform duration-200 ease-in-out hover:scale-105`}>
+            ثبت و ذخیره
+          </button>
+
+          <div
+            className={`absolute ${
+              !isConfirmed && ' opacity-0 '
+            } transform -translate-x-1/2 text-[#0F973D] flex rounded-lg transition-all duration-1000 ease-in-out`}
+            style={{
+              animation: `${
+                isConfirmed
+                  ? 'showSuccessText 1s ease-in-out forwards '
+                  : 'hideSuccessText 1s ease-in-out forwards '
+              }`,
+            }}>
+            عملیات موفقیت‌آمیز بود! <Grammerly size={24} color='#0F973D' />
+          </div>
+        </div>
       </div>
     </div>
   )

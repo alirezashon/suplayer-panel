@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { InfoCircle, Star1 } from 'iconsax-react'
-import Loading from '../shared/LoadingSpinner'
+import Loading from '../shared/Loading'
 import Image from 'next/image'
 import { bankImages } from '../shared/MatchingBankLogo'
 import WithdrawSheba from './Sheba'

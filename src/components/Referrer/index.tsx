@@ -47,7 +47,7 @@ const Referrer: React.FC = () => {
             pers_chart_title:
               TreeChartInterface?.find(
                 (chart) => chart.id === referrer.pers_chart_id
-              )?.chlabel || '',
+              )?.chtitle || '',
             pers_status: referrer.pers_status,
             pers_tob: referrer.pers_tob,
             pers_uid: referrer.pers_uid,
@@ -72,6 +72,7 @@ const Referrer: React.FC = () => {
     }
   }
 
+  console.table(referrerData)
   const filterPersonnel = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
