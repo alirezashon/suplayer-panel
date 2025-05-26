@@ -8,6 +8,7 @@ import SelectList from '@/components/shared/SelectList'
 import { EditBeneficiary } from '@/services/items'
 import MultiSelectTrees from '@/components/shared/MultiSelectTrees'
 import { getBeneficiaryData, getSubGroupData } from '@/actions/setData'
+import { DefineAppointmentTaskList } from '@/services/referrer'
 
 interface AppointmentModalProps {
   data?: SubGroup
@@ -28,6 +29,7 @@ const AppointmentModal = ({ data, close, type }: AppointmentModalProps) => {
       children: { id: number | string; label: string }[]
     }[]
   >([])
+
   const { beneficiaryData, referrerData, setSubGroupData, setBeneficiaryData } =
     useData()
 
@@ -106,6 +108,37 @@ const AppointmentModal = ({ data, close, type }: AppointmentModalProps) => {
           autoClose: 1,
         })
         return
+      } else {
+        const accessToken = (await getCookieByKey('access_token')) || ''
+        Promise.all(
+          selectedReferrers.map(async (referrer) => {
+            await DefineAppointmentTaskList({
+              accessToken,
+              personnel_uid: referrer,
+              supervisor_code: [data?.supervisor_code as string],
+              sup_group_code: [],
+              visitor_uid: '',
+              task_kpi_uid: '',
+              pgroup_id: [],
+              chart_id: [],
+              product_uid: [],
+            }).then((result) => {
+              showModal({
+                type: result.status === 1 ? 'success' : 'error',
+                main: <p>{result.message}</p>,
+                title: result.status === 1 ? 'موفق' : 'خطا',
+                autoClose: 2,
+              })
+            })
+          })
+        ).finally(async () => {
+          await getSubGroupData().then((response) => {
+            if (response) setSubGroupData(response)
+          })
+          await getBeneficiaryData().then((response) => {
+            if (response) setBeneficiaryData(response)
+          })
+        })
       }
       close()
     }

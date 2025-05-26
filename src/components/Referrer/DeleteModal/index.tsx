@@ -11,52 +11,36 @@ const DeleteModal = ({
 }: {
   isActive?: boolean
   data: ReferrerData
-  close: (show: boolean) => void
+  close: () => void
 }) => {
   const { submitting, setSubmitting, showModal } = useStates()
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setSubmitting(true)
     const accessToken = (await getCookieByKey('access_token')) || ''
-    const {
-      personnel_code,
-      pers_chart_id,
-      pers_job_id,
-      pers_type,
-      pers_tob,
-      pers_uid,
-      pers_tel,
-      pers_full_name,
-      pers_name,
-      pers_family,
-      CityUID,
-      pers_address,
-      last_educational_degree_id,
-      last_educational_major_id,
-      marital_status_id,
-      sex_id,
-      personnel_uid,
-    } = data
+
     await EditReferrer({
       accessToken,
-      personnel_code,
-      pers_chart_id: parseInt(`${pers_chart_id}`),
-      pers_job_id,
-      pers_type,
-      pers_tob,
-      pers_uid,
-      pers_tel,
-      pers_full_name,
-      pers_name,
-      pers_family,
-      pers_status: 9,
-      CityUID,
-      pers_address,
-      last_educational_degree_id,
-      last_educational_major_id,
-      marital_status_id,
-      sex_id,
-      personnel_uid,
+      personnel_code: data.personnel_code,
+      pers_chart_id: data.pers_chart_id,
+      pers_job_id: data.pers_job_id,
+      pers_type: data.pers_type,
+      pers_tob: data.pers_tob,
+      pers_uid: data.pers_uid,
+      pers_tel: data.pers_tel,
+      pers_full_name: data.pers_full_name,
+      pers_name: data.pers_name,
+      pers_family: data.pers_family,
+      pers_status: data.pers_status,
+      CityUID: data.CityUID,
+      pers_address: data.pers_address,
+      last_educational_degree_id: data.last_educational_degree_id,
+      last_educational_major_id: data.last_educational_major_id,
+      marital_status_id: data.marital_status_id,
+      sex_id: data.sex_id,
+      personnel_uid: data.pers_uid || data.personnel_code,
+      military_duty_status_id: data.military_duty_status_id || 0,
+      birthdate: data.birthdate || '1380-03-07',
     }).then((result) => {
       if (result.status === 1)
         showModal({
@@ -94,12 +78,12 @@ const DeleteModal = ({
                 size={24}
                 cursor='pointer'
                 color='#50545F'
-                onClick={() => close(false)}
+                onClick={() => close()}
               />
             </div>
           </div>
 
-          {!isActive ? (
+          {isActive ? (
             <div className='flex gap-3 p-3 my-3 rounded-lg bg-red-100 text-[#D42620]'>
               <Forbidden2 size={24} color='#D42620' />
               <p>این زیر گروه فعال می‌باشد، شما امکان حذف آن‌ را ندارید.</p>
@@ -108,13 +92,13 @@ const DeleteModal = ({
             <div className='font-bold my-5'>
               آیا مطمئن به حذف
               <span className='px-3 rounded-lg mx-1 bg-purple-300 text-[#6137A0]'>
-                {data.pers_full_name}
+                {` ${data.pers_full_name} `}
               </span>
               هستید؟
             </div>
           )}
           <div className='flex gap-10'>
-            {!isActive ? (
+            {isActive ? (
               <button
                 type='submit'
                 className={`fill-button px-10 h-10 rounded-lg  `}>
@@ -123,7 +107,7 @@ const DeleteModal = ({
             ) : (
               <>
                 <button
-                  type='submit'
+                  onClick={() => close()}
                   className='w-full mt-4 px-4 py-2 bg-[#7747C0] text-white rounded-lg hover:bg-purple-800'>
                   انصراف
                 </button>

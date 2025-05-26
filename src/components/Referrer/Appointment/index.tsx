@@ -27,7 +27,7 @@ const AppointmentModal = ({ data, close }: AppointmentModalProps) => {
     chart_id: [] as number[],
     product_uid: [] as string[],
   })
-  // data?.personnel_uid || ''
+
   const {
     groupData,
     subGroupData,
@@ -113,7 +113,7 @@ const AppointmentModal = ({ data, close }: AppointmentModalProps) => {
                 </div>
                 <div className='flex flex-col'>
                   <p className='text-[#5F6474]'>تاریخ تولد</p>
-                  <p className='text-[#8455D2]'>{'فیلدش تو بک نیست'}</p>
+                  <p className='text-[#8455D2]'>{data?.birthdate}</p>
                 </div>
                 <div className='flex flex-col'>
                   <p className='text-[#5F6474]'>تحصیلات</p>
@@ -204,6 +204,7 @@ const AppointmentModal = ({ data, close }: AppointmentModalProps) => {
           <div className='flex flex-col m-3 gap-3'>
             <div className='flex flex-col w-full'>
               <SelectList
+                key={1}
                 label='گروه خود را انتخاب کنید'
                 items={
                   groupData?.map((gp) => {
@@ -220,6 +221,7 @@ const AppointmentModal = ({ data, close }: AppointmentModalProps) => {
             </div>
             <div className='flex flex-col w-full'>
               <SelectList
+                key={2}
                 label='زیرگروه خود را انتخاب کنید'
                 items={
                   subGroupData?.map((gp) => {
@@ -246,6 +248,7 @@ const AppointmentModal = ({ data, close }: AppointmentModalProps) => {
           <div className='flex flex-col m-3 gap-3'>
             <div className='flex flex-col w-full'>
               <SelectList
+                key={3}
                 label='گروه محصول را انتخاب کنید'
                 items={
                   productGroupData?.map((gp) => {
@@ -265,6 +268,7 @@ const AppointmentModal = ({ data, close }: AppointmentModalProps) => {
             </div>
             <div className='flex flex-col w-full'>
               <SelectList
+                key={4}
                 label='برند محصول را انتخاب کنید'
                 items={
                   brandsData?.map((gp) => {

@@ -102,7 +102,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
       ...formData,
       pers_job_id: 1,
       pers_tel: formData.pers_uid,
-      pers_full_name: formData.pers_name + formData.pers_family,
+      pers_full_name: formData.pers_name + ' ' + formData.pers_family,
       accessToken,
     }).then(async (value) => {
       showModal({

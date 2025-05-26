@@ -140,15 +140,15 @@ const Brands: React.FC = () => {
                     <div className='flex my-3'>
                       <HashtagSquare size={24} color='#704CB9' />
                       <p className='text-sm  px-2 py-1 rounded'>
-                        {brand.lev1_count > 0 ? (
+                        {brand.product_count > 0 ? (
                           <>
                             <span className='text-[#757575]'>
-                              تعداد برند محصول :
+                              تعداد  محصول :
                             </span>
-                            {brand.lev1_count}
+                            {brand.product_count}
                           </>
                         ) : (
-                          'برند محصولی تعریف نشده است'
+                          ' محصولی تعریف نشده است'
                         )}
                       </p>
                     </div>

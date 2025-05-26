@@ -4,8 +4,13 @@ import { setComma } from '@/hooks/NumberFormat'
 import { errorClass, walletBoxStyle } from '@/app/assets/style'
 import { getCookieByKey } from '@/actions/cookieToken'
 import { CreateNewIPG, SendPaymentLink } from '@/services/finance'
+import { useMenu } from '@/Context/Menu'
+import ShowAnimateNumber from '@/components/shared/AnimateNumber'
+import { useData } from '@/Context/Data'
 
 const OnlinePayment = () => {
+  const { setMenu } = useMenu()
+  const { balance } = useData()
   const [formData, setFormData] = useState({
     amount: '',
     phone: '',
@@ -54,7 +59,6 @@ const OnlinePayment = () => {
             <MoneySend size='24' color='#704CB9' />
             واریز آنلاین
           </h2>
-
           <div>
             <label
               htmlFor='amount'
@@ -79,7 +83,7 @@ const OnlinePayment = () => {
           </div>
 
           <div className='flex justify-between'>
-            {['100000000', '200000000', '300000000'].map((amount) => (
+            {['100,000,000', '200,000,000', '300,000,000'].map((amount) => (
               <button
                 key={amount}
                 onClick={() => handleChange('amount', amount)}
@@ -127,7 +131,12 @@ const OnlinePayment = () => {
               <TickCircle size='20' color='#ffffff' variant='Bold' />
               پرداخت
             </button>
-            <button className='flex items-center gap-2 w-full justify-center h-10 rounded-lg bg-purple-50 hover:bg-purple-100 text-[#7747C0] border border-600 font-bold'>
+            <button
+              onClick={() => {
+                setMenu('wallet')
+                location.hash = 'wallet'
+              }}
+              className='flex items-center gap-2 w-full justify-center h-10 rounded-lg bg-purple-50 hover:bg-purple-100 text-[#7747C0] border border-600 font-bold'>
               <CloseCircle size='20' color='#704CB9' variant='Bold' />
               انصراف
             </button>
@@ -146,9 +155,14 @@ const OnlinePayment = () => {
             </h3>
             <p className='flex justify-between text-gray-500'>
               اعتبار قابل تخصیص <br />
-              <span className='text-gray-800 font-semibold text-lg'>
-                ۴۰۰۰۰۰  ریال
-              </span>
+              <div className='flex gap-2 text-gray-800 font-semibold text-lg'>
+                <ShowAnimateNumber
+                  startValue={balance?.Releasable || 0}
+                  targetValue={balance?.Releasable || 0}
+                  incrementValue={balance?.Releasable || 0}
+                />
+                ریال
+              </div>
             </p>
           </div>
         </div>

@@ -9,9 +9,11 @@ import { useData } from '@/Context/Data'
 import { getDraftsData } from '@/actions/setData'
 import { useStates } from '@/Context/States'
 import { errorClass } from '@/app/assets/style'
+import { useMenu } from '@/Context/Menu'
 
 const Drafts = () => {
   const { setDraftsData } = useData()
+  const { setMenu } = useMenu()
   const refs = useRef({
     cheque_type: '',
     amount: '',
@@ -310,7 +312,12 @@ const Drafts = () => {
               } justify-center h-10 rounded-lg bg-[#7747C0] hover:bg-[#7747C0] text-white font-bold`}>
               ذخیره
             </button>
-            <button className='flex items-center gap-2 w-full justify-center h-10 rounded-lg bg-purple-50 hover:bg-purple-100 text-[#7747C0] border border-[#7747c0] font-bold'>
+            <button
+              onClick={() => {
+                setMenu('wallet')
+                location.hash = 'wallet'
+              }}
+              className='flex items-center gap-2 w-full justify-center h-10 rounded-lg bg-purple-50 hover:bg-purple-100 text-[#7747C0] border border-[#7747c0] font-bold'>
               انصراف
             </button>
           </div>

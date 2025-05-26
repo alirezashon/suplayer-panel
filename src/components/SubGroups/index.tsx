@@ -46,7 +46,7 @@ const SubGroups: React.FC = () => {
       {showDeleteModal && (
         <DeleteModal
           name={`${showDeleteModal}`}
-          close={setShowDeleteModal}
+          close={() => setShowDeleteModal(false)}
           groupId={activeTab}
         />
       )}

@@ -99,6 +99,8 @@ export const EditReferrer = async ({
   marital_status_id,
   sex_id,
   personnel_uid,
+  military_duty_status_id,
+  birthdate,
 }: {
   accessToken: string | undefined
   personnel_code: string
@@ -119,6 +121,8 @@ export const EditReferrer = async ({
   marital_status_id: number
   sex_id: number
   personnel_uid: string
+  military_duty_status_id: number
+  birthdate: string
 }) => {
   try {
     const response = await fetch(
@@ -148,6 +152,8 @@ export const EditReferrer = async ({
           marital_status_id,
           sex_id,
           personnel_uid,
+          military_duty_status_id,
+          birthdate,
         }),
       }
     )

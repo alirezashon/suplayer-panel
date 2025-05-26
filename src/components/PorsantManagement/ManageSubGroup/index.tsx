@@ -204,7 +204,7 @@ const PorsantManagement = () => {
                   setShowDeleteState(false)
                 }}
                 className={`min-w-40 border border-[#7747C0] text-[#7747C0] px-5  h-10 rounded-lg`}>
-                حذف بازاریاب‌ها
+                حذف ذی‌نفعان
               </button>
               <button
                 onClick={() => {

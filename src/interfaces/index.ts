@@ -204,6 +204,7 @@ export interface ReferrerData {
   StateDesc: string
   task_count: number
   birthdate: string
+  military_duty_status_id?: number
 }
 export interface TreeChartInterface {
   id: number

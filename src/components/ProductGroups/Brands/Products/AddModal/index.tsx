@@ -1,5 +1,5 @@
 import { getCookieByKey } from '@/actions/cookieToken'
-import { getProductData } from '@/actions/setData'
+import { getProductData, getProductGroupData } from '@/actions/setData'
 import RadioTreeSelector from '@/components/shared/RadioTrees'
 import { useData } from '@/Context/Data'
 import { useStates } from '@/Context/States'
@@ -25,8 +25,11 @@ const AddModal = ({
     setSelectedProductData,
     submitting,
     setSubmitting,
+    selectedProductBrandData,
+    setSelectedProductBrandData,
   } = useStates()
-  const { systemTypes } = useData()
+  const { systemTypes, setProductData, setProductGroupData, setBrandsData } =
+    useData()
   const [names, setNames] = useState<string[]>([editData?.ini_name || ''])
   const [selectedType, setSelectedType] = useState<number>(0)
   const [errors, setErrors] = useState<boolean[]>(
@@ -39,8 +42,24 @@ const AddModal = ({
     )
   }
   const callbackData = async () => {
+    await getProductGroupData().then((result) => {
+      if (result) {
+        setProductGroupData(result.productGroups as ProductGroupData[])
+        setBrandsData(result.brands as ProductGroupData[])
+        if (result.brands) {
+          const selectedBrand = selectedProductBrandData
+          setSelectedProductBrandData({
+            data: result.brands?.filter(
+              (pg) => pg.group_pid === selectedBrand?.group.id
+            ) as ProductGroupData[],
+            group: selectedBrand?.group as ProductGroupData,
+          })
+        }
+      }
+    })
     const data = await getProductData()
     if (data) {
+      setProductData(data)
       const filteredData = data.filter(
         (item) => `${item.group_id}` === `${selectedProductData?.brand?.id}`
       ) as ProductsData[]

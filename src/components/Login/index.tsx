@@ -74,7 +74,7 @@ const Login = () => {
             })
           : await LoginWithOtpAndMobile({ mobile, otp })
 
-      if (!response) {
+      if (!response || !response.access_token) {
         setLoading(false)
         showModal({
           type: response.access_token ? 'success' : 'error',
@@ -169,7 +169,7 @@ const Login = () => {
       {modalContent && <CustomModal />}
       {loading ? (
         <div className='flex justify-center items-center w-full h-screen'>
-           <Loading />
+          <Loading />
         </div>
       ) : (
         <div className='flex w-[100vw]  max-lg:flex-col min-h-screen bg-white'>

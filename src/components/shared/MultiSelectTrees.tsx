@@ -44,7 +44,7 @@ const MultiSelectTrees: React.FC<RadioTreeSelectorProps> = ({
                   return parent?.children.find((child) => child.id === id)
                     ?.label
                 })
-                .filter(Boolean) // حذف `undefined`ها
+                .filter(Boolean)
                 .join(', ')
             : placeholder}
         </span>

@@ -6,7 +6,11 @@ import { useMenu } from '@/Context/Menu'
 import OTPInput from '../shared/OTPinput'
 import { useStates } from '@/Context/States'
 import { getCookieByKey } from '@/actions/cookieToken'
-import { UpdateProfile, UserChangePassword } from '@/services/user'
+import {
+  GetOtpWithMobile,
+  UpdateProfile,
+  UserChangePassword,
+} from '@/services/user'
 import { useData } from '@/Context/Data'
 
 const Profile = () => {
@@ -15,6 +19,7 @@ const Profile = () => {
   const { showModal } = useStates()
   const [tab, setTab] = useState<number>(0)
   const [otp, setOtp] = useState<null | string>()
+  const [password, setPassword] = useState<string>('')
   const [validate, setValidate] = useState<{
     words: boolean
     number: boolean
@@ -39,7 +44,6 @@ const Profile = () => {
 
   const updateProfile = async () => {
     const accessToken = (await getCookieByKey('access_token')) || ''
-    console.log('vodiiiii')
     await UpdateProfile({
       accessToken,
       Mobile: userInfo?.mobile || '',
@@ -106,8 +110,21 @@ const Profile = () => {
       }))
     }
   }
+  const sendOTP = async () => {
+    await GetOtpWithMobile({ mobile: userInfo?.mobile as string })
+    setOtp('')
+  }
   const changePassword = async () => {
     try {
+      if (!validate.length || !validate.number || !validate.words) {
+        showModal({
+          title: 'خطا',
+          main: 'ساختار رمز صحیح نمی باشد',
+          type: 'error',
+          autoClose: 1,
+        })
+        return
+      }
       if (!otp || otp.length < 6) {
         showModal({
           title: 'خطا',
@@ -120,10 +137,9 @@ const Profile = () => {
       const accessToken = (await getCookieByKey('access_token')) || ''
       const response = await UserChangePassword({
         accessToken,
-        newpassword: firstInputRef.current?.value || '',
+        newpassword: password,
         otp_code: otp || '',
       })
-
       if (!response) {
         showModal({
           title: 'خطا',
@@ -269,7 +285,10 @@ const Profile = () => {
                   </label>
                   <input
                     ref={firstInputRef}
-                    onChange={() => validator()}
+                    onChange={(e) => {
+                      setPassword(e.target.value)
+                      validator()
+                    }}
                     type='password'
                     placeholder=' رمز عبور '
                   />
@@ -315,12 +334,20 @@ const Profile = () => {
               type='button'
               onClick={() => {
                 if (tab === 0) updateProfile()
-                else if (tab !== 0 && typeof otp !== 'string') setOtp('')
+                else if (tab !== 0 && typeof otp !== 'string') sendOTP()
                 else changePassword()
               }}
               className={`fill-button px-10 h-10 rounded-lg  `}>
               {tab === 0 ? ' ذخیره تغییرات ' : 'ذخیره رمز جدید'}
             </button>
+            {typeof otp === 'string' && (
+              <button
+                type='button'
+                onClick={() => setOtp(null)}
+                className={`border-button px-10 h-10 rounded-lg mx-2 `}>
+                اصلاح مجدد
+              </button>
+            )}
           </div>
         </form>
       </div>

@@ -1,4 +1,6 @@
 import { getCookieByKey } from '@/actions/cookieToken'
+import { getSubGroupData } from '@/actions/setData'
+import { useData } from '@/Context/Data'
 import { useStates } from '@/Context/States'
 import { EditSubGroup } from '@/services/items'
 import { CloseSquare, Forbidden2, Trash } from 'iconsax-react'
@@ -12,9 +14,10 @@ const DeleteModal = ({
   isActive?: boolean
   name: string
   groupId: number
-  close: (show: boolean) => void
+  close: () => void
 }) => {
   const { showModal, submitting, setSubmitting } = useStates()
+  const { setSubGroupData } = useData()
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setSubmitting(true)
@@ -27,6 +30,11 @@ const DeleteModal = ({
       status: 9,
     })
       .then(async (value) => {
+        if (value && value.status === 1) {
+          await getSubGroupData().then((subgp) => {
+            if (subgp) setSubGroupData(subgp)
+          })
+        }
         showModal({
           type: value.status === 1 ? 'success' : 'error',
           main: <p>{value.message}</p>,
@@ -43,6 +51,7 @@ const DeleteModal = ({
         })
       )
     setSubmitting(false)
+      close()
   }
 
   return (
@@ -62,7 +71,7 @@ const DeleteModal = ({
                 size={24}
                 cursor='pointer'
                 color='#50545F'
-                onClick={() => close(false)}
+                onClick={() => close()}
               />
             </div>
           </div>
@@ -91,7 +100,7 @@ const DeleteModal = ({
             ) : (
               <>
                 <button
-                  onClick={() => close(false)}
+                  onClick={() => close()}
                   className='w-full mt-4 px-4 py-2 bg-[#7747C0] text-white rounded-lg hover:bg-purple-800'>
                   انصراف
                 </button>

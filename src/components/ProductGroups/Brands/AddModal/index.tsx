@@ -18,12 +18,18 @@ const AddModal = ({
   close: (show: boolean) => void
 }) => {
   const { setBrandsData, setProductGroupData } = useData()
+  const {
+    showModal,
+    submitting,
+    setSubmitting,
+    selectedProductBrandData,
+    setSelectedProductBrandData,
+  } = useStates()
   const [editName, setEditName] = useState<string>(data?.group_desc || '')
   const [names, setNames] = useState<string[]>([''])
   const [status, setStatus] = useState<React.ReactElement | null>()
   const [isConfirmed, setIsConfirmed] = useState(false)
   const [errors, setErrors] = useState<Record<string, string[]>>()
-  const { showModal, submitting, setSubmitting } = useStates()
 
   const setResult = (state: boolean, text?: string) => {
     if (state) {
@@ -107,9 +113,9 @@ const AddModal = ({
                 }).then(async (result) => {
                   if (result.status === 1) {
                     showModal({
-                      type: 'error',
+                      type: 'success',
                       main: <p>{result.message}</p>,
-                      title: 'خطا',
+                      title: 'موفق',
                       autoClose: 2,
                     })
                     await getProductGroupData().then((value) => {
@@ -118,6 +124,15 @@ const AddModal = ({
                           value.productGroups as ProductGroupData[]
                         )
                         setBrandsData(value.brands as ProductGroupData[])
+                        if (value.brands) {
+                          const selectedBrand = selectedProductBrandData
+                          setSelectedProductBrandData({
+                            data: value.brands?.filter(
+                              (pg) => pg.group_pid === selectedBrand?.group.id
+                            ) as ProductGroupData[],
+                            group: selectedBrand?.group as ProductGroupData,
+                          })
+                        }
                       }
                     })
                   } else

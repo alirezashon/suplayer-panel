@@ -21,6 +21,10 @@ const headers = [
   'عملیات',
 ]
 const Referrer: React.FC = () => {
+  const { permissions } = useStates()
+  const { setMenu } = useMenu()
+  const { referrerData, TreeChartInterface } = useData()
+
   const [showAddModal, setShowAddModal] = useState<boolean | ReferrerData>(
     false
   )
@@ -35,9 +39,6 @@ const Referrer: React.FC = () => {
   )
   const [selectedItems, setSelectedItems] = useState<number[]>([])
   const [initialData, setInitialData] = useState<Partial<ReferrerData>[]>([])
-  const { permissions } = useStates()
-  const { setMenu } = useMenu()
-  const { referrerData, TreeChartInterface } = useData()
   useEffect(() => {
     setInitialData(
       Array.isArray(referrerData)
@@ -72,7 +73,6 @@ const Referrer: React.FC = () => {
     }
   }
 
-  console.table(referrerData)
   const filterPersonnel = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -91,8 +91,8 @@ const Referrer: React.FC = () => {
       pers_family: person.pers_family,
       pers_chart_title: person.pers_chart_title,
       pers_status: person.pers_status,
+      task_count: person.task_count,
       pers_tob: person.pers_tob,
-      task_count: person?.task_count,
     }))
 
     setInitialData(filteredFieldsData as Partial<ReferrerData>[])
@@ -117,7 +117,7 @@ const Referrer: React.FC = () => {
       {showDeleteModal && (
         <DeleteModal
           data={showDeleteModal as ReferrerData}
-          close={setShowDeleteModal}
+          close={()=>setShowDeleteModal(false)}
         />
       )}
       <div className='flex flex-col p-5 max-md:w-[94vw] max-md:mr-[4vw]'>
@@ -287,8 +287,18 @@ const Referrer: React.FC = () => {
                                     </p>
                                   ) : detailIndex === 5 ? (
                                     <>
-                                      {parseInt(`${detail}`) > 0 ? (
-                                        <div className='flex gap-2 cursor-pointer justify-center text-[#7747C0] items-center '>
+                                      {(detail as number) == 0 ? (
+                                        <div
+                                          className='flex gap-2 cursor-pointer justify-center text-[#7747C0] items-center '
+                                          onClick={() =>
+                                            setShowAppointmentModal(
+                                              referrerData?.find(
+                                                (referrer) =>
+                                                  referrer.pers_uid ===
+                                                  personnel.pers_uid
+                                              ) as ReferrerData
+                                            )
+                                          }>
                                           <Edit2 size={16} color='#7747C0' />
                                           <p>ویرایش انتصاب</p>
                                         </div>
@@ -304,7 +314,7 @@ const Referrer: React.FC = () => {
                                               ) as ReferrerData
                                             )
                                           }}>
-                                          انتصاب دادن{' '}
+                                          انتصاب دادن
                                         </button>
                                       )}
                                     </>
@@ -395,5 +405,4 @@ const Referrer: React.FC = () => {
     </>
   )
 }
-
 export default Referrer
