@@ -4,8 +4,10 @@ import { PromotionInterface } from '@/interfaces'
 import Done from '../PromotionCard/Done'
 import Progress from '../PromotionCard/Progress'
 import Wait from '../PromotionCard/Wait'
-import { ArrowLeft2, Danger } from 'iconsax-react'
+import { ArrowLeft2, Danger, Setting2 } from 'iconsax-react'
 import { useStates } from '@/Context/States'
+import { useState } from 'react'
+import FilterPromotion from './FilterPromotion'
 
 const Kanban = ({
   done,
@@ -22,22 +24,42 @@ const Kanban = ({
 }) => {
   const { setMenu } = useMenu()
   const { permissions } = useStates()
+  const [filter, setFilter] = useState<{ show: boolean; result: number }>({
+    show: false,
+    result: 1,
+  })
   return (
     <>
+      {filter.show && (
+        <FilterPromotion
+          close={() => setFilter({ show: false, result: filter.result })}
+          setResult={(value: number) =>
+            setFilter({ show: true, result: value })
+          }
+        />
+      )}{' '}
       <div className='flex flex-col p-5'>
         <div className='flex justify-between items-center mb-7'>
           <p className='cursor-pointer'>
             <span className='text-[#98A2B3]'>پروموشن</span>
           </p>
           {length > 0 && permissions[1].includes('702') && (
-            <button
-              onClick={() => {
-                location.hash = 'new-promotion'
-                setMenu('new-promotion')
-              }}
-              className='h-10 min-w-40 bg-[#7747C0] text-white rounded-lg hover:bg-purple-800'>
-              + پروموشن جدید
-            </button>
+            <div className='flex items-center gap-3'>
+              <Setting2
+                size={24}
+                className='cursor-pointer'
+                color='#50545F'
+                onClick={() => setFilter({ show: true, result: filter.result })}
+              />
+              <button
+                onClick={() => {
+                  location.hash = 'new-promotion'
+                  setMenu('new-promotion')
+                }}
+                className='h-10 min-w-40 bg-[#7747C0] text-white rounded-lg hover:bg-purple-800'>
+                + پروموشن جدید
+              </button>
+            </div>
           )}
         </div>
         <div className='p-6 bg-white rounded-lg border border-gray-200'>
@@ -149,5 +171,4 @@ const Kanban = ({
     </>
   )
 }
-
 export default Kanban

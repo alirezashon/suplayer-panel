@@ -10,9 +10,9 @@ import { locationTree } from '../../../hooks/Locations'
 import { FormEvent, useRef, useState } from 'react'
 import ImageUploader from '../lib/ImageUploader'
 import { setComma } from '@/hooks/NumberFormat'
+import TimePicker from '@/components/shared/TimePicker'
 
 const AddPromotion = () => {
-  const [showTime, setShowTime] = useState<boolean>(false)
   const [draftSrc, setDraftSrc] = useState<string | null>(null)
   const {
     showModal,
@@ -220,60 +220,56 @@ const AddPromotion = () => {
                   <p className='text-red-500 text-sm'>{errors.ctitle}</p>
                 )}
               </div>
-              <label className='block text-sm font-bold'>
-                نوع انتشار پروموشن
-              </label>
-              <div className='flex mb-1'>
-                {['زمان دار', 'بدون زمان'].map((item, index) => (
-                  <label
-                    key={index}
-                    className='flex flex-1 items-center gap-3 cursor-pointer'>
-                    <input
-                      type='radio'
-                      defaultChecked={index === 1}
-                      name='beneficiary'
-                      value={item}
-                      onChange={() => {
-                        setShowTime(index === 0 ? true : false)
-                        if (index === 1) {
-                          refs.current.start_date = '0000-00-00'
-                          refs.current.exp_date = '9999-99-99'
-                        }
-                      }}
-                      className='w-5 h-5 cursor-pointer accent-[#7747C0]'
-                    />
-                    <span className='text-gray-700'>{item}</span>
+              <div className='flex gap-5'>
+                <div className='w-full '>
+                  <label className='block mb-1 text-sm font-bold'>
+                    تاریخ شروع پروموشن
                   </label>
-                ))}
-              </div>
-              {showTime && (
-                <div className='flex gap-5'>
-                  <div className='w-full '>
-                    <label className='block mb-1 text-sm font-bold'>
-                      تاریخ شروع پروموشن
-                    </label>
-                    <Calendar
-                      placeholder='تاریخ شروع'
-                      hasError={errors.start_date ? true : false}
-                      setDate={(value: string) =>
-                        (refs.current.start_date = value)
-                      }
-                    />
-                  </div>
-                  <div className='w-full '>
-                    <label className='block mb-1 text-sm font-bold'>
-                      تاریخ پایان پروموشن
-                    </label>
-                    <Calendar
-                      placeholder='تاریخ پایان'
-                      hasError={errors.exp_date ? true : false}
-                      setDate={(value: string) =>
-                        (refs.current.exp_date = value)
-                      }
-                    />
-                  </div>
+                  <Calendar
+                    placeholder='تاریخ شروع'
+                    hasError={errors.start_date ? true : false}
+                    setDate={(value: string) =>
+                      (refs.current.start_date = value)
+                    }
+                  />
                 </div>
-              )}
+                <div className='w-full '>
+                  <label className='block mb-1 text-sm font-bold'>
+                    تاریخ پایان پروموشن
+                  </label>
+                  <Calendar
+                    placeholder='تاریخ پایان'
+                    hasError={errors.exp_date ? true : false}
+                    setDate={(value: string) => (refs.current.exp_date = value)}
+                  />
+                </div>
+              </div>
+              <div className='flex gap-2 items-center mt-4'>
+                <input type='checkbox' className='accent-[#7747C0] w-4 h-4' />
+                <p>میخواهم زمان داشته باشد</p>
+              </div>
+              <div className='flex gap-3'>
+                <Calendar
+                  placeholder='تاریخ شروع'
+                  hasError={errors.exp_date ? true : false}
+                  setDate={(value: string) => (refs.current.exp_date = value)}
+                />
+                <TimePicker
+                  placeholder='ساعت شروع'
+                  hasError={errors.exp_date ? true : false}
+                  setData={(value: string) => (refs.current.exp_date = value)}
+                />
+                <Calendar
+                  placeholder='تاریخ پایان'
+                  hasError={errors.exp_date ? true : false}
+                  setDate={(value: string) => (refs.current.exp_date = value)}
+                />
+                <TimePicker
+                  placeholder='ساعت پایان'
+                  hasError={errors.exp_date ? true : false}
+                  setData={(value: string) => (refs.current.exp_date = value)}
+                />
+              </div>
               <div>
                 <label className='block mb-2 text-sm font-bold'>
                   لینک CTA پروموشن خود را وارد کنید.
