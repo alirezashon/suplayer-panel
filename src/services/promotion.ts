@@ -13,6 +13,12 @@ export const CreatePromotion = async ({
   pdetails,
   sdetails,
   ldetails,
+  distype2,
+  promo_start_date,
+  promo_start_time,
+  promo_exp_date,
+  promo_exp_time,
+  promo_desc,
 }: {
   cstatus: number
   ctitle: string
@@ -24,6 +30,13 @@ export const CreatePromotion = async ({
   desc: string
   budget: string
   accessToken: string | undefined
+  distype2: number
+  promo_start_date: string
+  promo_start_time: string
+  promo_exp_date: string
+  promo_exp_time: string
+  promo_desc: string
+
   pdetails: {
     pgroup_id: number
     chart_id: number
@@ -62,6 +75,12 @@ export const CreatePromotion = async ({
           pdetails,
           sdetails,
           ldetails,
+          distype2,
+          promo_start_date,
+          promo_start_time,
+          promo_exp_date,
+          promo_exp_time,
+          promo_desc,
         }),
       }
     )

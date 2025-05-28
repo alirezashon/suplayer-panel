@@ -225,6 +225,7 @@ export interface ProductGroupData {
   product_count: number
   personnel_count: number
   visitor_count: number
+  campaign_count: number
 }
 export interface ProductsData {
   sysid: string

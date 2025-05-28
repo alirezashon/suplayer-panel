@@ -1,5 +1,11 @@
 import { useState } from 'react'
-import { Trash, Edit2, ProfileCircle, HashtagSquare } from 'iconsax-react'
+import {
+  Trash,
+  Edit2,
+  ProfileCircle,
+  HashtagSquare,
+  StatusUp,
+} from 'iconsax-react'
 import AddModal from './AddModal'
 import DeleteModal from './DeleteModal'
 import { useMenu } from '@/Context/Menu'
@@ -88,6 +94,14 @@ const ProductGroups: React.FC = () => {
                       </span>
                       {permissions[1].includes('689') && (
                         <div className='flex gap-2'>
+                          {productGroup.campaign_count > 0 && (
+                            <StatusUp
+                              size={20}
+                              color='#8455D2'
+                              cursor={'pointer'}
+                              onClick={() => setShowAddModal(productGroup)}
+                            />
+                          )}
                           <Edit2
                             size={20}
                             color='#8455D2'

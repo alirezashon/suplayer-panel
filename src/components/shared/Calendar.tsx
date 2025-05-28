@@ -38,6 +38,7 @@ const Calendar: React.FC<Props> = ({ setDate, placeholder, hasError }) => {
           'border-red-300 border-2 shadow-red-200 shadow-md error-input-animated'
         } px-3 h-10 rounded-md `}
       />
+
       <span className='absolute left-2 top-1/2 -translate-y-1/2 text-gray-400'>
         <CalendarIcon size={24} color='gray' />
       </span>

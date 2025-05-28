@@ -11,10 +11,12 @@ const ImageUploader = ({
   draftSrc,
   setDraftSrc,
   hasError,
+  setFileUid,
 }: {
   draftSrc: string | null
   setDraftSrc: (value: string | null) => void
   hasError: boolean
+  setFileUid: (value: string) => void
 }) => {
   const { showModal } = useStates()
   const [uploadStatus, setUploadStatus] = useState<
@@ -85,7 +87,7 @@ const ImageUploader = ({
             accessToken,
           })
           if (result) {
-            // refs.current.file_uid = result.rec_id_file
+            setFileUid(result.rec_id_file)
           } else {
             setDraftSrc('')
             setUploadStatus('error')
