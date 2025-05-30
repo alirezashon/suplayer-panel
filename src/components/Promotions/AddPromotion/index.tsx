@@ -102,8 +102,7 @@ const AddPromotion = () => {
     return Object.keys(newErrors).length === 0
   }
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault()
+  const handleSubmit = async () => {
     if (validateForm() && step === 3) {
       setSubmitting(true)
       const accessToken = (await getCookieByKey('access_token')) || ''
@@ -360,7 +359,9 @@ const AddPromotion = () => {
                             defaultChecked={true}
                             name='distype'
                             value='cash'
-                            onChange={handleInputChange}
+                            onChange={(e) => {
+                              refs.current.distype = e.target.checked ? 1 : 0
+                            }}
                             className='w-5 h-5 cursor-pointer accent-[#7747C0] mx-2'
                           />
                           تخفیف نقدی
@@ -370,7 +371,9 @@ const AddPromotion = () => {
                             type='checkbox'
                             name='distype2'
                             value='product'
-                            onChange={handleInputChange}
+                            onChange={(e) => {
+                              refs.current.distype2 = e.target.checked ? 1 : 0
+                            }}
                             className='w-5 h-5 cursor-pointer accent-[#7747C0] mx-2'
                           />
                           تخفیف غیر نقدی
@@ -454,15 +457,13 @@ const AddPromotion = () => {
         <div className='w-full flex justify-end gap-3'>
           {step > 1 && (
             <button
-              type='button'
               onClick={() => setStep(step - 1)}
               className='mt-6 px-12 bg-[#7747C0] text-white py-2 rounded-md'>
               مرحله قبل
             </button>
           )}
           <button
-            type={step < 3 ? 'button' : 'submit'}
-            onClick={() => step < 3 && validateForm(step)}
+            onClick={() => (step < 3 ? validateForm(step) : handleSubmit())}
             disabled={submitting}
             className={`mt-6 px-12 bg-[#7747C0] text-white py-2 rounded-md ${
               submitting && 'opacity-30 cursor-not-allowed'
