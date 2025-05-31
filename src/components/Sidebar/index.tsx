@@ -77,7 +77,7 @@ const Sidebar = ({
   return (
     <div
       style={{ scrollbarWidth: 'none' }}
-      className={`fixed top-2 right-2 h-[98vh] rounded-md  transition-all duration-700 ${
+      className={`fixed top-2 right-2 h-[98vh] rounded-md z-50 transition-all duration-700 ${
         isOpen ? 'min-w-[17%] max-lg:min-w-[39%] ' : 'w-[5%] max-lg:min-w-[7%]'
       } bg-white flex flex-col overflow-y-auto `}>
       <div

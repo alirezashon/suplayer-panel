@@ -58,7 +58,7 @@ const SelectList: React.FC<SelectListProps> = ({
       <div
         className='border border-gray-300  rounded-md h-10 py-2 px-4 cursor-pointer flex justify-between items-center'
         onClick={() => setIsOpen((prev) => !prev)}>
-        <span className='text-gray-700'>
+        <span className='text-gray-700 text-nowrap overflow-hidden text-ellipsis whitespace-nowrap block max-w-full'>
           {selectedItems.length > 0
             ? items
                 .filter((item) => selectedItems.includes(item.id))

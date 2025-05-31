@@ -1,22 +1,39 @@
 import { getCookieByKey } from '@/actions/cookieToken'
-import { ReferrerData } from '@/interfaces'
-import { DefineAppointmentTaskList } from '@/services/referrer'
+import { AppointmentTaskInterface, ReferrerData } from '@/interfaces'
+import {
+  DefineAppointmentTaskList,
+  GetAppointmentTaskList,
+} from '@/services/referrer'
 import { ArrowDown2, CloseSquare, Profile } from 'iconsax-react'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useData } from '@/Context/Data'
 import { useStates } from '@/Context/States'
 import SelectList from '@/components/shared/SelectList'
+import Showtasks from '../ShowDetails/design'
 
 interface AppointmentModalProps {
   data?: ReferrerData
-  close: (show: boolean) => void
+  isEditMode?: boolean
+  close: () => void
 }
 
-const AppointmentModal = ({ data, close }: AppointmentModalProps) => {
+const AppointmentModal = ({
+  data,
+  close,
+  isEditMode = false,
+}: AppointmentModalProps) => {
+  const {
+    groupData,
+    subGroupData,
+    productGroupData,
+    brandsData,
+    productData,
+    TreeChartInterface,
+  } = useData()
   const { showModal } = useStates()
-  const [errors, setErrors] = useState<Record<string, string>>({})
   const [step, setStep] = useState<number>(1)
   const [showDetails, setShowDetails] = useState<boolean>(false)
+  const [taskList, setTaskList] = useState<AppointmentTaskInterface[]>([])
   const refs = useRef({
     personnel_uid: `${data?.personnel_uid}`,
     visitor_uid: '',
@@ -28,19 +45,22 @@ const AppointmentModal = ({ data, close }: AppointmentModalProps) => {
     product_uid: [] as string[],
   })
 
-  const {
-    groupData,
-    subGroupData,
-    productGroupData,
-    brandsData,
-    productData,
-    TreeChartInterface,
-  } = useData()
+  useEffect(() => {
+    const getData = async () => {
+      const accessToken = await getCookieByKey('access_token')
+      if (data)
+        await GetAppointmentTaskList({
+          accessToken,
+          uid: data.personnel_uid,
+        }).then((result) => {
+          if (result) setTaskList(result)
+        })
+    }
+    getData()
+  }, [data])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-
-    setErrors({})
 
     const accessToken = (await getCookieByKey('access_token')) || ''
     await DefineAppointmentTaskList({
@@ -65,6 +85,7 @@ const AppointmentModal = ({ data, close }: AppointmentModalProps) => {
 
   return (
     <div>
+      {isEditMode}
       <div className='absolute bg-slate-600 opacity-50 w-full h-[200vh] z-50 top-0 right-0'></div>
       <div
         style={{ scrollbarWidth: 'none' }}
@@ -77,7 +98,7 @@ const AppointmentModal = ({ data, close }: AppointmentModalProps) => {
             size={24}
             cursor='pointer'
             color='#50545F'
-            onClick={() => close(false)}
+            onClick={() => close()}
           />
         </div>
         <div className='flex justify-between  p-2 mx-8 mt-3 border rounded-lg'>
@@ -145,27 +166,19 @@ const AppointmentModal = ({ data, close }: AppointmentModalProps) => {
               <div className='flex flex-col my-3'>
                 <p className='text-[#5F6474]'>وضعیت بازاریاب</p>
                 <p className='text-[#0F973D] bg-[#DAFEE5] w-fit min-w-16 mx-3 rounded-lg text-center'>
-                  {data?.pers_status}
+                  {data?.pers_status === 1 ? 'فعال' : 'غیرفعال'}
                 </p>
               </div>
               <div className='flex flex-col mt-5'>
                 <p className='text-[#5F6474]'> گروه‌ و زیرگروه‌های عضو شده</p>
                 <div className='flex gap-3'>
-                  {
-                    <p className='text-[#3B5A4F] bg-[#A1E3CB] px-5 py-1 rounded-full w-fit'>
-                      {'نیاز به اضافه شدن در بک'}
-                    </p>
-                  }
+                  <Showtasks task={taskList} />
                 </div>
               </div>
               <div className='flex flex-col mt-5'>
                 <p className='text-[#5F6474]'>گروه و برند محصول عضو شده </p>
                 <div className='flex gap-3'>
-                  {
-                    <p className='text-[#3B5A4F] bg-[#A1E3CB] px-5 py-1 rounded-full w-fit'>
-                      {'نیاز به اضافه شدن در بک'}
-                    </p>
-                  }
+                  <Showtasks task={taskList} />
                 </div>
               </div>
             </div>
@@ -185,20 +198,22 @@ const AppointmentModal = ({ data, close }: AppointmentModalProps) => {
                 step > 1 ? 'border-[#7747C0]' : 'border-[#C9D0D8]'
               }`}></div>
           </div>
-          {['انتصاب به گروه', ' انتصاب به گروه محصول'].map((section, index) => (
-            <div className='flex flex-col items-center' key={index}>
-              <div
-                onClick={() => setStep(index + 1)}
-                className={`w-10 h-10 z-30 p-6 flex items-center justify-center rounded-full border-4  border-white mt-5 cursor-pointer text-white ${
-                  step >= index + 1
-                    ? ' bg-[#7747C0] '
-                    : 'bg-[#C9D0D8] text-[#50545F]'
-                }`}>
-                {index + 1}
+          {['انتصاب به ذینفع', ' انتصاب به گروه محصول'].map(
+            (section, index) => (
+              <div className='flex flex-col items-center' key={index}>
+                <div
+                  onClick={() => setStep(index + 1)}
+                  className={`w-10 h-10 z-30 p-6 flex items-center justify-center rounded-full border-4  border-white mt-5 cursor-pointer text-white ${
+                    step >= index + 1
+                      ? ' bg-[#7747C0] '
+                      : 'bg-[#C9D0D8] text-[#50545F]'
+                  }`}>
+                  {index + 1}
+                </div>
+                <p className=' text-[#7747C0]'>{section}</p>
               </div>
-              <p className=' text-[#7747C0]'>{section}</p>
-            </div>
-          ))}
+            )
+          )}
         </div>
         {step === 1 ? (
           <div className='flex flex-col m-3 gap-3'>
@@ -262,9 +277,6 @@ const AppointmentModal = ({ data, close }: AppointmentModalProps) => {
                   (refs.current.pgroup_id = result as number[])
                 }
               />
-              {errors.phone && (
-                <span className='text-red-500'>{errors.phone}</span>
-              )}
             </div>
             <div className='flex flex-col w-full'>
               <SelectList
@@ -282,9 +294,6 @@ const AppointmentModal = ({ data, close }: AppointmentModalProps) => {
                   (refs.current.chart_id = result as number[])
                 }
               />
-              {errors.phone && (
-                <span className='text-red-500'>{errors.phone}</span>
-              )}
             </div>
             <div className='flex flex-col w-full'>
               <SelectList

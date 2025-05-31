@@ -28,9 +28,10 @@ const Referrer: React.FC = () => {
   const [showAddModal, setShowAddModal] = useState<boolean | ReferrerData>(
     false
   )
-  const [showAppointmentModal, setShowAppointmentModal] = useState<
-    boolean | ReferrerData
-  >(false)
+  const [showAppointmentModal, setShowAppointmentModal] = useState<{
+    data: boolean | ReferrerData
+    isEditable: boolean
+  }>({ data: false, isEditable: false })
   const [showDeleteModal, setShowDeleteModal] = useState<
     boolean | ReferrerData
   >(false)
@@ -50,7 +51,7 @@ const Referrer: React.FC = () => {
                 (chart) => chart.id === referrer.pers_chart_id
               )?.chtitle || '',
             pers_status: referrer.pers_status,
-            pers_tob: referrer.pers_tob,
+            task_count: referrer.task_count,
             pers_uid: referrer.pers_uid,
           }))
         : []
@@ -92,7 +93,7 @@ const Referrer: React.FC = () => {
       pers_chart_title: person.pers_chart_title,
       pers_status: person.pers_status,
       task_count: person.task_count,
-      pers_tob: person.pers_tob,
+      pers_uid: person.pers_uid,
     }))
 
     setInitialData(filteredFieldsData as Partial<ReferrerData>[])
@@ -105,10 +106,12 @@ const Referrer: React.FC = () => {
           close={() => setShowDetailModal(null)}
         />
       )}
-      {showAppointmentModal && (
+      {showAppointmentModal.data && (
         <AppointmentModal
-          data={showAppointmentModal as ReferrerData}
-          close={setShowAppointmentModal}
+          data={showAppointmentModal.data as ReferrerData}
+          close={() =>
+            setShowAppointmentModal({ data: false, isEditable: false })
+          }
         />
       )}
       {showAddModal && (
@@ -117,7 +120,7 @@ const Referrer: React.FC = () => {
       {showDeleteModal && (
         <DeleteModal
           data={showDeleteModal as ReferrerData}
-          close={()=>setShowDeleteModal(false)}
+          close={() => setShowDeleteModal(false)}
         />
       )}
       <div className='flex flex-col p-5 max-md:w-[94vw] max-md:mr-[4vw]'>
@@ -287,17 +290,18 @@ const Referrer: React.FC = () => {
                                     </p>
                                   ) : detailIndex === 5 ? (
                                     <>
-                                      {(detail as number) == 0 ? (
+                                      {parseInt(`${detail}`) > 0 ? (
                                         <div
                                           className='flex gap-2 cursor-pointer justify-center text-[#7747C0] items-center '
                                           onClick={() =>
-                                            setShowAppointmentModal(
-                                              referrerData?.find(
+                                            setShowAppointmentModal({
+                                              data: referrerData?.find(
                                                 (referrer) =>
                                                   referrer.pers_uid ===
                                                   personnel.pers_uid
-                                              ) as ReferrerData
-                                            )
+                                              ) as ReferrerData,
+                                              isEditable: true,
+                                            })
                                           }>
                                           <Edit2 size={16} color='#7747C0' />
                                           <p>ویرایش انتصاب</p>
@@ -306,13 +310,14 @@ const Referrer: React.FC = () => {
                                         <button
                                           className='border-button px-2 rounded-md'
                                           onClick={() => {
-                                            setShowAppointmentModal(
-                                              referrerData?.find(
+                                            setShowAppointmentModal({
+                                              data: referrerData?.find(
                                                 (pers) =>
                                                   pers?.pers_uid ===
                                                   personnel?.pers_uid
-                                              ) as ReferrerData
-                                            )
+                                              ) as ReferrerData,
+                                              isEditable: false,
+                                            })
                                           }}>
                                           انتصاب دادن
                                         </button>

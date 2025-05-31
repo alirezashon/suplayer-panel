@@ -115,17 +115,12 @@ const ShowDetails = ({ data, close }: ShowDetailsProps) => {
           </div>
           <div className='flex flex-col mt-5'>
             <p className='text-[#5F6474]'> گروه‌ و زیرگروه‌های عضو شده</p>
-
             <Showtasks task={taskList} />
           </div>
           <div className='flex flex-col mt-5'>
             <p className='text-[#5F6474]'>گروه و برند محصول عضو شده </p>
             <div className='flex gap-3'>
-              {
-                <p className='text-[#3B5A4F] bg-[#A1E3CB] px-5 py-1 rounded-full w-fit'>
-                  {'نیاز به اضافه شدن در بک'}
-                </p>
-              }
+              <Showtasks task={taskList} />
             </div>
           </div>
         </div>

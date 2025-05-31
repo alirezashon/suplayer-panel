@@ -18,11 +18,11 @@ const TimePicker = ({
   const [minute, setMinute] = useState<number>(0)
   const [fullHour, setFullHour] = useState<number>()
 
-  const wrapperRef = useRef(null)
+  const wrapperRef = useRef<HTMLDivElement>(null)
   const clockRef = useRef<HTMLDivElement>(null)
 
   const handleClickOutside = (e: MouseEvent) => {
-    if (wrapperRef.current && !(wrapperRef.current as any).contains(e.target)) {
+    if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
       setOpen(false)
       setStep('hour')
     }

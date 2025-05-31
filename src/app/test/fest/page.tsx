@@ -6,11 +6,11 @@ const TimePicker = () => {
   const [step, setStep] = useState<'hour' | 'minute'>('hour')
   const [hour, setHour] = useState<number>(12)
   const [minute, setMinute] = useState<number>(0)
-  const wrapperRef = useRef(null)
+  const wrapperRef = useRef<HTMLDivElement>(null)
   const clockRef = useRef<HTMLDivElement>(null)
 
   const handleClickOutside = (e: MouseEvent) => {
-    if (wrapperRef.current && !(wrapperRef.current as any).contains(e.target)) {
+    if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
       setOpen(false)
       setStep('hour')
     }
@@ -81,7 +81,7 @@ const TimePicker = () => {
 
   const angleValue =
     (360 / numbers.length) *
-      (step === 'hour' ? (hour % 12 === 0 ? 12 : hour % 12) : minute / 5) 
+    (step === 'hour' ? (hour % 12 === 0 ? 12 : hour % 12) : minute / 5)
 
   return (
     <div className='relative inline-block m-96' ref={wrapperRef}>
