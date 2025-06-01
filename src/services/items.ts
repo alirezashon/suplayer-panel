@@ -1,3 +1,4 @@
+import { deleteCookieByKey } from '@/actions/cookieToken'
 import {
   BeneficiaryData,
   FormulaData,
@@ -28,7 +29,12 @@ export const CreateGroup = async ({
         }),
       }
     )
-
+     if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
+      return
+    }
+    if (response.status !== 200) return
     return await response.json()
   } catch (error) {
     console.log(error)
@@ -61,7 +67,12 @@ export const EditGroup = async ({
         }),
       }
     )
-
+     if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
+      return
+    }
+    if (response.status !== 200) return
     return await response.json()
   } catch (error) {
     console.log(error)
@@ -83,10 +94,12 @@ export const GetGroupsList = async ({
       }
     )
 
-    if (!response.ok || response.status === 500) {
-      throw new Error('Failed to GetAssistantList')
+     if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
+      return
     }
-
+    if (response.status !== 200) return
     return await response.json()
   } catch (error) {
     console.log(error)
@@ -122,7 +135,12 @@ export const CreateSubGroup = async ({
         }),
       }
     )
-
+     if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
+      return
+    }
+    if (response.status !== 200) return
     return await response.json()
   } catch (error) {
     console.log(error)
@@ -160,7 +178,12 @@ export const EditSubGroup = async ({
         }),
       }
     )
-
+     if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
+      return
+    }
+    if (response.status !== 200) return
     return await response.json()
   } catch (error) {
     console.log(error)
@@ -182,9 +205,12 @@ export const GetSubGroupsList = async ({
       }
     )
 
-    if (!response.ok || response.status === 500) {
-      throw new Error('Failed to GetAssistantList')
+     if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
+      return
     }
+    if (response.status !== 200) return
 
     return await response.json()
   } catch (error) {
@@ -254,6 +280,12 @@ export const CreateBeneficiary = async ({
         }),
       }
     )
+     if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
+      return
+    }
+    if (response.status !== 200) return
     return await response.json()
   } catch (error) {
     console.log(error)
@@ -325,7 +357,12 @@ export const EditBeneficiary = async ({
         }),
       }
     )
-
+     if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
+      return
+    }
+    if (response.status !== 200) return
     return await response.json()
   } catch (error) {
     console.log(error)
@@ -346,10 +383,12 @@ export const GetBeneficiaryList = async ({
         },
       }
     )
-
-    if (!response.ok || response.status === 500) {
-      throw new Error('Failed to GetAssistantList')
+     if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
+      return
     }
+    if (response.status !== 200) return
     const data = await response.json()
     return data.data
   } catch (error) {
@@ -396,7 +435,12 @@ export const CreateFormula = async ({
         }),
       }
     )
-
+     if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
+      return
+    }
+    if (response.status !== 200) return
     return await response.json()
   } catch (error) {
     console.log(error)
@@ -441,7 +485,12 @@ export const EditFormula = async ({
         }),
       }
     )
-
+     if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
+      return
+    }
+    if (response.status !== 200) return
     return await response.json()
   } catch (error) {
     console.log(error)
@@ -462,10 +511,12 @@ export const GetFormulassList = async ({
         },
       }
     )
-
-    if (!response.ok || response.status === 500) {
-      throw new Error('Failed to GetAssistantList')
+     if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
+      return
     }
+    if (response.status !== 200) return
 
     return await response.json()
   } catch (error) {
@@ -506,7 +557,12 @@ export const CreateKPITask = async ({
         }),
       }
     )
-
+     if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
+      return
+    }
+    if (response.status !== 200) return
     return await response.json()
   } catch (error) {
     console.log(error)
@@ -548,7 +604,12 @@ export const EditKPITask = async ({
         }),
       }
     )
-
+     if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
+      return
+    }
+    if (response.status !== 200) return
     return await response.json()
   } catch (error) {
     console.log(error)
@@ -570,10 +631,12 @@ export const GetKPITaskList = async ({
       }
     )
 
-    if (!response.ok || response.status === 500) {
-      throw new Error('Failed to GetAssistantList')
+     if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
+      return
     }
-
+    if (response.status !== 200) return
     const result = await response.json()
     return result.data
   } catch (error) {

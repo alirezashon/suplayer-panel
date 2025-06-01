@@ -1,3 +1,4 @@
+import { deleteCookieByKey } from '@/actions/cookieToken'
 import { PromotionInterface } from '@/interfaces'
 export const CreatePromotion = async ({
   cstatus,
@@ -85,10 +86,12 @@ export const CreatePromotion = async ({
       }
     )
 
-    if (response.status !== 200) {
-      throw new Error('Failed to EnableAssistant!')
+     if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
+      return
     }
-
+    if (response.status !== 200) return
     return await response.json()
   } catch (error) {
     console.log(error)
@@ -172,10 +175,12 @@ export const EditProductPromotion = async ({
         }),
       }
     )
-
-    if (response.status !== 200) {
-      throw new Error('Failed to EnableAssistant!')
+     if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
+      return
     }
+    if (response.status !== 200) return
 
     return await response.json()
   } catch (error) {
@@ -198,9 +203,12 @@ export const GetPromotionList = async ({
       }
     )
 
-    if (!response.ok || response.status === 500) {
-      throw new Error('Failed to GetAssistantList')
+     if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
+      return
     }
+    if (response.status !== 200) return
 
     const result = await response.json()
     return result.data
@@ -228,9 +236,12 @@ export const AddPromotionImage = async ({
       }
     )
 
-    if (response.status !== 200) {
+     if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
       return
     }
+    if (response.status !== 200) return
 
     return await response.json()
   } catch (error) {
@@ -259,9 +270,12 @@ export const CheckPromotionImage = async ({
       }
     )
 
-    if (response.status !== 200) {
+     if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
       return
     }
+    if (response.status !== 200) return
 
     return await response.json()
   } catch (error) {

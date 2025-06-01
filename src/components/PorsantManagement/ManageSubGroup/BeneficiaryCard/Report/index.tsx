@@ -11,6 +11,7 @@ import {
   TransmitSquare,
 } from 'iconsax-react'
 import { useEffect, useState } from 'react'
+import { setComma } from '@/hooks/NumberFormat'
 
 const BeneficiaryReport = ({
   beneficiary,
@@ -43,8 +44,6 @@ const BeneficiaryReport = ({
     fetchData()
   }, [beneficiary])
 
-  // const filterData = (value: string) => {}
-
   return (
     <div>
       <div className='absolute bg-slate-600 opacity-50 w-full h-[200vh] z-50 top-0 right-0'></div>
@@ -63,11 +62,17 @@ const BeneficiaryReport = ({
           <h2 className='font-bold'> {beneficiary.visitor_full_name}</h2>
           <div className='flex justify-between '>
             <p className='text-[#8455D2]'>تخصیص کل</p>
-            <p className=''> {beneficiary.collectible_credit}</p>
+            <p className=''>
+              {setComma(beneficiary.collectible_credit)}
+              <small className={`ms-1`}>ریال</small>
+            </p>
           </div>
           <div className='flex justify-between '>
             <p className='text-[#8455D2]'>آزاد سازی نشده</p>
-            <p className=''>{beneficiary.Uncollectible_credit}</p>
+            <p className=''>
+              {setComma(beneficiary.Uncollectible_credit)}
+              <small className={`ms-1`}>ریال</small>
+            </p>
           </div>
         </div>
         <div className='flex gap-5 items-center my-7'>

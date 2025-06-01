@@ -1,3 +1,4 @@
+import { deleteCookieByKey } from '@/actions/cookieToken';
 import {
   DraftsData,
   IDepositForm,
@@ -24,9 +25,12 @@ export const AddDraftImage = async ({
       }
     )
 
-    if (response.status !== 200) {
+     if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
       return
     }
+    if (response.status !== 200) return
 
     return await response.json()
   } catch (error) {
@@ -54,9 +58,12 @@ export const CheckDraftImage = async ({
       }
     )
 
-    if (response.status !== 200) {
+     if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
       return
     }
+    if (response.status !== 200) return
 
     return await response.json()
   } catch (error) {
@@ -99,9 +106,12 @@ export const ChangeDraftStatus = async ({
       }
     )
 
-    if (response.status !== 200) {
+     if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
       return
     }
+    if (response.status !== 200) return
 
     return await response.json()
   } catch (error) {
@@ -160,10 +170,12 @@ export const DepositWithDraft = async ({
         }),
       }
     )
-
-    if (response.status !== 200) {
+     if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
       return
     }
+    if (response.status !== 200) return
 
     return await response.json()
   } catch (error) {
@@ -185,10 +197,12 @@ export const GetdDraftsList = async ({
         },
       }
     )
-
-    if (!response.ok || response.status === 500) {
+     if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
       return
     }
+    if (response.status !== 200) return
 
     return await response.json()
   } catch (error) {
@@ -217,9 +231,12 @@ export const GetdDraftImage = async ({
       }
     )
 
-    if (!response.ok || response.status === 500) {
+     if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
       return
     }
+    if (response.status !== 200) return
 
     return await response.json()
   } catch (error) {
@@ -242,10 +259,12 @@ export const GetTransactions = async ({
         },
       }
     )
-
-    if (!response.ok || response.status === 500) {
+     if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
       return
     }
+    if (response.status !== 200) return
 
     return await response.json()
   } catch (error) {
@@ -268,9 +287,12 @@ export const GetWalletDetail = async ({
       }
     )
 
-    if (!response.ok || response.status === 500) {
+     if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
       return
     }
+    if (response.status !== 200) return
 
     const result = await response.json()
     return result.data
@@ -298,6 +320,12 @@ export const CreateNewIPG = async ({
         body: JSON.stringify(data),
       }
     )
+     if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
+      return
+    }
+    if (response.status !== 200) return
     return await response.json()
   } catch (error) {
     console.log(error)
@@ -316,6 +344,12 @@ export const SendPaymentLink = async ({ order_id }: { order_id: string }) => {
         body: JSON.stringify({ order_id }),
       }
     )
+     if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
+      return
+    }
+    if (response.status !== 200) return
     const datali = await response.json()
     return datali
   } catch (error) {

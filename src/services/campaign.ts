@@ -1,3 +1,4 @@
+import { deleteCookieByKey } from '@/actions/cookieToken'
 import { CampaignInterface } from '@/interfaces'
 
 export const CreateCampaign = async ({
@@ -65,11 +66,12 @@ export const CreateCampaign = async ({
         }),
       }
     )
-
-    if (response.status !== 200) {
-      throw new Error('Failed to EnableAssistant!')
+     if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
+      return
     }
-
+    if (response.status !== 200) return
     return await response.json()
   } catch (error) {
     console.log(error)
@@ -142,11 +144,12 @@ export const EditCampaign = async ({
         }),
       }
     )
-
-    if (response.status !== 200) {
-      throw new Error('Failed to EnableAssistant!')
+     if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
+      return
     }
-
+    if (response.status !== 200) return
     return await response.json()
   } catch (error) {
     console.log(error)
@@ -167,11 +170,12 @@ export const GetCampaignList = async ({
         },
       }
     )
-
-    if (!response.ok || response.status === 500) {
-      throw new Error('Failed to GetAssistantList')
+     if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
+      return
     }
-
+    if (response.status !== 200) return
     const result = await response.json()
     return result.data
   } catch (error) {

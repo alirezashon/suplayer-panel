@@ -1,4 +1,4 @@
-import { IAccessTokenResponse } from '@/actions/cookieToken'
+import { deleteCookieByKey, IAccessTokenResponse } from '@/actions/cookieToken'
 import { IUserResponse } from '@/interfaces'
 
 export interface IAuthenticatedUser {
@@ -135,7 +135,7 @@ export const LoginWithOtpAndMobile = async ({
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ mobile, otp,scopes:'5' }),
+        body: JSON.stringify({ mobile, otp, scopes: '5' }),
       }
     )
 
@@ -164,11 +164,12 @@ export const GetCurrentUser = async ({
         },
       }
     )
-
-    if (!response.ok || response.status === 500) {
-      throw new Error('Failed to GetCurrentUser')
+    if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
+      return
     }
-
+    if (response.status !== 200) return
     return await response.json()
   } catch (error) {
     console.log(error)
@@ -201,11 +202,12 @@ export const UserChangePassword = async ({
         body: JSON.stringify({ newpassword, otp_code }),
       }
     )
-
-    if (response.status !== 200) {
-      throw new Error('Failed to UserChangePassword!')
+        if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
+      return
     }
-
+    if (response.status !== 200) return
     return await response.json()
   } catch (error) {
     console.log(error)
@@ -249,10 +251,12 @@ export const UpdateProfile = async ({
       }
     )
 
-    if (response.status !== 200) {
-      throw new Error('Failed to UserChangePassword!')
+        if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
+      return
     }
-
+    if (response.status !== 200) return
     return await response.json()
   } catch (error) {
     console.log(error)
@@ -283,15 +287,16 @@ export const GetUserPermissions = async ({
         method: 'GET',
         headers: {
           authorization: `Bearer ${accessToken}`,
-          // authorization: `JWT ${token}`,
         },
       }
     )
 
-    if (!response.ok || response.status === 500) {
-      throw new Error('Failed to GetCurrentUser')
+        if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
+      return
     }
-
+    if (response.status !== 200) return
     const result = await response.json()
     return result.data
   } catch (error) {

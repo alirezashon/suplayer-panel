@@ -1,3 +1,4 @@
+import { deleteCookieByKey } from '@/actions/cookieToken'
 import {
   AllocatedListInterface,
   DefineAllocationInterface,
@@ -26,9 +27,12 @@ export const DefineAllocation = async ({
         body: JSON.stringify({ allocations }),
       }
     )
-    if (response.status !== 200) {
+     if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
       return
     }
+    if (response.status !== 200) return
     return await response.json()
   } catch (error) {
     console.log(error)
@@ -53,9 +57,12 @@ export const ChangeAllocationStatus = async ({
         body: JSON.stringify({ status_updates }),
       }
     )
-    if (response.status !== 200) {
+     if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
       return
     }
+    if (response.status !== 200) return
     return await response.json()
   } catch (error) {
     console.log(error)
@@ -81,9 +88,12 @@ export const ReleaseAllocatedList = async ({
         body: JSON.stringify({ releases: data }),
       }
     )
-    if (response.status !== 200) {
+     if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
       return
     }
+    if (response.status !== 200) return
     return await response.json()
   } catch (error) {
     console.log(error)
@@ -109,9 +119,12 @@ export const ChangeReleaseStatus = async ({
         body: JSON.stringify({ status_updates }),
       }
     )
-    if (response.status !== 200) {
+     if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
       return
     }
+    if (response.status !== 200) return
     return await response.json()
   } catch (error) {
     console.log(error)
@@ -156,9 +169,12 @@ export const GetReleasedList = async ({
         },
       }
     )
-    if (response.status !== 200) {
+     if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
       return
     }
+    if (response.status !== 200) return
     const result = await response.json()
     return result.data
   } catch (error) {
@@ -180,9 +196,12 @@ export const SendAssignmentOtp = async ({
         },
       }
     )
-    if (response.status !== 200) {
+     if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
       return
     }
+    if (response.status !== 200) return
     const result = await response.json()
     return result.data
   } catch (error) {
@@ -204,10 +223,12 @@ export const GetReferrerProductList = async ({
         },
       }
     )
-    if (response.status !== 200) {
+     if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
       return
     }
-
+    if (response.status !== 200) return
     return await response.json()
   } catch (error) {
     console.log(error)
@@ -240,11 +261,12 @@ export const DefineProductoReferrer = async ({
         }),
       }
     )
-
-    if (response.status !== 200) {
+     if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
       return
     }
-
+    if (response.status !== 200) return
     return await response.json()
   } catch (error) {
     console.log(error)
@@ -281,10 +303,12 @@ export const EditReferrerProduct = async ({
       }
     )
 
-    if (response.status !== 200) {
+     if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
       return
     }
-
+    if (response.status !== 200) return
     return await response.json()
   } catch (error) {
     console.log(error)
@@ -310,10 +334,12 @@ export const AddDocFile = async ({
       }
     )
 
-    if (response.status !== 200) {
+     if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
       return
     }
-
+    if (response.status !== 200) return
     return await response.json()
   } catch (error) {
     console.log(error)
@@ -338,8 +364,12 @@ export const GetdDocFile = async ({
         body: JSON.stringify({ file_uid }),
       }
     )
-
-    if (!response.ok) return
+        if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
+      return
+    }
+    if (response.status !== 200) return
 
     const blob = await response.blob() // <- دریافت فایل به صورت blob
     const contentDisposition = response.headers.get('content-disposition')
@@ -380,10 +410,12 @@ export const GetCommissionFulList = async ({
         },
       }
     )
-    if (response.status !== 200) {
+     if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
       return
     }
-
+    if (response.status !== 200) return
     const result = await response.json()
     return result.data
   } catch (error) {

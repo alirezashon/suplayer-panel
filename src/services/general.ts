@@ -1,3 +1,4 @@
+import { deleteCookieByKey } from '@/actions/cookieToken'
 import { Cities, County, EducationalDegree, Major, States } from '@/interfaces'
 
 export const GetStates = async ({
@@ -16,10 +17,12 @@ export const GetStates = async ({
       }
     )
 
-    if (!response.ok || response.status === 500) {
-      throw new Error('Failed to GetAssistantList')
+     if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
+      return
     }
-
+    if (response.status !== 200) return
     const result = await response.json()
     return result.data
   } catch (error) {
@@ -45,9 +48,12 @@ export const GetCounty = async ({
       }
     )
 
-    if (!response.ok || response.status === 500) {
-      throw new Error('Failed to GetAssistantList')
+     if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
+      return
     }
+    if (response.status !== 200) return
     const result = await response.json()
     return result.data
   } catch (error) {
@@ -75,10 +81,12 @@ export const GetCity = async ({
       }
     )
 
-    if (!response.ok || response.status === 500) {
-      throw new Error('Failed to GetAssistantList')
+     if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
+      return
     }
-
+    if (response.status !== 200) return
     const result = await response.json()
     return result.data
   } catch (error) {
@@ -100,9 +108,12 @@ export const GetMajor = async ({
         },
       }
     )
-    if (!response.ok || response.status === 500) {
-      throw new Error('Failed to GetAssistantList')
+     if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
+      return
     }
+    if (response.status !== 200) return
     const result = await response.json()
     return result.data
   } catch (error) {
@@ -125,9 +136,12 @@ export const GetEducationalDegree = async ({
         },
       }
     )
-    if (!response.ok || response.status === 500) {
-      throw new Error('Failed to GetAssistantList')
+     if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey('access_token')
+      location.href = '/auth/login'
+      return
     }
+    if (response.status !== 200) return
     const result = await response.json()
     return result.data
   } catch (error) {
