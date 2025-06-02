@@ -94,7 +94,12 @@ const AddCampaign = ({
     const accessToken = await getCookieByKey('access_token')
     await CreateCampaign({ ...refs.current, accessToken })
       .then(async (result) => {
-        if (result) setshowDetails(true)
+        if (result) {
+          setshowDetails(true)
+          await getCampaignData().then(
+            (result) => result && setCampaignData(result)
+          )
+        }
         if (result?.status === '-1')
           showModal({
             type: 'success',
@@ -109,9 +114,6 @@ const AddCampaign = ({
             title: 'موفق',
             autoClose: 2,
           })
-        await getCampaignData().then(
-          (result) => result && setCampaignData(result)
-        )
         setStep(4)
       })
       .catch(() =>

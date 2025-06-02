@@ -279,8 +279,9 @@ const AddModal = ({ data, close }: AddModalProps) => {
                           refs.current.visitor_specialty ||
                           ''
                         }
-                        type='number'
-                        name='visitor_specialty'
+                        name=''
+                        type='text'
+                        // name='visitor_specialty'
                         onChange={handleChange}
                         placeholder='متخصص پوست و مو'
                       />
@@ -380,7 +381,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
                           ''
                         }
                         onChange={handleChange}
-                        name='visitor_specialty'
+                        // name='visitor_specialty'
                         className={`border ${
                           errors.visitor_specialty && errorClass
                         }`}

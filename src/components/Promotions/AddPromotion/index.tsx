@@ -135,7 +135,7 @@ const AddPromotion = () => {
           )`,
         }}>
         <div className='flex flex-col items-end text-right text-white'>
-          <h2 className='text-lg font-bold'>شعار | جمله برند شما</h2>
+          <h2 className='text-lg font-bold'>{refs.current.ctitle || 'شعار | جمله برند شما'}</h2>
           <p>تخفیف شما</p>
           <button className='mt-2 px-4 py-2 bg-white text-purple-800 rounded-md'>
             لینک خرید

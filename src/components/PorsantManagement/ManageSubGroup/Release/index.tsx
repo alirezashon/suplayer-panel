@@ -1,5 +1,9 @@
 import { getCookieByKey } from '@/actions/cookieToken'
-import { getReleasedList } from '@/actions/setData'
+import {
+  getBeneficiaryData,
+  getReleasedList,
+  getSubGroupData,
+} from '@/actions/setData'
 import OtpModal from '@/components/shared/OtpModal'
 import { useData } from '@/Context/Data'
 import { useMenu } from '@/Context/Menu'
@@ -7,17 +11,28 @@ import { useStates } from '@/Context/States'
 import { setComma } from '@/hooks/NumberFormat'
 import { generateAllocationSignature } from '@/hooks/Signature'
 import {
+  AllocatedListInterface,
   BeneficiaryData,
   FinalReleaseInterface,
+  GroupData,
   ReleaseAllocatedInterface,
+  ReleasedListInterface,
+  SubGroup,
 } from '@/interfaces'
 import {
-  AddDocFile,
   ChangeReleaseStatus,
   ReleaseAllocatedList,
 } from '@/services/allocation'
-import { Printer, SearchNormal, TickCircle, Trash } from 'iconsax-react'
+import { Printer, SearchNormal } from 'iconsax-react'
 import { useCallback, useEffect, useState } from 'react'
+import {
+  calculateData,
+  calculateFinalData,
+  changeReleasedStatus,
+  createReleaseData,
+  releasingData,
+} from './lib/utils'
+import FileUploader from './FileUploader'
 
 const headers = [
   'ردیف',
@@ -36,9 +51,16 @@ type TableDataType = Partial<BeneficiaryData> & {
   fileId: string
   disable: boolean
 }
+
 const Release = () => {
-  const { beneficiaryData, allocationList, releasedList, setReleasedList } =
-    useData()
+  const {
+    beneficiaryData,
+    allocationList,
+    releasedList,
+    setBeneficiaryData,
+    setReleasedList,
+    setAllocationList,
+  } = useData()
   const {
     showModal,
     selectedSubGroupData,
@@ -47,6 +69,7 @@ const Release = () => {
     submitting,
     setSubmitting,
     permissions,
+    setSelectedSubGroupData,
   } = useStates()
   const { setMenu } = useMenu()
   const [uploadStatuses, setUploadStatuses] = useState<
@@ -65,92 +88,32 @@ const Release = () => {
   const [otp, setOtp] = useState<string>()
   const [showOtpModal, setshowOtpModal] = useState<boolean>(false)
 
-  const calculateFinalData = useCallback(() => {
-    const finalRelease: FinalReleaseInterface[] = []
-    const subGroupAllocatedList = releasedList?.filter(
-      (release) =>
-        release?.wstatus === 0 &&
-        release?.supervisor_code === selectedSubGroupData?.supervisor_code
-    )
-    subGroupAllocatedList?.forEach((row) => {
-      if (row) {
-        finalRelease.push({
-          commission_allocation_uid: row.commission_release_uid,
-          status: 1,
-          wamount: row.amount,
-          allocation_status_id_file: `${row.allocation_status_id_file}`,
-          assignment_otp: '',
-          Signature: generateAllocationSignature({
-            amount: `${row.amount}`,
-            customerMobile: row.visitor_uid,
-            sup_group_code: selectedGroupData?.sup_group_code as string,
-            supervisor_code: selectedSubGroupData?.supervisor_code as string,
-            visitor_uid: row.visitor_uid,
-          }),
-        })
-      }
+  const updateData = () => {
+    alert('kalbimdiqez')
+    calculateData({
+      allocationList: allocationList as AllocatedListInterface[],
+      selectedSubGroupData: selectedSubGroupData as SubGroup,
+      data,
+      beneficiaryData: beneficiaryData as BeneficiaryData[],
+      releasedList: releasedList as ReleasedListInterface[],
+      setData,
+      setAllocationList,
     })
-    setFinalReleaseData(finalRelease)
-  }, [releasedList, selectedGroupData, selectedSubGroupData])
-  const calculateData = useCallback(() => {
-    if (allocationList && data.length < 1) {
-      const subGroupAllocatedList = allocationList?.filter(
-        (allocate) =>
-          allocate?.supervisor_code === selectedSubGroupData?.supervisor_code
-      )
-      const allocated = subGroupAllocatedList
-        .filter(
-          (allocate) => allocate.wstatus === 1 && allocate.remain_amount > 0
-        )
-        .map((allocate) => ({
-          visitor_name: beneficiaryData?.find(
-            (beneficiary) => beneficiary.visitor_uid === allocate?.visitor_uid
-          )?.visitor_name,
-          visitor_family: beneficiaryData?.find(
-            (beneficiary) => beneficiary.visitor_uid === allocate?.visitor_uid
-          )?.visitor_family,
-          visitor_tel: allocate.visitor_uid,
-          allocatedAmount: setComma(`${allocate.allocated_amount}`),
-          remain_amount: setComma(`${allocate.remain_amount}`),
-          newReleaseAmount:
-            releasedList
-              ?.filter(
-                (release) =>
-                  release.wstatus === 0 &&
-                  release.supervisor_code ===
-                    selectedSubGroupData?.supervisor_code
-              )
-              ?.find((final) => final?.visitor_uid === allocate?.visitor_uid)
-              ?.amount.toString() || '',
-          fileId: '',
-          disable: Boolean(
-            releasedList
-              ?.filter(
-                (release) =>
-                  release.wstatus === 0 &&
-                  release.supervisor_code ===
-                    selectedSubGroupData?.supervisor_code
-              )
-              ?.find((final) => final?.visitor_uid === allocate?.visitor_uid)
-          ),
-        }))
-      setData(allocated)
-    }
-  }, [
-    allocationList,
-    beneficiaryData,
-    selectedSubGroupData,
-    releasedList,
-    data.length,
-  ])
+    calculateFinalData({
+      releasedList: releasedList as ReleasedListInterface[],
+      selectedSubGroupData: selectedSubGroupData as SubGroup,
+      selectedGroupData: selectedGroupData as GroupData,
+      setFinalReleaseData,
+    })
+  }
+
   useEffect(() => {
     if (!selectedGroupData) {
       location.hash = 'porsant'
       setMenu('porsant')
     }
-    calculateData()
-    calculateFinalData()
-  }, [setMenu, selectedGroupData, calculateData, calculateFinalData])
+    updateData()
+  }, [setMenu, selectedGroupData])
 
   const handleDeleteFile = (visitorTel: string) => {
     setData((prev) =>
@@ -164,116 +127,48 @@ const Release = () => {
     }))
   }
 
-  const handleUploadFile = async (
-    event: React.ChangeEvent<HTMLInputElement>,
-    visitorTel: string
-  ) => {
-    const files = event.target.files
-    if (!files || files.length === 0) return
-
-    const allowedTypes = [
-      'image/png',
-      'image/jpg',
-      'image/jpeg',
-      'application/vnd.ms-excel',
-      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      'application/msword',
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-      'application/vnd.ms-access',
-      'text/csv',
-      'application/vnd.ms-powerpoint',
-      'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-      'application/pdf',
-      'text/html',
-      'application/xhtml+xml',
-    ]
-
-    const file = files[0] // فقط یک فایل را بررسی می‌کنیم
-
-    if (!allowedTypes.includes(file.type)) {
-      showErrorModal('پسوند فایل قابل قبول نمی‌باشد')
-      setUploadStatuses((prev) => ({
-        ...prev,
-        [visitorTel]: { status: 'error', progress: 0 },
-      }))
-      return
-    }
-
-    if (file.size < 50000 || file.size > 2200000) {
-      showErrorModal('حجم فایل باید بین 50KB و 2MB باشد')
-      setUploadStatuses((prev) => ({
-        ...prev,
-        [visitorTel]: { status: 'error', progress: 0 },
-      }))
-      return
-    }
-
+  const handleUploadStart = (visitorTel: string) => {
     setUploadStatuses((prev) => ({
       ...prev,
       [visitorTel]: { status: 'uploading', progress: 0 },
     }))
+  }
 
-    // مقداردهی اولیه
-    let progress = 0
+  const handleUploadProgress = (visitorTel: string, progress: number) => {
+    setUploadStatuses((prev) => ({
+      ...prev,
+      [visitorTel]: { status: 'uploading', progress },
+    }))
+  }
 
-    // ایجاد یک اینتروال برای افزایش مقدار progress
-    const interval = setInterval(() => {
-      setUploadStatuses((prev) => {
-        const newProgress = Math.min(prev[visitorTel].progress + 10, 100) // افزایش ۱۰٪ در هر ۳۰۰ms
-        return {
-          ...prev,
-          [visitorTel]: { status: 'uploading', progress: newProgress },
-        }
-      })
-      progress += 10
-      if (progress >= 100) {
-        clearInterval(interval)
-      }
-    }, 300)
+  const handleUploadSuccess = (visitorTel: string, fileId: string) => {
+    setData((prev) =>
+      prev.map((last) =>
+        last.visitor_tel === visitorTel ? { ...last, fileId } : last
+      )
+    )
+    setFinalReleaseData((prev) =>
+      prev.map((last) =>
+        releasedList?.find(
+          (release) =>
+            release.commission_release_uid === last.commission_allocation_uid
+        )?.visitor_uid === visitorTel
+          ? { ...last, allocation_status_id_file: fileId }
+          : last
+      )
+    )
+    setUploadStatuses((prev) => ({
+      ...prev,
+      [visitorTel]: { status: 'success', progress: 100 },
+    }))
+  }
 
-    try {
-      const formData = new FormData()
-      formData.append('file', file)
-
-      const accessToken = (await getCookieByKey('access_token')) || ''
-      await AddDocFile({ src: formData, accessToken }).then((result) => {
-        if (result && result.status !== '-1') {
-          setData((prev) =>
-            prev.map((last) =>
-              last.visitor_tel === visitorTel
-                ? { ...last, fileId: result.rec_id_file }
-                : last
-            )
-          )
-          setFinalReleaseData((prev) =>
-            prev.map((last) =>
-              releasedList?.find(
-                (release) =>
-                  release.commission_release_uid ===
-                  last.commission_allocation_uid
-              )?.visitor_uid === visitorTel
-                ? { ...last, allocation_status_id_file: result?.rec_id_file }
-                : last
-            )
-          )
-          clearInterval(interval) // متوقف کردن اینتروال وقتی آپلود کامل شد
-
-          setUploadStatuses((prev) => ({
-            ...prev,
-            [visitorTel]: { status: 'success', progress: 100 },
-          }))
-        }
-      })
-    } catch (error) {
-      clearInterval(interval) // در صورت بروز خطا اینتروال را متوقف کن
-
-      setUploadStatuses((prev) => ({
-        ...prev,
-        [visitorTel]: { status: 'error', progress: 0 },
-      }))
-      showErrorModal('خطا در بارگذاری فایل')
-      return error
-    }
+  const handleUploadError = (visitorTel: string, error: string) => {
+    setUploadStatuses((prev) => ({
+      ...prev,
+      [visitorTel]: { status: 'error', progress: 0 },
+    }))
+    showErrorModal(error)
   }
 
   const showErrorModal = (message: string) => {
@@ -286,7 +181,6 @@ const Release = () => {
   }
 
   const handleCreditChange = (id: string, value: string) => {
-    // حذف کاماهای اضافی
     const cleanValue = value.replace(/,/g, '')
     if (!/^\d*$/.test(cleanValue)) return
 
@@ -316,95 +210,19 @@ const Release = () => {
         )
       }
 
-      const newItem: ReleaseAllocatedInterface = {
-        commission_type: 1,
-        source_type: 1,
-        sup_group_code: selectedGroupData?.sup_group_code as string,
-        supervisor_code: selectedSubGroupData?.supervisor_code as string,
-        visitor_uid: id,
-        amount: parsedValue,
-        currency_type: 241,
-        ref_allocation_uid:
-          allocationList?.find((allocated) => allocated.visitor_uid === id)
-            ?.commission_allocation_uid || '',
-        allocation_type: 1,
-        Signature: generateAllocationSignature({
-          amount: cleanValue,
-          customerMobile: id,
-          sup_group_code: selectedGroupData?.sup_group_code as string,
-          supervisor_code: selectedSubGroupData?.supervisor_code as string,
-          visitor_uid: id,
-        }),
-      }
-      return [...prev, newItem]
+      return [
+        ...prev,
+        createReleaseData(
+          id,
+          parsedValue,
+          selectedGroupData || null,
+          selectedSubGroupData || null,
+          allocationList ?? []
+        ),
+      ]
     })
   }
-  const releasingData = async () => {
-    if (releaseData.length < 1) {
-      showErrorModal('لیست شما خالی است')
-      return
-    }
-    const accessToken = await getCookieByKey('access_token')
-    await ReleaseAllocatedList({ accessToken, data: releaseData }).then(
-      async (response) => {
-        if (response && response?.status === 1) {
-          await getReleasedList().then((result) => {
-            if (result) {
-              setReleasedList(result)
-              calculateData()
-              calculateFinalData()
-            }
-          })
-          showModal({
-            type: 'success',
-            title: 'موفق',
-            main: response?.message,
-            autoClose: 1,
-          })
-          setReleaseData([])
-          setData((prv) =>
-            prv.map((last) => ({ ...last, newReleaseAmount: '' }))
-          )
-        } else showErrorModal(response?.message || 'خطای ارتباط با سرور')
-      }
-    )
-  }
-  const changeReleasedStatus = async () => {
-    if (finalReleaseData?.length < 1) return
-    if (!otp || otp?.length < 5) {
-      showModal({
-        main: 'کد صحیح نیست',
-        title: 'خطا',
-        type: 'error',
-        autoClose: 1,
-        hideButton: true,
-      })
-      return
-    }
-    setSubmitting(true)
-    const accessToken = (await getCookieByKey('access_token')) || ''
-    await ChangeReleaseStatus({
-      accessToken,
-      status_updates: finalReleaseData.map((allocated) => ({
-        ...allocated,
-        assignment_otp: `${otp}`,
-      })),
-    }).then(async (result) => {
-      showModal({
-        title: result?.status === 1 ? 'موفق' : 'ناموفق',
-        type: result?.status === 1 ? 'success' : 'error',
-        main: result?.message || 'خطایی رخ داد',
-        autoClose: 1,
-      })
-      setSubmitting(false)
-      await getReleasedList().then((result) => {
-        if (result) {
-          setReleasedList(result)
-          setshowOtpModal(false)
-        }
-      })
-    })
-  }
+
   return (
     <>
       {permissions[1].includes('748') && (
@@ -414,7 +232,21 @@ const Release = () => {
               setOtp={setOtp}
               title='ثبت نهایی آزادسازی اعتبار'
               close={() => setshowOtpModal(false)}
-              submit={changeReleasedStatus}
+              submit={() =>
+                changeReleasedStatus({
+                  finalReleaseData,
+                  otp,
+                  setReleasedList,
+                  setSubmitting,
+                  setshowOtpModal,
+                  setBeneficiaryData,
+                  selectedSubGroupData: selectedSubGroupData as SubGroup,
+                  updateData,
+                  setSelectedSubGroupData,
+                  setMenu,
+                  showModal,
+                })
+              }
             />
           )}
           <div className='flex justify-between items-center mb-7'>
@@ -535,56 +367,22 @@ const Release = () => {
                             />
                           </td>
                           <td className='text-center px-4 py-2 border-l'>
-                            {row.fileId.length < 1 ? (
-                              <label
-                                className={`${
-                                  !row.disable && 'opacity-30 cursor-pointer'
-                                } flex flex-col items-center gap-2 cursor-pointer w-full`}
-                                htmlFor='fileUploader'>
-                                <input
-                                  id='fileUploader'
-                                  disabled={!row.disable}
-                                  type='file'
-                                  onChange={(e) =>
-                                    handleUploadFile(e, `${row.visitor_tel}`)
-                                  }
-                                  className='hidden'
-                                  accept='image/*'
-                                />
-                                <div className='w-full flex items-center justify-center border border-[#7747C0] text-[#7747C0] rounded-md px-4 py-2 text-sm hover:bg-[#7747C0] hover:text-white'>
-                                  {uploadStatuses[`${row.visitor_tel}`]
-                                    ?.status === 'uploading'
-                                    ? 'در حال بارگذاری...'
-                                    : 'بارگذاری فایل'}
-                                </div>
-                                {uploadStatuses[`${row.visitor_tel}`]
-                                  ?.status === 'uploading' && (
-                                  <div className='w-full bg-gray-200 rounded-full h-2 mt-2'>
-                                    <div
-                                      className='bg-[#7747C0] h-2 rounded-full transition-all duration-500'
-                                      style={{
-                                        width: `${
-                                          uploadStatuses[`${row.visitor_tel}`]
-                                            ?.progress
-                                        }%`,
-                                      }}></div>
-                                  </div>
-                                )}
-                              </label>
-                            ) : (
-                              <div className='flex items-center gap-2 '>
-                                <TickCircle size={24} color='#0F973D' />
-                                بارگذاری انجام شد
-                                <Trash
-                                  size={24}
-                                  onClick={() =>
-                                    handleDeleteFile(`${row.visitor_tel}`)
-                                  }
-                                  color='#B2BBC7'
-                                  className='cursor-pointer'
-                                />
-                              </div>
-                            )}
+                            <FileUploader
+                              visitorTel={row.visitor_tel as string}
+                              fileId={row.fileId}
+                              disable={row.disable}
+                              uploadStatus={
+                                uploadStatuses[row.visitor_tel as string] || {
+                                  status: 'idle',
+                                  progress: 0,
+                                }
+                              }
+                              onUploadStart={handleUploadStart}
+                              onUploadProgress={handleUploadProgress}
+                              onUploadSuccess={handleUploadSuccess}
+                              onUploadError={handleUploadError}
+                              onDelete={handleDeleteFile}
+                            />
                           </td>
                         </tr>
                       ))}
@@ -598,7 +396,16 @@ const Release = () => {
                   </div>
                   <div className='flex mt-4 gap-10 justify-end'>
                     <button
-                      onClick={releasingData}
+                      onClick={() =>
+                        releasingData({
+                          releaseData,
+                          showModal,
+                          setReleasedList,
+                          updateData,
+                          setReleaseData,
+                          setData,
+                        })
+                      }
                       className='border-button px-10 h-10 rounded-lg '>
                       ذخیره پیش نویس آزادسازی
                     </button>

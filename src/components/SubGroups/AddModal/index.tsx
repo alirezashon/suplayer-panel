@@ -1,11 +1,12 @@
 import { getCookieByKey } from '@/actions/cookieToken'
-import { getSubGroupData } from '@/actions/setData'
+import { getGroupData, getSubGroupData } from '@/actions/setData'
 import { errorClass } from '@/app/assets/style'
 import RadioSelectList from '@/components/shared/RadioSelectree'
 import RadioTreeSelector from '@/components/shared/RadioTrees'
 import { useData } from '@/Context/Data'
 import { useMenu } from '@/Context/Menu'
 import { useStates } from '@/Context/States'
+import { GroupData } from '@/interfaces'
 import { CreateSubGroup, EditSubGroup } from '@/services/items'
 import { CloseSquare, Grammerly, Trash } from 'iconsax-react'
 import { useState } from 'react'
@@ -19,7 +20,7 @@ const AddModal = ({
   groupId: number
   close: () => void
 }) => {
-  const { groupData, setSubGroupData, systemTypes } = useData()
+  const { groupData, setSubGroupData, systemTypes, setGroupData } = useData()
   const { showModal, closeModal, submitting, setSubmitting } = useStates()
   const { setMenu } = useMenu()
   const [data, setData] = useState<{ name: string; groupId: number }>({
@@ -66,6 +67,9 @@ const AddModal = ({
         if (value.status === '-1') setResult(false, value.message)
         else {
           setResult(true)
+          await getGroupData().then((groups) => {
+            if (groupData) setGroupData(groups as GroupData[])
+          })
           await getSubGroupData().then(
             (value) => value && setSubGroupData(value)
           )
@@ -87,6 +91,9 @@ const AddModal = ({
           })
           if (value.status === '-1') setResult(false, value.message)
           else setResult(true)
+          await getGroupData().then((groups) => {
+            if (groupData) setGroupData(groups as GroupData[])
+          })
           await getSubGroupData().then(
             (value) => value && setSubGroupData(value)
           )

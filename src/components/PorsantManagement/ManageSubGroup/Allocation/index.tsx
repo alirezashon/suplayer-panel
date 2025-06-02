@@ -1,7 +1,11 @@
 import { getCookieByKey } from '@/actions/cookieToken'
-import { getAllocatedList } from '@/actions/setData'
+import {
+  getAllocatedList,
+  getBeneficiaryData,
+  getSubGroupData,
+} from '@/actions/setData'
 import { walletBoxStyle } from '@/app/assets/style'
-import Loading from '@/components/shared/Loading'
+import DotsLoading from '@/components/shared/DotsLoading'
 import OtpModal from '@/components/shared/OtpModal'
 import { useData } from '@/Context/Data'
 import { useMenu } from '@/Context/Menu'
@@ -12,6 +16,7 @@ import {
   BeneficiaryData,
   DefineAllocationInterface,
   SaveAllocatedDataInterface,
+  SubGroup,
 } from '@/interfaces'
 import { ChangeAllocationStatus, DefineAllocation } from '@/services/allocation'
 import { Printer, SearchNormal, WalletMoney } from 'iconsax-react'
@@ -40,13 +45,19 @@ const Allocation = () => {
   const [otp, setOtp] = useState<string>()
   const [showOtpModal, setshowOtpModal] = useState<boolean>(false)
   const { setMenu } = useMenu()
-  const { beneficiaryData, balance, allocationList, setAllocationList } =
-    useData()
+  const {
+    beneficiaryData,
+    balance,
+    allocationList,
+    setAllocationList,
+    setBeneficiaryData,
+  } = useData()
   const [filteredData, setFilteredData] = useState<BeneficiaryData[]>([])
   const {
     selectedSubGroupData,
     selectedGroupData,
     setSelectedGroupData,
+    setSelectedSubGroupData,
     showModal,
     submitting,
     setSubmitting,
@@ -222,6 +233,21 @@ const Allocation = () => {
         if (result) {
           setAllocationList(result)
           setshowOtpModal(false)
+        }
+      })
+      await getBeneficiaryData().then((beneficiaries) => {
+        if (beneficiaries) {
+          setBeneficiaryData(beneficiaries)
+        }
+      })
+      await getSubGroupData().then((subGroups) => {
+        if (subGroups as SubGroup[]) {
+          const selected =
+            subGroups &&
+            subGroups.find(
+              (sub) => sub.supervisor_id === selectedSubGroupData?.supervisor_id
+            )
+          setSelectedSubGroupData(selected as SubGroup)
         }
       })
     })
@@ -411,16 +437,25 @@ const Allocation = () => {
                       disabled={loading}
                       className={`border-button h-10 rounded-lg  w-56 flex justify-center items-center`}>
                       {loading ? (
-                        <Loading color='#ffffff' />
+                        <DotsLoading color='#7747C0' />
                       ) : (
                         'ذخیره پیش نویس تخصیص'
                       )}
                     </button>
                     <button
-                      onClick={() => setshowOtpModal(true)}
+                      onClick={() =>
+                        allocatedData.length > 0
+                          ? setshowOtpModal(true)
+                          : showModal({
+                              main: 'لطفا  ابتدا در پیش نویس ذخیره کنید',
+                              title: 'خطا',
+                              autoClose: 1,
+                              type: 'error',
+                            })
+                      }
                       disabled={loading}
                       className={`fill-button h-10 rounded-lg  w-56 flex justify-center items-center`}>
-                      {loading ? <Loading color='#ffffff' /> : 'ثبت نهایی'}
+                      {loading ? <DotsLoading /> : 'ثبت نهایی'}
                     </button>
                   </div>
                 </div>

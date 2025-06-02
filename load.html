@@ -5,45 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <style>
+      /* HTML: <div class="loader"></div> */
       .loader {
-        width: 50px;
-        aspect-ratio: 1;
-        box-shadow: 0 0 0 3px #8430c9 inset;
-        border-radius: 50%;
-        position: relative;
-        animation: l8-0 1.5s linear infinite;
+        height: 15px;
+        aspect-ratio: 4;
+        --_g: no-repeat radial-gradient(farthest-side, #f9f0ff 90%, #0e41ce00);
+        background: var(--_g) left, var(--_g) right;
+        background-size: 25% 100%;
+        display: grid;
       }
-      .loader:before {
+      .loader:before,
+      .loader:after {
         content: '';
-        position: absolute;
-        top: 50%;
-        left: calc(100% + 2px);
-        box-shadow: inherit;
-        width: 25px;
+        height: inherit;
         aspect-ratio: 1;
+        grid-area: 1/1;
+        margin: auto;
         border-radius: 50%;
-        animation: l8-1 1.5s linear infinite;
+        transform-origin: -100% 50%;
+        background: #e9d3ff;
+        animation: l49 1s infinite linear;
       }
-      @keyframes l8-1 {
-        0% {
-          transform-origin: -27px 50%;
-          width: 20px;
-          transform: translateY(-50%) rotate(0);
-        }
-        100% {
-          transform-origin: -12px 50%;
-          width: 50px;
-          transform: translateY(-50%) rotate(180deg);
-        }
+      .loader:after {
+        transform-origin: 200% 50%;
+        --s: -1;
+        animation-delay: -0.5s;
       }
-      @keyframes l8-0 {
-        0% {
-          width: 50px;
-          transform: translate(0);
-        }
+
+      @keyframes l49 {
+        58%,
         100% {
-          width: 20px;
-          transform: translate(37px);
+          transform: rotate(calc(var(--s, 1) * 1turn));
         }
       }
     </style>
