@@ -5,12 +5,14 @@ interface SelectListProps {
   label: string
   items: { id: string | number; label: string }[]
   setSelectedItems: (selected: Array<string | number>) => void
+  defaultSelectAll?: boolean
 }
 
 const SelectList: React.FC<SelectListProps> = ({
   label,
   items,
   setSelectedItems,
+  defaultSelectAll,
 }) => {
   const [selectedItems, setSelectedItemsState] = useState<
     Array<string | number>
@@ -20,6 +22,7 @@ const SelectList: React.FC<SelectListProps> = ({
   >([])
   const [isOpen, setIsOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
+  const didSelectAllRef = useRef(false)
 
   const toggleItem = (id: string | number) => {
     let updatedSelectedItems
@@ -31,7 +34,16 @@ const SelectList: React.FC<SelectListProps> = ({
     setSelectedItemsState(updatedSelectedItems)
     setSelectedItems(updatedSelectedItems)
   }
-
+  const selectAll = () => {
+    if (selectedItems.length === filteredItems.length) {
+      setSelectedItemsState([])
+      setSelectedItems([])
+    } else {
+      const allIds = filteredItems.map((item) => item.id)
+      setSelectedItemsState(allIds)
+      setSelectedItems(allIds)
+    }
+  }
   useEffect(() => {
     setFilteredItems(items)
     const handleClickOutside = (event: MouseEvent) => {
@@ -42,17 +54,29 @@ const SelectList: React.FC<SelectListProps> = ({
         setIsOpen(false)
       }
     }
-
     document.addEventListener('mousedown', handleClickOutside)
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [items])
+
+  useEffect(() => {
+    if (
+      defaultSelectAll &&
+      filteredItems.length > 0 &&
+      !didSelectAllRef.current
+    ) {
+      selectAll()
+      didSelectAllRef.current = true
+    }
+  }, [defaultSelectAll, filteredItems])
+
   const filterData = (value: string) => {
     const filterResult = items.filter((item) => item.label.includes(value))
     setFilteredItems(filterResult)
   }
+
   return (
     <div ref={containerRef} className='relative w-full '>
       <div
@@ -85,6 +109,26 @@ const SelectList: React.FC<SelectListProps> = ({
             />
           </div>
           <div className='mt-8'>
+            <div
+              className={`flex items-center gap-2 px-4 py-2 cursor-pointer hover:bg-purple-100 ${
+                selectedItems.length === filteredItems.length &&
+                'text-[#7747C0] hover:bg-gray-100 hover:text-[#7747C0]'
+              }`}
+              onClick={selectAll}>
+              <input
+                type='checkbox'
+                checked={selectedItems.length === filteredItems.length}
+                readOnly
+                className={`form-checkbox appearance-none 
+                h-5 w-5 border-2  rounded-md
+                ${
+                  selectedItems.length === filteredItems.length
+                    ? 'bg-[#7747C0]'
+                    : 'bg-white'
+                }`}
+              />
+              <label> انتخاب همه</label>
+            </div>
             {filteredItems?.map((item) => (
               <div
                 key={item.id}

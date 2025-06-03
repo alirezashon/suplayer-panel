@@ -34,6 +34,12 @@ const AppointmentModal = ({
   const [step, setStep] = useState<number>(1)
   const [showDetails, setShowDetails] = useState<boolean>(false)
   const [taskList, setTaskList] = useState<AppointmentTaskInterface[]>([])
+  const [selectedParent, setSelectedParent] = useState<{
+    groups: string[]
+    productGroups: number[]
+    brands: number[]
+  }>({ groups: [], productGroups: [], brands: [] })
+
   const refs = useRef({
     personnel_uid: `${data?.personnel_uid}`,
     visitor_uid: '',
@@ -224,27 +230,40 @@ const AppointmentModal = ({
                 items={
                   groupData?.map((gp) => {
                     return {
-                      id: gp.sup_group_name,
+                      id: gp.sup_group_code,
                       label: gp.sup_group_name,
                     }
                   }) || []
                 }
-                setSelectedItems={(result) =>
-                  (refs.current.sup_group_code = result as string[])
-                }
+                setSelectedItems={(result) => {
+                  setSelectedParent({
+                    brands: selectedParent.brands,
+                    groups: result as string[],
+                    productGroups: selectedParent.productGroups,
+                  })
+                  refs.current.sup_group_code = result as string[]
+                }}
               />
             </div>
             <div className='flex flex-col w-full'>
               <SelectList
                 key={2}
+                defaultSelectAll={true}
                 label='زیرگروه خود را انتخاب کنید'
                 items={
-                  subGroupData?.map((gp) => {
-                    return {
-                      id: gp.supervisor_id,
-                      label: gp.supervisor_name,
-                    }
-                  }) || []
+                  subGroupData
+                    ?.filter(
+                      (subGp) =>
+                        selectedParent.groups.includes(
+                          `${subGp.sup_group_id}`
+                        ) && subGp
+                    )
+                    ?.map((gp) => {
+                      return {
+                        id: gp.supervisor_id,
+                        label: gp.supervisor_name,
+                      }
+                    }) || []
                 }
                 setSelectedItems={(result) =>
                   (refs.current.supervisor_code = result as string[])
@@ -273,38 +292,64 @@ const AppointmentModal = ({
                     }
                   }) || []
                 }
-                setSelectedItems={(result) =>
-                  (refs.current.pgroup_id = result as number[])
-                }
+                setSelectedItems={(result) => {
+                  refs.current.pgroup_id = result as number[]
+                  setSelectedParent({
+                    brands: selectedParent.brands,
+                    groups: selectedParent.groups,
+                    productGroups: result as number[],
+                  })
+                }}
               />
             </div>
             <div className='flex flex-col w-full'>
               <SelectList
                 key={4}
                 label='برند محصول را انتخاب کنید'
+                defaultSelectAll={true}
                 items={
-                  brandsData?.map((gp) => {
-                    return {
-                      id: gp.id,
-                      label: gp.group_desc,
-                    }
-                  }) || []
+                  brandsData
+                    ?.filter(
+                      (brnad) =>
+                        selectedParent.productGroups.includes(
+                          brnad.group_pid
+                        ) && brnad
+                    )
+                    ?.map((brandName) => {
+                      return {
+                        id: brandName.id,
+                        label: brandName.group_desc,
+                      }
+                    }) || []
                 }
-                setSelectedItems={(result) =>
-                  (refs.current.chart_id = result as number[])
-                }
+                setSelectedItems={(result) => {
+                  refs.current.chart_id = result as number[]
+                  setSelectedParent({
+                    brands: result as number[],
+                    groups: selectedParent.groups,
+                    productGroups: selectedParent.productGroups,
+                  })
+                }}
               />
             </div>
             <div className='flex flex-col w-full'>
               <SelectList
                 label='محصول را انتخاب کنید'
+                defaultSelectAll={true}
                 items={
-                  productData?.map((gp) => {
-                    return {
-                      id: gp.id,
-                      label: gp.ini_name,
-                    }
-                  }) || []
+                  productData
+                    ?.filter(
+                      (product) =>
+                        selectedParent.brands.includes(
+                          parseInt(product.group_id)
+                        ) && product
+                    )
+                    ?.map((gp) => {
+                      return {
+                        id: gp.id,
+                        label: gp.ini_name,
+                      }
+                    }) || []
                 }
                 setSelectedItems={(result) =>
                   (refs.current.product_uid = result as string[])

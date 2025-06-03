@@ -27,11 +27,11 @@ const BeneficiaryCard: React.FC<{
       </div>
       <p className='flex justify-between mt-5'>
         <span className='text-[#8455D2]'>تخصیص کل</span>
-        {setComma(`${data.collectible_credit}`)}
+        {setComma(`${data.Uncollectible_credit}`)}
       </p>
       <p className='flex justify-between mt-3'>
         <span className='text-[#8455D2]'>آزادسازی نشده</span>
-        {setComma(`${data.Uncollectible_credit}`)}
+        {setComma(`${data.Uncollectible_credit - data.collectible_credit }`)}
       </p>
     </div>
   )

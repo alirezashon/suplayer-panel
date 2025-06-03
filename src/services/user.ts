@@ -29,6 +29,7 @@ export const UserLoginAPI = async ({
       body: new URLSearchParams({
         username: username,
         password: password,
+        scope:'8'
       }),
     })
     if (!response) return
@@ -135,7 +136,7 @@ export const LoginWithOtpAndMobile = async ({
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ mobile, otp, scopes: '5' }),
+        body: JSON.stringify({ mobile, otp, scopes: '8' }),
       }
     )
 

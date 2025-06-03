@@ -101,53 +101,129 @@ const AddModal = ({
       })
     else {
       if (names?.length > 0) {
-        await Promise.all(
+        const results = await Promise.all(
           names
-            .filter((name) => name.length > 0) // فقط نام‌های معتبر
-            .map(
-              async (name) =>
-                await CreateProductGroup({
-                  accessToken,
-                  name: name,
-                  group_pid: parent.id,
-                }).then(async (result) => {
-                  if (result.status === 1) {
-                    showModal({
-                      type: 'success',
-                      main: <p>{result.message}</p>,
-                      title: 'موفق',
-                      autoClose: 2,
-                    })
-                    await getProductGroupData().then((value) => {
-                      if (value) {
-                        setProductGroupData(
-                          value.productGroups as ProductGroupData[]
-                        )
-                        setBrandsData(value.brands as ProductGroupData[])
-                        if (value.brands) {
-                          const selectedBrand = selectedProductBrandData
-                          setSelectedProductBrandData({
-                            data: value.brands?.filter(
-                              (pg) => pg.group_pid === selectedBrand?.group.id
-                            ) as ProductGroupData[],
-                            group: selectedBrand?.group as ProductGroupData,
-                          })
-                        }
-                      }
-                    })
-                  } else
-                    showModal({
-                      type: 'error',
-                      main: <p>{result.message}</p>,
-                      title: 'خطا',
-                      autoClose: 2,
-                    })
-                })
+            .filter((name) => name.trim().length > 0)
+            .map((name) =>
+              CreateProductGroup({
+                accessToken,
+                name,
+                group_pid: parent.id,
+              }).catch((error) => ({
+                status: 0,
+                message: error?.message || 'خطای ناشناخته',
+              }))
             )
         )
+
+        let hasSuccess = false
+        let errorMessages: string[] = []
+
+        results.forEach((result) => {
+          if (result.status === 1) {
+            hasSuccess = true
+          } else {
+            errorMessages.push(result.message)
+          }
+        })
+
+        // نمایش موفقیت کلی
+        if (hasSuccess) {
+          showModal({
+            type: 'success',
+            main: <p> برندها با موفقیت ایجاد شدند</p>,
+            title: 'موفق',
+            autoClose: 2,
+          })
+          setResult(true)
+
+          const value = await getProductGroupData()
+          if (value) {
+            setProductGroupData(value.productGroups as ProductGroupData[])
+            setBrandsData(value.brands as ProductGroupData[])
+            if (value.brands) {
+              const selectedBrand = selectedProductBrandData
+              setSelectedProductBrandData({
+                data: value.brands?.filter(
+                  (pg) => pg.group_pid === selectedBrand?.group.id
+                ) as ProductGroupData[],
+                group: selectedBrand?.group as ProductGroupData,
+              })
+            }
+          }
+        }
+
+        // نمایش خطاهای مربوط به برندهایی که ثبت نشدند
+        if (errorMessages.length > 0) {
+          showModal({
+            type: 'error',
+            main: (
+              <ul className='text-right'>
+                {errorMessages.map((msg, i) => (
+                  <li key={i}>{msg}</li>
+                ))}
+              </ul>
+            ),
+            title: 'خطا در برخی برندها',
+            autoClose: 3,
+          })
+          setResult(false, errorMessages[0])
+        }
+
         setNames([])
-        setResult(true)
       }
+
+      // if (names?.length > 0) {
+      //   await Promise.all(
+      //     names
+      //       .filter((name) => name.length > 0) // فقط نام‌های معتبر
+      //       .map(
+      //         async (name) =>
+      //           await CreateProductGroup({
+      //             accessToken,
+      //             name: name,
+      //             group_pid: parent.id,
+      //           }).then(async (result) => {
+      //             if (result.status === 1) {
+      //               showModal({
+      //                 type: 'success',
+      //                 main: <p>{result.message}</p>,
+      //                 title: 'موفق',
+      //                 autoClose: 2,
+      //               })
+      //               setResult(true)
+
+      //               await getProductGroupData().then((value) => {
+      //                 if (value) {
+      //                   setProductGroupData(
+      //                     value.productGroups as ProductGroupData[]
+      //                   )
+      //                   setBrandsData(value.brands as ProductGroupData[])
+      //                   if (value.brands) {
+      //                     const selectedBrand = selectedProductBrandData
+      //                     setSelectedProductBrandData({
+      //                       data: value.brands?.filter(
+      //                         (pg) => pg.group_pid === selectedBrand?.group.id
+      //                       ) as ProductGroupData[],
+      //                       group: selectedBrand?.group as ProductGroupData,
+      //                     })
+      //                   }
+      //                 }
+      //               })
+      //             } else {
+      //               showModal({
+      //                 type: 'error',
+      //                 main: <p>{result.message}</p>,
+      //                 title: 'خطا',
+      //                 autoClose: 2,
+      //               })
+      //               setResult(false, result.message)
+      //             }
+      //           })
+      //       )
+      //   )
+      //   setNames([])
+      // }
     }
 
     await rerenderData()

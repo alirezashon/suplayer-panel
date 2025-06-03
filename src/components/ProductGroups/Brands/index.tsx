@@ -143,7 +143,7 @@ const Brands: React.FC = () => {
                         {brand.product_count > 0 ? (
                           <>
                             <span className='text-[#757575]'>
-                              تعداد  محصول :
+                              تعداد محصول :
                             </span>
                             {brand.product_count}
                           </>
@@ -158,7 +158,7 @@ const Brands: React.FC = () => {
                         else setShowAddProduct(brand)
                       }}
                       className={`w-full py-2  font-semibold rounded ${
-                        brand.group_desc === 'add'
+                        brand.product_count > 0
                           ? 'bg-[#7747C0] hover:bg-[#7747C0] text-white'
                           : 'border border-[#7747C0] text-[#7747C0] hover:bg-[#7747C0] hover:text-white'
                       } transition duration-300`}>

@@ -23,7 +23,10 @@ const AddPromotion = () => {
   } = useStates()
   const [step, setStep] = useState<number>(1)
   const [hasCornometer, setHasCornometer] = useState<boolean>(false)
-
+  const [selectedTime, setSelectedTime] = useState<{
+    start: string
+    end: string
+  }>({ start: '', end: '' })
   const refs = useRef({
     cstatus: 1,
     ctitle: '',
@@ -135,14 +138,20 @@ const AddPromotion = () => {
           )`,
         }}>
         <div className='flex flex-col items-end text-right text-white'>
-          <h2 className='text-lg font-bold'>{refs.current.ctitle || 'شعار | جمله برند شما'}</h2>
+          <h2 className='text-lg font-bold'>
+            {refs.current.ctitle || 'شعار | جمله برند شما'}
+          </h2>
           <p>تخفیف شما</p>
           <button className='mt-2 px-4 py-2 bg-white text-purple-800 rounded-md'>
             لینک خرید
           </button>
         </div>
         <div className='flex flex-col items-start text-white'>
-          <h1 className='text-2xl font-bold'>تاریخ و زمان پروموشن</h1>
+          <h1 className='text-2xl font-bold'>
+            {selectedTime.start
+              ? selectedTime.end + ' _ ' + selectedTime.start
+              : 'تاریخ و زمان پروموشن'}
+          </h1>
           <p className='text-sm'>ثانیه | دقیقه | ساعت | روز</p>
         </div>
         <div
@@ -235,9 +244,13 @@ const AddPromotion = () => {
                     <Calendar
                       placeholder='تاریخ شروع'
                       hasError={errors.start_date ? true : false}
-                      setDate={(value: string) =>
-                        (refs.current.start_date = value)
-                      }
+                      setDate={(value: string) => {
+                        setSelectedTime({
+                          start: value,
+                          end: selectedTime.end,
+                        })
+                        refs.current.start_date = value
+                      }}
                     />
                   </div>
                   <div className='w-full '>
@@ -247,9 +260,13 @@ const AddPromotion = () => {
                     <Calendar
                       placeholder='تاریخ پایان'
                       hasError={errors.exp_date ? true : false}
-                      setDate={(value: string) =>
-                        (refs.current.exp_date = value)
-                      }
+                      setDate={(value: string) => {
+                        setSelectedTime({
+                          start: selectedTime.start,
+                          end: value,
+                        })
+                        refs.current.exp_date = value
+                      }}
                     />
                   </div>
                 </div>
@@ -259,7 +276,7 @@ const AddPromotion = () => {
                     <input
                       type='checkbox'
                       defaultChecked={hasCornometer}
-                      className='accent-[#7747C0] w-4 h-4 '
+                      className='accent-[#7747C0] w-4 h-4 cursor-pointer'
                       onClick={() => setHasCornometer(!hasCornometer)}
                     />
                     میخواهم زمان داشته باشد

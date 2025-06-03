@@ -32,6 +32,7 @@ const AddModal = ({ data, close }: AddModalProps) => {
     visitor_family: '',
     visitor_tel: '',
   })
+  const [status, setStatus] = useState<React.ReactElement | null>()
   const [foundAddresses, setFoundAddresses] = useState<SearchAddress[]>([])
   const refs = useRef({
     supervisor_id: data?.supervisor_id || 0,
@@ -61,6 +62,21 @@ const AddModal = ({ data, close }: AddModalProps) => {
     }
     setErrors({ ...errors, [name]: '' })
   }
+  const setResult = (state: boolean, text?: string) => {
+    if (state) {
+      setStatus(
+        <p className='text-[#0F973D] flex items-center gap-2'>
+          عملیات موفقیت‌آمیز بود! <Grammerly size={24} color='#0F973D' />
+        </p>
+      )
+    } else {
+      setStatus(
+        <p className='text-[#D42620] flex items-center gap-2'>
+          {text} <Grammerly size={24} color='#D42620' />
+        </p>
+      )
+    }
+  }
   const handleSubmit = async () => {
     setIsConfirmed(true)
     const newErrors: Record<string, string> = {}
@@ -69,7 +85,6 @@ const AddModal = ({ data, close }: AddModalProps) => {
       newErrors.visitor_family = 'این فیلد اجباریست'
     if (!refs.current.visitor_tel) newErrors.visitor_tel = 'این فیلد اجباریست'
     setErrors(newErrors)
-    console.log(newErrors)
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors)
       return
@@ -123,13 +138,22 @@ const AddModal = ({ data, close }: AddModalProps) => {
             ? refs.current.visitor_name + ' ' + refs.current.visitor_family
             : refs.current.visitor_full_name,
         visitor_uid: refs.current?.visitor_tel,
-      }).then(
-        async (value) =>
-          value &&
-          (await getBeneficiaryData().then(
+      }).then(async (value) => {
+        if (value.status === 1) {
+          if (value && value.status === 1) setResult(true)
+          await getBeneficiaryData().then(
             (data) => data && setBeneficiaryData(data)
-          ))
-      )
+          )
+        } else {
+          showModal({
+            type: 'error',
+            main: <p>{value.message}</p>,
+            title: 'خطا',
+            autoClose: 2,
+          })
+          setResult(false, value && value.message)
+        }
+      })
     }
     setTimeout(() => {
       setIsConfirmed(false)
@@ -500,36 +524,38 @@ const AddModal = ({ data, close }: AddModalProps) => {
             </>
           )}
         </form>
-        <div className='flex items-center'>
-          <button
-            type={step === 1 ? 'button' : 'submit'}
-            onClick={() => (step === 1 ? validateForm() : handleSubmit())}
-            style={{
-              animation: `${
-                isConfirmed
-                  ? 'hideSubmitAnimate 1s ease-in-out forwards '
-                  : 'showSubmitAnimate 1s ease-in-out forwards '
-              }`,
-            }}
-            disabled={submitting}
-            className={`w-full ${
-              submitting && 'opacity-30 cursor-not-allowed'
-            } fill-button px-10 h-10 mt-10 rounded-lg transition-transform duration-200 ease-in-out hover:scale-105`}>
-            ثبت و ذخیره
-          </button>
+        <div className='mt-10 w-full max-md:max-w-full'>
+          <div className='flex items-center'>
+            <button
+              type={step === 1 ? 'button' : 'submit'}
+              onClick={() => (step === 1 ? validateForm() : handleSubmit())}
+              style={{
+                animation: `${
+                  isConfirmed
+                    ? 'hideSubmitAnimate 1s ease-in-out forwards '
+                    : 'showSubmitAnimate 1s ease-in-out forwards '
+                }`,
+              }}
+              disabled={submitting}
+              className={`w-full ${
+                submitting && 'opacity-30 cursor-not-allowed'
+              }  w-full fill-button px-10 h-10 mt-10 rounded-lg transition-transform duration-200 ease-in-out hover:scale-105`}>
+              ثبت و ذخیره
+            </button>
 
-          <div
-            className={`absolute ${
-              !isConfirmed && ' opacity-0 '
-            } transform -translate-x-1/2 text-[#0F973D] flex rounded-lg transition-all duration-1000 ease-in-out`}
-            style={{
-              animation: `${
-                isConfirmed
-                  ? 'showSuccessText 1s ease-in-out forwards '
-                  : 'hideSuccessText 1s ease-in-out forwards '
-              }`,
-            }}>
-            عملیات موفقیت‌آمیز بود! <Grammerly size={24} color='#0F973D' />
+            <div
+              className={`absolute ${
+                !isConfirmed && ' opacity-0 '
+              } transform -translate-x-1/2 transition-all duration-1000 ease-in-out`}
+              style={{
+                animation: `${
+                  isConfirmed
+                    ? 'showSuccessText 1s ease-in-out forwards '
+                    : 'hideSuccessText 1s ease-in-out forwards '
+                }`,
+              }}>
+              {status}
+            </div>
           </div>
         </div>
       </div>

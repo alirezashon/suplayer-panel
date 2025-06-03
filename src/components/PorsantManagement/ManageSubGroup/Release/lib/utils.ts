@@ -22,7 +22,22 @@ import {
   getReleasedList,
   getSubGroupData,
 } from '@/actions/setData'
-
+export type TableDataType = Partial<BeneficiaryData> & {
+  allocatedAmount: string
+  remain_amount: string
+  newReleaseAmount: string
+  fileId: string
+  disable: boolean
+}
+export const headers = [
+  'ردیف',
+  'نام ذی‌نفع',
+  'نام خانوادگی ذی‌نفع',
+  'اعتبار تخصیص داده شده',
+  'اعتبار آزادسازی نشده',
+  'آزادسازی اعتبار',
+  'بارگذاری فایل محاسبه',
+]
 export const ALLOWED_FILE_TYPES = [
   'image/png',
   'image/jpg',
@@ -56,6 +71,29 @@ export const validateFile = (file: File) => {
   }
 
   return { isValid: true }
+}
+
+export const handleDeleteFile = (
+  visitorTel: string,
+  setData: React.Dispatch<React.SetStateAction<TableDataType[]>>,
+  setUploadStatuses: React.Dispatch<
+    React.SetStateAction<
+      Record<
+        string,
+        { status: 'idle' | 'uploading' | 'success' | 'error'; progress: number }
+      >
+    >
+  >
+) => {
+  setData((prev) =>
+    prev.map((item) =>
+      item.visitor_tel === visitorTel ? { ...item, fileId: '' } : item
+    )
+  )
+  setUploadStatuses((prev) => ({
+    ...prev,
+    [visitorTel]: { status: 'idle', progress: 0 },
+  }))
 }
 
 export const uploadFile = async (file: File) => {
@@ -92,24 +130,6 @@ export const createReleaseData = (
     visitor_uid: id,
   }),
 })
-
-export const headers = [
-  'ردیف',
-  'نام ذی‌نفع',
-  'نام خانوادگی ذی‌نفع',
-  'اعتبار تخصیص داده شده',
-  'اعتبار آزادسازی نشده',
-  'آزادسازی اعتبار',
-  'بارگذاری فایل محاسبه',
-]
-
-export type TableDataType = Partial<BeneficiaryData> & {
-  allocatedAmount: string
-  remain_amount: string
-  newReleaseAmount: string
-  fileId: string
-  disable: boolean
-}
 
 export const calculateFinalData = ({
   releasedList,
@@ -152,24 +172,17 @@ export const calculateFinalData = ({
 export const calculateData = async ({
   allocationList,
   selectedSubGroupData,
-  data,
   beneficiaryData,
   releasedList,
   setData,
-  setAllocationList,
 }: {
   allocationList: AllocatedListInterface[]
   selectedSubGroupData: SubGroup
-  data: TableDataType[]
   beneficiaryData: BeneficiaryData[]
   releasedList: ReleasedListInterface[]
   setData: (value: TableDataType[]) => void
-  setAllocationList: (value: AllocatedListInterface[]) => void
 }) => {
-  if (allocationList && data.length < 1) {
-    await getAllocatedList().then(
-      (result) => result && setAllocationList(result)
-    )
+  if (allocationList.length > 0) {
     const subGroupAllocatedList =
       allocationList?.filter(
         (allocate) =>
@@ -238,9 +251,10 @@ export const releasingData = async ({
   releaseData,
   showModal,
   setReleasedList,
-  updateData,
   setReleaseData,
-  setData,
+  setAllocationList,
+  setMenu,
+  setSubmitting,
 }: {
   releaseData: ReleaseAllocatedInterface[]
   showModal: (content: {
@@ -251,23 +265,26 @@ export const releasingData = async ({
     hideButton?: boolean
   }) => void
   setReleasedList: (value: ReleasedListInterface[]) => void
-  updateData: () => void
   setReleaseData: (value: ReleaseAllocatedInterface[]) => void
-  setData: React.Dispatch<React.SetStateAction<TableDataType[]>>
+  setAllocationList: (value: AllocatedListInterface[]) => void
+  setMenu: (value: string) => void
+  setSubmitting: (value: boolean) => void
 }) => {
   if (releaseData.length < 1) {
     showErrorModal('لیست شما خالی است', showModal)
     return
   }
+  setSubmitting(true)
   const accessToken = await getCookieByKey('access_token')
   await ReleaseAllocatedList({ accessToken, data: releaseData }).then(
     async (response) => {
       if (response && response?.status === 1) {
-        await new Promise((res) => setTimeout(res, 1000))
+        await getAllocatedList().then(
+          (result) => result && setAllocationList(result)
+        )
         await getReleasedList().then((result) => {
           if (result) {
             setReleasedList(result)
-            updateData()
           }
         })
         showModal({
@@ -277,11 +294,16 @@ export const releasingData = async ({
           autoClose: 1,
         })
         setReleaseData([])
-        setData((prv) => prv.map((last) => ({ ...last, newReleaseAmount: '' })))
+        setMenu('porsantmanagement')
+        location.hash = 'porsantmanagement'
+        await new Promise((res) => setTimeout(res, 70))
+        setMenu('release')
+        location.hash = 'release'
       } else
         showErrorModal(response?.message || 'خطای ارتباط با سرور', showModal)
     }
   )
+  setSubmitting(false)
 }
 
 export const changeReleasedStatus = async ({
@@ -364,32 +386,8 @@ export const changeReleasedStatus = async ({
         setSelectedSubGroupData(selected as SubGroup)
       }
     })
-    await new Promise((res) => setTimeout(res, 1000))
     updateData()
     setMenu('porsantmanagement')
     location.hash = 'porsantmanagement'
   })
-}
-
-export const handleDeleteFile = (
-  visitorTel: string,
-  setData: React.Dispatch<React.SetStateAction<TableDataType[]>>,
-  setUploadStatuses: React.Dispatch<
-    React.SetStateAction<
-      Record<
-        string,
-        { status: 'idle' | 'uploading' | 'success' | 'error'; progress: number }
-      >
-    >
-  >
-) => {
-  setData((prev) =>
-    prev.map((item) =>
-      item.visitor_tel === visitorTel ? { ...item, fileId: '' } : item
-    )
-  )
-  setUploadStatuses((prev) => ({
-    ...prev,
-    [visitorTel]: { status: 'idle', progress: 0 },
-  }))
 }

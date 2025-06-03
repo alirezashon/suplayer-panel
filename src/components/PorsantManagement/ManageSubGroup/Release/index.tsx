@@ -1,15 +1,8 @@
-import { getCookieByKey } from '@/actions/cookieToken'
-import {
-  getBeneficiaryData,
-  getReleasedList,
-  getSubGroupData,
-} from '@/actions/setData'
 import OtpModal from '@/components/shared/OtpModal'
 import { useData } from '@/Context/Data'
 import { useMenu } from '@/Context/Menu'
 import { useStates } from '@/Context/States'
 import { setComma } from '@/hooks/NumberFormat'
-import { generateAllocationSignature } from '@/hooks/Signature'
 import {
   AllocatedListInterface,
   BeneficiaryData,
@@ -19,30 +12,19 @@ import {
   ReleasedListInterface,
   SubGroup,
 } from '@/interfaces'
-import {
-  ChangeReleaseStatus,
-  ReleaseAllocatedList,
-} from '@/services/allocation'
 import { Printer, SearchNormal } from 'iconsax-react'
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   calculateData,
   calculateFinalData,
   changeReleasedStatus,
   createReleaseData,
+  headers,
   releasingData,
+  showErrorModal,
 } from './lib/utils'
 import FileUploader from './FileUploader'
-
-const headers = [
-  'ردیف',
-  'نام ذی‌نفع',
-  'نام خانوادگی ذی‌نفع',
-  'اعتبار تخصیص داده شده',
-  'اعتبار آزادسازی نشده',
-  'آزادسازی اعتبار',
-  'بارگذاری فایل محاسبه',
-]
+import DotsLoading from '@/components/shared/DotsLoading'
 
 type TableDataType = Partial<BeneficiaryData> & {
   allocatedAmount: string
@@ -89,15 +71,12 @@ const Release = () => {
   const [showOtpModal, setshowOtpModal] = useState<boolean>(false)
 
   const updateData = () => {
-    alert('kalbimdiqez')
     calculateData({
       allocationList: allocationList as AllocatedListInterface[],
       selectedSubGroupData: selectedSubGroupData as SubGroup,
-      data,
       beneficiaryData: beneficiaryData as BeneficiaryData[],
       releasedList: releasedList as ReleasedListInterface[],
       setData,
-      setAllocationList,
     })
     calculateFinalData({
       releasedList: releasedList as ReleasedListInterface[],
@@ -106,7 +85,6 @@ const Release = () => {
       setFinalReleaseData,
     })
   }
-
   useEffect(() => {
     if (!selectedGroupData) {
       location.hash = 'porsant'
@@ -168,16 +146,7 @@ const Release = () => {
       ...prev,
       [visitorTel]: { status: 'error', progress: 0 },
     }))
-    showErrorModal(error)
-  }
-
-  const showErrorModal = (message: string) => {
-    showModal({
-      type: 'error',
-      main: <p>{message}</p>,
-      title: 'خطا',
-      autoClose: 1,
-    })
+    showErrorModal(error, showModal)
   }
 
   const handleCreditChange = (id: string, value: string) => {
@@ -394,22 +363,29 @@ const Release = () => {
                     <Printer size={22} color='#7747C0' />
                     <p>چاپ لیست</p>
                   </div>
-                  <div className='flex mt-4 gap-10 justify-end'>
+                  <div className='flex mt-4 gap-5 justify-end'>
                     <button
+                      disabled={submitting}
                       onClick={() =>
                         releasingData({
                           releaseData,
                           showModal,
                           setReleasedList,
-                          updateData,
+                          setSubmitting,
                           setReleaseData,
-                          setData,
+                          setAllocationList,
+                          setMenu,
                         })
                       }
-                      className='border-button px-10 h-10 rounded-lg '>
-                      ذخیره پیش نویس آزادسازی
+                      className='flex justify-center  items-center border-button px-10 h-10 rounded-lg  w-full text-nowrap min-w-60'>
+                      {submitting ? (
+                        <DotsLoading color='#7747C0' />
+                      ) : (
+                        'ذخیره پیش نویس آزادسازی'
+                      )}
                     </button>
                     <button
+                      disabled={submitting}
                       onClick={() => {
                         if (finalReleaseData.length > 0) setshowOtpModal(true)
                         else
@@ -420,8 +396,12 @@ const Release = () => {
                             autoClose: 1,
                           })
                       }}
-                      className='fill-button px-10 h-10 rounded-lg w-56'>
-                      ثبت نهایی
+                      className='flex justify-center items-center fill-button px-10 h-10 rounded-lg w-full  text-nowrap min-w-60'>
+                      {submitting ? (
+                        <DotsLoading color='#ffffff' />
+                      ) : (
+                        'ثبت نهایی'
+                      )}
                     </button>
                   </div>
                 </div>
