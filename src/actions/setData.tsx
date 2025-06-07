@@ -3,41 +3,41 @@ import {
   GetProductGroupsList,
   GetProductList,
   GetProductSystemTypesList,
-} from '@/services/products'
-import { getCookieByKey } from './cookieToken'
+} from "@/services/products"
+import { getCookieByKey } from "./cookieToken"
 import {
   GetBeneficiaryList,
   GetGroupsList,
   GetKPITaskList,
   GetSubGroupsList,
-} from '@/services/items'
-import { GetCurrentUser } from '@/services/user'
-import { GetReferrerChartList, GetReferrerList } from '@/services/referrer'
-import { GetCampaignList } from '@/services/campaign'
-import { GetPromotionList } from '@/services/promotion'
+} from "@/services/items"
+import { GetCurrentUser } from "@/services/user"
+import { GetReferrerChartList, GetReferrerList } from "@/services/referrer"
+import { GetCampaignList } from "@/services/campaign"
+import { GetPromotionUniqueList } from "@/services/promotion"
 import {
   GetdDraftsList,
   GetTransactions,
   GetWalletDetail,
-} from '@/services/finance'
-import { GetAllocatedList, GetReleasedList } from '@/services/allocation'
-import { TreeChartInterface } from '@/interfaces'
+} from "@/services/finance"
+import { GetAllocatedList, GetReleasedList } from "@/services/allocation"
+import { TreeChartInterface } from "@/interfaces"
 
 export const getGroupData = async () => {
-  const accessToken = await getCookieByKey('access_token')
+  const accessToken = await getCookieByKey("access_token")
   if (accessToken) {
     const response = await GetGroupsList({ accessToken })
     return response || []
   }
 }
 export const getSubGroupData = async () => {
-  const accessToken = await getCookieByKey('access_token')
+  const accessToken = await getCookieByKey("access_token")
   if (accessToken) {
     return await GetSubGroupsList({ accessToken })
   }
 }
 export const getProductGroupData = async () => {
-  const accessToken = await getCookieByKey('access_token')
+  const accessToken = await getCookieByKey("access_token")
   if (accessToken) {
     const response = await GetProductGroupsList({ accessToken })
     if (Array.isArray(response)) {
@@ -50,88 +50,89 @@ export const getProductGroupData = async () => {
   }
 }
 export const getProductData = async () => {
-  const accessToken = await getCookieByKey('access_token')
+  const accessToken = await getCookieByKey("access_token")
   if (accessToken) {
     return await GetProductList({ accessToken })
   }
 }
 export const getBeneficiaryData = async () => {
-  const accessToken = await getCookieByKey('access_token')
+  const accessToken = await getCookieByKey("access_token")
   if (accessToken) {
     return await GetBeneficiaryList({ accessToken })
   }
 }
 export const getReferrerData = async () => {
-  const accessToken = await getCookieByKey('access_token')
+  const accessToken = await getCookieByKey("access_token")
   if (accessToken) {
     return await GetReferrerList({ accessToken })
   }
 }
 export const getUserInfo = async () => {
-  const accessToken = await getCookieByKey('access_token')
+  const accessToken = await getCookieByKey("access_token")
   if (accessToken) {
     return await GetCurrentUser({ accessToken })
   }
 }
 export const getReferrerChart = async () => {
-  const accessToken = await getCookieByKey('access_token')
+  const accessToken = await getCookieByKey("access_token")
   if (accessToken) {
     return await GetReferrerChartList({ accessToken })
   }
 }
 export const getCampaignData = async () => {
-  const accessToken = await getCookieByKey('access_token')
+  const accessToken = await getCookieByKey("access_token")
   if (accessToken) {
     return await GetCampaignList({ accessToken })
   }
 }
 export const getPromotiuonData = async () => {
-  const accessToken = await getCookieByKey('access_token')
+  const accessToken = await getCookieByKey("access_token")
   if (accessToken) {
-    return await GetPromotionList({ accessToken })
+    // return await GetPromotionList({ accessToken })
+    return await GetPromotionUniqueList({ accessToken })
   }
 }
 export const getDraftsData = async () => {
-  const accessToken = await getCookieByKey('access_token')
+  const accessToken = await getCookieByKey("access_token")
   if (accessToken) {
     return await GetdDraftsList({ accessToken })
   }
 }
 export const getKPITaskData = async () => {
-  const accessToken = await getCookieByKey('access_token')
+  const accessToken = await getCookieByKey("access_token")
   if (accessToken) {
     return await GetKPITaskList({ accessToken })
   }
 }
 export const getBalance = async () => {
-  const accessToken = await getCookieByKey('access_token')
+  const accessToken = await getCookieByKey("access_token")
   if (accessToken) {
     return await GetWalletDetail({ accessToken })
   }
 }
 
 export const getTransactionHistory = async () => {
-  const accessToken = await getCookieByKey('access_token')
+  const accessToken = await getCookieByKey("access_token")
   if (accessToken) {
     return await GetTransactions({ accessToken })
   }
 }
 
 export const getAllocatedList = async () => {
-  const accessToken = await getCookieByKey('access_token')
+  const accessToken = await getCookieByKey("access_token")
   if (accessToken) {
     return await GetAllocatedList({ accessToken })
   }
 }
 export const getReleasedList = async () => {
-  const accessToken = await getCookieByKey('access_token')
+  const accessToken = await getCookieByKey("access_token")
   if (accessToken) {
     return await GetReleasedList({ accessToken })
   }
 }
 
 export const getSystemTypes = async () => {
-  const accessToken = await getCookieByKey('access_token')
+  const accessToken = await getCookieByKey("access_token")
   if (accessToken) {
     const productTypesResult =
       (await GetProductSystemTypesList({ accessToken })) || []
@@ -177,7 +178,7 @@ export const getSystemTypes = async () => {
 }
 
 export const getPermissions = async () => {
-  const cookie = await getCookieByKey('uzrprm')
+  const cookie = await getCookieByKey("uzrprm")
   if (!cookie) return [[], [], []] as [string[], string[], number[]]
 
   try {
@@ -195,7 +196,7 @@ export const getPermissions = async () => {
       return [[], [], []] as [string[], string[], number[]]
     }
   } catch (err) {
-    console.error('خطا در پارس کوکی:', err)
+    console.error("خطا در پارس کوکی:", err)
     return [[], [], []] as [string[], string[], number[]]
   }
 }

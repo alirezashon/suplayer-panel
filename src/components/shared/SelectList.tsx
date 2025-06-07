@@ -1,5 +1,5 @@
-import { SearchNormal } from 'iconsax-react'
-import { useEffect, useRef, useState } from 'react'
+import { SearchNormal } from "iconsax-react"
+import { useCallback, useEffect, useRef, useState } from "react"
 
 interface SelectListProps {
   label: string
@@ -34,7 +34,7 @@ const SelectList: React.FC<SelectListProps> = ({
     setSelectedItemsState(updatedSelectedItems)
     setSelectedItems(updatedSelectedItems)
   }
-  const selectAll = () => {
+  const selectAll = useCallback(() => {
     if (selectedItems.length === filteredItems.length) {
       setSelectedItemsState([])
       setSelectedItems([])
@@ -43,7 +43,8 @@ const SelectList: React.FC<SelectListProps> = ({
       setSelectedItemsState(allIds)
       setSelectedItems(allIds)
     }
-  }
+  }, [filteredItems, selectedItems, setSelectedItems])
+
   useEffect(() => {
     setFilteredItems(items)
     const handleClickOutside = (event: MouseEvent) => {
@@ -54,13 +55,12 @@ const SelectList: React.FC<SelectListProps> = ({
         setIsOpen(false)
       }
     }
-    document.addEventListener('mousedown', handleClickOutside)
+    document.addEventListener("mousedown", handleClickOutside)
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener("mousedown", handleClickOutside)
     }
   }, [items])
-
   useEffect(() => {
     if (
       defaultSelectAll &&
@@ -70,7 +70,7 @@ const SelectList: React.FC<SelectListProps> = ({
       selectAll()
       didSelectAllRef.current = true
     }
-  }, [defaultSelectAll, filteredItems])
+  }, [selectAll, defaultSelectAll, filteredItems])
 
   const filterData = (value: string) => {
     const filterResult = items.filter((item) => item.label.includes(value))
@@ -81,13 +81,14 @@ const SelectList: React.FC<SelectListProps> = ({
     <div ref={containerRef} className='relative w-full '>
       <div
         className='border border-gray-300  rounded-md h-10 py-2 px-4 cursor-pointer flex justify-between items-center'
-        onClick={() => setIsOpen((prev) => !prev)}>
+        onClick={() => setIsOpen((prev) => !prev)}
+      >
         <span className='text-gray-700 text-nowrap overflow-hidden text-ellipsis whitespace-nowrap block max-w-full'>
           {selectedItems.length > 0
             ? items
                 .filter((item) => selectedItems.includes(item.id))
                 .map((item) => item.label)
-                .join(', ')
+                .join(", ")
             : label}
         </span>
 
@@ -95,8 +96,9 @@ const SelectList: React.FC<SelectListProps> = ({
       </div>
       {isOpen && (
         <div
-          style={{ scrollbarWidth: 'none' }}
-          className='absolute py-5 max-h-[40vh] overflow-auto w-full border border-gray-300 bg-white   rounded-md mt-2 shadow-md z-10'>
+          style={{ scrollbarWidth: "none" }}
+          className='absolute py-5 max-h-[40vh] overflow-auto w-full border border-gray-300 bg-white   rounded-md mt-2 shadow-md z-10'
+        >
           <div className='sticky top-0  w-full  flex items-center'>
             <div className='absolute left-10 mt-4 z-20 cursor-pointer text-[#50545F]'>
               <SearchNormal size={24} color='gray' />
@@ -112,9 +114,10 @@ const SelectList: React.FC<SelectListProps> = ({
             <div
               className={`flex items-center gap-2 px-4 py-2 cursor-pointer hover:bg-purple-100 ${
                 selectedItems.length === filteredItems.length &&
-                'text-[#7747C0] hover:bg-gray-100 hover:text-[#7747C0]'
+                "text-[#7747C0] hover:bg-gray-100 hover:text-[#7747C0]"
               }`}
-              onClick={selectAll}>
+              onClick={selectAll}
+            >
               <input
                 type='checkbox'
                 checked={selectedItems.length === filteredItems.length}
@@ -123,8 +126,8 @@ const SelectList: React.FC<SelectListProps> = ({
                 h-5 w-5 border-2  rounded-md
                 ${
                   selectedItems.length === filteredItems.length
-                    ? 'bg-[#7747C0]'
-                    : 'bg-white'
+                    ? "bg-[#7747C0]"
+                    : "bg-white"
                 }`}
               />
               <label> انتخاب همه</label>
@@ -134,28 +137,30 @@ const SelectList: React.FC<SelectListProps> = ({
                 key={item.id}
                 className={`flex items-center gap-2 px-4 py-2 cursor-pointer hover:bg-purple-100 ${
                   !selectedItems.includes(item.id) &&
-                  'text-[#7747C0] hover:bg-gray-100 hover:text-[#7747C0]'
+                  "text-[#7747C0] hover:bg-gray-100 hover:text-[#7747C0]"
                 }`}
-                onClick={() => toggleItem(item.id)}>
+                onClick={() => toggleItem(item.id)}
+              >
                 <input
                   type='checkbox'
                   checked={selectedItems.includes(item.id)}
                   readOnly
                   className={`form-checkbox appearance-none 
     h-5 w-5 border-2  rounded-md
-    ${selectedItems.includes(item.id) ? 'bg-[#7747C0]' : 'bg-white'}
+    ${selectedItems.includes(item.id) ? "bg-[#7747C0]" : "bg-white"}
   `}
                 />
                 <span
                   className={`${
                     selectedItems.includes(item.id)
-                      ? 'text-[#7747C0]'
-                      : 'text-gray-700'
-                  }`}>
+                      ? "text-[#7747C0]"
+                      : "text-gray-700"
+                  }`}
+                >
                   {item.label}
                 </span>
               </div>
-            ))}{' '}
+            ))}{" "}
           </div>
         </div>
       )}

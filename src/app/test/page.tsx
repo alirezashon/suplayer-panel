@@ -1,116 +1,450 @@
-'use client'
+// "use client"
 
-const data = [
-  { value: 30, color: '#ff6384' },
-  { value: 45, color: '#36a2eb' },
-  { value: 25, color: 'purple' },
-  { value: 25, color: 'green' },
-  { value: 25, color: 'pink' },
-  { value: 25, color: '#4caf50' },
-  { value: 25, color: 'yellow' },
-]
+// const data = [
+//   { value: 60, color: "#36a2eb", label: "آبی" },
+//   { value: 40, color: "#fdd835", label: "زرد" },
+// ]
 
-const PureCSSDonutChart = () => {
-  // محاسبه درصدها و رنگ‌ها
-  const total = data.reduce((sum, item) => sum + item.value, 0)
-  const gradientParts: string[] = []
-  let currentAngle = 0
+// const PureCSSDonutChart = () => {
+//   const total = data.reduce((sum, item) => sum + item.value, 0)
+//   const gradientParts: string[] = []
+//   let currentAngle = 0
 
-  data.forEach((item) => {
-    const angle = (item.value / total) * 360
-    const nextAngle = currentAngle + angle
-    gradientParts.push(`${item.color} ${currentAngle}deg ${nextAngle}deg`)
-    currentAngle = nextAngle
-  })
+//   data.forEach((item) => {
+//     const angle = (item.value / total) * 360
+//     const nextAngle = currentAngle + angle
+//     gradientParts.push(`${item.color} ${currentAngle}deg ${nextAngle}deg`)
+//     currentAngle = nextAngle
+//   })
 
-  const gradient = `conic-gradient(${gradientParts.join(', ')})`
+//   const gradient = `conic-gradient(${gradientParts.join(", ")})`
+
+//   return (
+//     <>
+//       <style>{`
+// .chart-container {
+//   position: relative;
+//   perspective: 800px;
+//   width: 300px;
+//   height: 300px;
+//   margin: 80px auto;
+// }
+
+// .donut-base,
+// .donut-top {
+//   width: 100%;
+//   height: 100%;
+//   border-radius: 50%;
+//   mask: radial-gradient(circle at center, transparent 40%, black 41%);
+//   -webkit-mask: radial-gradient(circle at center, transparent 40%, black 41%);
+//   transform-style: preserve-3d;
+//   background: ${gradient};
+//   position: absolute;
+//   top: 0;
+//   left: 0;
+// }
+
+// .donut-base {
+//   transform: rotateX(60deg) scale(0.92); /* smaller, to go underneath */
+//   filter: brightness(0.85);
+//   z-index: 1;
+// }
+
+// .donut-top {
+//   transform: rotateX(60deg);
+//   z-index: 2;
+// }
+
+// /* لیبل‌ها */
+// .label {
+//   position: absolute;
+//   color: #000;
+//   font-weight: bold;
+//   font-size: 14px;
+//   pointer-events: none;
+//   transform: rotateX(60deg) translateZ(1px); /* to appear on top of chart */
+// }
+
+// .label-blue {
+//   top: 25%;
+//   left: 55%;
+//   transform: rotateX(60deg) translateZ(1px) translate(-50%, -50%);
+//   color: #0366d6;
+// }
+
+// .label-yellow {
+//   top: 70%;
+//   left: 45%;
+//   transform: rotateX(60deg) translateZ(1px) translate(-50%, -50%);
+//   color: #fbc02d;
+// }
+//       `}</style>
+
+//       <div className="chart-container">
+//         {/* زیرین (کوچکتر، تیره‌تر) */}
+//         <div className="donut-base" />
+//         {/* رویی (اصلی) */}
+//         <div className="donut-top" />
+//         {/* لیبل‌ها */}
+//         <div className="label label-blue">آبی</div>
+//         <div className="label label-yellow">زرد</div>
+//       </div>
+//     </>
+//   )
+// }
+
+// export default PureCSSDonutChart
+
+// "use client"
+
+// const data = [
+//   { value: 67, color: "#36a2eb", label: "۶۷٪", className: "label-blue" },
+//   { value: 33, color: "#fdd835", label: "۳۳٪", className: "label-yellow" },
+// ]
+
+// const Donut3DChart = () => {
+//   const total = data.reduce((sum, item) => sum + item.value, 0)
+//   const gradientParts: string[] = []
+//   let currentAngle = 0
+
+//   data.forEach((item) => {
+//     const angle = (item.value / total) * 360
+//     gradientParts.push(`${item.color} ${currentAngle}deg ${currentAngle + angle}deg`)
+//     currentAngle += angle
+//   })
+
+//   const gradient = `conic-gradient(${gradientParts.join(", ")})`
+
+//   return (
+//     <>
+//       <style>{`
+//         .chart-container {
+//           position: relative;
+//           width: 300px;
+//           height: 300px;
+//           margin: 80px auto;
+//           perspective: 1000px;
+//         }
+
+//         .donut-layer {
+//           width: 100%;
+//           height: 100%;
+//           border-radius: 50%;
+//           background: ${gradient};
+//           position: absolute;
+//           top: 0;
+//           left: 0;
+//           -webkit-mask: radial-gradient(circle at center, transparent 42%, black 43%);
+//           mask: radial-gradient(circle at center, transparent 42%, black 43%);
+//           transform: rotateX(55deg) rotateY(0deg) rotateZ(0deg);
+//           transform-style: preserve-3d;
+//         }
+
+//         .donut-shadow {
+//           filter: brightness(0.75);
+//           transform: rotateX(55deg) rotateY(0deg) rotateZ(0deg) translateZ(-15px);
+//         }
+
+//         .label {
+//           position: absolute;
+//           font-size: 18px;
+//           font-weight: bold;
+//           font-family: "Tahoma", sans-serif;
+//           transform: rotateX(55deg) rotateY(0deg) rotateZ(0deg) translateZ(1px) translate(-50%, -50%);
+//           pointer-events: none;
+//         }
+
+//         .label-blue {
+//           top: 50%;
+//           left: 78%;
+//           color: white;
+//         }
+
+//         .label-yellow {
+//           top: 42%;
+//           left: 28%;
+//           color: black;
+//         }
+//       `}</style>
+
+//       <div className="chart-container">
+//         <div className="donut-layer donut-shadow" />
+//         <div className="donut-layer" />
+//         {data.map(({ label, className }) => (
+//           <div key={label} className={`label ${className}`}>{label}</div>
+//         ))}
+//       </div>
+//     </>
+//   )
+// }
+
+// export default Donut3DChart
+
+// "use client"
+
+// const Donut3DChart = () => {
+//   return (
+//     <>
+//       <style>{`
+//         .chart-container {
+//           position: relative;
+//           width: 300px;
+//           height: 300px;
+//           margin: 80px auto;
+//           perspective: 1000px;
+//         }
+
+//         .segment {
+//           position: absolute;
+//           top: 0; left: 0;
+//           width: 100%;
+//           height: 100%;
+//           border-radius: 50%;
+//           transform: rotateX(55deg) rotateZ(0deg);
+//           transform-style: preserve-3d;
+//         }
+
+//         .segment-blue {
+//           background: conic-gradient(#36a2eb 0deg 240deg, transparent 240deg 360deg);
+//           -webkit-mask: radial-gradient(circle at center, transparent 42%, black 43%);
+//           mask: radial-gradient(circle at center, transparent 42%, black 43%);
+//           z-index: 2;
+//         }
+
+//         .segment-yellow {
+//           background: conic-gradient(transparent 0deg 240deg, #fdd835 240deg 360deg);
+//           -webkit-mask: radial-gradient(circle at center, transparent 55%, black 56%);
+//           mask: radial-gradient(circle at center, transparent 55%, black 56%);
+//           z-index: 1;
+//           filter: brightness(1);
+//         }
+
+//         .segment-shadow {
+//           filter: brightness(0.75);
+//           transform: rotateX(55deg) rotateZ(0deg) translateZ(-15px);
+//         }
+
+//         .label {
+//           position: absolute;
+//           font-size: 18px;
+//           font-weight: bold;
+//           font-family: Tahoma, sans-serif;
+//           transform: rotateX(55deg) rotateZ(0deg) translateZ(1px) translate(-50%, -50%);
+//           pointer-events: none;
+//         }
+
+//         .label-blue {
+//           top: 48%;
+//           left: 76%;
+//           color: white;
+//         }
+
+//         .label-yellow {
+//           top: 32%;
+//           left: 30%;
+//           color: black;
+//         }
+//       `}</style>
+
+//       <div className="chart-container">
+//         {/* Shadow Layers */}
+//         <div className="segment segment-blue segment-shadow" />
+//         <div className="segment segment-yellow segment-shadow" />
+
+//         {/* Top Layers */}
+//         <div className="segment segment-blue" />
+//         <div className="segment segment-yellow" />
+
+//         {/* Labels */}
+//         <div className="label label-blue">۶۷٪</div>
+//         <div className="label label-yellow">۳۳٪</div>
+//       </div>
+//     </>
+//   )
+// }
+
+// export default Donut3DChart
+
+"use client"
+
+interface Donut3DChartProps {
+  percentage: number // مثلاً 30 یعنی 30٪ آبی و 70٪ زرد
+}
+
+const Donut3DChart = ({ percentage = 60 }: Donut3DChartProps) => {
+  const blueDeg = (percentage / 100) * 360
+  const yellowDeg = 360 - blueDeg
 
   return (
     <>
-      <style>
-        {`.donut-3d {
-  width: 300px;
-  height: 300px;
-  border-radius: 50%;
-  mask: radial-gradient(circle at center, transparent 50%, black 51%);
-  -webkit-mask: radial-gradient(circle at center, transparent 50%, black 51%);
-  transform: rotateX(55deg);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
-  transition: transform 0.4s;
-  margin: 50px auto;
-}
+      <style>{`
+        .chart-container {
+          position: relative;
+          width: 300px;
+          height: 300px;
+          margin: 80px auto;
+          perspective: 1000px;
+        }
 
-.donut-3d:hover {
-  transform: rotate(65deg);
-}
-`}
-      </style>
-      <div className='donut-3d' style={{ background: gradient }}></div>
+        .segment {
+          position: absolute;
+          top: 0; left: 0;
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+          transform: rotateX(55deg) rotateZ(0deg);
+          transform-style: preserve-3d;
+        }
+
+        .segment-blue { 
+             background: conic-gradient(#36a2eb 0deg ${blueDeg}deg, transparent ${blueDeg}deg 360deg);
+          -webkit-mask: radial-gradient(circle at center, transparent 42%, black 43%);
+          mask: radial-gradient(circle at center, transparent 42%, black 43%);
+          z-index: 2;
+        }
+
+        .segment-yellow {
+          background: conic-gradient(transparent 0deg ${blueDeg}deg, #fdd835 ${blueDeg}deg 360deg);
+          -webkit-mask: radial-gradient(circle at center, transparent 55%, black 56%);
+          mask: radial-gradient(circle at center, transparent 55%, black 56%);
+          z-index: 1;
+        }
+
+        .segment-shadow {
+          filter: brightness(0.75);
+          transform: rotateX(55deg) rotateZ(0deg) translateZ(-15px);
+        }
+
+        .label {
+          position: absolute;
+          font-size: 18px;
+          font-weight: bold;
+          font-family: Tahoma, sans-serif;
+          transform: rotateX(55deg) rotateZ(0deg) translateZ(1px) translate(-50%, -50%);
+          pointer-events: none;
+        }
+
+        .label-blue {
+          top: 48%;
+          left: 76%;
+          color: white;
+        }
+
+        .label-yellow {
+          top: 32%;
+          left: 30%;
+          color: black;
+        }
+      `}</style>
+
+      <div className='chart-container'>
+        {/* سایه‌ها */}
+        <div className='segment segment-blue segment-shadow' />
+        <div className='segment segment-yellow segment-shadow' />
+
+        {/* چارت بالا */}
+        <div className='segment segment-blue' />
+        <div className='segment segment-yellow' />
+
+        {/* لیبل‌ها */}
+        <div className='label label-blue'>{percentage}٪</div>
+        <div className='label label-yellow'>{100 - percentage}٪</div>
+      </div>
     </>
   )
 }
 
-export default PureCSSDonutChart
+export default Donut3DChart
 
-// import { useEffect, useRef } from 'react'
-// import Chart from 'chart.js/auto'
+// "use client"
 
-// const DonutChart3D = () => {
-//   const chartRef = useRef<HTMLCanvasElement | null>(null)
-//   const chartInstanceRef = useRef<Chart | null>(null)
+// const data = [
+//   { value: 60, color: "#36a2eb", label: "آبی" },
+//   { value: 40, color: "#fdd835", label: "زرد" },
+// ]
 
-//   useEffect(() => {
-//     if (chartRef.current) {
-//       chartInstanceRef.current = new Chart(chartRef.current, {
-//         type: 'doughnut',
-//         data: {
-//           labels: ['قرمز', 'آبی', 'سبز'],
-//           datasets: [
-//             {
-//               label: 'مقادیر تستی',
-//               data: [30, 45, 25],
-//               backgroundColor: ['#ff6384', '#36a2eb', '#4caf50'],
-//               borderWidth: 2,
-//             },
-//           ],
-//         },
-//         options: {
-//           responsive: true,
-//           cutout: '70%',
-//           plugins: {
-//             legend: {
-//               position: 'bottom',
-//             },
-//           },
-//         },
-//       })
-//     }
+// const PureCSSDonutChart = () => {
+//   const total = data.reduce((sum, item) => sum + item.value, 0)
+//   const gradientParts: string[] = []
+//   let currentAngle = 0
 
-//     return () => {
-//       chartInstanceRef.current?.destroy()
-//     }
-//   }, [])
+//   data.forEach((item) => {
+//     const angle = (item.value / total) * 360
+//     const nextAngle = currentAngle + angle
+//     gradientParts.push(`${item.color} ${currentAngle}deg ${nextAngle}deg`)
+//     currentAngle = nextAngle
+//   })
+
+//   const gradient = `conic-gradient(${gradientParts.join(", ")})`
 
 //   return (
-//     <div className='chart-container'>
-//       <style>
-//         {`.chart-container {
-//   width: 300px;
-//   height: 300px;
-//   perspective: 800px;
-//   margin: auto;
+//     <>
+//       <style>{`
+// .chart-container {
+//   position: relative;
+//   perspective: 900px;
+//   width: 320px;
+//   height: 320px;
+//   margin: 80px auto;
 // }
 
-// .chart-container canvas {
-//   transform: rotateX(50deg);
-//   transition: transform 0.3s ease;
+// .donut-base,
+// .donut-top {
+//   width: 100%;
+//   height: 100%;
+//   border-radius: 50%;
+//   background: ${gradient};
+//   position: absolute;
+//   top: 0;
+//   left: 0;
+//   mask: radial-gradient(circle at center, transparent 40%, black 41%);
+//   -webkit-mask: radial-gradient(circle at center, transparent 40%, black 41%);
+//   transform-style: preserve-3d;
 // }
 
-// `}
-//       </style>
-//       <canvas ref={chartRef}></canvas>
-//     </div>
+// .donut-base {
+//   transform: rotateX(55deg) rotateY(25deg) rotateZ(20deg) scale(0.93);
+//   filter: brightness(0.85);
+//   z-index: 1;
+// }
+
+// .donut-top {
+//   transform: rotateX(55deg) rotateY(25deg) rotateZ(20deg);
+//   z-index: 2;
+// }
+
+// /* لیبل‌ها */
+// .label {
+//   position: absolute;
+//   font-weight: bold;
+//   font-size: 14px;
+//   pointer-events: none;
+//   transform: rotateX(55deg) rotateY(25deg) rotateZ(20deg) translateZ(1px);
+// }
+
+// .label-blue {
+//   top: 28%;
+//   left: 65%;
+//   color: #0366d6;
+//   transform: rotateX(55deg) rotateY(25deg) rotateZ(20deg) translateZ(1px) translate(-50%, -50%);
+// }
+
+// .label-yellow {
+//   top: 72%;
+//   left: 40%;
+//   color: #fbc02d;
+//   transform: rotateX(55deg) rotateY(25deg) rotateZ(20deg) translateZ(1px) translate(-50%, -50%);
+// }
+//       `}</style>
+
+//       <div className="chart-container">
+//         <div className="donut-base" />
+//         <div className="donut-top" />
+//         <div className="label label-blue">آبی</div>
+//         <div className="label label-yellow">زرد</div>
+//       </div>
+//     </>
 //   )
 // }
 
-// export default DonutChart3D
+// export default PureCSSDonutChart

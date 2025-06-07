@@ -1,5 +1,5 @@
-import { deleteCookieByKey } from '@/actions/cookieToken'
-import { PromotionInterface } from '@/interfaces'
+import { deleteCookieByKey } from "@/actions/cookieToken"
+import { PromotionInterface } from "@/interfaces"
 export const CreatePromotion = async ({
   cstatus,
   ctitle,
@@ -58,9 +58,9 @@ export const CreatePromotion = async ({
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_define_promotion`,
       {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
@@ -86,9 +86,9 @@ export const CreatePromotion = async ({
       }
     )
 
-     if ([401, 403].includes(response.status)) {
-      await deleteCookieByKey('access_token')
-      location.href = '/auth/login'
+    if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey("access_token")
+      location.href = "/auth/login"
       return
     }
     if (response.status !== 200) return
@@ -152,9 +152,9 @@ export const EditProductPromotion = async ({
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/edit_promotion`,
       {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
@@ -175,9 +175,9 @@ export const EditProductPromotion = async ({
         }),
       }
     )
-     if ([401, 403].includes(response.status)) {
-      await deleteCookieByKey('access_token')
-      location.href = '/auth/login'
+    if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey("access_token")
+      location.href = "/auth/login"
       return
     }
     if (response.status !== 200) return
@@ -196,16 +196,45 @@ export const GetPromotionList = async ({
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_promotion_list`,
       {
-        method: 'GET',
+        method: "GET",
         headers: {
           authorization: `Bearer ${accessToken}`,
         },
       }
     )
 
-     if ([401, 403].includes(response.status)) {
-      await deleteCookieByKey('access_token')
-      location.href = '/auth/login'
+    if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey("access_token")
+      location.href = "/auth/login"
+      return
+    }
+    if (response.status !== 200) return
+
+    const result = await response.json()
+    return result.data
+  } catch (error) {
+    console.log(error)
+  }
+}
+export const GetPromotionUniqueList = async ({
+  accessToken,
+}: {
+  accessToken: string | undefined
+}): Promise<PromotionInterface[] | undefined> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/prv_promotion_agglist`,
+      {
+        method: "GET",
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+      }
+    )
+
+    if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey("access_token")
+      location.href = "/auth/login"
       return
     }
     if (response.status !== 200) return
@@ -228,7 +257,7 @@ export const AddPromotionImage = async ({
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/uploadpromotionimage`,
       {
-        method: 'POST',
+        method: "POST",
         headers: {
           authorization: `Bearer ${accessToken}`,
         },
@@ -236,9 +265,9 @@ export const AddPromotionImage = async ({
       }
     )
 
-     if ([401, 403].includes(response.status)) {
-      await deleteCookieByKey('access_token')
-      location.href = '/auth/login'
+    if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey("access_token")
+      location.href = "/auth/login"
       return
     }
     if (response.status !== 200) return
@@ -260,7 +289,7 @@ export const CheckPromotionImage = async ({
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/checkpromotionimage`,
       {
-        method: 'POST',
+        method: "POST",
         headers: {
           authorization: `Bearer ${accessToken}`,
         },
@@ -270,9 +299,9 @@ export const CheckPromotionImage = async ({
       }
     )
 
-     if ([401, 403].includes(response.status)) {
-      await deleteCookieByKey('access_token')
-      location.href = '/auth/login'
+    if ([401, 403].includes(response.status)) {
+      await deleteCookieByKey("access_token")
+      location.href = "/auth/login"
       return
     }
     if (response.status !== 200) return

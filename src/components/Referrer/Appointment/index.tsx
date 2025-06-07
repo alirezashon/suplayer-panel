@@ -1,15 +1,15 @@
-import { getCookieByKey } from '@/actions/cookieToken'
-import { AppointmentTaskInterface, ReferrerData } from '@/interfaces'
+import { getCookieByKey } from "@/actions/cookieToken"
+import { AppointmentTaskInterface, ReferrerData } from "@/interfaces"
 import {
   DefineAppointmentTaskList,
   GetAppointmentTaskList,
-} from '@/services/referrer'
-import { ArrowDown2, CloseSquare, Profile } from 'iconsax-react'
-import { useEffect, useRef, useState } from 'react'
-import { useData } from '@/Context/Data'
-import { useStates } from '@/Context/States'
-import SelectList from '@/components/shared/SelectList'
-import Showtasks from '../ShowDetails/design'
+} from "@/services/referrer"
+import { ArrowDown2, CloseSquare, Profile } from "iconsax-react"
+import { useEffect, useRef, useState } from "react"
+import { useData } from "@/Context/Data"
+import { useStates } from "@/Context/States"
+import SelectList from "@/components/shared/SelectList"
+import Showtasks from "../ShowDetails/design"
 
 interface AppointmentModalProps {
   data?: ReferrerData
@@ -42,8 +42,8 @@ const AppointmentModal = ({
 
   const refs = useRef({
     personnel_uid: `${data?.personnel_uid}`,
-    visitor_uid: '',
-    task_kpi_uid: '',
+    visitor_uid: "",
+    task_kpi_uid: "",
     sup_group_code: [] as string[],
     supervisor_code: [] as string[],
     pgroup_id: [] as number[],
@@ -53,7 +53,7 @@ const AppointmentModal = ({
 
   useEffect(() => {
     const getData = async () => {
-      const accessToken = await getCookieByKey('access_token')
+      const accessToken = await getCookieByKey("access_token")
       if (data)
         await GetAppointmentTaskList({
           accessToken,
@@ -64,11 +64,10 @@ const AppointmentModal = ({
     }
     getData()
   }, [data])
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    const accessToken = (await getCookieByKey('access_token')) || ''
+    const accessToken = (await getCookieByKey("access_token")) || ""
     await DefineAppointmentTaskList({
       accessToken,
       personnel_uid: refs.current.personnel_uid,
@@ -81,9 +80,9 @@ const AppointmentModal = ({
       product_uid: refs.current.product_uid,
     }).then((result) => {
       showModal({
-        type: result.status === 1 ? 'success' : 'error',
+        type: result.status === 1 ? "success" : "error",
         main: <p>{result.message}</p>,
-        title: result.status === 1 ? 'موفق' : 'خطا',
+        title: result.status === 1 ? "موفق" : "خطا",
         autoClose: 2,
       })
     })
@@ -91,11 +90,11 @@ const AppointmentModal = ({
 
   return (
     <div>
-      {isEditMode}
       <div className='absolute bg-slate-600 opacity-50 w-full h-[200vh] z-50 top-0 right-0'></div>
       <div
-        style={{ scrollbarWidth: 'none' }}
-        className={`fixed overflow-auto  z-50 right-0 top-0 max-md:left-[0] max-md:w-[100%] w-[40vw] h-full bg-white border border-gray-300 shadow-lg transition-transform duration-300 ease-in-out right-side-animate`}>
+        style={{ scrollbarWidth: "none" }}
+        className={`fixed overflow-auto  z-50 right-0 top-0 max-md:left-[0] max-md:w-[100%] w-[40vw] h-full bg-white border border-gray-300 shadow-lg transition-transform duration-300 ease-in-out right-side-animate`}
+      >
         <div className='sticky top-0 p-3 z-40 bg-white flex justify-between items-center w-[97%] text-xl font-medium text-right text-gray-800'>
           <div className=' flex-1 shrink my-auto min-w-[240px]'>
             انتصاب دادن بازاریاب
@@ -154,7 +153,7 @@ const AppointmentModal = ({
                 </div>
                 <div className='flex flex-col'>
                   <p className='text-[#5F6474]'>وضعیت تاهل</p>
-                  <p className='text-[#8455D2]'>{'فیلدش تو بک نیست'}</p>
+                  <p className='text-[#8455D2]'>{"فیلدش تو بک نیست"}</p>
                 </div>
                 <div className='flex flex-col'>
                   <p className='text-[#5F6474]'> استان </p>
@@ -172,19 +171,19 @@ const AppointmentModal = ({
               <div className='flex flex-col my-3'>
                 <p className='text-[#5F6474]'>وضعیت بازاریاب</p>
                 <p className='text-[#0F973D] bg-[#DAFEE5] w-fit min-w-16 mx-3 rounded-lg text-center'>
-                  {data?.pers_status === 1 ? 'فعال' : 'غیرفعال'}
+                  {data?.pers_status === 1 ? "فعال" : "غیرفعال"}
                 </p>
               </div>
               <div className='flex flex-col mt-5'>
                 <p className='text-[#5F6474]'> گروه‌ و زیرگروه‌های عضو شده</p>
                 <div className='flex gap-3'>
-                  <Showtasks task={taskList} />
+                  <Showtasks task={taskList} type={1} />
                 </div>
               </div>
               <div className='flex flex-col mt-5'>
                 <p className='text-[#5F6474]'>گروه و برند محصول عضو شده </p>
                 <div className='flex gap-3'>
-                  <Showtasks task={taskList} />
+                  <Showtasks task={taskList} type={2} />
                 </div>
               </div>
             </div>
@@ -201,19 +200,21 @@ const AppointmentModal = ({
             <div className='border w-full border-[#7747C0]'></div>
             <div
               className={`border w-full ${
-                step > 1 ? 'border-[#7747C0]' : 'border-[#C9D0D8]'
-              }`}></div>
+                step > 1 ? "border-[#7747C0]" : "border-[#C9D0D8]"
+              }`}
+            ></div>
           </div>
-          {['انتصاب به ذینفع', ' انتصاب به گروه محصول'].map(
+          {["انتصاب به ذینفع", " انتصاب به گروه محصول"].map(
             (section, index) => (
               <div className='flex flex-col items-center' key={index}>
                 <div
                   onClick={() => setStep(index + 1)}
                   className={`w-10 h-10 z-30 p-6 flex items-center justify-center rounded-full border-4  border-white mt-5 cursor-pointer text-white ${
                     step >= index + 1
-                      ? ' bg-[#7747C0] '
-                      : 'bg-[#C9D0D8] text-[#50545F]'
-                  }`}>
+                      ? " bg-[#7747C0] "
+                      : "bg-[#C9D0D8] text-[#50545F]"
+                  }`}
+                >
                   {index + 1}
                 </div>
                 <p className=' text-[#7747C0]'>{section}</p>
@@ -244,6 +245,11 @@ const AppointmentModal = ({
                   refs.current.sup_group_code = result as string[]
                 }}
               />
+              {isEditMode && (
+                <div className='flex flex-col mb-5 mt-2'>
+                  <Showtasks task={taskList} type={3} />
+                </div>
+              )}
             </div>
             <div className='flex flex-col w-full'>
               <SelectList
@@ -269,11 +275,17 @@ const AppointmentModal = ({
                   (refs.current.supervisor_code = result as string[])
                 }
               />
+              {isEditMode && (
+                <div className='flex flex-col mt-2 '>
+                  <Showtasks task={taskList} type={4} />
+                </div>
+              )}
             </div>
             <div className='w-full mt-10 sticky bottom-0 left-0 right-0 bg-white p-2 max-w-[40vw] mx-auto'>
               <button
                 onClick={() => setStep(2)}
-                className='w-full h-10 text-white bg-[#7747C0] rounded-lg'>
+                className='w-full h-10 text-white bg-[#7747C0] rounded-lg'
+              >
                 مرحله بعد
               </button>
             </div>
@@ -301,6 +313,11 @@ const AppointmentModal = ({
                   })
                 }}
               />
+              {isEditMode && (
+                <div className='flex flex-col mt-2 mb-5'>
+                  <Showtasks task={taskList} type={5} />
+                </div>
+              )}
             </div>
             <div className='flex flex-col w-full'>
               <SelectList
@@ -331,6 +348,11 @@ const AppointmentModal = ({
                   })
                 }}
               />
+              {isEditMode && (
+                <div className='flex flex-col mt-2 mb-5'>
+                  <Showtasks task={taskList} type={5} />
+                </div>
+              )}
             </div>
             <div className='flex flex-col w-full'>
               <SelectList
@@ -355,11 +377,17 @@ const AppointmentModal = ({
                   (refs.current.product_uid = result as string[])
                 }
               />
+              {isEditMode && (
+                <div className='flex flex-col mt-2 mb-5'>
+                  <Showtasks task={taskList} type={6} />
+                </div>
+              )}
             </div>
             <div className='w-full mt-10 sticky bottom-0 left-0 right-0 bg-white p-2 max-w-[40vw] mx-auto'>
               <button
                 onClick={handleSubmit}
-                className='w-full h-10 text-white bg-[#7747C0] rounded-lg'>
+                className='w-full h-10 text-white bg-[#7747C0] rounded-lg'
+              >
                 ثبت نهایی
               </button>
             </div>

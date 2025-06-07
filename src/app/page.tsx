@@ -1,27 +1,29 @@
 'use client'
-import Beneficiary from '@/components/Beneficiary'
-import Campaign from '@/components/Campaign'
-import Dashboard from '@/components/Dashboard'
-import Deposite from '@/components/Deposite'
-import MyGroups from '@/components/MyGroups'
-import PorsantManagement from '@/components/PorsantManagement'
-import ProductGroupsPage from '@/components/ProductGroups'
-import Product from '@/components/ProductGroups/Brands/Products'
-import Profile from '@/components/Profile'
-import Promotion from '@/components/Promotions'
-import ReferralLevels from '@/components/Referral Levels'
-import Referrer from '@/components/Referrer'
-import Loading from '@/components/shared/Loading'
-import SubGroups from '@/components/SubGroups'
-import Variables from '@/components/Variables'
-import Wallet from '@/components/Wallet'
 import { useMenu } from '@/Context/Menu'
 import { useStates } from '@/Context/States'
-import MainLayout from '@/layouts/MainLayout'
 import { useEffect, useState } from 'react'
+import dynamic from 'next/dynamic'
 import CustomModal from '@/components/shared/CustomModal'
 import FinanceReports from '@/components/Reports/Finance'
 import TransactionReports from '@/components/Reports/transactions'
+
+const Beneficiary = dynamic(() => import('@/components/Beneficiary'))
+const Campaign = dynamic(() => import('@/components/Campaign'))
+const Dashboard = dynamic(() => import('@/components/Dashboard'))
+const Deposite = dynamic(() => import('@/components/Deposite'))
+const MyGroups = dynamic(() => import('@/components/MyGroups'))
+const PorsantManagement = dynamic(() => import('@/components/PorsantManagement'))
+const ProductGroupsPage = dynamic(() => import('@/components/ProductGroups'))
+const Product = dynamic(() => import('@/components/ProductGroups/Brands/Products'))
+const Profile = dynamic(() => import('@/components/Profile'))
+const Promotion = dynamic(() => import('@/components/Promotions'))
+const ReferralLevels = dynamic(() => import('@/components/Referral Levels'))
+const Referrer = dynamic(() => import('@/components/Referrer'))
+const Loading = dynamic(() => import('@/components/shared/Loading'))
+const SubGroups = dynamic(() => import('@/components/SubGroups'))
+const Variables = dynamic(() => import('@/components/Variables'))
+const Wallet = dynamic(() => import('@/components/Wallet'))
+const MainLayout = dynamic(() => import('@/layouts/MainLayout'))
 
 const Home = () => {
   const { modalContent } = useStates()

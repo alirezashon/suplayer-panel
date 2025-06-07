@@ -153,7 +153,7 @@ const OnlinePayment = () => {
               <WalletMoney size='20' color='#704CB9' />
               کیف پول شما
             </h3>
-            <p className='flex justify-between text-gray-500'>
+            <div className='flex justify-between text-gray-500'>
               اعتبار قابل تخصیص <br />
               <div className='flex gap-2 text-gray-800 font-semibold text-lg'>
                 <ShowAnimateNumber
@@ -163,7 +163,7 @@ const OnlinePayment = () => {
                 />
                 ریال
               </div>
-            </p>
+            </div>
           </div>
         </div>
       </div>

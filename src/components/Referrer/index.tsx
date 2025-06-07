@@ -1,24 +1,24 @@
-import { useEffect, useState } from 'react'
-import { Trash, Edit2, MoreSquare, Message } from 'iconsax-react'
-import AddModal from './AddModal'
-import DeleteModal from './DeleteModal'
-import Image from 'next/image'
-import { useMenu } from '@/Context/Menu'
-import { useData } from '@/Context/Data'
-import AppointmentModal from './Appointment'
-import { ReferrerData } from '@/interfaces'
-import ShowDetails from './ShowDetails'
-import { useStates } from '@/Context/States'
+import { useEffect, useState } from "react"
+import { Trash, Edit2, MoreSquare, Message } from "iconsax-react"
+import AddModal from "./AddModal"
+import DeleteModal from "./DeleteModal"
+import Image from "next/image"
+import { useMenu } from "@/Context/Menu"
+import { useData } from "@/Context/Data"
+import AppointmentModal from "./Appointment"
+import { ReferrerData } from "@/interfaces"
+import ShowDetails from "./ShowDetails"
+import { useStates } from "@/Context/States"
 
 const headers = [
-  'ردیف',
-  'نام',
-  'نام خانوادگی',
-  'سمت بازاریاب',
-  'وضعیت',
-  'فعالسازی/انتصاب',
-  'جزئیات',
-  'عملیات',
+  "ردیف",
+  "نام",
+  "نام خانوادگی",
+  "سمت بازاریاب",
+  "وضعیت",
+  "فعالسازی/انتصاب",
+  "جزئیات",
+  "عملیات",
 ]
 const Referrer: React.FC = () => {
   const { permissions } = useStates()
@@ -49,7 +49,7 @@ const Referrer: React.FC = () => {
             pers_chart_title:
               TreeChartInterface?.find(
                 (chart) => chart.id === referrer.pers_chart_id
-              )?.chtitle || '',
+              )?.chtitle || "",
             pers_status: referrer.pers_status,
             task_count: referrer.task_count,
             pers_uid: referrer.pers_uid,
@@ -80,7 +80,7 @@ const Referrer: React.FC = () => {
     const { name, value } = e.target
     const filteredData = referrerData?.filter((person) => {
       const fieldValue = person?.[name as keyof ReferrerData]
-      if (typeof fieldValue === 'string') {
+      if (typeof fieldValue === "string") {
         return !value || fieldValue.includes(value)
       }
       return !value
@@ -112,6 +112,7 @@ const Referrer: React.FC = () => {
           close={() =>
             setShowAppointmentModal({ data: false, isEditable: false })
           }
+          isEditMode={showAppointmentModal.isEditable}
         />
       )}
       {showAddModal && (
@@ -129,35 +130,38 @@ const Referrer: React.FC = () => {
             <span
               className='text-[#98A2B3]'
               onClick={() => {
-                setMenu('mygroups')
-                location.hash = 'mygroups'
-              }}>
+                setMenu("mygroups")
+                location.hash = "mygroups"
+              }}
+            >
               تعاریف
             </span>
             /
             <span
               className='text-[#7747C0]'
               onClick={() => {
-                setMenu('referrers')
-                location.hash = 'referrers'
-              }}>
+                setMenu("referrers")
+                location.hash = "referrers"
+              }}
+            >
               بازاریاب‌های من
             </span>
           </p>
-          {permissions[1].includes('694') &&
+          {permissions[1].includes("694") &&
             initialData &&
             initialData?.length > 0 && (
               <div className='flex gap-5'>
                 <button
                   type='submit'
                   onClick={() => setShowAddModal(true)}
-                  className='h-10 min-w-40 bg-[#7747C0] text-white rounded-lg hover:bg-purple-800'>
+                  className='h-10 min-w-40 bg-[#7747C0] text-white rounded-lg hover:bg-purple-800'
+                >
                   + بازاریاب جدید
                 </button>
               </div>
             )}
         </div>
-        {permissions[1].includes('739') && (
+        {permissions[1].includes("739") && (
           <div className='p-6 max-md:w-[99.4%] bg-white rounded-lg border border-gray-200'>
             <form className='flex  flex-col bg-[#F6F5FD] my-3 p-3 max-md:px-5 max-md:pb-24 rounded-lg'>
               <div className='flex max-md:flex-col  gap-4 items-center'>
@@ -196,7 +200,8 @@ const Referrer: React.FC = () => {
               <div className='mt-10 w-full flex justify-end '>
                 <button
                   type='submit'
-                  className={` gap-2 px-2 py-2 w-40 text-base text-center text-white bg-[#7747C0] rounded-lg border border-[#7747C0] border-solid min-h-10 `}>
+                  className={` gap-2 px-2 py-2 w-40 text-base text-center text-white bg-[#7747C0] rounded-lg border border-[#7747C0] border-solid min-h-10 `}
+                >
                   جستجو
                 </button>
               </div>
@@ -207,7 +212,8 @@ const Referrer: React.FC = () => {
                   <button
                     type='submit'
                     onClick={() => setShowAddModal(true)}
-                    className='h-10 w-fit border-button px-3 flex items-center gap-2 rounded-lg hover:bg-purple-50'>
+                    className='h-10 w-fit border-button px-3 flex items-center gap-2 rounded-lg hover:bg-purple-50'
+                  >
                     <Message size={24} color='#7747C0' />
                     <span>ارسال پیامک گروهی</span>
                   </button>
@@ -220,18 +226,20 @@ const Referrer: React.FC = () => {
                           <th
                             className={`bg-[#F3F4F5] h-10 ${
                               headIndex === 0
-                                ? 'rounded-tr-lg '
+                                ? "rounded-tr-lg "
                                 : headIndex === headers.length - 1 &&
-                                  'rounded-tl-lg'
+                                  "rounded-tl-lg"
                             }`}
-                            key={headIndex}>
+                            key={headIndex}
+                          >
                             <div
                               className={`flex justify-center items-center border-y h-10 ${
                                 headIndex === 0
-                                  ? 'border-r rounded-tr-lg'
+                                  ? "border-r rounded-tr-lg"
                                   : headIndex === headers.length - 1 &&
-                                    'border-l rounded-tl-lg'
-                              }`}>
+                                    "border-l rounded-tl-lg"
+                              }`}
+                            >
                               {headIndex !== 0 ? (
                                 head
                               ) : (
@@ -263,8 +271,9 @@ const Referrer: React.FC = () => {
                                 <td
                                   key={detailIndex}
                                   className={`text-center h-10 ${
-                                    detailIndex === 0 && 'border-r'
-                                  }`}>
+                                    detailIndex === 0 && "border-r"
+                                  }`}
+                                >
                                   {detailIndex === 0 ? (
                                     <div className='flex items-center justify-center gap-7'>
                                       <input
@@ -282,10 +291,11 @@ const Referrer: React.FC = () => {
                                       <span
                                         className={`min-w-16 ${
                                           detail === 1
-                                            ? 'bg-[#DAFEE5] text-[#0CAD41] rounded-lg'
-                                            : 'bg-[#FEE3E2] text-[#D42620] rounded-lg'
-                                        }`}>
-                                        {detail === 1 ? 'فعال' : 'غیرفعال'}
+                                            ? "bg-[#DAFEE5] text-[#0CAD41] rounded-lg"
+                                            : "bg-[#FEE3E2] text-[#D42620] rounded-lg"
+                                        }`}
+                                      >
+                                        {detail === 1 ? "فعال" : "غیرفعال"}
                                       </span>
                                     </p>
                                   ) : detailIndex === 5 ? (
@@ -302,7 +312,8 @@ const Referrer: React.FC = () => {
                                               ) as ReferrerData,
                                               isEditable: true,
                                             })
-                                          }>
+                                          }
+                                        >
                                           <Edit2 size={16} color='#7747C0' />
                                           <p>ویرایش انتصاب</p>
                                         </div>
@@ -318,7 +329,8 @@ const Referrer: React.FC = () => {
                                               ) as ReferrerData,
                                               isEditable: false,
                                             })
-                                          }}>
+                                          }}
+                                        >
                                           انتصاب دادن
                                         </button>
                                       )}
@@ -346,7 +358,7 @@ const Referrer: React.FC = () => {
                               />
                             </p>
                           </td>
-                          {permissions[1].includes('693') && (
+                          {permissions[1].includes("693") && (
                             <td className='text-center h-10 flex justify-center gap-2 border-l'>
                               <Trash
                                 size={24}
@@ -386,7 +398,7 @@ const Referrer: React.FC = () => {
               <div className='w-full bg-white flex flex-col gap-2 justify-center items-center'>
                 <h1 className='text-2xl'>بازاریابی ندارید</h1>
                 <Image
-                  src={'/icons/empty-box.svg'}
+                  src={"/icons/empty-box.svg"}
                   width={444}
                   height={333}
                   alt=''
@@ -394,11 +406,12 @@ const Referrer: React.FC = () => {
                 />
                 <div className='border min-w-[40%] my-5'></div>
                 <h1 className='text-2xl'> تعریف بازاریاب</h1>
-                {permissions[1].includes('694') && (
+                {permissions[1].includes("694") && (
                   <button
                     type='submit'
                     onClick={() => setShowAddModal(true)}
-                    className='h-10 min-w-40 bg-[#7747C0] text-white rounded-lg hover:bg-purple-800'>
+                    className='h-10 min-w-40 bg-[#7747C0] text-white rounded-lg hover:bg-purple-800'
+                  >
                     + بازاریاب جدید
                   </button>
                 )}

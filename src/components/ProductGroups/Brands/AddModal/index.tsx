@@ -1,12 +1,12 @@
-import { getCookieByKey } from '@/actions/cookieToken'
-import { getProductGroupData } from '@/actions/setData'
-import { useData } from '@/Context/Data'
-import { CreateProductGroup, EditProductGroup } from '@/services/products'
-import { CloseSquare, Grammerly, Trash } from 'iconsax-react'
-import { FormEvent, useState } from 'react'
-import { ProductGroupData } from '@/interfaces'
-import { errorClass } from '@/app/assets/style'
-import { useStates } from '@/Context/States'
+import { getCookieByKey } from "@/actions/cookieToken"
+import { getProductGroupData } from "@/actions/setData"
+import { useData } from "@/Context/Data"
+import { CreateProductGroup, EditProductGroup } from "@/services/products"
+import { CloseSquare, Grammerly, Trash } from "iconsax-react"
+import { FormEvent, useState } from "react"
+import { ProductGroupData } from "@/interfaces"
+import { errorClass } from "@/app/assets/style"
+import { useStates } from "@/Context/States"
 
 const AddModal = ({
   data,
@@ -25,8 +25,8 @@ const AddModal = ({
     selectedProductBrandData,
     setSelectedProductBrandData,
   } = useStates()
-  const [editName, setEditName] = useState<string>(data?.group_desc || '')
-  const [names, setNames] = useState<string[]>([''])
+  const [editName, setEditName] = useState<string>(data?.group_desc || "")
+  const [names, setNames] = useState<string[]>([""])
   const [status, setStatus] = useState<React.ReactElement | null>()
   const [isConfirmed, setIsConfirmed] = useState(false)
   const [errors, setErrors] = useState<Record<string, string[]>>()
@@ -48,7 +48,7 @@ const AddModal = ({
   }
 
   const handleAddInput = () => {
-    setNames([...names, ''])
+    setNames([...names, ""])
   }
 
   const handleRemoveInput = (index: number) => {
@@ -64,8 +64,8 @@ const AddModal = ({
       }
     } else {
       newErrors.brands = newErrors.brands || []
-      if (!newErrors.brands.includes('تمام فیلدهای برند اجباریست')) {
-        newErrors.brands.push('تمام فیلدهای برند اجباریست')
+      if (!newErrors.brands.includes("تمام فیلدهای برند اجباریست")) {
+        newErrors.brands.push("تمام فیلدهای برند اجباریست")
       }
     }
     setErrors(newErrors)
@@ -83,11 +83,11 @@ const AddModal = ({
     const newErrors: Record<string, string[]> = {}
     const emptyBrands = names.filter((brand) => !brand.trim())
     if (emptyBrands.length > 0)
-      newErrors.brands = ['تمام فیلدهای برند اجباریست']
+      newErrors.brands = ["تمام فیلدهای برند اجباریست"]
 
     setIsConfirmed(true)
     setSubmitting(true)
-    const accessToken = (await getCookieByKey('access_token')) || ''
+    const accessToken = (await getCookieByKey("access_token")) || ""
     if (data?.group_desc)
       await EditProductGroup({
         accessToken,
@@ -111,13 +111,13 @@ const AddModal = ({
                 group_pid: parent.id,
               }).catch((error) => ({
                 status: 0,
-                message: error?.message || 'خطای ناشناخته',
+                message: error?.message || "خطای ناشناخته",
               }))
             )
         )
 
         let hasSuccess = false
-        let errorMessages: string[] = []
+        const errorMessages: string[] = [] 
 
         results.forEach((result) => {
           if (result.status === 1) {
@@ -130,9 +130,9 @@ const AddModal = ({
         // نمایش موفقیت کلی
         if (hasSuccess) {
           showModal({
-            type: 'success',
+            type: "success",
             main: <p> برندها با موفقیت ایجاد شدند</p>,
-            title: 'موفق',
+            title: "موفق",
             autoClose: 2,
           })
           setResult(true)
@@ -154,9 +154,9 @@ const AddModal = ({
         }
 
         // نمایش خطاهای مربوط به برندهایی که ثبت نشدند
-        if (errorMessages.length > 0) {
+        if (errorMessages?.length > 0) {
           showModal({
-            type: 'error',
+            type: "error",
             main: (
               <ul className='text-right'>
                 {errorMessages.map((msg, i) => (
@@ -164,66 +164,14 @@ const AddModal = ({
                 ))}
               </ul>
             ),
-            title: 'خطا در برخی برندها',
+            title: "خطا در برخی برندها",
             autoClose: 3,
           })
           setResult(false, errorMessages[0])
         }
 
         setNames([])
-      }
-
-      // if (names?.length > 0) {
-      //   await Promise.all(
-      //     names
-      //       .filter((name) => name.length > 0) // فقط نام‌های معتبر
-      //       .map(
-      //         async (name) =>
-      //           await CreateProductGroup({
-      //             accessToken,
-      //             name: name,
-      //             group_pid: parent.id,
-      //           }).then(async (result) => {
-      //             if (result.status === 1) {
-      //               showModal({
-      //                 type: 'success',
-      //                 main: <p>{result.message}</p>,
-      //                 title: 'موفق',
-      //                 autoClose: 2,
-      //               })
-      //               setResult(true)
-
-      //               await getProductGroupData().then((value) => {
-      //                 if (value) {
-      //                   setProductGroupData(
-      //                     value.productGroups as ProductGroupData[]
-      //                   )
-      //                   setBrandsData(value.brands as ProductGroupData[])
-      //                   if (value.brands) {
-      //                     const selectedBrand = selectedProductBrandData
-      //                     setSelectedProductBrandData({
-      //                       data: value.brands?.filter(
-      //                         (pg) => pg.group_pid === selectedBrand?.group.id
-      //                       ) as ProductGroupData[],
-      //                       group: selectedBrand?.group as ProductGroupData,
-      //                     })
-      //                   }
-      //                 }
-      //               })
-      //             } else {
-      //               showModal({
-      //                 type: 'error',
-      //                 main: <p>{result.message}</p>,
-      //                 title: 'خطا',
-      //                 autoClose: 2,
-      //               })
-      //               setResult(false, result.message)
-      //             }
-      //           })
-      //       )
-      //   )
-      //   setNames([])
-      // }
+      } 
     }
 
     await rerenderData()
@@ -238,19 +186,22 @@ const AddModal = ({
     <div>
       <div className='absolute bg-slate-600 opacity-50 w-full h-[200vh] z-50 top-0 right-0'></div>
       <div
-        style={{ scrollbarWidth: 'none' }}
+        style={{ scrollbarWidth: "none" }}
         className={`fixed p-10 z-50 right-0 top-0 max-md:left-[0] max-md:w-[100%] w-[40vw] h-full bg-white border border-gray-300 shadow-lg transition-transform duration-300 ease-in-out right-side-animate overflow-y-auto  
-     `}>
+     `}
+      >
         <form
           onSubmit={handleSubmit}
-          className='flex flex-col bg-white pb-[852px] max-md:px-5 max-md:pb-24 '>
+          className='flex flex-col bg-white pb-[852px] max-md:px-5 max-md:pb-24 '
+        >
           <div className='flex justify-between items-center w-full text-xl font-medium text-right text-gray-800 max-md:max-w-full'>
             <div className='flex-1 shrink self-stretch my-auto min-w-[240px] max-md:max-w-full'>
               برند محصول جدید
             </div>
             <div
               className='
-           '>
+           '
+            >
               <CloseSquare
                 size={24}
                 cursor='pointer'
@@ -289,8 +240,9 @@ const AddModal = ({
                 <div
                   key={index}
                   className={`mt-4 ${
-                    index === names.length - 1 && 'add-new-input-animated'
-                  }`}>
+                    index === names.length - 1 && "add-new-input-animated"
+                  }`}
+                >
                   <label className='text-base font-medium text-right text-gray-800'>
                     نام برند محصول خود را بنویسید
                   </label>
@@ -322,7 +274,8 @@ const AddModal = ({
               <button
                 type='button'
                 onClick={handleAddInput}
-                className='text-[#7747C0] font-bold hover:text-[#7747C0]'>
+                className='text-[#7747C0] font-bold hover:text-[#7747C0]'
+              >
                 افزودن برند +
               </button>
             )}
@@ -334,28 +287,30 @@ const AddModal = ({
                 style={{
                   animation: `${
                     isConfirmed
-                      ? 'hideSubmitAnimate 1s ease-in-out forwards '
-                      : 'showSubmitAnimate 1s ease-in-out forwards '
+                      ? "hideSubmitAnimate 1s ease-in-out forwards "
+                      : "showSubmitAnimate 1s ease-in-out forwards "
                   }`,
                 }}
                 disabled={submitting}
                 className={` ${
-                  submitting && 'opacity-30 cursor-not-allowed'
-                } w-full fill-button px-10 h-10 mt-10 rounded-lg transition-transform duration-200 ease-in-out hover:scale-105`}>
+                  submitting && "opacity-30 cursor-not-allowed"
+                } w-full fill-button px-10 h-10 mt-10 rounded-lg transition-transform duration-200 ease-in-out hover:scale-105`}
+              >
                 ثبت
               </button>
 
               <div
                 className={`absolute ${
-                  !isConfirmed && ' opacity-0 '
+                  !isConfirmed && " opacity-0 "
                 } transform -translate-x-1/2 transition-all duration-1000 ease-in-out`}
                 style={{
                   animation: `${
                     isConfirmed
-                      ? 'showSuccessText 1s ease-in-out forwards '
-                      : 'hideSuccessText 1s ease-in-out forwards '
+                      ? "showSuccessText 1s ease-in-out forwards "
+                      : "hideSuccessText 1s ease-in-out forwards "
                   }`,
-                }}>
+                }}
+              >
                 {status}
               </div>
             </div>

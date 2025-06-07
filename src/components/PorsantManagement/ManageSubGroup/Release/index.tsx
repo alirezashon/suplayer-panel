@@ -1,8 +1,8 @@
-import OtpModal from '@/components/shared/OtpModal'
-import { useData } from '@/Context/Data'
-import { useMenu } from '@/Context/Menu'
-import { useStates } from '@/Context/States'
-import { setComma } from '@/hooks/NumberFormat'
+import OtpModal from "@/components/shared/OtpModal"
+import { useData } from "@/Context/Data"
+import { useMenu } from "@/Context/Menu"
+import { useStates } from "@/Context/States"
+import { setComma } from "@/hooks/NumberFormat"
 import {
   AllocatedListInterface,
   BeneficiaryData,
@@ -11,9 +11,9 @@ import {
   ReleaseAllocatedInterface,
   ReleasedListInterface,
   SubGroup,
-} from '@/interfaces'
-import { Printer, SearchNormal } from 'iconsax-react'
-import { useEffect, useState } from 'react'
+} from "@/interfaces"
+import { Printer, SearchNormal } from "iconsax-react"
+import { useCallback, useEffect, useState } from "react"
 import {
   calculateData,
   calculateFinalData,
@@ -22,9 +22,9 @@ import {
   headers,
   releasingData,
   showErrorModal,
-} from './lib/utils'
-import FileUploader from './FileUploader'
-import DotsLoading from '@/components/shared/DotsLoading'
+} from "./lib/utils"
+import FileUploader from "./FileUploader"
+import DotsLoading from "@/components/shared/DotsLoading"
 
 type TableDataType = Partial<BeneficiaryData> & {
   allocatedAmount: string
@@ -57,7 +57,7 @@ const Release = () => {
   const [uploadStatuses, setUploadStatuses] = useState<
     Record<
       string,
-      { status: 'idle' | 'uploading' | 'success' | 'error'; progress: number }
+      { status: "idle" | "uploading" | "success" | "error"; progress: number }
     >
   >({})
   const [releaseData, setReleaseData] = useState<ReleaseAllocatedInterface[]>(
@@ -70,7 +70,7 @@ const Release = () => {
   const [otp, setOtp] = useState<string>()
   const [showOtpModal, setshowOtpModal] = useState<boolean>(false)
 
-  const updateData = () => {
+  const updateData = useCallback(() => {
     calculateData({
       allocationList: allocationList as AllocatedListInterface[],
       selectedSubGroupData: selectedSubGroupData as SubGroup,
@@ -84,38 +84,43 @@ const Release = () => {
       selectedGroupData: selectedGroupData as GroupData,
       setFinalReleaseData,
     })
-  }
+  }, [
+    allocationList,
+    beneficiaryData,
+    releasedList,
+    selectedGroupData,
+    selectedSubGroupData,
+  ])
   useEffect(() => {
     if (!selectedGroupData) {
-      location.hash = 'porsant'
-      setMenu('porsant')
+      location.hash = "porsant"
+      setMenu("porsant")
     }
     updateData()
-  }, [setMenu, selectedGroupData])
-
+  }, [setMenu, selectedGroupData, updateData])
   const handleDeleteFile = (visitorTel: string) => {
     setData((prev) =>
       prev.map((item) =>
-        item.visitor_tel === visitorTel ? { ...item, fileId: '' } : item
+        item.visitor_tel === visitorTel ? { ...item, fileId: "" } : item
       )
     )
     setUploadStatuses((prev) => ({
       ...prev,
-      [visitorTel]: { status: 'idle', progress: 0 },
+      [visitorTel]: { status: "idle", progress: 0 },
     }))
   }
 
   const handleUploadStart = (visitorTel: string) => {
     setUploadStatuses((prev) => ({
       ...prev,
-      [visitorTel]: { status: 'uploading', progress: 0 },
+      [visitorTel]: { status: "uploading", progress: 0 },
     }))
   }
 
   const handleUploadProgress = (visitorTel: string, progress: number) => {
     setUploadStatuses((prev) => ({
       ...prev,
-      [visitorTel]: { status: 'uploading', progress },
+      [visitorTel]: { status: "uploading", progress },
     }))
   }
 
@@ -137,29 +142,29 @@ const Release = () => {
     )
     setUploadStatuses((prev) => ({
       ...prev,
-      [visitorTel]: { status: 'success', progress: 100 },
+      [visitorTel]: { status: "success", progress: 100 },
     }))
   }
 
   const handleUploadError = (visitorTel: string, error: string) => {
     setUploadStatuses((prev) => ({
       ...prev,
-      [visitorTel]: { status: 'error', progress: 0 },
+      [visitorTel]: { status: "error", progress: 0 },
     }))
     showErrorModal(error, showModal)
   }
 
   const handleCreditChange = (id: string, value: string) => {
-    const cleanValue = value.replace(/,/g, '')
+    const cleanValue = value.replace(/,/g, "")
     if (!/^\d*$/.test(cleanValue)) return
 
-    const parsedValue = cleanValue ? parseInt(cleanValue, 10) : ''
+    const parsedValue = cleanValue ? parseInt(cleanValue, 10) : ""
     setData((prev) => {
       const updatedData = prev.map((last) =>
         last.visitor_tel === id
           ? {
               ...last,
-              newReleaseAmount: parsedValue !== '' ? `${parsedValue}` : '',
+              newReleaseAmount: parsedValue !== "" ? `${parsedValue}` : "",
             }
           : last
       )
@@ -169,7 +174,7 @@ const Release = () => {
     setReleaseData((prev) => {
       const existingIndex = prev.findIndex((item) => item.visitor_uid === id)
 
-      if (parsedValue === '') {
+      if (parsedValue === "") {
         return prev.filter((item) => item.visitor_uid !== id)
       }
 
@@ -194,7 +199,7 @@ const Release = () => {
 
   return (
     <>
-      {permissions[1].includes('748') && (
+      {permissions[1].includes("748") && (
         <div className='m-4'>
           {showOtpModal && !submitting && (
             <OtpModal
@@ -223,26 +228,29 @@ const Release = () => {
               <span
                 className='text-[#98A2B3] cursor-pointer'
                 onClick={() => {
-                  setMenu('porsant')
-                  location.hash = 'porsant'
+                  setMenu("porsant")
+                  location.hash = "porsant"
                   setSelectedGroupData(null)
-                }}>
+                }}
+              >
                 مدیریت پورسانت‌دهی/
               </span>
               <span
                 className='text-[#98A2B3] cursor-pointer'
                 onClick={() => {
-                  setMenu('porsant')
-                  location.hash = 'porsant'
-                }}>
+                  setMenu("porsant")
+                  location.hash = "porsant"
+                }}
+              >
                 {selectedGroupData?.sup_group_name}/
               </span>
               <span
                 className='text-[#98A2B3] cursor-pointer'
                 onClick={() => {
-                  setMenu('porsantmanagement')
-                  location.hash = 'porsantmanagement'
-                }}>
+                  setMenu("porsantmanagement")
+                  location.hash = "porsantmanagement"
+                }}
+              >
                 {selectedSubGroupData?.supervisor_name}/
               </span>
               <span className='text-[#7747C0]'>آزادسازی گروهی</span>
@@ -266,7 +274,8 @@ const Release = () => {
                 </div>
                 <button
                   type='submit'
-                  className='border-button w-56 px-10 h-10 rounded-lg'>
+                  className='border-button w-56 px-10 h-10 rounded-lg'
+                >
                   جستجو
                 </button>
               </div>
@@ -278,18 +287,20 @@ const Release = () => {
                         <th
                           className={`bg-[#F5F7F8] border-z h-10 ${
                             headIndex === 0
-                              ? 'rounded-tr-lg'
+                              ? "rounded-tr-lg"
                               : headIndex === headers.length - 1 &&
-                                'rounded-tl-lg'
+                                "rounded-tl-lg"
                           } `}
-                          key={headIndex}>
+                          key={headIndex}
+                        >
                           <p
                             className={`flex justify-center items-center border-y h-10  ${
                               headIndex === 0
-                                ? 'border-r rounded-tr-lg'
+                                ? "border-r rounded-tr-lg"
                                 : headIndex === headers.length - 1 &&
-                                  'border-l rounded-tl-lg'
-                            }`}>
+                                  "border-l rounded-tl-lg"
+                            }`}
+                          >
                             {head}
                           </p>
                         </th>
@@ -324,9 +335,9 @@ const Release = () => {
                               onChange={(e) => {
                                 const result =
                                   parseInt(
-                                    row.remain_amount.replace(/,/g, '')
+                                    row.remain_amount.replace(/,/g, "")
                                   ) >=
-                                  parseInt(e.target.value.replace(/,/g, ''))
+                                  parseInt(e.target.value.replace(/,/g, ""))
                                     ? e.target.value
                                     : row.remain_amount
                                 handleCreditChange(`${row.visitor_tel}`, result)
@@ -342,7 +353,7 @@ const Release = () => {
                               disable={row.disable}
                               uploadStatus={
                                 uploadStatuses[row.visitor_tel as string] || {
-                                  status: 'idle',
+                                  status: "idle",
                                   progress: 0,
                                 }
                               }
@@ -377,11 +388,12 @@ const Release = () => {
                           setMenu,
                         })
                       }
-                      className='flex justify-center  items-center border-button px-10 h-10 rounded-lg  w-full text-nowrap min-w-60'>
+                      className='flex justify-center  items-center border-button px-10 h-10 rounded-lg  w-full text-nowrap min-w-60'
+                    >
                       {submitting ? (
                         <DotsLoading color='#7747C0' />
                       ) : (
-                        'ذخیره پیش نویس آزادسازی'
+                        "ذخیره پیش نویس آزادسازی"
                       )}
                     </button>
                     <button
@@ -390,17 +402,18 @@ const Release = () => {
                         if (finalReleaseData.length > 0) setshowOtpModal(true)
                         else
                           showModal({
-                            type: 'error',
-                            main: 'ابتدا لیست را در پیش نویس ذخیره کنید',
-                            title: 'خطا',
+                            type: "error",
+                            main: "ابتدا لیست را در پیش نویس ذخیره کنید",
+                            title: "خطا",
                             autoClose: 1,
                           })
                       }}
-                      className='flex justify-center items-center fill-button px-10 h-10 rounded-lg w-full  text-nowrap min-w-60'>
+                      className='flex justify-center items-center fill-button px-10 h-10 rounded-lg w-full  text-nowrap min-w-60'
+                    >
                       {submitting ? (
                         <DotsLoading color='#ffffff' />
                       ) : (
-                        'ثبت نهایی'
+                        "ثبت نهایی"
                       )}
                     </button>
                   </div>
